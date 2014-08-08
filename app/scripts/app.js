@@ -16,7 +16,6 @@ var app = angular.module('sopheAuthorApp', [
     //'ngSanitize',
     //'ngTouch',
     //'canvasModule',
-    'sophe-joint',
     'sophe-kinetic'
   ]);
 
