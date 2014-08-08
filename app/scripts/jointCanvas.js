@@ -1,6 +1,6 @@
 (function() {
     'use strict';
-    angular.module('sophe', [])
+    angular.module('sophe-joint', [])
     .directive('jointCanvas', ['$rootScope',
     function canvasDirective ($rootScope) {
         return {

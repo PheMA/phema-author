@@ -9,4 +9,6 @@
  */
 angular.module('sopheAuthorApp')
   .controller('PhenotypeCtrl', function ($scope) {
+    $scope.addElement = function () {
+    };
   });
