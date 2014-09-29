@@ -16,7 +16,8 @@ var app = angular.module('sopheAuthorApp', [
     //'ngSanitize',
     //'ngTouch',
     //'canvasModule',
-    'sophe-kinetic'
+    'sophe-kinetic',
+    'sophe-menu'
   ]);
 
 app.config(function ($routeProvider) {
