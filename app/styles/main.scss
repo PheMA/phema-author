@@ -95,6 +95,19 @@ body {
   }
 }
 
+table.phenotype-list {
+  width: 100%;
+  font-size: 0.9em;
+  th {
+    font-weight: normal;
+    border-bottom: solid 1px black;
+  }
+  tr td {
+    padding-top: 3px;
+    padding-bottom: 4px;
+  }
+}
+
 /********************************
   Dashboard
 ********************************/
