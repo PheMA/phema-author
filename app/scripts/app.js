@@ -23,20 +23,15 @@ var app = angular.module('sopheAuthorApp', [
 app.config(function ($routeProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl',
-        title: 'Home'
-      })
+        title: 'Home', templateUrl: 'views/main.html', controller: 'MainCtrl' })
+      .when('/dashboard', {
+        title: 'Dashboard', templateUrl: 'views/dashboard.html', controller: 'DashboardCtrl' })
       .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl',
-        title: 'About'
-      })
+        title: 'About', templateUrl: 'views/about.html', controller: 'AboutCtrl' })
       .when('/phenotype', {
-        templateUrl: 'views/phenotype.html',
-        controller: 'PhenotypeCtrl',
-        title: 'Phenotypes'
-      })
+        title: 'Phenotypes', templateUrl: 'views/phenotypes/new.html', controller: 'PhenotypeCtrl' })
+      .when('/phenotype/new', {
+        title: 'Phenotypes', templateUrl: 'views/phenotypes/new.html', controller: 'PhenotypeCtrl' })
       .otherwise({
         redirectTo: '/'
       });

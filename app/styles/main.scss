@@ -2,6 +2,7 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
 // bower:scss
 @import "bootstrap-sass-official/assets/stylesheets/bootstrap.scss";
 // endbower
+@import "variables.scss";
 
 .browsehappy {
   margin: 0.2em 0;
@@ -12,28 +13,31 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
 
 /* Space out content a bit */
 body {
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 0px;
+  padding-bottom: 10px;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
 .marketing,
 .footer {
-  padding-left: 15px;
+  padding-left: 15px ;
   padding-right: 15px;
 }
 
 /* Custom page header */
 .header {
-  border-bottom: 1px solid #e5e5e5;
+  /*margin-bottom: 20px;*/
+  background-color: $header-background-color;
+  color: #FFFFFF;
 
-  /* Make the masthead heading the same height as the navigation */
-  h3 {
-    margin-top: 0;
-    margin-bottom: 0;
-    line-height: 40px;
-    padding-bottom: 19px;
+  a {
+    color: #FFFFFF;
+  }
+
+  .navbar-brand {
+    padding-left: 5px;
+    font-size: 20px;
   }
 }
 
@@ -68,25 +72,65 @@ body {
   }
 }
 
-/* Responsive: Portrait tablets and up */
-@media screen and (min-width: 768px) {
-  .container {
-    /*max-width: 730px;*/
+.container {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+
+.header .nav {
+  li > a:hover, .nav > li > a:focus {
+    text-decoration: none;
+    background-color: lighten($header-background-color, 10%);
   }
 
-  /* Remove the padding we set earlier */
-  .header,
-  .marketing,
-  .footer {
-    padding-left: 0;
-    padding-right: 0;
+  li.btn-highlight {
+    padding-top: 12px;
+    padding-right: 15px;
+    a {
+      background-color: lighten($header-background-color, 15%);
+      padding-top: 3px;
+      padding-bottom: 3px;
+    }
   }
-  /* Space out the masthead */
-  .header {
-    margin-bottom: 30px;
+}
+
+/********************************
+  Dashboard
+********************************/
+.dashboard-col {
+  padding-bottom: 30px;
+
+  .dashboard-header {
+    background: $dashboard-header-background-color;
+    color: white;
+    padding: 5px 10px;
+    text-align: center;
   }
-  /* Remove the bottom border on the jumbotron for visual effect */
-  .jumbotron {
-    border-bottom: 0;
+
+  .dashboard-body {
+    background: white;
+    color: black;
+    padding: 10px 10px;
+    border: 1px solid $dashboard-header-background-color;
+
+    ul {
+      list-style-type: none;
+      padding: 0px;
+      margin: 0px;
+      li {
+        padding-bottom: 10px;
+      }
+    }
+
+    .activity-text {
+      font-size: 0.9em;
+
+      .activity-time {
+        font-size: 0.8em;
+        font-color: #777;
+        display: inline-block;
+      }
+    }
   }
 }

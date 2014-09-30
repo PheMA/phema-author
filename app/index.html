@@ -21,22 +21,74 @@
 
     <!-- Add your site or application content here -->
     <div class="container">
+      <!--
       <div class="header">
         <ul class="nav nav-pills pull-right">
-          <li><a ng-href="#/phenotype">Phenotypes</a></li>
-          <li><a ng-href="#/about">About</a></li>
+          <li class="btn-highlight"><a ng-href="#/phenotype/new">Create Phenotype</a></li>
+          <li>
+            <a ng-href="#/phenotype" data-toggle="dropdown" class="dropdown-toggle">Phenotypes</a>
+          </li>
+          <li><a ng-href="#/valuesets">Value Sets</a></li>
+          <li><a ng-href="#">Search</a></li>
           <li><a ng-href="#">Help</a></li>
           <li><a ng-href="#">Login</a></li>
         </ul>
         <a ng-href="#">
-          <h3 class="text-muted">Phenotype Authoring Tool</h3>
+          <h3 class="app-name">Phenotype Authoring Tool</h3>
         </a>
+      </div>-->
+
+      <div class="navbar-header header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#app-navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Phenotype Authoring Tool</a>
+      </div>
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse header" id="app-navbar-collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="btn-highlight"><a ng-href="#/phenotype/new">Create Phenotype</a></li>
+          <li class="dropdown">
+            <a href="#/phenotype/new" data-toggle="dropdown" class="dropdown-toggle">Phenotypes <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="#/phenotype/new">Create</a></li>
+              <li><a href="#/phenotype/search">Search</a></li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" data-toggle="dropdown" class="dropdown-toggle">Value Sets <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="#/valueset/new">Create</a></li>
+              <li><a href="#/valueset-search">Search</a></li>
+            </ul>
+          </li>
+          <li><a href="#/help">Help</a></li>
+          <li class="dropdown">
+            <a href="#" data-toggle="dropdown" class="dropdown-toggle">My Account <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="#">Login</a></li>
+              <li class="divider"></li>
+              <li><a href="#">Settings</a></li>
+            </ul>
+          </li>
+        </ul>
       </div>
 
       <div class="container container-big" ng-view=""></div>
 
       <div class="footer">
-        Funded by {grant}
+        <div class="col-md-9">
+          This work has been funded by NIGMS grant R01GM105688.
+        </div>
+        <div class="col-md-3">
+          <ul>
+            <li>Publications</li>
+            <li>Contact Us</li>
+          </ul>
+        </div>
       </div>
     </div>
 
