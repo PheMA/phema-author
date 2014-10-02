@@ -8,7 +8,9 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PhenotypeCtrl', function ($scope) {
+  .controller('PhenotypeCtrl', function ($scope, $routeParams) {
+    $scope.phenotype = $routeParams.id;
+
     $scope.addKineticElement = function () {
         var layer = new Kinetic.Layer();
         var rectX = $scope.canvasDetails.kineticStageObj.getWidth() / 2 - 50;

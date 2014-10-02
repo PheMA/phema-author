@@ -16,8 +16,10 @@ var app = angular.module('sopheAuthorApp', [
     //'ngSanitize',
     //'ngTouch',
     //'canvasModule',
+    'ui.bootstrap',
     'sophe-kinetic',
-    'sophe-menu'
+    'sophe-menu',
+    'security'
   ]);
 
 app.config(function ($routeProvider) {
@@ -29,9 +31,11 @@ app.config(function ($routeProvider) {
       .when('/about', {
         title: 'About', templateUrl: 'views/about.html', controller: 'AboutCtrl' })
       .when('/phenotype', {
-        title: 'Phenotypes', templateUrl: 'views/phenotypes/new.html', controller: 'PhenotypeCtrl' })
+        title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeCtrl' })
       .when('/phenotype/new', {
-        title: 'Phenotypes', templateUrl: 'views/phenotypes/new.html', controller: 'PhenotypeCtrl' })
+        title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeCtrl' })
+      .when('/phenotype/:id', {
+        title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeCtrl' })
       .otherwise({
         redirectTo: '/'
       });

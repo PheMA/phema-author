@@ -17,6 +17,20 @@ body {
   padding-bottom: 10px;
 }
 
+.btn {
+  background-color: $button-color;
+}
+
+.btn-success {
+  background-color: $button-color;
+  border: darken($button-color, 20%);
+}
+
+.btn-success:hover, .btn:hover {
+  background-color: lighten($button-color, 10%);
+  color: white;
+}
+
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
 .marketing,
@@ -85,14 +99,13 @@ body {
   }
 
   li.btn-highlight {
-    padding-top: 12px;
+    padding-top: 7px;
     padding-right: 15px;
-    a {
-      background-color: lighten($header-background-color, 15%);
-      padding-top: 3px;
-      padding-bottom: 3px;
-    }
   }
+}
+
+.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+  background-color: lighten($header-background-color, 10%);
 }
 
 table.phenotype-list {
