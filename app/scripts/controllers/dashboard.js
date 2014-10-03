@@ -9,4 +9,6 @@
  */
 angular.module('sopheAuthorApp')
   .controller('DashboardCtrl', function ($scope) {
+    $scope.newsItems = [];
+    $scope.phenotypes = [];
   });

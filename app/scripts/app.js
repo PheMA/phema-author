@@ -17,9 +17,7 @@ var app = angular.module('sopheAuthorApp', [
     //'ngTouch',
     //'canvasModule',
     'ui.bootstrap',
-    'sophe.kinetic',
-    'sophe.menu',
-    'sophe.phenotype.toolbar',
+    'sophe',
     'security'
   ]);
 

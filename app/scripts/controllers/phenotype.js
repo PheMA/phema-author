@@ -8,8 +8,24 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PhenotypeCtrl', function ($scope, $routeParams) {
+  .controller('PhenotypeCtrl', ['$scope', '$http', '$routeParams', function ($scope, $http, $routeParams) {
     $scope.phenotype = $routeParams.id;
+    // $scope.dataElements = [
+    //     {name: "Care Experience"},
+    //     {name: "Care Goal"}
+    // ];
+    $http.get('data/qdm-elements.json').success (function(data){
+        var transformedData = [];
+        var originalData = data.results.bindings;
+        for (var index = 0; index < originalData.length; index++) {
+            if (originalData[index].context.value == "http://rdf.healthit.gov/qdm/element#qdm-4-1") {
+                transformedData.push({ name: originalData[index].datatypeLabel.value} );
+            }
+        };
+        $scope.dataElements = transformedData.sort(function(obj1, obj2) {
+            return obj1.name.localeCompare(obj2.name);
+        });
+    });
 
     $scope.addKineticElement = function () {
         var layer = new Kinetic.Layer();
@@ -44,4 +60,4 @@ angular.module('sopheAuthorApp')
         layer.add(kineticObj);
         $scope.canvasDetails.kineticStageObj.add(layer);
     };
-  });
+  }]);

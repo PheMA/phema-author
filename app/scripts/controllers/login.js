@@ -16,8 +16,8 @@ angular.module('security.login.form', [])
   $scope.authReason = null;
   if ( security.getLoginReason() ) {
     $scope.authReason = ( security.isAuthenticated() ) ?
-      "You are not authorized to access this page" :
-      "Please log in to continue";
+      'You are not authorized to access this page' :
+      'Please log in to continue';
   }
 
   // Attempt to authenticate the user specified in the form's model
@@ -29,7 +29,7 @@ angular.module('security.login.form', [])
     security.login($scope.user.email, $scope.user.password).then(function(loggedIn) {
       if ( !loggedIn ) {
         // If we get here then the login failed due to bad credentials
-        $scope.authError = "Invalid login or password";
+        $scope.authError = 'Invalid login or password';
       }
     }, function(x) {
       // If we get here then there was a problem with the login request to the server
