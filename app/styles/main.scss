@@ -1,8 +1,13 @@
 $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/bootstrap/";
 // bower:scss
 @import "bootstrap-sass-official/assets/stylesheets/bootstrap.scss";
+$fa-font-path: "/bower_components/font-awesome/fonts";
+@import "font-awesome/scss/font-awesome";
+
 // endbower
 @import "variables.scss";
+@import "dashboard.scss";
+@import "phenotype.scss";
 
 .browsehappy {
   margin: 0.2em 0;
@@ -118,45 +123,5 @@ table.phenotype-list {
   tr td {
     padding-top: 3px;
     padding-bottom: 4px;
-  }
-}
-
-/********************************
-  Dashboard
-********************************/
-.dashboard-col {
-  padding-bottom: 30px;
-
-  .dashboard-header {
-    background: $dashboard-header-background-color;
-    color: white;
-    padding: 5px 10px;
-    text-align: center;
-  }
-
-  .dashboard-body {
-    background: white;
-    color: black;
-    padding: 10px 10px;
-    border: 1px solid $dashboard-header-background-color;
-
-    ul {
-      list-style-type: none;
-      padding: 0px;
-      margin: 0px;
-      li {
-        padding-bottom: 10px;
-      }
-    }
-
-    .activity-text {
-      font-size: 0.9em;
-
-      .activity-time {
-        font-size: 0.8em;
-        font-color: #777;
-        display: inline-block;
-      }
-    }
   }
 }

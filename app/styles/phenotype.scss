@@ -1,0 +1,41 @@
+@import "variables.scss";
+.phenotype-toolbar {
+  background-color: $dashboard-header-background-color;
+  border: solid 1px black;
+  color: white;
+  padding: 7px 5px;
+  margin-bottom: 3px;
+
+  ul {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+    li {
+      display: inline-block;
+      margin-right: 3px;
+      .phenotype-toolbar-button {
+        border: solid 1px black;
+        padding: 2px 5px;
+      }
+
+      .spacer {
+        width: 15px;
+      }
+    }
+  }
+}
+
+.phenotype-element-list{
+  border: solid 1px black;
+
+  .phenotype-element-header {
+    background-color: $dashboard-header-background-color;
+    color: white;
+    padding: 3px 5px;
+    text-align: center;
+  }
+
+  .phenotype-element {
+
+  }
+}

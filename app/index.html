@@ -8,6 +8,7 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -51,6 +52,7 @@
       <div class="collapse navbar-collapse header" id="app-navbar-collapse">
         <div class="navbar-right">
           <ul class="nav navbar-nav">
+            <li><a href="#/dashboard">Dashboard</a>
             <li class="btn-highlight"><button class="btn" ng-click="createNewPhenotype()">Create Phenotype</button></li>
             <li class="dropdown">
               <a href="#/phenotype/new" data-toggle="dropdown" class="dropdown-toggle">Phenotypes <b class="caret"></b></a>
@@ -66,15 +68,7 @@
                 <li><a href="#/valueset-search">Search</a></li>
               </ul>
             </li>
-            <li><a href="#/help">Help</a></li>
-            <li class="dropdown" ng-show="isAuthenticated()">
-              <a href="#" data-toggle="dropdown" class="dropdown-toggle">My Account <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Login</a></li>
-                <li class="divider"></li>
-                <li><a href="#">Settings</a></li>
-              </ul>
-            </li>
+            <li><a href="#/help">Help</a>
           </ul>
           <login-toolbar />
         </div>
@@ -134,11 +128,13 @@
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/directives/kineticCanvas.js"></script>
         <script src="scripts/directives/menu.js"></script>
+        <script src="scripts/directives/phenotypeToolbar.js"></script>
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/about.js"></script>
         <script src="scripts/controllers/phenotype.js"></script>
         <script src="scripts/controllers/login.js"></script>
+        <script src="scripts/controllers/dashboard.js"></script>
         <!-- endbuild -->
 
         <script src="scripts/services/security/index.js"></script>

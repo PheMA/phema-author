@@ -1,6 +1,6 @@
 (function() {
     'use strict';
-    angular.module('sophe-kinetic', [])
+    angular.module('sophe.kinetic', [])
     .directive('kineticCanvas', ['$rootScope',
     function canvasDirective ($rootScope) {
         return {

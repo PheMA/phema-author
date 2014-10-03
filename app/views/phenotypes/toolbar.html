@@ -1,0 +1,10 @@
+<div class="phenotype-toolbar">
+  <ul>
+    <li ng-repeat="btn in buttons">
+      <button ng-hide="{{btn.spacer}}" type="button" class="btn phenotype-toolbar-button">
+        <span class="{{btn.iconClass}}"></span> {{btn.text}}
+      </button>
+      <div ng-show="{{btn.spacer}}" class="spacer" />
+    </li>
+  </ul>
+</div>

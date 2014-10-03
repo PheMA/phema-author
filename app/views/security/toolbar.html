@@ -1,12 +1,12 @@
 <ul class="nav navbar-nav">
-  <li class="divider-vertical"></li>
-  <li ng-show="isAuthenticated()">
-      <a href="#">{{currentUser.firstName}} {{currentUser.lastName}}</a>
-  </li>
-  <li ng-show="isAuthenticated()" class="logout">
-      <form class="navbar-form">
-          <button class="btn logout" ng-click="logout()">Log out</button>
-      </form>
+  <li class="dropdown" ng-show="isAuthenticated()">
+    <a href="#" data-toggle="dropdown" class="dropdown-toggle">{{currentUser.firstName}} {{currentUser.lastName}} <b class="caret"></b></a>
+    <ul class="dropdown-menu">
+      <li><a href="#/user/{{currentUser.id}}">Profile</a></li>
+      <li>
+        <a href="#" ng-click="logout()">Log out</a>
+      </li>
+    </ul>
   </li>
   <li ng-hide="isAuthenticated()" class="login">
       <form class="navbar-form">

@@ -1,6 +1,6 @@
 (function() {
     'use strict';
-    angular.module('sophe-menu', [])
+    angular.module('sophe.menu', [])
     .directive('authorMenu', ['$rootScope',
     function menuDirective ($rootScope) {
         return {
