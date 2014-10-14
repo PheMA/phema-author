@@ -1,0 +1,641 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"guideline_ste",
+				"guideline_step_observations"
+			],
+			[
+				"patient_g",
+				"patient_guideline_step_id"
+			],
+			[
+				"get_response",
+				"get_response_set_for_referral"
+			],
+			[
+				"a_",
+				"a_no"
+			],
+			[
+				"av",
+				"q_available_to_talk"
+			],
+			[
+				"data",
+				"data_export_identifier"
+			],
+			[
+				"condition_",
+				"condition_C"
+			],
+			[
+				"research",
+				"research_appointment_location"
+			],
+			[
+				"research_",
+				"research_appointment_time"
+			],
+			[
+				"comm",
+				"comments"
+			],
+			[
+				"keypres",
+				"keypress_script"
+			],
+			[
+				"spanish",
+				"spanish_language"
+			],
+			[
+				"refer",
+				"referral_contacts"
+			],
+			[
+				"test",
+				"test_referral"
+			],
+			[
+				"javas",
+				"javascript_include_tag"
+			],
+			[
+				"style",
+				"stylesheet_link_tag"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "app/scripts/controllers/phenotype.js",
+			"settings":
+			{
+				"buffer_size": 2178,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "test/spec/controllers/phenotype.js",
+			"settings":
+			{
+				"buffer_size": 1641,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"Install",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 530.0
+	},
+	"console":
+	{
+		"height": 294.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/lvr491/Development/sophe-author/Gruntfile.js",
+		"/Users/lvr491/Library/Application Support/Sublime Text 2/Packages/User/karma.sublime-build",
+		"/Users/lvr491/Development/sophe-author/app/scripts/controllers/dashboard.js",
+		"/Users/lvr491/Development/sophe-author/app/data/phenotypes.json",
+		"/Users/lvr491/Development/sophe-author/app/scripts/app.js",
+		"/Users/lvr491/Development/sophe-author/test/spec/controllers/main.js",
+		"/Users/lvr491/Development/sophe-author/test/karma.conf.js",
+		"/Users/lvr491/Development/sophe-author/app/views/elements/qdm.html",
+		"/Users/lvr491/Development/sophe-author/test/spec/controllers/phenotype.js",
+		"/Users/lvr491/Development/sophe-author/app/scripts/controllers/about.js",
+		"/Users/lvr491/Development/sophe-author/test/spec/controllers/about.js",
+		"/Users/lvr491/Development/sophe-author/app/data/qdm-elements.json",
+		"/Users/lvr491/Development/BI/bi-client/lib/processors/helper.rb",
+		"/Users/lvr491/Development/BI/bi-client/spec/lib/processors/helper_spec.rb",
+		"/Users/lvr491/Downloads/1820OS_CodeBundle/1820OS_CodeBundle/1820OS_CodeBundle/1820OS_CodeBundle/1820OS_07_Code/05_security_module/src/security.js",
+		"/Users/lvr491/Development/BI/bi-client/lib/processors/respiratory.rb",
+		"/Users/lvr491/Development/BI/bi-client/lib/processors/cardiac.rb",
+		"/Users/lvr491/Development/BI/bi-client/lib/processors/hematology.rb",
+		"/Users/lvr491/Development/BI/bi-client/spec/lib/processors/hematology_spec.rb",
+		"/Users/lvr491/Development/BI/bi-client/spec/lib/processors/respiratory_spec.rb",
+		"/Users/lvr491/Development/BI/bi-client/app/models/observation.rb",
+		"/Users/lvr491/Development/BI/bi-client/app/views/guideline_step_observations/_details.html.haml",
+		"/Users/lvr491/Development/BI/bi-client/app/assets/stylesheets/bedside_intelligence.css.scss",
+		"/Users/lvr491/Development/BI/bi-client/spec/helpers/guideline_step_observations_helper_spec.rb",
+		"/Users/lvr491/Development/BI/bi-client/app/views/locations/_patient_guideline_details.html.haml",
+		"/Users/lvr491/Development/BI/bi-client/app/controllers/observations_controller.rb",
+		"/Users/lvr491/Development/bootstrap/alerts.less",
+		"/Users/lvr491/Development/BI/bi-client/app/views/guideline_step_observations/_header.html.haml",
+		"/Users/lvr491/Development/BI/bi-client/app/assets/javascripts/locations.js",
+		"/Users/lvr491/Development/BI/bi-client/app/helpers/patient_guideline_steps_helper.rb",
+		"/Users/lvr491/Development/BI/bi-client/app/models/guildeline_step_observation.rb",
+		"/Users/lvr491/Development/BI/bi-client/db/migrate/20140910120132_create_guideline_step_observations.rb",
+		"/Users/lvr491/Development/BI/bi-client/db/migrate/20140910120132_create_guildeline_step_observations.rb",
+		"/Users/lvr491/Development/orders_biotechlab/Genotyping_Core/seqsamples/multiseqform.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/Microarray_Core/seqsamples/multiseqform.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/ibc_equipment/seqsamples/multiseqform.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/Genomics_Core/seqsamples/multiseqform.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/CellImaging/seqsamples/multiseqform.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/murine_core/seqsamples/multiseqform.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/Monoclonal_Core/seqsamples/multiseqform.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/ibc_flow/seqsamples/multiseqform.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/PCF/seqsamples/multiseqform.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/Transgenic_Core/seqsamples/multiseqform.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/Corefacilities/seqsamples/multiseqform.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/Flow_Core/seqsamples/multiseqform.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/ibc_media/index_biotech.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/ibc_media/seqsamples/multiseqform.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/Biotech_Lab/index.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/Transgenic_Core_David/index_biotech.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/PCF/index_biotech.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/ibc_flow/index_biotech.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/corefac/CentralCodeBase/index_biotech.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/ibc_equipment/index_biotech.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/CCM/index_biotech.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/Bioinformatics_Core/index_biotech.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/Genomics_Core/index_biotech.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/Bioinformatics_Core/seqsamples/multiseqform.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/Genotyping_Core/index.cfm",
+		"/Users/lvr491/Development/orders_biotechlab/Genomics_Core/index.cfm",
+		"/Users/lvr491/Development/sophe-author/app/scripts/menu.js",
+		"/Users/lvr491/Development/sophe-author/app/scripts/kineticCanvas.js",
+		"/Users/lvr491/Development/sophe-author/bower.json",
+		"/Users/lvr491/Development/sophe-author/app/scripts/jointCanvas.js",
+		"/Users/lvr491/Development/bonnie/test/fixtures/users/bonnie.json",
+		"/Users/lvr491/Development/bonnie/config/initializers/devise.rb",
+		"/Users/lvr491/Development/bonnie/test/unit/user_test.rb",
+		"/Users/lvr491/Development/bonnie/config/deploy.rb",
+		"/Users/lvr491/Development/bonnie/config/deploy/beta.rb",
+		"/Users/lvr491/Development/bonnie/ubuntu-deployment-steps.txt",
+		"/Users/lvr491/Development/health_locator/surveys/followup_script.rb",
+		"/Users/lvr491/Development/health_locator/public/assets/application.js",
+		"/Users/lvr491/Development/health_locator/app/views/referrals/_referral_worklist.html.haml",
+		"/Users/lvr491/Development/health_locator/app/views/referrals/_research_worklist.html.haml",
+		"/Users/lvr491/Development/health_locator/app/views/referrals/_followup_worklist.html.haml",
+		"/Users/lvr491/Development/health_locator/app/views/referrals/_list.html.haml",
+		"/Users/lvr491/Development/health_locator/app/views/referrals/_referral_menu.html.haml",
+		"/Users/lvr491/Development/health_locator/app/helpers/response_sets_helper.rb",
+		"/Users/lvr491/Development/health_locator/app/views/referred_resources/index.html.haml",
+		"/Users/lvr491/Development/health_locator/app/helpers/referrals_helper.rb",
+		"/Users/lvr491/Development/health_locator/app/views/partials/_question_group.html.haml",
+		"/Users/lvr491/Development/sophe-author/bower_components/joint/package.json",
+		"/Users/lvr491/Development/sophe-author/app/scripts/canvasModule.js",
+		"/Users/lvr491/Development/sophe-author/app/styles/main.scss",
+		"/Users/lvr491/Development/sophe-author/app/scripts/controllers/main.js",
+		"/Users/lvr491/Downloads/eureka-1.9/eureka-protempa-etl/src/main/resources/eureka-dsb-schema.sql",
+		"/Users/lvr491/Downloads/eureka-1.9/docs/eureka_install_guide.adoc",
+		"/Users/lvr491/Development/emerge_data_validation/sample-data-dictionary-corrected.csv",
+		"/Users/lvr491/Development/emerge_data_validation/sample-data-file.txt",
+		"/Users/lvr491/Development/emerge_data_validation/sample-data-file-corrected.txt",
+		"/Users/lvr491/Dropbox/edx/Genomics Gets Personal/Links and References.txt",
+		"/Users/lvr491/Documents/Projects/PheMA:NQF R01/Phenotype Author Examples/i2b2/dr_cases_i2b2.xml",
+		"/Users/lvr491/Documents/Projects/PheMA:NQF R01/Phenotype Author Examples/i2b2/dr_controls_i2b2.xml",
+		"/Users/lvr491/Development/eureka-package-1.9/README",
+		"/Users/lvr491/Documents/VMs/Shared/VUMCAnonTool/data/test_data.txt",
+		"/Users/lvr491/Development/project-updates/projects/research-navigators",
+		"/Users/lvr491/Development/project-updates/projects/pathcore-bsi",
+		"/Users/lvr491/Development/project-updates/email-archives/2014-06-11",
+		"/Users/lvr491/Development/project-updates/projects/space-allocation",
+		"/Users/lvr491/Development/project-updates/projects/nu-financial-reporter",
+		"/Users/lvr491/Development/project-updates/projects/ncs-task-order-5",
+		"/Users/lvr491/Development/project-updates/projects/nbti",
+		"/Users/lvr491/Development/project-updates/projects/lattice-grid",
+		"/Users/lvr491/Development/project-updates/projects/galter-library",
+		"/Users/lvr491/Development/project-updates/projects/enotis",
+		"/Users/lvr491/Development/project-updates/projects/discerner-pathcore",
+		"/Users/lvr491/Development/project-updates/projects/crr-audiology",
+		"/Users/lvr491/Development/project-updates/projects/cro-site",
+		"/Users/lvr491/Development/project-updates/projects/abstractor",
+		"/Users/lvr491/Development/BI/bi-client/db/migrate/20140608023806_renal_guidelines_june2014.rb",
+		"/Users/lvr491/Development/BI/bi-client/app/views/flowsheets/_labs_header.html.haml",
+		"/Users/lvr491/Development/BI/bi-client/app/views/flowsheets/_labs_row.html.haml",
+		"/Users/lvr491/Development/BI/bi-client/app/views/flowsheets/_vitals_row.html.haml",
+		"/Users/lvr491/Development/emerge_data_validation/lib/validation/base_validator.rb",
+		"/Users/lvr491/Development/emerge_data_validation/spec/lib/validation/base_validator_spec.rb",
+		"/Users/lvr491/Development/BI/bi-client/app/models/patient_guideline_action.rb",
+		"/Users/lvr491/Development/BI/bi-client/app/controllers/alerts_controller.rb",
+		"/Users/lvr491/Development/BI/bi-client/app/helpers/alerts_helper.rb",
+		"/Users/lvr491/Development/BI/bi-client/db/migrate/20140522032208_update_radiology_guideline.rb",
+		"/Users/lvr491/Development/BI/bi-client/recreatedb-mac.sh",
+		"/Users/lvr491/Development/BI/bi-client/db/migrate/20140521121212_retire_old_cardiac_guidelines.rb",
+		"/Users/lvr491/Development/BI/bi-client/db/migrate/20140522032441_retire_old_respiratory_guidelines.rb",
+		"/Users/lvr491/Development/BI/bi-client/db/migrate/20140519040702_update_cardiac_guidelines.rb",
+		"/Users/lvr491/Development/BI/bi-client/app/views/locations/_patient_detail_body_loc.html.haml",
+		"/Users/lvr491/Development/BI/bi-client/spec/models/guideline_spec.rb",
+		"/Users/lvr491/Development/BI/bi-client/lib/processors/gastrointestinal.rb",
+		"/Users/lvr491/Development/BI/bi-client/lib/processors/infectious.rb",
+		"/Users/lvr491/Development/BI/bi-client/lib/processors/neurologic.rb",
+		"/Users/lvr491/Development/BI/bi-client/lib/processors/renal.rb"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			"/Users/lvr491/Development/BI/bi-client",
+			"/Users/lvr491/Development/corefac/orders_biotechlab",
+			"/Users/lvr491/Development/corefac/orders_biolab",
+			"/Users/lvr491/Downloads/Server,*.java",
+			"/Users/lvr491/Downloads/Server,*,java",
+			"/Users/lvr491/Downloads/Server",
+			"/Users/lvr491/Development/registar",
+			"/Users/lvr491/Development/BI/bi-client,*.rb",
+			"/Users/lvr491/Development/BI/bi-client/*.rb",
+			"/Users/lvr491/Development/BI/bi-client",
+			"/Users/lvr491/Development/registar",
+			"/Users/lvr491/Development/BI/bi-client",
+			"/Users/lvr491/Development/orders_biotechlab",
+			"/Users/lvr491/orders_biotechlab",
+			"/Users/lvr491/Development/bonnie",
+			"/Users/lvr491/Development/health_locator",
+			"/Users/lvr491/Development/health-data-standards-original",
+			"/Users/lvr491/Development/BI/bi-client",
+			"/Users/lvr491/Development/registar",
+			"/Users/lvr491/Development/BI/bi-client",
+			"/Users/lvr491/Development/shrine-1.13",
+			"/Users/lvr491/Development/shrine-1.1.3",
+			"/Users/lvr491/Development/BI/bi-client",
+			"/Users/lvr491/Development/nucats_membership",
+			"/Users/lvr491/Development/BI/bi-client",
+			"/Users/lvr491/Development/BI/bi-test-processor",
+			"/Users/lvr491/Development/BI/bi-client",
+			"/Users/lvr491/Development/emerge_data_validation",
+			"/Users/lvr491/Development/emerge_data_validation/db",
+			"/Users/lvr491/Development/emerge_data_validation",
+			"/Users/lvr491/Development/health_locator",
+			"/Users/lvr491/Development/nucore",
+			"/Users/lvr491/Development/nucats_membership",
+			"/Users/lvr491/Development/health_locator",
+			"/Users/luke/Development/health_locator",
+			"/Users/luke/Development/health_locator/app/assets/javascripts/surveyor",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"float_below_value_in_time_window",
+			"int_below_value_in_time_window",
+			"num_below_value_in_time_window",
+			".push",
+			"num_below_value_in_time_window",
+			"nav",
+			"ReportHandler",
+			"T_INVOIC",
+			"\"Database error\"",
+			"OracleDataSourceLookupDAO",
+			"getDataSourceLookupDAO",
+			"dataSourceName",
+			"getDataSourceLookupDAO",
+			"getLookupDataSourceFromPropertyFile",
+			"getCRCDBLookupDataSource",
+			"DS_LOOKUP_DATASOURCE_PROPERTIES",
+			"lookup.datasource",
+			"datasource",
+			"CRCDataSourceLookup",
+			"IsActiveSession",
+			"IsValidSession",
+			"format",
+			"[[",
+			"fill_in_step_details",
+			"require_account",
+			"has_many",
+			"Two readings in an hour with heart rate >100",
+			"calculate_tidal_volume",
+			"multiseq",
+			"ftp",
+			"/Users/lvr491/Development",
+			"DNA_Sample_Submission_Chicago",
+			".anvas",
+			"kinetic",
+			"bonnie@",
+			"confirmable",
+			"Email is already taken",
+			"remove_row",
+			"remove row",
+			"referred_resources_repeater",
+			"patient connected to",
+			"menu_items",
+			"remove row",
+			"paper",
+			"joint",
+			"\"",
+			"map_fn",
+			"2.16.840.1.113883.6.1",
+			"MSRPOPL",
+			"V1Parser",
+			"vdevstage",
+			".sort",
+			".ago",
+			"DateTime.",
+			"LP64598-3",
+			"height",
+			"patientguidelineaction",
+			"alic",
+			".where",
+			".include",
+			"partial_pressure_threshold_check",
+			"patch",
+			"Time.zone",
+			"require_user",
+			"logger",
+			"extract_observations",
+			":partial",
+			"get_value_for_field",
+			"Spin",
+			"KEYSTORE_ALIAS",
+			"KEYALIAS",
+			"/etc",
+			"scanner",
+			"Routing loop",
+			"dupe query",
+			"routingtable",
+			"runQueryInstance_fromQueryDefinition",
+			"startQuery",
+			"_queryRun",
+			"doQueryRun",
+			"getQueryXML",
+			"query_definition",
+			"getQueryXML",
+			"routingtable",
+			"SHRINE_IP",
+			"AdapterMappings",
+			"isSHRINE",
+			"QueryAuthorizationService",
+			"readApprovedEntries",
+			"10.0.2",
+			"Approved Query Topic",
+			"AdapterMappings",
+			"\"i2b2.\"",
+			"\"i2b2\"",
+			"AdapterMappingsTest",
+			"getProblemListForm",
+			"process_guideline_step",
+			".update_attributes(:is_",
+			"seeLocationChanges",
+			"sortPatient",
+			"Beta_",
+			"patient_detail",
+			"@context_body_system",
+			"Febrile",
+			"fill_in_step_details",
+			"[[",
+			"non in",
+			"Edit Patient Data",
+			"should not contain spaces",
+			"puts ",
+			"values_index",
+			"[:values]",
+			"Is now a good time to talk",
+			"reset_referral_start_time",
+			"current_referral_start_time",
+			"current_session_user",
+			"Thread.current[:user]",
+			"current_referral_start_time",
+			"puts \"***",
+			"session[:referral_start",
+			"current_session_user",
+			"sleep",
+			"session[",
+			"session",
+			"referral_begin",
+			"authenticity",
+			"default_contact_date_time",
+			"default_"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			".",
+			".canvas",
+			"'",
+			"ards",
+			"alic = Guideline.create(:name => \"Acute Lung Injury Concern\", :code => \"RESPIRATORY_ALIC\",\n  :organization => \"Bedside Intelligence\",\n  :url => \"\", :description => \"\", :body_system_id => 2)\nalic_step = GuidelineStep.create(:guideline_id => alic.id, :name => \"Low Pressure Ratio\", :description => \"Ratio of partial pressure of oxygen / fraction of inspired oxygen < 300\", :order => 1)\nQuestion.create(:guideline_step_id => alic_step.id, :code => \"oxygen_ratio_below_300\", :display => \"Ratio of partial pressure of oxygen / fraction of inspired oxygen < 300\", :question_type => \"choice\", :constraints => \"YesNo\")\nalic_step = GuidelineStep.create(:guideline_id => alic.id, :name => \"Confirmed chest radiograph\", :description => \"Chest radiograph confirmed as compatible with ALI diagnosis\", :order => 2)\nQuestion.create(:guideline_step_id => alic_step.id, :code => \"alic_confirmed_chest_radiograph\", :display => \"Chest radiograph is consistent with diagnosis\", :question_type => \"choice\", :constraints => \"YesNo\")\nalic_step = GuidelineStep.create(:guideline_id => alic.id, :name => \"Ventilator tidal volume to ideal body weight >= 8mL/kg\", :description => \"Ratio of ventilator tidal volume to ideal body weight >= 8 mL/kg\", :order => 3)\nQuestion.create(:guideline_step_id => alic_step.id, :code => \"alic_tidal_volume\", :display => \"Is the ratio of ventilator tidal volume to ideal body weight >= 8 mL/kg\", :question_type => \"choice\", :constraints => \"YesNo\")\nalic_step = GuidelineStep.create(:guideline_id => alic.id, :name => \"Lung protective ventilation is appropriate\", :description => \"Lung protective ventilation is appropriate\", :order => 4)\nQuestion.create(:guideline_step_id => alic_step.id, :code => \"alic_ventilation_appropriate\", :display => \"Lung protective ventilation is appropriate?\", :question_type => \"choice\", :constraints => \"YesNo\")\n",
+			"save_observation",
+			"values_column_index",
+			"",
+			"NMEDW",
+			"ContactStatus",
+			"Time.now",
+			"_contact_date",
+			"          %li ",
+			"      %td",
+			" %td ",
+			"%td ",
+			"followup",
+			"\"Sí\"",
+			"q_review_study_es",
+			"add_contact_to_object",
+			":contact_type=>'Referral'",
+			"contact_type: Referral",
+			"",
+			" contact_type: ",
+			" final: ",
+			"  name: ",
+			"  id: ",
+			"referral",
+			":context=>\"resource#",
+			"  %li ",
+			"o	",
+			"helper",
+			"@test_referral",
+			"referral",
+			"patient_his_her",
+			"patient_he_she",
+			"patient_him_her",
+			"(smoothness/images/",
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "app/scripts/controllers/phenotype.js",
+					"settings":
+					{
+						"buffer_size": 2178,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								429,
+								439
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "test/spec/controllers/phenotype.js",
+					"settings":
+					{
+						"buffer_size": 1641,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1561,
+								1561
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 304.0
+	},
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"reports_helper",
+				"app/helpers/reports_helper.rb"
+			],
+			[
+				"referrals_help",
+				"app/helpers/referrals_helper.rb"
+			],
+			[
+				"app/controllers/ref",
+				"app/controllers/referrals_controller.rb"
+			],
+			[
+				"app/views/referr",
+				"app/views/referrals/_form.html.haml"
+			],
+			[
+				"app/views/reports/",
+				"app/views/reports/patient_action_plan.html.haml"
+			],
+			[
+				"app/views",
+				"app/views/affiliations/show.html.haml"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 243.0,
+	"status_bar_visible": true
+}

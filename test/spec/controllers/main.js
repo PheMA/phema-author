@@ -3,6 +3,7 @@
 describe('Controller: MainCtrl', function () {
 
   // load the controller's module
+  beforeEach(module('ui.bootstrap'));
   beforeEach(module('sopheAuthorApp'));
 
   var MainCtrl,

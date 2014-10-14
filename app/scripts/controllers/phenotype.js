@@ -10,21 +10,27 @@
 angular.module('sopheAuthorApp')
   .controller('PhenotypeCtrl', ['$scope', '$http', '$routeParams', function ($scope, $http, $routeParams) {
     $scope.phenotype = $routeParams.id;
-    // $scope.dataElements = [
-    //     {name: "Care Experience"},
-    //     {name: "Care Goal"}
-    // ];
+
+    $http.get('data/phenotypes.json').success (function(data) {
+      $scope.phenotypes = data.sort(function(obj1, obj2) {
+        return obj1.name.localeCompare(obj2.name);
+        });
+    });
+
     $http.get('data/qdm-elements.json').success (function(data){
+      $scope.dataElements = [];
+      if (data && data.results) {
         var transformedData = [];
         var originalData = data.results.bindings;
         for (var index = 0; index < originalData.length; index++) {
-            if (originalData[index].context.value == "http://rdf.healthit.gov/qdm/element#qdm-4-1") {
+            if (originalData[index].context.value === 'http://rdf.healthit.gov/qdm/element#qdm-4-1') {
                 transformedData.push({ name: originalData[index].datatypeLabel.value} );
             }
-        };
+        }
         $scope.dataElements = transformedData.sort(function(obj1, obj2) {
             return obj1.name.localeCompare(obj2.name);
         });
+      }
     });
 
     $scope.addKineticElement = function () {
