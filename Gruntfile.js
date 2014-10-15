@@ -262,12 +262,22 @@ module.exports = function (grunt) {
     //     files: {
     //       '<%= yeoman.dist %>/scripts/scripts.js': [
     //         '<%= yeoman.dist %>/scripts/scripts.js'
-    //       ]
+    //         ]
     //     }
     //   }
     // },
+    // bower_concat: {
+    //   all: {
+    //     dest: '<%= yeoman.dist %>/scripts/bower.js'
+    //   }
+    // },
     // concat: {
-    //   dist: {}
+    //   dist: {
+    //     // the files to concatenate
+    //     src: ['<%= yeoman.app %>/scripts/**/*.js'],
+    //     // the location of the resulting JS file
+    //     dest: '<%= yeoman.dist %>/scripts/vendor.js'
+    //   }
     // },
 
     imagemin: {
@@ -345,7 +355,8 @@ module.exports = function (grunt) {
             '*.html',
             'views/{,*/}*.html',
             'images/{,*/}*.{webp}',
-            'fonts/*'
+            'fonts/*',
+            'data/*'
           ]
         }, {
           expand: true,
@@ -356,6 +367,11 @@ module.exports = function (grunt) {
           expand: true,
           cwd: '.',
           src: 'bower_components/bootstrap-sass-official/assets/fonts/bootstrap/*',
+          dest: '<%= yeoman.dist %>'
+        }, {
+          expand: true,
+          cwd: 'bower_components/font-awesome',
+          src: 'fonts/*',
           dest: '<%= yeoman.dist %>'
         }]
       },
