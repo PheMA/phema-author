@@ -92,7 +92,7 @@ angular.module('sopheAuthorApp')
       var headerOptions = {
           x: options.x, y: options.y,
           width: options.width, // Leave out height so it auto-sizes
-          fontFamily: 'Arial', fontSize: 12, fill: 'black',
+          fontFamily: 'Calibri', fontSize: 14, fill: 'black',
           text: config.element.name, align: 'center', padding: 5
       };
       var headerObj = createText(headerOptions, layer);
