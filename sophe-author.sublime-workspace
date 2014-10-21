@@ -75,7 +75,7 @@
 			"file": "app/scripts/controllers/phenotype.js",
 			"settings":
 			{
-				"buffer_size": 2178,
+				"buffer_size": 2376,
 				"line_ending": "Unix"
 			}
 		},
@@ -83,7 +83,15 @@
 			"file": "test/spec/controllers/phenotype.js",
 			"settings":
 			{
-				"buffer_size": 1641,
+				"buffer_size": 3682,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/scripts/directives/kineticCanvas.js",
+			"settings":
+			{
+				"buffer_size": 2621,
 				"line_ending": "Unix"
 			}
 		}
@@ -124,15 +132,20 @@
 	},
 	"file_history":
 	[
+		"/Users/lvr491/Development/sophe-author/bower_components/kineticjs/src/Stage.js",
+		"/Users/lvr491/Development/sophe-author/app/scripts/directives/kineticCanvas.js",
+		"/Users/lvr491/Development/sophe-author/bower_components/kineticjs/kinetic.js",
+		"/Users/lvr491/Development/sophe-author/test/karma.conf.js",
+		"/Users/lvr491/Development/sophe-author/app/views/phenotypes/edit.html",
+		"/Users/lvr491/Development/sophe-author/app/scripts/directives/droppable.js",
+		"/Users/lvr491/Development/sophe-author/test/spec/controllers/phenotype.js",
 		"/Users/lvr491/Development/sophe-author/Gruntfile.js",
 		"/Users/lvr491/Library/Application Support/Sublime Text 2/Packages/User/karma.sublime-build",
 		"/Users/lvr491/Development/sophe-author/app/scripts/controllers/dashboard.js",
 		"/Users/lvr491/Development/sophe-author/app/data/phenotypes.json",
 		"/Users/lvr491/Development/sophe-author/app/scripts/app.js",
 		"/Users/lvr491/Development/sophe-author/test/spec/controllers/main.js",
-		"/Users/lvr491/Development/sophe-author/test/karma.conf.js",
 		"/Users/lvr491/Development/sophe-author/app/views/elements/qdm.html",
-		"/Users/lvr491/Development/sophe-author/test/spec/controllers/phenotype.js",
 		"/Users/lvr491/Development/sophe-author/app/scripts/controllers/about.js",
 		"/Users/lvr491/Development/sophe-author/test/spec/controllers/about.js",
 		"/Users/lvr491/Development/sophe-author/app/data/qdm-elements.json",
@@ -246,12 +259,7 @@
 		"/Users/lvr491/Development/BI/bi-client/db/migrate/20140521121212_retire_old_cardiac_guidelines.rb",
 		"/Users/lvr491/Development/BI/bi-client/db/migrate/20140522032441_retire_old_respiratory_guidelines.rb",
 		"/Users/lvr491/Development/BI/bi-client/db/migrate/20140519040702_update_cardiac_guidelines.rb",
-		"/Users/lvr491/Development/BI/bi-client/app/views/locations/_patient_detail_body_loc.html.haml",
-		"/Users/lvr491/Development/BI/bi-client/spec/models/guideline_spec.rb",
-		"/Users/lvr491/Development/BI/bi-client/lib/processors/gastrointestinal.rb",
-		"/Users/lvr491/Development/BI/bi-client/lib/processors/infectious.rb",
-		"/Users/lvr491/Development/BI/bi-client/lib/processors/neurologic.rb",
-		"/Users/lvr491/Development/BI/bi-client/lib/processors/renal.rb"
+		"/Users/lvr491/Development/BI/bi-client/app/views/locations/_patient_detail_body_loc.html.haml"
 	],
 	"find":
 	{
@@ -259,9 +267,12 @@
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 93.0,
 		"where_history":
 		[
+			"/Users/lvr491/Development/sophe-author/",
+			"/Users/lvr491/Development/sophe-author/bower_components/kineticjs",
+			"/Users/lvr491/Development/sophe-author",
 			"/Users/lvr491/Development/BI/bi-client",
 			"/Users/lvr491/Development/corefac/orders_biotechlab",
 			"/Users/lvr491/Development/corefac/orders_biolab",
@@ -306,6 +317,15 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"kineticCanvas",
+			"link",
+			"kineticCanvas",
+			"Kinetic.document",
+			"Can not find container in document with id",
+			"canvas-details",
+			"canvasDetails",
+			"setContainer",
+			"Can not find container in document",
 			"float_below_value_in_time_window",
 			"int_below_value_in_time_window",
 			"num_below_value_in_time_window",
@@ -424,16 +444,7 @@
 			"current_session_user",
 			"Thread.current[:user]",
 			"current_referral_start_time",
-			"puts \"***",
-			"session[:referral_start",
-			"current_session_user",
-			"sleep",
-			"session[",
-			"session",
-			"referral_begin",
-			"authenticity",
-			"default_contact_date_time",
-			"default_"
+			"puts \"***"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -490,7 +501,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -498,15 +509,15 @@
 					"file": "app/scripts/controllers/phenotype.js",
 					"settings":
 					{
-						"buffer_size": 2178,
+						"buffer_size": 2376,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								429,
-								439
+								2357,
+								2357
 							]
 						],
 						"settings":
@@ -516,7 +527,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 407.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -526,15 +537,15 @@
 					"file": "test/spec/controllers/phenotype.js",
 					"settings":
 					{
-						"buffer_size": 1641,
+						"buffer_size": 3682,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1561,
-								1561
+								3614,
+								3614
 							]
 						],
 						"settings":
@@ -544,7 +555,35 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 902.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "app/scripts/directives/kineticCanvas.js",
+					"settings":
+					{
+						"buffer_size": 2621,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								408,
+								408
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 5.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

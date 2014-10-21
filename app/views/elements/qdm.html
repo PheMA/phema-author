@@ -3,6 +3,7 @@
   <ul>
     <li class="phenotype-element" draggable ng-repeat="dataElem in dataElements">
       {{dataElem.name}}
+      <input type="hidden" value="{{dataElem}}"></input>
     </li>
   </ul>
 </div>

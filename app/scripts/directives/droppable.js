@@ -60,7 +60,8 @@ angular.module('sophe.droppable', [])
           $scope.$apply(function(scope) {
             var fn = scope.drop;
             if ('undefined' !== typeof fn) {
-              fn(e);
+              var configParam = {config: {x: e.layerX, y: e.layerY, element: JSON.parse(e.dataTransfer.getData('Text')) }};
+              fn(configParam);
             }
           });
 

@@ -33,37 +33,109 @@ angular.module('sopheAuthorApp')
       }
     });
 
-    $scope.addKineticElement = function () {
-        var layer = new Kinetic.Layer();
-        var rectX = $scope.canvasDetails.kineticStageObj.getWidth() / 2 - 50;
-        var rectY = $scope.canvasDetails.kineticStageObj.getHeight() / 2 - 25;
+    function addCursorStyles(kineticObj) {
+      // add cursor styling
+      kineticObj.on('mouseover', function () {
+          document.body.style.cursor = 'pointer';
+      });
+      kineticObj.on('mouseout', function () {
+          document.body.style.cursor = 'default';
+          $scope.$emit('CANVAS-MOUSEOUT');
+      });
+    }
 
-        //if kineticObj is null, init
-        var options = {
-            x: rectX,
-            y: rectY,
-            width: 100,
-            height: 50,
-            fill: '#00D2FF',
-            stroke: 'black',
-            strokeWidth: 4,
-        };
-        if ($scope.canvasDetails.isdraggable) {
-            options.draggable = true;
-        }
+    function createText(options, layer) {
+      if ('undefined' === typeof options.text || '' === options.text) {
+        options.text = 'New Item';
+      }
 
-        var kineticObj = new Kinetic.Rect(options);
+      var kineticObj = new Kinetic.Text(options);
+      addCursorStyles(kineticObj);
+      layer.add(kineticObj);
+      return kineticObj;
+    }
 
-        // add cursor styling
-        kineticObj.on('mouseover', function () {
-            document.body.style.cursor = 'pointer';
-        });
-        kineticObj.on('mouseout', function () {
-            document.body.style.cursor = 'default';
-            $scope.$emit('CANVAS-MOUSEOUT');
-        });
+    function createRectangle(options, layer) {
+      var kineticObj = new Kinetic.Rect(options);
+      addCursorStyles(kineticObj);
+      layer.add(kineticObj);
+      return kineticObj;
+    }
 
-        layer.add(kineticObj);
-        $scope.canvasDetails.kineticStageObj.add(layer);
+    function createCircle(options, layer) {
+      var kineticObj = new Kinetic.Circle(options);
+      addCursorStyles(kineticObj);
+      layer.add(kineticObj);
+      return kineticObj;
+    }
+
+    // config object:
+    //   x
+    //   y
+    //   element
+    $scope.addWorkflowObject = function (config) {
+      // If there is no canvas to add to, we are done here
+      if('undefined' === typeof $scope.canvasDetails) {
+          return null;
+      }
+
+      var options = {
+          x: (config ? config.x : 50), y: (config ? config.y : 50),
+          width: 175, height: 200,
+          fill: '#EEE2EF',
+          stroke: 'black', strokeWidth: 1
+      };
+
+      var layer = new Kinetic.Layer({draggable: true});
+      var workflowObj = createRectangle(options, layer);
+
+      var headerOptions = {
+          x: options.x, y: options.y,
+          width: options.width, // Leave out height so it auto-sizes
+          fontFamily: 'Arial', fontSize: 12, fill: 'black',
+          text: config.element.name, align: 'center', padding: 5
+      };
+      var headerObj = createText(headerOptions, layer);
+
+      var termDropOptions = {
+        x: options.x + 10, y: headerObj.height() + headerOptions.y + 5,
+        width: options.width - 20, height: 75,
+        fill: '#EEEEEE',
+        stroke: '#CCCCCC', strokeWidth: 1
+      };
+      var termObj = createRectangle(termDropOptions, layer);
+
+      var configOptions = {
+        x: termDropOptions.x, y: termObj.height() + termDropOptions.y + 5,
+        width: termDropOptions.width, height: termDropOptions.height,
+        fill: '#EEEEEE',
+        stroke: '#CCCCCC', strokeWidth: 1
+      };
+      var configObj = createRectangle(configOptions, layer);
+
+
+      // Resize the main container to ensure consistent spacing regardless of the
+      // height of internal components.
+      workflowObj.setHeight(configObj.getY() + configObj.getHeight() - options.y + 10);
+
+      var leftConnectOptions = {
+        x: options.x, y: options.y + (workflowObj.getHeight() / 2),
+        width: 15, height: 15,
+        fill: 'white',
+        stroke: 'black', strokeWidth: 1
+      };
+      createCircle(leftConnectOptions, layer);
+
+      var rightConnectOptions = {
+        x: options.x + options.width, y: options.y + (workflowObj.getHeight() / 2),
+        width: 15, height: 15,
+        fill: 'white',
+        stroke: 'black', strokeWidth: 1
+      };
+      createCircle(rightConnectOptions, layer);
+
+      $scope.canvasDetails.kineticStageObj.add(layer);
+
+      return workflowObject;
     };
   }]);
