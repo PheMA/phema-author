@@ -33,6 +33,36 @@ angular.module('sopheAuthorApp')
       }
     });
 
+    function addConnectionHandler(kineticObj) {
+      // kineticObj.on('mousedown', function (e) {
+      //   if (e.target.parent.connectionStatus === 'drawing') {
+      //     e.target.parent.connectionStatus = undefined;
+      //     e.target.parent.activeLine = undefined;
+      //   }
+      //   else {
+      //     var line = new Kinetic.Line({
+      //       x: e.target.getX(),
+      //       y: e.target.getY(),
+      //       points: [0, 0],
+      //       stroke: 'black'
+      //     });
+      //     e.target.parent.add(line);
+      //     e.target.parent.connectionStatus = 'drawing';
+      //     e.target.parent.activeLine = line;
+      //     e.target.parent.draw();
+      //   }
+      // });
+
+      // kineticObj.parent.on('mousemove', function(e) {
+      //   if (e.target.parent.connectionStatus === 'drawing') {
+      //     var line = e.target.parent.activeLine;
+      //     var layer = e.target.parent;
+      //     line.points([0, 0, e.evt.layerX - line.getX(), e.evt.layerY - line.getY()]);
+      //     layer.draw();
+      //   }
+      // });
+    }
+
     function addCursorStyles(kineticObj) {
       // add cursor styling
       kineticObj.on('mouseover', function () {
@@ -41,6 +71,17 @@ angular.module('sopheAuthorApp')
       kineticObj.on('mouseout', function () {
           document.body.style.cursor = 'default';
           $scope.$emit('CANVAS-MOUSEOUT');
+      });
+    }
+
+    function addOutlineStyles(kineticObj) {
+      kineticObj.on('mouseover', function (e) {
+          e.target.setStrokeWidth(3);
+          e.target.parent.draw();
+      });
+      kineticObj.on('mouseout', function (e) {
+          e.target.setStrokeWidth(1);
+          e.target.parent.draw();
       });
     }
 
@@ -82,7 +123,7 @@ angular.module('sopheAuthorApp')
       var options = {
           x: (config ? config.x : 50), y: (config ? config.y : 50),
           width: 175, height: 200,
-          fill: '#EEE2EF',
+          fill: '#dbeef4',
           stroke: 'black', strokeWidth: 1
       };
 
@@ -93,7 +134,8 @@ angular.module('sopheAuthorApp')
           x: options.x, y: options.y,
           width: options.width, // Leave out height so it auto-sizes
           fontFamily: 'Calibri', fontSize: 14, fill: 'black',
-          text: config.element.name, align: 'center', padding: 5
+          text: config.element.name,
+          align: 'center', padding: 5
       };
       var headerObj = createText(headerOptions, layer);
 
@@ -104,6 +146,14 @@ angular.module('sopheAuthorApp')
         stroke: '#CCCCCC', strokeWidth: 1
       };
       var termObj = createRectangle(termDropOptions, layer);
+      var termTextOptions = {
+        x: termDropOptions.x, y: termDropOptions.y,
+        width: termObj.width(), height: termObj.height(),
+        fontFamily: 'Calibri', fontSize: 14, fill: 'gray',
+        text: 'Drag and drop clinical terms or value sets here, or search for terms',
+        align: 'center', padding: 5
+      };
+      createText(termTextOptions, layer);
 
       var configOptions = {
         x: termDropOptions.x, y: termObj.height() + termDropOptions.y + 5,
@@ -124,7 +174,9 @@ angular.module('sopheAuthorApp')
         fill: 'white',
         stroke: 'black', strokeWidth: 1
       };
-      createCircle(leftConnectOptions, layer);
+      var leftObj = createCircle(leftConnectOptions, layer);
+      addOutlineStyles(leftObj);
+      addConnectionHandler(leftObj);
 
       var rightConnectOptions = {
         x: options.x + options.width, y: options.y + (workflowObj.getHeight() / 2),
@@ -132,10 +184,12 @@ angular.module('sopheAuthorApp')
         fill: 'white',
         stroke: 'black', strokeWidth: 1
       };
-      createCircle(rightConnectOptions, layer);
+      var rightObj = createCircle(rightConnectOptions, layer);
+      addOutlineStyles(rightObj);
+      addConnectionHandler(rightObj);
 
       $scope.canvasDetails.kineticStageObj.add(layer);
 
-      return workflowObject;
+      return workflowObj;
     };
   }]);
