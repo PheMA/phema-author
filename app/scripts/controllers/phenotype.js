@@ -33,8 +33,41 @@ angular.module('sopheAuthorApp')
       }
     });
 
+    //$scope.connectionStatus = '';
+
     function addConnectionHandler(kineticObj) {
-      // kineticObj.on('mousedown', function (e) {
+      var stage = $scope.canvasDetails.kineticStageObj;
+      kineticObj.on('mouseup', function (e) {
+        if (stage.connectionStatus === 'drawing') {
+          stage.connectionStatus = undefined;
+          stage.activeLine = undefined;
+          e.target.getLayer().draggable(true);
+        }
+      });
+
+      kineticObj.on('mousedown', function (e) {
+        if (stage.connectionStatus === 'drawing') {
+          stage.connectionStatus = undefined;
+          stage.activeLine = undefined;
+          e.target.getLayer().draggable(true);
+        }
+        else {
+          var layer = new Kinetic.Layer({draggable: true});
+          var line = new Kinetic.Line({
+            x: stage.getPointerPosition().x,
+            y: stage.getPointerPosition().y,
+            points: [0, 0],
+            stroke: 'black', strokeWidth: 1
+           });
+           layer.add(line);
+           stage.add(layer);
+           layer.setZIndex(999);  // Should be on top
+           stage.connectionStatus = 'drawing';
+           stage.activeLine = line;
+           line.parent.draw();
+           e.target.getLayer().draggable(false);
+        }
+      });
       //   if (e.target.parent.connectionStatus === 'drawing') {
       //     e.target.parent.connectionStatus = undefined;
       //     e.target.parent.activeLine = undefined;
