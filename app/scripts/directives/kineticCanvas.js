@@ -51,23 +51,11 @@
                     backgroundLayer.draw();
 
                     background.on('mousemove', function(evt) {
-                      if (stage.connectionStatus === 'drawing') {
-                        updateActiveLineLocation(stage, evt);
-                      }
+                      updateActiveLineLocation(stage, evt);
                     });
 
                     background.on('mouseup', function(evt) {
-                      if (stage.connectionStatus === 'drawing') {
-                        // We didn't end the connection at a drop point, so delete the line we were drawing
-                        // var layer = stage.activeLine.parent;
-                        // layer.destroyChildren();
-                        // layer.destroy();
-                        // stage.connectionAnchor.getLayer().draggable(true);
-                        // stage.connectionAnchor = undefined;
-                        // stage.connectionStatus = undefined;
-                        // stage.activeLine = undefined;
-                        endConnector(stage, undefined);
-                      }
+                      endConnector(stage, undefined);
                     });
                 }
             }

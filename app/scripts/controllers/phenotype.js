@@ -41,49 +41,13 @@ angular.module('sopheAuthorApp')
       var stage = $scope.canvasDetails.kineticStageObj;
       kineticObj.on('mouseup', function (e) {
         endConnector(stage, e.target);
-        // if (stage.connectionStatus === 'drawing') {
-        //   if (stage.connectionAnchor === e.target) {
-        //     var layer = stage.activeLine.parent;
-        //     layer.destroyChildren();
-        //     layer.destroy();
-        //   }
-        //   stage.connectionAnchor.getLayer().draggable(true);
-        //   stage.connectionAnchor = undefined;
-        //   stage.connectionStatus = undefined;
-        //   stage.activeLine = undefined;
-        //}
       });
       kineticObj.on('mousemove', function(evt) {
-        if (stage.connectionStatus === 'drawing') {
-          updateActiveLineLocation(stage, evt);
-        }
+        updateActiveLineLocation(stage, evt);
       });
       kineticObj.on('mousedown', function (e) {
-        if (stage.connectionStatus === 'drawing') {
-          endConnector(stage, undefined);
-          // stage.connectionAnchor.getLayer().draggable(true);
-          // stage.connectionAnchor = undefined;
-          // stage.connectionStatus = undefined;
-          // stage.activeLine = undefined;
-        }
-        else {
-          startConnector(stage, e.target);
-          // var layer = new Kinetic.Layer({draggable: true});
-          // var line = new Kinetic.Line({
-          //   x: stage.getPointerPosition().x,
-          //   y: stage.getPointerPosition().y,
-          //   points: [0, 0],
-          //   stroke: 'black', strokeWidth: 1
-          // });
-          // layer.add(line);
-          // stage.add(layer);
-          // layer.setZIndex(999);  // Should be on top
-          // stage.connectionStatus = 'drawing';
-          // stage.activeLine = line;
-          // line.parent.draw();
-          // stage.connectionAnchor = e.target;
-          // e.target.getLayer().draggable(false);
-        }
+        endConnector(stage, undefined);  // Make sure it's not carrying over from before
+        startConnector(stage, e.target);
       });
     }
 
@@ -93,17 +57,7 @@ angular.module('sopheAuthorApp')
         updateActiveLineLocation(stage, evt);
       });
       kineticObj.on('mouseup', function(evt) {
-        if (stage.connectionStatus === 'drawing') {
-          // We didn't end the connection at a drop point, so delete the line we were drawing
-          // var layer = stage.activeLine.parent;
-          // layer.destroyChildren();
-          // layer.destroy();
-          // stage.connectionStatus = undefined;
-          // stage.activeLine = undefined;
-          // stage.connectionAnchor.getLayer().draggable(true);
-          // stage.connectionAnchor = undefined;
-          endConnector(stage, undefined);
-        }
+        endConnector(stage, undefined);
       });
     }
 
