@@ -1,15 +1,10 @@
+/* global Kinetic */
+
 (function() {
     'use strict';
     angular.module('sophe.kinetic', [])
     .directive('kineticCanvas', ['$rootScope',
     function canvasDirective ($rootScope) {
-        function updateActiveLineLocation(stage, evt) {
-          var x = evt.evt.layerX;
-          var y = evt.evt.layerY;
-          stage.activeLine.points([0, 0, x - stage.activeLine.getX(), y - stage.activeLine.getY()]);
-          stage.activeLine.parent.drawScene();
-        }
-
         return {
             restrict: 'A',
             scope: {
@@ -64,11 +59,14 @@
                     background.on('mouseup', function(evt) {
                       if (stage.connectionStatus === 'drawing') {
                         // We didn't end the connection at a drop point, so delete the line we were drawing
-                        var layer = stage.activeLine.parent;
-                        layer.destroyChildren();
-                        layer.destroy();
-                        stage.connectionStatus = undefined;
-                        stage.activeLine = undefined;
+                        // var layer = stage.activeLine.parent;
+                        // layer.destroyChildren();
+                        // layer.destroy();
+                        // stage.connectionAnchor.getLayer().draggable(true);
+                        // stage.connectionAnchor = undefined;
+                        // stage.connectionStatus = undefined;
+                        // stage.activeLine = undefined;
+                        endConnector(stage, undefined);
                       }
                     });
                 }

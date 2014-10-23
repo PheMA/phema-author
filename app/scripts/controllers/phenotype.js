@@ -1,3 +1,5 @@
+/* global Kinetic */
+
 'use strict';
 
 /**
@@ -38,62 +40,71 @@ angular.module('sopheAuthorApp')
     function addConnectionHandler(kineticObj) {
       var stage = $scope.canvasDetails.kineticStageObj;
       kineticObj.on('mouseup', function (e) {
+        endConnector(stage, e.target);
+        // if (stage.connectionStatus === 'drawing') {
+        //   if (stage.connectionAnchor === e.target) {
+        //     var layer = stage.activeLine.parent;
+        //     layer.destroyChildren();
+        //     layer.destroy();
+        //   }
+        //   stage.connectionAnchor.getLayer().draggable(true);
+        //   stage.connectionAnchor = undefined;
+        //   stage.connectionStatus = undefined;
+        //   stage.activeLine = undefined;
+        //}
+      });
+      kineticObj.on('mousemove', function(evt) {
         if (stage.connectionStatus === 'drawing') {
-          stage.connectionStatus = undefined;
-          stage.activeLine = undefined;
-          e.target.getLayer().draggable(true);
+          updateActiveLineLocation(stage, evt);
         }
       });
-
       kineticObj.on('mousedown', function (e) {
         if (stage.connectionStatus === 'drawing') {
-          stage.connectionStatus = undefined;
-          stage.activeLine = undefined;
-          e.target.getLayer().draggable(true);
+          endConnector(stage, undefined);
+          // stage.connectionAnchor.getLayer().draggable(true);
+          // stage.connectionAnchor = undefined;
+          // stage.connectionStatus = undefined;
+          // stage.activeLine = undefined;
         }
         else {
-          var layer = new Kinetic.Layer({draggable: true});
-          var line = new Kinetic.Line({
-            x: stage.getPointerPosition().x,
-            y: stage.getPointerPosition().y,
-            points: [0, 0],
-            stroke: 'black', strokeWidth: 1
-           });
-           layer.add(line);
-           stage.add(layer);
-           layer.setZIndex(999);  // Should be on top
-           stage.connectionStatus = 'drawing';
-           stage.activeLine = line;
-           line.parent.draw();
-           e.target.getLayer().draggable(false);
+          startConnector(stage, e.target);
+          // var layer = new Kinetic.Layer({draggable: true});
+          // var line = new Kinetic.Line({
+          //   x: stage.getPointerPosition().x,
+          //   y: stage.getPointerPosition().y,
+          //   points: [0, 0],
+          //   stroke: 'black', strokeWidth: 1
+          // });
+          // layer.add(line);
+          // stage.add(layer);
+          // layer.setZIndex(999);  // Should be on top
+          // stage.connectionStatus = 'drawing';
+          // stage.activeLine = line;
+          // line.parent.draw();
+          // stage.connectionAnchor = e.target;
+          // e.target.getLayer().draggable(false);
         }
       });
-      //   if (e.target.parent.connectionStatus === 'drawing') {
-      //     e.target.parent.connectionStatus = undefined;
-      //     e.target.parent.activeLine = undefined;
-      //   }
-      //   else {
-      //     var line = new Kinetic.Line({
-      //       x: e.target.getX(),
-      //       y: e.target.getY(),
-      //       points: [0, 0],
-      //       stroke: 'black'
-      //     });
-      //     e.target.parent.add(line);
-      //     e.target.parent.connectionStatus = 'drawing';
-      //     e.target.parent.activeLine = line;
-      //     e.target.parent.draw();
-      //   }
-      // });
+    }
 
-      // kineticObj.parent.on('mousemove', function(e) {
-      //   if (e.target.parent.connectionStatus === 'drawing') {
-      //     var line = e.target.parent.activeLine;
-      //     var layer = e.target.parent;
-      //     line.points([0, 0, e.evt.layerX - line.getX(), e.evt.layerY - line.getY()]);
-      //     layer.draw();
-      //   }
-      // });
+    function addStandardEventHandlers(kineticObj) {
+      var stage = $scope.canvasDetails.kineticStageObj;
+      kineticObj.on('mousemove', function(evt) {
+        updateActiveLineLocation(stage, evt);
+      });
+      kineticObj.on('mouseup', function(evt) {
+        if (stage.connectionStatus === 'drawing') {
+          // We didn't end the connection at a drop point, so delete the line we were drawing
+          // var layer = stage.activeLine.parent;
+          // layer.destroyChildren();
+          // layer.destroy();
+          // stage.connectionStatus = undefined;
+          // stage.activeLine = undefined;
+          // stage.connectionAnchor.getLayer().draggable(true);
+          // stage.connectionAnchor = undefined;
+          endConnector(stage, undefined);
+        }
+      });
     }
 
     function addCursorStyles(kineticObj) {
@@ -110,11 +121,11 @@ angular.module('sopheAuthorApp')
     function addOutlineStyles(kineticObj) {
       kineticObj.on('mouseover', function (e) {
           e.target.setStrokeWidth(3);
-          e.target.parent.draw();
+          e.target.getLayer().draw();
       });
       kineticObj.on('mouseout', function (e) {
           e.target.setStrokeWidth(1);
-          e.target.parent.draw();
+          e.target.getLayer().draw();
       });
     }
 
@@ -125,6 +136,7 @@ angular.module('sopheAuthorApp')
 
       var kineticObj = new Kinetic.Text(options);
       addCursorStyles(kineticObj);
+      addStandardEventHandlers(kineticObj);
       layer.add(kineticObj);
       return kineticObj;
     }
@@ -132,6 +144,7 @@ angular.module('sopheAuthorApp')
     function createRectangle(options, layer) {
       var kineticObj = new Kinetic.Rect(options);
       addCursorStyles(kineticObj);
+      addStandardEventHandlers(kineticObj);
       layer.add(kineticObj);
       return kineticObj;
     }
