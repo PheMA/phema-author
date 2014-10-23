@@ -35,8 +35,6 @@ angular.module('sopheAuthorApp')
       }
     });
 
-    //$scope.connectionStatus = '';
-
     function addConnectionHandler(kineticObj) {
       var stage = $scope.canvasDetails.kineticStageObj;
       kineticObj.on('mouseup', function (e) {

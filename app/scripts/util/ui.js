@@ -6,6 +6,27 @@ function updateActiveLineLocation(stage, evt) {
     var x = evt.evt.layerX;
     var y = evt.evt.layerY;
     stage.activeLine.points([0, 0, x - stage.activeLine.getX(), y - stage.activeLine.getY()]);
+
+    // Arrow head: http://jsfiddle.net/cmcculloh/M56w4/
+    var fromx = 0;
+    var fromy = 0;
+    var tox = x - stage.activeLine.getX();
+    var toy = y - stage.activeLine.getY();
+    var headlen = 10;
+    var angle = Math.atan2(toy-fromy,tox-fromx);
+    stage.activeLine.points(
+      [fromx,
+       fromy,
+       tox,
+       toy,
+       tox-headlen*Math.cos(angle-Math.PI/6),
+       toy-headlen*Math.sin(angle-Math.PI/6),
+       tox,
+       toy,
+       tox-headlen*Math.cos(angle+Math.PI/6),
+       toy-headlen*Math.sin(angle+Math.PI/6)]
+    );
+
     stage.activeLine.parent.drawScene();
   }
 }
