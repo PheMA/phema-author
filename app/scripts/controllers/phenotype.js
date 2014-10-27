@@ -73,15 +73,15 @@ angular.module('sopheAuthorApp')
     function addOutlineStyles(kineticObj) {
       kineticObj.on('mouseover', function (e) {
           e.target.setStrokeWidth(3);
-          e.target.getLayer().draw();
+          e.target.getParent().draw();
       });
       kineticObj.on('mouseout', function (e) {
           e.target.setStrokeWidth(1);
-          e.target.getLayer().draw();
+          e.target.getParent().draw();
       });
     }
 
-    function createText(options, layer) {
+    function createText(options, group) {
       if ('undefined' === typeof options.text || '' === options.text) {
         options.text = 'New Item';
       }
@@ -89,22 +89,22 @@ angular.module('sopheAuthorApp')
       var kineticObj = new Kinetic.Text(options);
       addCursorStyles(kineticObj);
       addStandardEventHandlers(kineticObj);
-      layer.add(kineticObj);
+      group.add(kineticObj);
       return kineticObj;
     }
 
-    function createRectangle(options, layer) {
+    function createRectangle(options, group) {
       var kineticObj = new Kinetic.Rect(options);
-      addCursorStyles(kineticObj);
+      //addCursorStyles(kineticObj);
       addStandardEventHandlers(kineticObj);
-      layer.add(kineticObj);
+      group.add(kineticObj);
       return kineticObj;
     }
 
-    function createCircle(options, layer) {
+    function createCircle(options, group) {
       var kineticObj = new Kinetic.Circle(options);
       addCursorStyles(kineticObj);
-      layer.add(kineticObj);
+      group.add(kineticObj);
       return kineticObj;
     }
 
@@ -119,14 +119,15 @@ angular.module('sopheAuthorApp')
       }
 
       var options = {
-          x: (config ? config.x : 50), y: (config ? config.y : 50),
+          x: ((config && config.x) ? config.x : 50), y: ((config && config.y) ? config.y : 50),
           width: 175, height: 200,
           fill: '#dbeef4',
           stroke: 'black', strokeWidth: 1
       };
 
-      var layer = new Kinetic.Layer({draggable: true});
-      var workflowObj = createRectangle(options, layer);
+      var group = new Kinetic.Group({draggable: true});
+      addCursorStyles(group);
+      var workflowObj = createRectangle(options, group);
 
       var headerOptions = {
           x: options.x, y: options.y,
@@ -135,7 +136,7 @@ angular.module('sopheAuthorApp')
           text: config.element.name,
           align: 'center', padding: 5
       };
-      var headerObj = createText(headerOptions, layer);
+      var headerObj = createText(headerOptions, group);
 
       var termDropOptions = {
         x: options.x + 10, y: headerObj.height() + headerOptions.y + 5,
@@ -143,7 +144,7 @@ angular.module('sopheAuthorApp')
         fill: '#EEEEEE',
         stroke: '#CCCCCC', strokeWidth: 1
       };
-      var termObj = createRectangle(termDropOptions, layer);
+      var termObj = createRectangle(termDropOptions, group);
       var termTextOptions = {
         x: termDropOptions.x, y: termDropOptions.y,
         width: termObj.width(), height: termObj.height(),
@@ -151,7 +152,7 @@ angular.module('sopheAuthorApp')
         text: 'Drag and drop clinical terms or value sets here, or search for terms',
         align: 'center', padding: 5
       };
-      createText(termTextOptions, layer);
+      createText(termTextOptions, group);
 
       var configOptions = {
         x: termDropOptions.x, y: termObj.height() + termDropOptions.y + 5,
@@ -159,7 +160,7 @@ angular.module('sopheAuthorApp')
         fill: '#EEEEEE',
         stroke: '#CCCCCC', strokeWidth: 1
       };
-      var configObj = createRectangle(configOptions, layer);
+      var configObj = createRectangle(configOptions, group);
 
 
       // Resize the main container to ensure consistent spacing regardless of the
@@ -172,7 +173,7 @@ angular.module('sopheAuthorApp')
         fill: 'white',
         stroke: 'black', strokeWidth: 1
       };
-      var leftObj = createCircle(leftConnectOptions, layer);
+      var leftObj = createCircle(leftConnectOptions, group);
       addOutlineStyles(leftObj);
       addConnectionHandler(leftObj);
 
@@ -182,11 +183,12 @@ angular.module('sopheAuthorApp')
         fill: 'white',
         stroke: 'black', strokeWidth: 1
       };
-      var rightObj = createCircle(rightConnectOptions, layer);
+      var rightObj = createCircle(rightConnectOptions, group);
       addOutlineStyles(rightObj);
       addConnectionHandler(rightObj);
 
-      $scope.canvasDetails.kineticStageObj.add(layer);
+      $scope.canvasDetails.kineticStageObj.find('#mainLayer').add(group);
+      $scope.canvasDetails.kineticStageObj.find('#mainLayer').draw();
 
       return workflowObj;
     };

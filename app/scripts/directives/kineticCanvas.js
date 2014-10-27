@@ -34,9 +34,11 @@
 
                     // Set up a rectangle on its own layer, which will listen for mouse events for us.
                     var stage = scope.canvasDetails.kineticStageObj;
-                    var backgroundLayer = new Kinetic.Layer();
+                    var backgroundLayer = new Kinetic.Layer({id: 'backgroundLayer', draggable: false});
                     stage.add(backgroundLayer);
                     stage.backgroundLayer = backgroundLayer;
+                    var mainLayer = new Kinetic.Layer({id: 'mainLayer'});
+                    stage.add(mainLayer);
 
                     var background = new Kinetic.Rect({
                       x: 0,
