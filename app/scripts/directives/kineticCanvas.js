@@ -27,6 +27,7 @@
                             width: 600,
                             height: 400
                         });
+                        scope.canvasDetails.kineticStageObj.connector = {};
                     }
                     if (!scope.canvasDetails.kineticStageObj.container) {
                         scope.canvasDetails.kineticStageObj.attrs.container = id;

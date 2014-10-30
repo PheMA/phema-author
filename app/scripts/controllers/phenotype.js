@@ -87,7 +87,7 @@ angular.module('sopheAuthorApp')
       }
 
       var kineticObj = new Kinetic.Text(options);
-      addCursorStyles(kineticObj);
+      //addCursorStyles(kineticObj);
       addStandardEventHandlers(kineticObj);
       group.add(kineticObj);
       return kineticObj;
@@ -103,7 +103,7 @@ angular.module('sopheAuthorApp')
 
     function createCircle(options, group) {
       var kineticObj = new Kinetic.Circle(options);
-      addCursorStyles(kineticObj);
+      //addCursorStyles(kineticObj);
       group.add(kineticObj);
       return kineticObj;
     }
@@ -128,6 +128,29 @@ angular.module('sopheAuthorApp')
       var group = new Kinetic.Group({draggable: true});
       addCursorStyles(group);
       var workflowObj = createRectangle(options, group);
+      group.on('dragmove', function(e) {
+        // e.target is assumed to be a Group
+        if (e.target.nodeType !== 'Group') {
+          console.error('Unsupported object' + e.target);
+          return;
+        }
+
+        // For the element we are moving, redraw all connection lines
+        var connector = e.target.find('.rightConnector')[0];
+        var stage = group.getStage();
+        var i = 0;
+        for (i = connector.connections.length - 1; i >= 0; i--) {
+          var line = connector.connections[i];
+          var startPos = {x: line.getPoints()[0], y: line.getPoints()[1]};
+          var endPos = {x: line.getPoints()[2], y: line.getPoints()[3]};
+          line.setX(e.evt.layerX);
+          line.setY(e.evt.layerY);
+          console.log(line.getX() + ' ' + line.getY());
+          console.log(e.evt);
+          changeLineEndpoints(stage, line, startPos, endPos);
+        };
+        stage.draw();
+      });
 
       var headerOptions = {
           x: options.x, y: options.y,
@@ -170,25 +193,28 @@ angular.module('sopheAuthorApp')
       var leftConnectOptions = {
         x: options.x, y: options.y + (workflowObj.getHeight() / 2),
         width: 15, height: 15,
-        fill: 'white',
+        fill: 'white', name: 'leftConnector',
         stroke: 'black', strokeWidth: 1
       };
       var leftObj = createCircle(leftConnectOptions, group);
       addOutlineStyles(leftObj);
       addConnectionHandler(leftObj);
+      leftObj.connections = [];
 
       var rightConnectOptions = {
         x: options.x + options.width, y: options.y + (workflowObj.getHeight() / 2),
         width: 15, height: 15,
-        fill: 'white',
+        fill: 'white', name: 'rightConnector',
         stroke: 'black', strokeWidth: 1
       };
       var rightObj = createCircle(rightConnectOptions, group);
       addOutlineStyles(rightObj);
       addConnectionHandler(rightObj);
+      rightObj.connections = [];
 
-      $scope.canvasDetails.kineticStageObj.find('#mainLayer').add(group);
-      $scope.canvasDetails.kineticStageObj.find('#mainLayer').draw();
+      var mainLayer = $scope.canvasDetails.kineticStageObj.find('#mainLayer');
+      mainLayer.add(group);
+      mainLayer.draw();
 
       return workflowObj;
     };

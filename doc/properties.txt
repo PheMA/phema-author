@@ -1,0 +1,22 @@
+KineticCanvas
+  canvasDetails {
+    isdraggable       bool
+    kineticStageObj {
+      connector {
+        status          '' or 'drawing'
+        anchor          Kinetic.Circle that is the starting endpoint
+        line            Kinetic.Line that is being drawn
+      }
+    }
+  }
+
+Circle : Connector  (considered a special type of Kinetic.Circle)  {
+  connections []      All Kinetic.Line objects connected here
+}
+
+Line : Connection   (considered a special type of Kinetic.Line) {
+  connector {
+    start             Kinetic.Circle that we are drawn from (non-arrow end)
+    end               Kinetic.Circle that we are drawn to (arrow end)
+  }
+}
