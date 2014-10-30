@@ -61,7 +61,7 @@ function changeLineEndpoints(stage, line, startPos, endPos) {
 }
 
 function startConnector(stage, connectorObj) {
-  var group = new Kinetic.Group({draggable: true});
+  //var group = new Kinetic.Group({draggable: true});
   var line = new Kinetic.Line({
     x: stage.getPointerPosition().x,
     y: stage.getPointerPosition().y,
@@ -71,9 +71,11 @@ function startConnector(stage, connectorObj) {
   line.connectors = {};
   line.connectors.start = connectorObj;
 
-  group.add(line);
-  stage.find('#mainLayer').add(group);
-  group.setZIndex(999);  // Should be on top
+  //group.add(line);
+  //stage.find('#mainLayer').add(group);
+  stage.find('#mainLayer').add(line);
+  //group.setZIndex(999);  // Should be on top
+  line.setZIndex(999);  // Should be on top
   stage.connector.status = 'drawing';
   stage.connector.line = line;
   line.parent.draw();

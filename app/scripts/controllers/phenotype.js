@@ -141,13 +141,17 @@ angular.module('sopheAuthorApp')
         var i = 0;
         for (i = connector.connections.length - 1; i >= 0; i--) {
           var line = connector.connections[i];
-          var startPos = {x: line.getPoints()[0], y: line.getPoints()[1]};
-          var endPos = {x: line.getPoints()[2], y: line.getPoints()[3]};
-          line.setX(e.evt.layerX);
-          line.setY(e.evt.layerY);
-          console.log(line.getX() + ' ' + line.getY());
-          console.log(e.evt);
-          changeLineEndpoints(stage, line, startPos, endPos);
+          if (line.connectors.start === connector) {
+            line.setAbsolutePosition(connector.getAbsolutePosition());
+            var startPos = {x: line.getPoints()[0], y: line.getPoints()[1]};
+            var endPos = {
+              x: line.connectors.end.getAbsolutePosition().x - line.connectors.start.getAbsolutePosition().x,
+              y: line.connectors.end.getAbsolutePosition().y - line.connectors.start.getAbsolutePosition().y,
+            };
+            changeLineEndpoints(stage, line, startPos, endPos);
+          }
+          else {
+          }
         };
         stage.draw();
       });
