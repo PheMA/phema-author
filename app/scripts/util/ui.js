@@ -34,6 +34,18 @@ function updateActiveLineLocation(stage, evt) {
   }
 }
 
+
+function addOutlineStyles(kineticObj) {
+  kineticObj.on('mouseover', function (e) {
+      e.target.setStrokeWidth(3);
+      e.target.getParent().draw();
+  });
+  kineticObj.on('mouseout', function (e) {
+      e.target.setStrokeWidth(1);
+      e.target.getParent().draw();
+  });
+}
+
 function changeLineEndpoints(stage, line, startPos, endPos) {
   var x = endPos.x;
   var y = endPos.y;
@@ -70,6 +82,7 @@ function startConnector(stage, connectorObj) {
   });
   line.connectors = {};
   line.connectors.start = connectorObj;
+  addOutlineStyles(line);
 
   //group.add(line);
   //stage.find('#mainLayer').add(group);

@@ -54,7 +54,7 @@ angular.module('sopheAuthorApp')
       kineticObj.on('mousemove', function(evt) {
         updateActiveLineLocation(stage, evt);
       });
-      kineticObj.on('mouseup', function(evt) {
+      kineticObj.on('mouseup', function() {
         endConnector(stage, undefined);
       });
     }
@@ -67,17 +67,6 @@ angular.module('sopheAuthorApp')
       kineticObj.on('mouseout', function () {
           document.body.style.cursor = 'default';
           $scope.$emit('CANVAS-MOUSEOUT');
-      });
-    }
-
-    function addOutlineStyles(kineticObj) {
-      kineticObj.on('mouseover', function (e) {
-          e.target.setStrokeWidth(3);
-          e.target.getParent().draw();
-      });
-      kineticObj.on('mouseout', function (e) {
-          e.target.setStrokeWidth(1);
-          e.target.getParent().draw();
       });
     }
 
@@ -108,6 +97,32 @@ angular.module('sopheAuthorApp')
       return kineticObj;
     }
 
+    function updateConnectedLines(connector, stage) {
+      var i = 0;
+      for (i = connector.connections.length - 1; i >= 0; i--) {
+        var line = connector.connections[i];
+        var startPos = {};
+        var endPos = {};
+        if (line.connectors.start === connector) {
+          line.setAbsolutePosition(connector.getAbsolutePosition());
+          startPos = {x: line.getPoints()[0], y: line.getPoints()[1]};
+          endPos = {
+            x: line.connectors.end.getAbsolutePosition().x - line.connectors.start.getAbsolutePosition().x,
+            y: line.connectors.end.getAbsolutePosition().y - line.connectors.start.getAbsolutePosition().y,
+          };
+          changeLineEndpoints(stage, line, startPos, endPos);
+        }
+        else {
+          startPos = {x: line.getPoints()[0], y: line.getPoints()[1]};
+          endPos = {
+            x: line.connectors.end.getAbsolutePosition().x - line.connectors.start.getAbsolutePosition().x,
+            y: line.connectors.end.getAbsolutePosition().y - line.connectors.start.getAbsolutePosition().y,
+          };
+          changeLineEndpoints(stage, line, startPos, endPos);
+        }
+      }
+    }
+
     // config object:
     //   x
     //   y
@@ -136,23 +151,9 @@ angular.module('sopheAuthorApp')
         }
 
         // For the element we are moving, redraw all connection lines
-        var connector = e.target.find('.rightConnector')[0];
         var stage = group.getStage();
-        var i = 0;
-        for (i = connector.connections.length - 1; i >= 0; i--) {
-          var line = connector.connections[i];
-          if (line.connectors.start === connector) {
-            line.setAbsolutePosition(connector.getAbsolutePosition());
-            var startPos = {x: line.getPoints()[0], y: line.getPoints()[1]};
-            var endPos = {
-              x: line.connectors.end.getAbsolutePosition().x - line.connectors.start.getAbsolutePosition().x,
-              y: line.connectors.end.getAbsolutePosition().y - line.connectors.start.getAbsolutePosition().y,
-            };
-            changeLineEndpoints(stage, line, startPos, endPos);
-          }
-          else {
-          }
-        };
+        updateConnectedLines(e.target.find('.rightConnector')[0], stage);
+        updateConnectedLines(e.target.find('.leftConnector')[0], stage);
         stage.draw();
       });
 
