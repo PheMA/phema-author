@@ -8,8 +8,6 @@
         return {
             restrict: 'A',
             scope: {
-                // isdraggable: '=',
-                // kineticStageObj: '=',
                 canvasDetails: '=',
                 connectionStatus: '='
             },

@@ -76,7 +76,6 @@ angular.module('sopheAuthorApp')
       }
 
       var kineticObj = new Kinetic.Text(options);
-      //addCursorStyles(kineticObj);
       addStandardEventHandlers(kineticObj);
       group.add(kineticObj);
       return kineticObj;
@@ -84,7 +83,6 @@ angular.module('sopheAuthorApp')
 
     function createRectangle(options, group) {
       var kineticObj = new Kinetic.Rect(options);
-      //addCursorStyles(kineticObj);
       addStandardEventHandlers(kineticObj);
       group.add(kineticObj);
       return kineticObj;
@@ -92,7 +90,6 @@ angular.module('sopheAuthorApp')
 
     function createCircle(options, group) {
       var kineticObj = new Kinetic.Circle(options);
-      //addCursorStyles(kineticObj);
       group.add(kineticObj);
       return kineticObj;
     }
@@ -110,7 +107,7 @@ angular.module('sopheAuthorApp')
             x: line.connectors.end.getAbsolutePosition().x - line.connectors.start.getAbsolutePosition().x,
             y: line.connectors.end.getAbsolutePosition().y - line.connectors.start.getAbsolutePosition().y,
           };
-          changeLineEndpoints(stage, line, startPos, endPos);
+          changeConnectorEndpoints(stage, line, startPos, endPos);
         }
         else {
           startPos = {x: line.getPoints()[0], y: line.getPoints()[1]};
@@ -118,7 +115,7 @@ angular.module('sopheAuthorApp')
             x: line.connectors.end.getAbsolutePosition().x - line.connectors.start.getAbsolutePosition().x,
             y: line.connectors.end.getAbsolutePosition().y - line.connectors.start.getAbsolutePosition().y,
           };
-          changeLineEndpoints(stage, line, startPos, endPos);
+          changeConnectorEndpoints(stage, line, startPos, endPos);
         }
       }
     }

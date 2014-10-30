@@ -1,52 +1,21 @@
 /* global Kinetic */
 
 'use strict';
+
+// Responding to a mouse move event, update the current connector line that is being drawn
+// to end at the cursor.
 function updateActiveLineLocation(stage, evt) {
   if (stage.connector.status === 'drawing') {
     var startPos = {x: stage.connector.line.getX(), y: stage.connector.line.getY()};
     var endPos = {x: evt.evt.layerX, y: evt.evt.layerY};
-    changeLineEndpoints(stage, stage.connector.line, startPos, endPos);
-    // var x = evt.evt.layerX;
-    // var y = evt.evt.layerY;
-    // stage.connector.line.points([0, 0, x - stage.connector.line.getX(), y - stage.connector.line.getY()]);
-
-    // // Arrow head: http://jsfiddle.net/cmcculloh/M56w4/
-    // var fromx = 0;
-    // var fromy = 0;
-    // var tox = x - stage.connector.line.getX();
-    // var toy = y - stage.connector.line.getY();
-    // var headlen = 15;
-    // var angle = Math.atan2(toy-fromy,tox-fromx);
-    // stage.connector.line.points(
-    //   [fromx,
-    //    fromy,
-    //    tox,
-    //    toy,
-    //    tox-headlen*Math.cos(angle-Math.PI/6),
-    //    toy-headlen*Math.sin(angle-Math.PI/6),
-    //    tox,
-    //    toy,
-    //    tox-headlen*Math.cos(angle+Math.PI/6),
-    //    toy-headlen*Math.sin(angle+Math.PI/6)]
-    // );
-
+    changeConnectorEndpoints(stage, stage.connector.line, startPos, endPos);
     stage.drawScene();
   }
 }
 
-
-function addOutlineStyles(kineticObj) {
-  kineticObj.on('mouseover', function (e) {
-      e.target.setStrokeWidth(3);
-      e.target.getParent().draw();
-  });
-  kineticObj.on('mouseout', function (e) {
-      e.target.setStrokeWidth(1);
-      e.target.getParent().draw();
-  });
-}
-
-function changeLineEndpoints(stage, line, startPos, endPos) {
+// Update a connector line so that it is drawn between a start position and an
+// end position.
+function changeConnectorEndpoints(stage, line, startPos, endPos) {
   var x = endPos.x;
   var y = endPos.y;
   line.points([0, 0, x - startPos.x, y - startPos.y]);
@@ -72,8 +41,8 @@ function changeLineEndpoints(stage, line, startPos, endPos) {
   );
 }
 
+// Start a connector line, anchored at a connector object
 function startConnector(stage, connectorObj) {
-  //var group = new Kinetic.Group({draggable: true});
   var line = new Kinetic.Line({
     x: stage.getPointerPosition().x,
     y: stage.getPointerPosition().y,
@@ -84,10 +53,7 @@ function startConnector(stage, connectorObj) {
   line.connectors.start = connectorObj;
   addOutlineStyles(line);
 
-  //group.add(line);
-  //stage.find('#mainLayer').add(group);
   stage.find('#mainLayer').add(line);
-  //group.setZIndex(999);  // Should be on top
   line.setZIndex(999);  // Should be on top
   stage.connector.status = 'drawing';
   stage.connector.line = line;
@@ -96,6 +62,8 @@ function startConnector(stage, connectorObj) {
   connectorObj.getParent().draggable(false);
 }
 
+// For a line in progress, end the line at the given connector.  If no connector is present,
+// or the connector isn't valid, remove the in progress line.
 function endConnector(stage, connectorObj) {
   if (stage.connector.status === 'drawing') {
     // If we are dropping where we started, or there is no end connection point, the line
@@ -118,9 +86,20 @@ function endConnector(stage, connectorObj) {
     stage.connector.anchor.getParent().draggable(true);
   }
 
-  // stage.connectionStatus = undefined;
-  // stage.activeLine = undefined;
-  // stage.connectionAnchor = undefined;
   stage.connector = {};
   stage.drawScene();
+}
+
+
+// Provide the "outline" effect for objects when you move the mouse
+// over them.
+function addOutlineStyles(kineticObj) {
+  kineticObj.on('mouseover', function (e) {
+      e.target.setStrokeWidth(3);
+      e.target.getParent().draw();
+  });
+  kineticObj.on('mouseout', function (e) {
+      e.target.setStrokeWidth(1);
+      e.target.getParent().draw();
+  });
 }
