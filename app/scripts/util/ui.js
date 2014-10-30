@@ -70,9 +70,10 @@ function endConnector(stage, connectorObj) {
     // If we are dropping where we started, or there is no end connection point, the line
     // is invalid and we will just clear it
     if (stage.connector.anchor === connectorObj || ('undefined' === typeof connectorObj)) {
-      var group = stage.connector.line.parent;
-      group.destroyChildren();
-      group.destroy();
+      //var group = stage.connector.line.parent;
+      //group.destroyChildren();
+      //group.destroy();
+      stage.connector.line.destroy();
     }
     // Otherwise we have a valid line.  Update the internal collections tracking how objects
     // are related.
