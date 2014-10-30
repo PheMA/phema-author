@@ -51,7 +51,7 @@ function startConnector(stage, connectorObj) {
   });
   line.connectors = {};
   line.connectors.start = connectorObj;
-  addOutlineStyles(line);
+  addOutlineStyles(line, 2);
 
   stage.find('#mainLayer').add(line);
   line.setZIndex(999);  // Should be on top
@@ -93,13 +93,14 @@ function endConnector(stage, connectorObj) {
 
 // Provide the "outline" effect for objects when you move the mouse
 // over them.
-function addOutlineStyles(kineticObj) {
+function addOutlineStyles(kineticObj, originalWidth) {
+  var normalWidth = (originalWidth || 1);
   kineticObj.on('mouseover', function (e) {
-      e.target.setStrokeWidth(3);
+      e.target.setStrokeWidth(normalWidth + 2);
       e.target.getParent().draw();
   });
   kineticObj.on('mouseout', function (e) {
-      e.target.setStrokeWidth(1);
+      e.target.setStrokeWidth(normalWidth);
       e.target.getParent().draw();
   });
 }
