@@ -56,6 +56,8 @@ angular.module('sopheAuthorApp')
       });
       kineticObj.on('mouseup', function() {
         endConnector(stage, undefined);
+        clearSelections(stage);
+        selectObject(stage, kineticObj);
       });
     }
 
@@ -76,14 +78,14 @@ angular.module('sopheAuthorApp')
       }
 
       var kineticObj = new Kinetic.Text(options);
-      addStandardEventHandlers(kineticObj);
+      //addStandardEventHandlers(kineticObj);
       group.add(kineticObj);
       return kineticObj;
     }
 
     function createRectangle(options, group) {
       var kineticObj = new Kinetic.Rect(options);
-      addStandardEventHandlers(kineticObj);
+      //addStandardEventHandlers(kineticObj);
       group.add(kineticObj);
       return kineticObj;
     }
@@ -102,21 +104,14 @@ angular.module('sopheAuthorApp')
         var endPos = {};
         if (line.connectors.start === connector) {
           line.setAbsolutePosition(connector.getAbsolutePosition());
-          startPos = {x: line.getPoints()[0], y: line.getPoints()[1]};
-          endPos = {
-            x: line.connectors.end.getAbsolutePosition().x - line.connectors.start.getAbsolutePosition().x,
-            y: line.connectors.end.getAbsolutePosition().y - line.connectors.start.getAbsolutePosition().y,
-          };
-          changeConnectorEndpoints(stage, line, startPos, endPos);
         }
-        else {
-          startPos = {x: line.getPoints()[0], y: line.getPoints()[1]};
-          endPos = {
-            x: line.connectors.end.getAbsolutePosition().x - line.connectors.start.getAbsolutePosition().x,
-            y: line.connectors.end.getAbsolutePosition().y - line.connectors.start.getAbsolutePosition().y,
-          };
-          changeConnectorEndpoints(stage, line, startPos, endPos);
-        }
+
+        startPos = {x: line.getPoints()[0], y: line.getPoints()[1]};
+        endPos = {
+          x: line.connectors.end.getAbsolutePosition().x - line.connectors.start.getAbsolutePosition().x,
+          y: line.connectors.end.getAbsolutePosition().y - line.connectors.start.getAbsolutePosition().y,
+        };
+        changeConnectorEndpoints(stage, line, startPos, endPos);
       }
     }
 
@@ -133,11 +128,12 @@ angular.module('sopheAuthorApp')
       var options = {
           x: ((config && config.x) ? config.x : 50), y: ((config && config.y) ? config.y : 50),
           width: 175, height: 200,
-          fill: '#dbeef4',
+          fill: '#dbeef4', name: 'mainRect',
           stroke: 'black', strokeWidth: 1
       };
 
       var group = new Kinetic.Group({draggable: true});
+      addStandardEventHandlers(group);
       addCursorStyles(group);
       var workflowObj = createRectangle(options, group);
       group.on('dragmove', function(e) {

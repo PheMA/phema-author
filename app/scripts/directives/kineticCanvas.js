@@ -57,6 +57,7 @@
 
                     background.on('mouseup', function(evt) {
                       endConnector(stage, undefined);
+                      clearSelections(stage);
                     });
                 }
             }

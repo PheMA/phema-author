@@ -19,4 +19,10 @@ Line : Connection   (considered a special type of Kinetic.Line) {
     start             Kinetic.Circle that we are drawn from (non-arrow end)
     end               Kinetic.Circle that we are drawn to (arrow end)
   }
+  selected            bool  (is the object currently selected)
+  originalStrokeWidth int   (the original width of the line)
+}
+
+Group : Element    (considered a special type of Kinetic.Group) {
+  selected            bool  (is the object currently selected)
 }

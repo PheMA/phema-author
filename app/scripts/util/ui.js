@@ -51,6 +51,7 @@ function startConnector(stage, connectorObj) {
   });
   line.connectors = {};
   line.connectors.start = connectorObj;
+  line.originalStrokeWidth = 2;
   addOutlineStyles(line, 2);
 
   stage.find('#mainLayer').add(line);
@@ -79,6 +80,10 @@ function endConnector(stage, connectorObj) {
       stage.connector.line.connectors.end = connectorObj;
       connectorObj.connections.push(stage.connector.line);
       stage.connector.line.connectors.start.connections.push(stage.connector.line);
+      stage.connector.line.on("mouseup", function(e) {
+        clearSelections(stage);
+        selectObject(stage, e.target);
+      });
     }
   }
 
@@ -90,17 +95,55 @@ function endConnector(stage, connectorObj) {
   stage.drawScene();
 }
 
+function selectObject(stage, selectObj) {
+  if (stage.connector && stage.connector.status === 'drawing') {
+    return;
+  }
+  selectObj.selected = true;
+  updateStrokeWidth(selectObj, false);
+  stage.draw();
+}
+
+function updateStrokeWidth(kineticObj, normal) {
+  var strokeWidth = kineticObj.originalStrokeWidth || 1;
+  if (!normal) {
+    strokeWidth = strokeWidth + 2;
+  }
+
+  if ('Group' === kineticObj.nodeType) {
+    kineticObj.find('.mainRect')[0].setStrokeWidth(strokeWidth);
+  }
+  else if ('Line' === kineticObj.className) {
+    kineticObj.setStrokeWidth(strokeWidth);
+  }
+}
+
+function clearSelections(stage) {
+  var layer = stage.find('#mainLayer')[0];
+  var counter = 0;
+  var children = layer.getChildren();
+  for (counter = 0; counter < children.length; counter++) {
+    children[counter].selected = false;
+    updateStrokeWidth(children[counter], true);
+  }
+  stage.draw();
+}
+
 
 // Provide the "outline" effect for objects when you move the mouse
 // over them.
 function addOutlineStyles(kineticObj, originalWidth) {
   var normalWidth = (originalWidth || 1);
   kineticObj.on('mouseover', function (e) {
+    if (!e.target.selected) {
       e.target.setStrokeWidth(normalWidth + 2);
       e.target.getParent().draw();
+    }
   });
   kineticObj.on('mouseout', function (e) {
+    if (!e.target.selected) {
       e.target.setStrokeWidth(normalWidth);
       e.target.getParent().draw();
+    }
   });
 }
