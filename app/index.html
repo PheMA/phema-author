@@ -14,6 +14,7 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
+    <link rel="stylesheet" href="bower_components/angular-tree-control/css/tree-control-attribute.css" />
   </head>
   <body ng-app="sopheAuthorApp">
     <!--[if lt IE 7]>
@@ -121,6 +122,7 @@
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="bower_components/kineticjs/kinetic.js"></script>
+    <script src="bower_components/angular-tree-control/angular-tree-control.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -132,7 +134,9 @@
     <script src="scripts/directives/kineticCanvas.js"></script>
     <script src="scripts/directives/phenotypeToolbar.js"></script>
     <script src="scripts/directives/elements/phenotype.js"></script>
-    <script src="scripts/directives/elements/qdm.js"></script>
+    <script src="scripts/directives/elements/qdm/dataElements.js"></script>
+    <script src="scripts/directives/elements/qdm/logicalOperators.js"></script>
+    <script src="scripts/directives/elements/qdm/temporalOperators.js"></script>
     <script src="scripts/directives/sophe.js"></script>
     <script src="scripts/controllers/main.js"></script>
     <script src="scripts/controllers/about.js"></script>

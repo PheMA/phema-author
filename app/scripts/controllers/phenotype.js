@@ -19,21 +19,88 @@ angular.module('sopheAuthorApp')
         });
     });
 
-    $http.get('data/qdm-elements.json').success (function(data){
+    $http.get('data/qdm-categories.json').success (function(data){
       $scope.dataElements = [];
       if (data && data.results) {
         var transformedData = [];
         var originalData = data.results.bindings;
         for (var index = 0; index < originalData.length; index++) {
-            if (originalData[index].context.value === 'http://rdf.healthit.gov/qdm/element#qdm-4-1') {
-                transformedData.push({ name: originalData[index].datatypeLabel.value} );
-            }
+          transformedData.push({
+            name: originalData[index].categoryLabel.value,
+            uri: originalData[index].id.value,
+            type: 'Category',
+            children: []} );
         }
         $scope.dataElements = transformedData.sort(function(obj1, obj2) {
             return obj1.name.localeCompare(obj2.name);
         });
       }
     });
+
+    $http.get('data/qdm-elements.json').success (function(data){
+      if (data && data.results) {
+        var originalData = data.results.bindings;
+        var categoryIndex = 0;
+        for (var index = 0; index < originalData.length; index++) {
+          for (categoryIndex = 0; categoryIndex < $scope.dataElements.length; categoryIndex++) {
+            if ($scope.dataElements[categoryIndex].uri === originalData[index].context.value) {
+              $scope.dataElements[categoryIndex].children.push({
+                name: originalData[index].dataElementLabel.value,
+                uri: originalData[index].id.value,
+                type: 'DataElement'
+              });
+              break;
+            }
+          }
+        }
+
+        for (categoryIndex = 0; categoryIndex < $scope.dataElements.length; categoryIndex++) {
+          $scope.dataElements[categoryIndex].children = $scope.dataElements[categoryIndex].children.sort(function(obj1, obj2) {
+            return obj1.name.localeCompare(obj2.name);
+          });
+        }
+      }
+    });
+
+    $http.get('data/qdm-logicalOperators.json').success (function(data){
+      $scope.logicalOperators = [];
+      if (data && data.results) {
+        var transformedData = [];
+        var originalData = data.results.bindings;
+        for (var index = 0; index < originalData.length; index++) {
+          transformedData.push({
+            name: originalData[index].logicalOperatorLabel.value,
+            uri: originalData[index].id.value,
+            type: 'LogicalOperators',
+            children: []} );
+        }
+        $scope.logicalOperators = transformedData.sort(function(obj1, obj2) {
+            return obj1.name.localeCompare(obj2.name);
+        });
+      }
+    });
+
+    $http.get('data/qdm-temporalOperators.json').success (function(data){
+      $scope.temporalOperators = [];
+      if (data && data.results) {
+        var transformedData = [];
+        var originalData = data.results.bindings;
+        for (var index = 0; index < originalData.length; index++) {
+          transformedData.push({
+            name: originalData[index].temporalOperatorLabel.value,
+            uri: originalData[index].id.value,
+            type: 'TemporalOperators',
+            children: []} );
+        }
+        $scope.temporalOperators = transformedData.sort(function(obj1, obj2) {
+            return obj1.name.localeCompare(obj2.name);
+        });
+      }
+    });
+
+    $scope.treeOptions = {
+      dirSelectable: false
+    };
 
     function addConnectionHandler(kineticObj) {
       var stage = $scope.canvasDetails.kineticStageObj;

@@ -26,6 +26,13 @@
   }
 }
 
+#data-elements-list {
+  .tree-classic {
+    height: 400px;
+    overflow-x: scroll;
+  }
+}
+
 .phenotype-element-list{
   border: solid 1px black;
   border-radius: 2px;
@@ -51,5 +58,14 @@
 
   .phenotype-element:hover {
     background-color: darken(white, 10%);
+  }
+
+  [treecontrol] {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+
+    li {
+      padding: 0px 5px;
+    }
   }
 }

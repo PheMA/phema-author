@@ -2,15 +2,56 @@
 
 'use strict';
 
-// Responding to a mouse move event, update the current connector line that is being drawn
-// to end at the cursor.
-function updateActiveLineLocation(stage, evt) {
-  if (stage.connector.status === 'drawing') {
-    var startPos = {x: stage.connector.line.getX(), y: stage.connector.line.getY()};
-    var endPos = {x: evt.evt.layerX, y: evt.evt.layerY};
-    changeConnectorEndpoints(stage, stage.connector.line, startPos, endPos);
-    stage.drawScene();
+function updateStrokeWidth(kineticObj, normal) {
+  var strokeWidth = kineticObj.originalStrokeWidth || 1;
+  if (!normal) {
+    strokeWidth = strokeWidth + 2;
   }
+
+  if ('Group' === kineticObj.nodeType) {
+    kineticObj.find('.mainRect')[0].setStrokeWidth(strokeWidth);
+  }
+  else if ('Line' === kineticObj.className) {
+    kineticObj.setStrokeWidth(strokeWidth);
+  }
+}
+
+function selectObject(stage, selectObj) {
+  if (stage.connector && stage.connector.status === 'drawing') {
+    return;
+  }
+  selectObj.selected = true;
+  updateStrokeWidth(selectObj, false);
+  stage.draw();
+}
+
+function clearSelections(stage) {
+  var layer = stage.find('#mainLayer')[0];
+  var counter = 0;
+  var children = layer.getChildren();
+  for (counter = 0; counter < children.length; counter++) {
+    children[counter].selected = false;
+    updateStrokeWidth(children[counter], true);
+  }
+  stage.draw();
+}
+
+// Provide the "outline" effect for objects when you move the mouse
+// over them.
+function addOutlineStyles(kineticObj, originalWidth) {
+  var normalWidth = (originalWidth || 1);
+  kineticObj.on('mouseover', function (e) {
+    if (!e.target.selected) {
+      e.target.setStrokeWidth(normalWidth + 2);
+      e.target.getParent().draw();
+    }
+  });
+  kineticObj.on('mouseout', function (e) {
+    if (!e.target.selected) {
+      e.target.setStrokeWidth(normalWidth);
+      e.target.getParent().draw();
+    }
+  });
 }
 
 // Update a connector line so that it is drawn between a start position and an
@@ -39,6 +80,17 @@ function changeConnectorEndpoints(stage, line, startPos, endPos) {
      tox-headlen*Math.cos(angle+Math.PI/6),
      toy-headlen*Math.sin(angle+Math.PI/6)]
   );
+}
+
+// Responding to a mouse move event, update the current connector line that is being drawn
+// to end at the cursor.
+function updateActiveLineLocation(stage, evt) {
+  if (stage.connector.status === 'drawing') {
+    var startPos = {x: stage.connector.line.getX(), y: stage.connector.line.getY()};
+    var endPos = {x: evt.evt.layerX, y: evt.evt.layerY};
+    changeConnectorEndpoints(stage, stage.connector.line, startPos, endPos);
+    stage.drawScene();
+  }
 }
 
 // Start a connector line, anchored at a connector object
@@ -81,7 +133,7 @@ function endConnector(stage, connectorObj) {
       stage.connector.line.connectors.end = connectorObj;
       connectorObj.connections.push(stage.connector.line);
       stage.connector.line.connectors.start.connections.push(stage.connector.line);
-      stage.connector.line.on("mouseup", function(e) {
+      stage.connector.line.on('mouseup', function(e) {
         clearSelections(stage);
         selectObject(stage, e.target);
       });
@@ -94,57 +146,4 @@ function endConnector(stage, connectorObj) {
 
   stage.connector = {};
   stage.drawScene();
-}
-
-function selectObject(stage, selectObj) {
-  if (stage.connector && stage.connector.status === 'drawing') {
-    return;
-  }
-  selectObj.selected = true;
-  updateStrokeWidth(selectObj, false);
-  stage.draw();
-}
-
-function updateStrokeWidth(kineticObj, normal) {
-  var strokeWidth = kineticObj.originalStrokeWidth || 1;
-  if (!normal) {
-    strokeWidth = strokeWidth + 2;
-  }
-
-  if ('Group' === kineticObj.nodeType) {
-    kineticObj.find('.mainRect')[0].setStrokeWidth(strokeWidth);
-  }
-  else if ('Line' === kineticObj.className) {
-    kineticObj.setStrokeWidth(strokeWidth);
-  }
-}
-
-function clearSelections(stage) {
-  var layer = stage.find('#mainLayer')[0];
-  var counter = 0;
-  var children = layer.getChildren();
-  for (counter = 0; counter < children.length; counter++) {
-    children[counter].selected = false;
-    updateStrokeWidth(children[counter], true);
-  }
-  stage.draw();
-}
-
-
-// Provide the "outline" effect for objects when you move the mouse
-// over them.
-function addOutlineStyles(kineticObj, originalWidth) {
-  var normalWidth = (originalWidth || 1);
-  kineticObj.on('mouseover', function (e) {
-    if (!e.target.selected) {
-      e.target.setStrokeWidth(normalWidth + 2);
-      e.target.getParent().draw();
-    }
-  });
-  kineticObj.on('mouseout', function (e) {
-    if (!e.target.selected) {
-      e.target.setStrokeWidth(normalWidth);
-      e.target.getParent().draw();
-    }
-  });
 }

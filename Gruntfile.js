@@ -370,6 +370,12 @@ module.exports = function (grunt) {
           dest: '<%= yeoman.dist %>'
         }, {
           expand: true,
+          cwd: '.',
+          src: ['bower_components/angular-tree-control/css/*',
+          'bower_components/angular-tree-control/images/*'],
+          dest: '<%= yeoman.dist %>'
+        }, {
+          expand: true,
           cwd: 'bower_components/font-awesome',
           src: 'fonts/*',
           dest: '<%= yeoman.dist %>'
@@ -379,7 +385,8 @@ module.exports = function (grunt) {
         expand: true,
         cwd: '<%= yeoman.app %>/styles',
         dest: '.tmp/styles/',
-        src: '{,*/}*.css'
+        src: ['{,*/}*.css',
+          'bower_components/**/*.css']
       }
     },
 

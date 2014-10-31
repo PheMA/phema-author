@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('sophe.elements.qdm', [])
-  .directive('qdmElements', ['$rootScope', function($rootScope) {
+angular.module('sophe.elements.qdm.dataElements', [])
+  .directive('qdmDataElements', ['$rootScope', function($rootScope) {
   var directive = {
-    templateUrl: 'views/elements/qdm.html',
+    templateUrl: 'views/elements/qdm/dataElements.html',
     restrict: 'A',
     replace: true,
     scope: true,
