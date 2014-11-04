@@ -9,7 +9,10 @@ function updateStrokeWidth(kineticObj, normal) {
   }
 
   if ('Group' === kineticObj.nodeType) {
-    kineticObj.find('.mainRect')[0].setStrokeWidth(strokeWidth);
+    var mainRect = kineticObj.find('.mainRect')[0];
+    if (mainRect) {
+      mainRect.setStrokeWidth(strokeWidth);
+    }
   }
   else if ('Line' === kineticObj.className) {
     kineticObj.setStrokeWidth(strokeWidth);
