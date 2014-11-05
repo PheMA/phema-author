@@ -27,6 +27,12 @@ angular.module('sophe.factories.algorithmElement', [])
         clearSelections(stage);
         selectObject(stage, kineticObj);
       });
+      kineticObj.on("dragstart", function(e) {
+        kineticObj.setZIndex(999);
+        clearSelections(stage);
+        selectObject(stage, kineticObj);
+        kineticObj.draw();
+      });
     }
 
     function addCursorStyles(kineticObj, scope) {
@@ -179,7 +185,7 @@ angular.module('sophe.factories.algorithmElement', [])
     function createQDMTemporalOperator(config, scope) {
       var group = new Kinetic.Group({draggable: true});
       var spacing = 75;
-      //addStandardEventHandlers(group, scope);
+      addStandardEventHandlers(group, scope);
       addCursorStyles(group, scope);
 
       var options = {
@@ -239,6 +245,35 @@ angular.module('sophe.factories.algorithmElement', [])
       return group;
     }
 
+    function createQDMLogicalOperator(config, scope) {
+      var options = {
+          x: ((config && config.x) ? config.x : 50), y: ((config && config.y) ? config.y : 50),
+          width: 200, height: 200,
+          fill: '#eeeeee', name: 'mainRect',
+          stroke: 'gray', strokeWidth: 1
+      };
+
+      var group = new Kinetic.Group({draggable: true});
+      addStandardEventHandlers(group, scope);
+      addCursorStyles(group, scope);
+      var workflowObj = createRectangle(options, group);
+      workflowObj.dash([10, 5]);
+      workflowObj.dashEnabled(true);
+
+      var headerOptions = {
+          x: options.x, y: options.y,
+          width: options.width, // Leave out height so it auto-sizes
+          fontFamily: 'Calibri', fontSize: 14, fill: 'black',
+          text: config.element.name,
+          align: 'center', padding: 5
+      };
+
+      var mainLayer = scope.canvasDetails.kineticStageObj.find('#mainLayer');
+      mainLayer.add(group);
+      mainLayer.draw();
+      return group;
+    }
+
     function createGenericElement(config, scope) {
       var options = {
           x: ((config && config.x) ? config.x : 50), y: ((config && config.y) ? config.y : 50),
@@ -286,6 +321,9 @@ angular.module('sophe.factories.algorithmElement', [])
       }
       else if (config.element.type === 'DataElement' || config.element.type === 'Category') {
         createQDMDataElement(config, scope);
+      }
+      else if (config.element.type === 'LogicalOperator') {
+        createQDMLogicalOperator(config, scope);
       }
       else {
         createGenericElement(config, scope);
