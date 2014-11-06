@@ -33,6 +33,7 @@ angular.module('sophe.factories.algorithmElement', [])
         selectObject(stage, kineticObj);
         kineticObj.draw();
       });
+      addDropTargetCheck(kineticObj, scope);
     }
 
     function addCursorStyles(kineticObj, scope) {
@@ -46,20 +47,48 @@ angular.module('sophe.factories.algorithmElement', [])
       });
     }
 
+    // Adds appropriate event handlers to a draggable object.
+    // Idea for temp layer so we can use getIntersection courtesy of: http://jsbin.com/pecor/3/edit?html,js,output
+    function addDropTargetCheck(kineticObj, scope) {
+      var stage = scope.canvasDetails.kineticStageObj;
+      kineticObj.on('dragstart',function(){
+        kineticObj.moveTo(stage.tempLayer);
+        Kinetic.DD.isDragging = false;
+        stage.mainLayer.draw();
+        Kinetic.DD.isDragging = true;
+        var dd = Kinetic.DD;
+        dd.anim.stop();
+        dd.anim.setLayers(stage.tempLayer);
+        dd.anim.start();
+      });
+
+      kineticObj.on('dragmove',function(){
+        var pos = stage.getPointerPosition();
+        var shape = stage.mainLayer.getIntersection(pos);
+        if (shape) {
+          updateStrokeWidth(shape, false);
+          shape.getLayer().draw();
+          console.log(shape);
+        }
+      });
+
+      kineticObj.on('dragend',function(){
+        kineticObj.moveTo(stage.mainLayer);
+      });
+    }
+
     function createText(options, group) {
       if ('undefined' === typeof options.text || '' === options.text) {
         options.text = 'New Item';
       }
 
       var kineticObj = new Kinetic.Text(options);
-      //addStandardEventHandlers(kineticObj);
       group.add(kineticObj);
       return kineticObj;
     }
 
     function createRectangle(options, group) {
       var kineticObj = new Kinetic.Rect(options);
-      //addStandardEventHandlers(kineticObj);
       group.add(kineticObj);
       return kineticObj;
     }

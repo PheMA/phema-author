@@ -38,6 +38,10 @@
                     stage.backgroundLayer = backgroundLayer;
                     var mainLayer = new Kinetic.Layer({id: 'mainLayer'});
                     stage.add(mainLayer);
+                    stage.mainLayer = mainLayer;
+                    var tempLayer = new Kinetic.Layer();
+                    stage.add(tempLayer);
+                    stage.tempLayer = tempLayer;
 
                     var background = new Kinetic.Rect({
                       x: 0,
