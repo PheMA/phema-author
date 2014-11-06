@@ -51,6 +51,7 @@ angular.module('sophe.factories.algorithmElement', [])
     // Idea for temp layer so we can use getIntersection courtesy of: http://jsbin.com/pecor/3/edit?html,js,output
     function addDropTargetCheck(kineticObj, scope) {
       var stage = scope.canvasDetails.kineticStageObj;
+      var highlightedDrop = null;
       kineticObj.on('dragstart',function(){
         kineticObj.moveTo(stage.tempLayer);
         Kinetic.DD.isDragging = false;
@@ -65,15 +66,26 @@ angular.module('sophe.factories.algorithmElement', [])
       kineticObj.on('dragmove',function(){
         var pos = stage.getPointerPosition();
         var shape = stage.mainLayer.getIntersection(pos);
-        if (shape) {
-          updateStrokeWidth(shape, false);
+        if (shape && shape.droppable && shape !== highlightedDrop) {
+          if (highlightedDrop) {
+            highlightedDrop.setFill(shadeColor(highlightedDrop.getFill(), 0.5));
+          }
+          
+          highlightedDrop = shape;
+
+          console.log("Drop spot found");
+          shape.setFill(shadeColor(shape.getFill(), -0.5));
           shape.getLayer().draw();
-          console.log(shape);
         }
       });
 
       kineticObj.on('dragend',function(){
         kineticObj.moveTo(stage.mainLayer);
+        if (highlightedDrop) {
+          highlightedDrop.setFill(shadeColor(highlightedDrop.getFill(), 0.5));
+          highlightedDrop = null;
+          stage.mainLayer.draw();
+        }
       });
     }
 
@@ -226,6 +238,7 @@ angular.module('sophe.factories.algorithmElement', [])
       var eventA = createRectangle(options, group);
       eventA.dash([10, 5]);
       eventA.dashEnabled(true);
+      eventA.droppable = true;
 
       var headerOptions = {
           x: options.x, y: options.y,
@@ -246,6 +259,7 @@ angular.module('sophe.factories.algorithmElement', [])
       var eventB = createRectangle(options, group);
       eventB.dash([10, 5]);
       eventB.dashEnabled(true);
+      eventA.droppable = true;
 
       headerOptions.x = options.x;
       headerOptions.y = options.y;
@@ -288,6 +302,7 @@ angular.module('sophe.factories.algorithmElement', [])
       var workflowObj = createRectangle(options, group);
       workflowObj.dash([10, 5]);
       workflowObj.dashEnabled(true);
+      workflowObj.droppable = true;
 
       var headerOptions = {
           x: options.x, y: options.y,
@@ -315,6 +330,7 @@ angular.module('sophe.factories.algorithmElement', [])
       addStandardEventHandlers(group, scope);
       addCursorStyles(group, scope);
       var workflowObj = createRectangle(options, group);
+      workflowObj.droppable = true;
 
       var headerOptions = {
           x: options.x, y: options.y,
