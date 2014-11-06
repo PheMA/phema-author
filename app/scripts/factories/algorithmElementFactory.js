@@ -1,5 +1,5 @@
 'use strict';
-/* globals endConnector, updateActiveLineLocation, startConnector, clearSelections, selectObject, changeConnectorEndpoints, addOutlineStyles, Kinetic */
+/* globals endConnector, updateActiveLineLocation, startConnector, clearSelections, selectObject, changeConnectorEndpoints, addOutlineStyles, updateStrokeWidth, Kinetic */
 
 angular.module('sophe.factories.algorithmElement', [])
   .factory('algorithmElementFactory', function() {
@@ -27,13 +27,12 @@ angular.module('sophe.factories.algorithmElement', [])
         clearSelections(stage);
         selectObject(stage, kineticObj);
       });
-      kineticObj.on("dragstart", function(e) {
+      kineticObj.on('dragstart', function() {
         kineticObj.setZIndex(999);
         clearSelections(stage);
         selectObject(stage, kineticObj);
         kineticObj.draw();
       });
-      addDropTargetCheck(kineticObj, scope);
     }
 
     function addCursorStyles(kineticObj, scope) {
@@ -52,8 +51,15 @@ angular.module('sophe.factories.algorithmElement', [])
     function addDropTargetCheck(kineticObj, scope) {
       var stage = scope.canvasDetails.kineticStageObj;
       var highlightedDrop = null;
-      kineticObj.on('dragstart',function(){
-        kineticObj.moveTo(stage.tempLayer);
+
+      var dropItem = kineticObj;
+      kineticObj.droppable = true;
+      if ('Group' !== kineticObj.nodeType) {
+        dropItem = kineticObj.getParent();
+      }
+
+      dropItem.on('dragstart',function(){
+        dropItem.moveTo(stage.tempLayer);
         Kinetic.DD.isDragging = false;
         stage.mainLayer.draw();
         Kinetic.DD.isDragging = true;
@@ -63,26 +69,23 @@ angular.module('sophe.factories.algorithmElement', [])
         dd.anim.start();
       });
 
-      kineticObj.on('dragmove',function(){
+      dropItem.on('dragmove',function(){
         var pos = stage.getPointerPosition();
         var shape = stage.mainLayer.getIntersection(pos);
         if (shape && shape.droppable && shape !== highlightedDrop) {
           if (highlightedDrop) {
-            highlightedDrop.setFill(shadeColor(highlightedDrop.getFill(), 0.5));
+            updateStrokeWidth(highlightedDrop, true);
           }
-          
           highlightedDrop = shape;
-
-          console.log("Drop spot found");
-          shape.setFill(shadeColor(shape.getFill(), -0.5));
-          shape.getLayer().draw();
+          updateStrokeWidth(shape, false);
+          stage.mainLayer.draw();
         }
       });
 
-      kineticObj.on('dragend',function(){
-        kineticObj.moveTo(stage.mainLayer);
+      dropItem.on('dragend',function(){
+        dropItem.moveTo(stage.mainLayer);
         if (highlightedDrop) {
-          highlightedDrop.setFill(shadeColor(highlightedDrop.getFill(), 0.5));
+          updateStrokeWidth(highlightedDrop, true);
           highlightedDrop = null;
           stage.mainLayer.draw();
         }
@@ -179,7 +182,8 @@ angular.module('sophe.factories.algorithmElement', [])
         text: 'Drag and drop clinical terms or value sets here, or search for terms',
         align: 'center', padding: 5
       };
-      createText(termTextOptions, group);
+      addDropTargetCheck(
+        createText(termTextOptions, group), scope);
 
       var configOptions = {
         x: termDropOptions.x, y: termObj.height() + termDropOptions.y + 5,
@@ -188,7 +192,7 @@ angular.module('sophe.factories.algorithmElement', [])
         stroke: '#CCCCCC', strokeWidth: 1
       };
       var configObj = createRectangle(configOptions, group);
-
+      addDropTargetCheck(configObj, scope);
 
       // Resize the main container to ensure consistent spacing regardless of the
       // height of internal components.
@@ -238,7 +242,7 @@ angular.module('sophe.factories.algorithmElement', [])
       var eventA = createRectangle(options, group);
       eventA.dash([10, 5]);
       eventA.dashEnabled(true);
-      eventA.droppable = true;
+      addDropTargetCheck(eventA, scope);
 
       var headerOptions = {
           x: options.x, y: options.y,
@@ -259,7 +263,7 @@ angular.module('sophe.factories.algorithmElement', [])
       var eventB = createRectangle(options, group);
       eventB.dash([10, 5]);
       eventB.dashEnabled(true);
-      eventA.droppable = true;
+      addDropTargetCheck(eventB, scope);
 
       headerOptions.x = options.x;
       headerOptions.y = options.y;
@@ -302,7 +306,7 @@ angular.module('sophe.factories.algorithmElement', [])
       var workflowObj = createRectangle(options, group);
       workflowObj.dash([10, 5]);
       workflowObj.dashEnabled(true);
-      workflowObj.droppable = true;
+      addDropTargetCheck(workflowObj, scope);
 
       var headerOptions = {
           x: options.x, y: options.y,
@@ -311,6 +315,7 @@ angular.module('sophe.factories.algorithmElement', [])
           text: config.element.name,
           align: 'center', padding: 5
       };
+      createText(headerOptions, group);
 
       var mainLayer = scope.canvasDetails.kineticStageObj.find('#mainLayer');
       mainLayer.add(group);
@@ -330,7 +335,7 @@ angular.module('sophe.factories.algorithmElement', [])
       addStandardEventHandlers(group, scope);
       addCursorStyles(group, scope);
       var workflowObj = createRectangle(options, group);
-      workflowObj.droppable = true;
+      addDropTargetCheck(workflowObj, scope);
 
       var headerOptions = {
           x: options.x, y: options.y,
@@ -361,18 +366,21 @@ angular.module('sophe.factories.algorithmElement', [])
         return null;
       }
 
+      var workflowObject = null;
       if (config.element.type === 'TemporalOperator') {
-        createQDMTemporalOperator(config, scope);
+        workflowObject = createQDMTemporalOperator(config, scope);
       }
       else if (config.element.type === 'DataElement' || config.element.type === 'Category') {
-        createQDMDataElement(config, scope);
+        workflowObject = createQDMDataElement(config, scope);
       }
       else if (config.element.type === 'LogicalOperator') {
-        createQDMLogicalOperator(config, scope);
+        workflowObject = createQDMLogicalOperator(config, scope);
       }
       else {
-        createGenericElement(config, scope);
+        workflowObject = createGenericElement(config, scope);
       }
+
+      return workflowObject;
     };
     return factory;
 });

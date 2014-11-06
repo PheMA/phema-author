@@ -27,7 +27,7 @@ angular.module('sophe.droppable', [])
 
       el.addEventListener(
         'dragenter',
-        function(e) {
+        function() {
           this.classList.add('over');
           return false;
         },
@@ -36,7 +36,7 @@ angular.module('sophe.droppable', [])
 
       el.addEventListener(
         'dragleave',
-        function(e) {
+        function() {
           this.classList.remove('over');
           return false;
         },

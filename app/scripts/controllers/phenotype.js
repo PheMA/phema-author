@@ -99,6 +99,6 @@ angular.module('sopheAuthorApp')
     //   y
     //   element
     $scope.addWorkflowObject = function (config) {
-      algorithmElementFactory.addWorkflowObject(config, $scope);
+      return algorithmElementFactory.addWorkflowObject(config, $scope);
     };
   }]);

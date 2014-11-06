@@ -24,7 +24,7 @@ angular.module('sophe.draggable', [])
 
         el.addEventListener(
             'dragend',
-            function(e) {
+            function() {
                 this.classList.remove('drag');
                 return false;
             },

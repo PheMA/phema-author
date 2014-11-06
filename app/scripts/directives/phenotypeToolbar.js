@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('sophe.phenotype.toolbar', [])
-  .directive('phenotypeToolbar', ['$rootScope', function($rootScope) {
+  .directive('phenotypeToolbar', [function() {
   var directive = {
     templateUrl: 'views/phenotypes/toolbar.html',
     restrict: 'E',
     replace: true,
     scope: true,
-    link: function($scope, $element, $attrs, $controller) {
+    link: function($scope) {
       $scope.buttons = [
         {text: 'Save', iconClass:'fa fa-save'},
         {text: 'Export', iconClass:'fa fa-arrow-circle-down'},

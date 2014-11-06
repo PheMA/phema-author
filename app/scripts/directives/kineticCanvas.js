@@ -1,10 +1,10 @@
-/* global Kinetic */
+/* globals updateActiveLineLocation, endConnector, clearSelections, Kinetic */
 
 (function() {
     'use strict';
     angular.module('sophe.kinetic', [])
-    .directive('kineticCanvas', ['$rootScope',
-    function canvasDirective ($rootScope) {
+    .directive('kineticCanvas', [
+    function canvasDirective () {
         return {
             restrict: 'A',
             scope: {
@@ -22,8 +22,8 @@
                     if (!scope.canvasDetails.kineticStageObj) {
                         scope.canvasDetails.kineticStageObj = new Kinetic.Stage({
                             container: id,
-                            width: 600,
-                            height: 400
+                            width: 800,
+                            height: 600
                         });
                         scope.canvasDetails.kineticStageObj.connector = {};
                     }
@@ -59,7 +59,7 @@
                       updateActiveLineLocation(stage, evt);
                     });
 
-                    background.on('mouseup', function(evt) {
+                    background.on('mouseup', function() {
                       endConnector(stage, undefined);
                       clearSelections(stage);
                     });

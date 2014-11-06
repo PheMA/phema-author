@@ -26,3 +26,7 @@ Line : Connection   (considered a special type of Kinetic.Line) {
 Group : Element    (considered a special type of Kinetic.Group) {
   selected            bool  (is the object currently selected)
 }
+
+Any element {
+  droppable           bool  (can have shapes dropped on it)
+}
