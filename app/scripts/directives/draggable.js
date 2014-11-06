@@ -14,7 +14,6 @@ angular.module('sophe.draggable', [])
             'dragstart',
             function(e) {
                 e.dataTransfer.effectAllowed = 'move';
-                //e.dataTransfer.setData('Text', this.id);
                 e.dataTransfer.setData('Text', el.getElementsByTagName('input')[0].value);
                 this.classList.add('drag');
                 return false;

@@ -53,10 +53,6 @@ angular.module('sophe.droppable', [])
 
           this.classList.remove('over');
 
-          //var item = document.getElementById(e.dataTransfer.getData('Text'));
-          //this.appendChild(item);
-
-          //$scope.$apply('drop()');
           $scope.$apply(function(scope) {
             var fn = scope.drop;
             if ('undefined' !== typeof fn) {

@@ -1,4 +1,4 @@
-/* global Kinetic */
+/* globals Kinetic */
 
 'use strict';
 
@@ -14,9 +14,6 @@ function updateStrokeWidth(kineticObj, normal) {
       mainRect.setStrokeWidth(strokeWidth);
     }
   }
-  //else if ('Line' === kineticObj.className) {
-  //  kineticObj.setStrokeWidth(strokeWidth);
-  //}
   else {
     kineticObj.setStrokeWidth(strokeWidth);
   }
@@ -128,9 +125,6 @@ function endConnector(stage, connectorObj) {
     // If we are dropping where we started, or there is no end connection point, the line
     // is invalid and we will just clear it
     if (stage.connector.anchor === connectorObj || ('undefined' === typeof connectorObj)) {
-      //var group = stage.connector.line.parent;
-      //group.destroyChildren();
-      //group.destroy();
       stage.connector.line.destroy();
     }
     // Otherwise we have a valid line.  Update the internal collections tracking how objects
