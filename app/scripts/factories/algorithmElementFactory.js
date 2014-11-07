@@ -27,12 +27,17 @@ angular.module('sophe.factories.algorithmElement', [])
         clearSelections(stage);
         selectObject(stage, kineticObj);
       });
+
+      // When we are dragging, move the drag object to be the top element, clear all
+      // other selections, and then visually select the dragging element.
       kineticObj.on('dragstart', function() {
         kineticObj.setZIndex(999);
         clearSelections(stage);
         selectObject(stage, kineticObj);
         kineticObj.draw();
       });
+
+      setDraggable(kineticObj, scope);
     }
 
     function addCursorStyles(kineticObj, scope) {
@@ -46,20 +51,23 @@ angular.module('sophe.factories.algorithmElement', [])
       });
     }
 
+    function setDroppable(kineticObj) {
+      kineticObj.droppable = true;
+    }
+
     // Adds appropriate event handlers to a draggable object.
     // Idea for temp layer so we can use getIntersection courtesy of: http://jsbin.com/pecor/3/edit?html,js,output
-    function addDropTargetCheck(kineticObj, scope) {
+    function setDraggable(kineticObj, scope) {
       var stage = scope.canvasDetails.kineticStageObj;
       var highlightedDrop = null;
 
-      var dropItem = kineticObj;
-      kineticObj.droppable = true;
+      var dragItem = kineticObj;
       if ('Group' !== kineticObj.nodeType) {
-        dropItem = kineticObj.getParent();
+        dragItem = kineticObj.getParent();
       }
 
-      dropItem.on('dragstart',function(){
-        dropItem.moveTo(stage.tempLayer);
+      dragItem.on('dragstart',function(){
+        dragItem.moveTo(stage.tempLayer);
         Kinetic.DD.isDragging = false;
         stage.mainLayer.draw();
         Kinetic.DD.isDragging = true;
@@ -69,21 +77,40 @@ angular.module('sophe.factories.algorithmElement', [])
         dd.anim.start();
       });
 
-      dropItem.on('dragmove',function(){
+      dragItem.on('dragmove',function(){
         var pos = stage.getPointerPosition();
         var shape = stage.mainLayer.getIntersection(pos);
-        if (shape && shape.droppable && shape !== highlightedDrop) {
+        console.log(shape);
+        if (!shape) {
+          return;
+        }
+
+        // If we land on a Text element, we need to look for the underlying droppable Rect that should
+        // be considered the actual drop target.  We always use a Rect because our visual indicator of
+        // a drop target is to modify the Rect itself.
+        if (shape.className === 'Text') {
+          var allShapes = shape.getParent().getAllIntersections(pos);
+          var index = 0;
+          for (index = 0; index < allShapes.length; index++) {
+            if (allShapes[index].droppable) {
+              shape = allShapes[index];
+              break;
+            }
+          }
+        }
+
+        if (shape.droppable && shape !== highlightedDrop) {
           if (highlightedDrop) {
             updateStrokeWidth(highlightedDrop, true);
           }
           highlightedDrop = shape;
           updateStrokeWidth(shape, false);
-          stage.mainLayer.draw();
+          highlightedDrop.getParent().draw();
         }
       });
 
-      dropItem.on('dragend',function(){
-        dropItem.moveTo(stage.mainLayer);
+      dragItem.on('dragend',function(){
+        dragItem.moveTo(stage.mainLayer);
         if (highlightedDrop) {
           updateStrokeWidth(highlightedDrop, true);
           highlightedDrop = null;
@@ -144,6 +171,7 @@ angular.module('sophe.factories.algorithmElement', [])
       var group = new Kinetic.Group({draggable: true});
       addStandardEventHandlers(group, scope);
       addCursorStyles(group, scope);
+
       var workflowObj = createRectangle(options, group);
       group.on('dragmove', function(e) {
         // e.target is assumed to be a Group
@@ -175,6 +203,8 @@ angular.module('sophe.factories.algorithmElement', [])
         stroke: '#CCCCCC', strokeWidth: 1
       };
       var termObj = createRectangle(termDropOptions, group);
+      setDroppable(termObj);
+
       var termTextOptions = {
         x: termDropOptions.x, y: termDropOptions.y,
         width: termObj.width(), height: termObj.height(),
@@ -182,8 +212,7 @@ angular.module('sophe.factories.algorithmElement', [])
         text: 'Drag and drop clinical terms or value sets here, or search for terms',
         align: 'center', padding: 5
       };
-      addDropTargetCheck(
-        createText(termTextOptions, group), scope);
+      createText(termTextOptions, group);
 
       var configOptions = {
         x: termDropOptions.x, y: termObj.height() + termDropOptions.y + 5,
@@ -192,7 +221,7 @@ angular.module('sophe.factories.algorithmElement', [])
         stroke: '#CCCCCC', strokeWidth: 1
       };
       var configObj = createRectangle(configOptions, group);
-      addDropTargetCheck(configObj, scope);
+      setDroppable(configObj);
 
       // Resize the main container to ensure consistent spacing regardless of the
       // height of internal components.
@@ -242,7 +271,7 @@ angular.module('sophe.factories.algorithmElement', [])
       var eventA = createRectangle(options, group);
       eventA.dash([10, 5]);
       eventA.dashEnabled(true);
-      addDropTargetCheck(eventA, scope);
+      setDroppable(eventA);
 
       var headerOptions = {
           x: options.x, y: options.y,
@@ -263,7 +292,7 @@ angular.module('sophe.factories.algorithmElement', [])
       var eventB = createRectangle(options, group);
       eventB.dash([10, 5]);
       eventB.dashEnabled(true);
-      addDropTargetCheck(eventB, scope);
+      setDroppable(eventB);
 
       headerOptions.x = options.x;
       headerOptions.y = options.y;
@@ -303,10 +332,11 @@ angular.module('sophe.factories.algorithmElement', [])
       var group = new Kinetic.Group({draggable: true});
       addStandardEventHandlers(group, scope);
       addCursorStyles(group, scope);
+
       var workflowObj = createRectangle(options, group);
       workflowObj.dash([10, 5]);
       workflowObj.dashEnabled(true);
-      addDropTargetCheck(workflowObj, scope);
+      setDroppable(workflowObj);
 
       var headerOptions = {
           x: options.x, y: options.y,
@@ -335,7 +365,6 @@ angular.module('sophe.factories.algorithmElement', [])
       addStandardEventHandlers(group, scope);
       addCursorStyles(group, scope);
       var workflowObj = createRectangle(options, group);
-      addDropTargetCheck(workflowObj, scope);
 
       var headerOptions = {
           x: options.x, y: options.y,
