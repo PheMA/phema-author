@@ -51,6 +51,7 @@ angular.module('sophe.factories.algorithmElement', [])
       });
     }
 
+    // Sets up a Kinetic shape to be a droppable target
     function setDroppable(kineticObj) {
       kineticObj.droppable = true;
     }
@@ -80,8 +81,14 @@ angular.module('sophe.factories.algorithmElement', [])
       dragItem.on('dragmove',function(){
         var pos = stage.getPointerPosition();
         var shape = stage.mainLayer.getIntersection(pos);
-        console.log(shape);
         if (!shape) {
+          // If we don't have a spot to drop, but we did before, clean up the old shape so it's not
+          // still highlighted as an active drop target.
+          if (highlightedDrop) {
+            updateStrokeWidth(highlightedDrop, true);
+            highlightedDrop.getParent().draw();
+            highlightedDrop = null;
+          }
           return;
         }
 
@@ -132,12 +139,14 @@ angular.module('sophe.factories.algorithmElement', [])
     function createRectangle(options, group) {
       var kineticObj = new Kinetic.Rect(options);
       group.add(kineticObj);
+      kineticObj.originalStrokeWidth = options.strokeWidth;
       return kineticObj;
     }
 
     function createCircle(options, group) {
       var kineticObj = new Kinetic.Circle(options);
       group.add(kineticObj);
+      kineticObj.originalStrokeWidth = options.strokeWidth;
       return kineticObj;
     }
 
