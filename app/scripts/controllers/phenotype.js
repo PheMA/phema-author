@@ -16,7 +16,15 @@ angular.module('sopheAuthorApp')
     }
 
     $http.get('data/phenotypes.json').success (function(data) {
-      $scope.phenotypes = data.sort(sortByName);
+      var transformedData = [];
+      for (var index = 0; index < data.length; index++) {
+        transformedData.push({
+          name: data[index].name,
+          type: 'Phenotype'
+        });
+      }
+
+      $scope.phenotypes = transformedData.sort(sortByName);
     });
 
     $http.get('data/qdm-categories.json').success (function(data){

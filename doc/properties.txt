@@ -24,9 +24,30 @@ Line : Connection   (considered a special type of Kinetic.Line) {
 
 Group : Element    (considered a special type of Kinetic.Group) {
   selected            bool  (is the object currently selected)
+  element             object  (the original element that was used to create the Kinetic element)
 }
 
 Any element {
-  droppable           bool  (can have shapes dropped on it)
-  originalStrokeWidth int   (the original width of the shape)
+  droppable           bool      (can have shapes dropped on it)
+  droppableElementTypes []      string[]  (the element types that may be dropped, or 'Any' if anything is accepted)
+  originalStrokeWidth int       (the original width of the shape)
 }
+
+
+Element Types:
+  Category
+  DataElement
+  LogicalOperator
+  TemporalOperator
+  ValueSet
+  Term
+  Phenotype
+
+Allowed drop targets:
+  Category / DataElement
+    Term Drop
+      - ValueSet, Term, Phenotype
+  LogicalOperator
+    - Category, DataElement, LogicalOperator
+  TemporalOperator
+    - Category, DataElement, LogicalOperator, Phenotype

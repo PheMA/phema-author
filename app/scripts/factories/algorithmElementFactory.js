@@ -51,9 +51,11 @@ angular.module('sophe.factories.algorithmElement', [])
       });
     }
 
-    // Sets up a Kinetic shape to be a droppable target
-    function setDroppable(kineticObj) {
+    // Sets up a Kinetic shape to be a droppable target that accepts an array of types that
+    // can be dropped on it.
+    function setDroppable(kineticObj, allowedDropTypes) {
       kineticObj.droppable = true;
+      kineticObj.droppableElementTypes = allowedDropTypes;
     }
 
     // Adds appropriate event handlers to a draggable object.
@@ -78,7 +80,7 @@ angular.module('sophe.factories.algorithmElement', [])
         dd.anim.start();
       });
 
-      dragItem.on('dragmove',function(){
+      dragItem.on('dragmove',function(e){
         var pos = stage.getPointerPosition();
         var shape = stage.mainLayer.getIntersection(pos);
         if (!shape) {
@@ -89,6 +91,7 @@ angular.module('sophe.factories.algorithmElement', [])
             highlightedDrop.getParent().draw();
             highlightedDrop = null;
           }
+          document.body.style.cursor = 'default';
           return;
         }
 
@@ -107,6 +110,10 @@ angular.module('sophe.factories.algorithmElement', [])
         }
 
         if (shape.droppable && shape !== highlightedDrop) {
+          if (!allowsDrop(e.target, shape)) {
+            document.body.style.cursor = 'no-drop';
+          }
+
           if (highlightedDrop) {
             updateStrokeWidth(highlightedDrop, true);
           }
@@ -118,6 +125,7 @@ angular.module('sophe.factories.algorithmElement', [])
 
       dragItem.on('dragend',function(){
         dragItem.moveTo(stage.mainLayer);
+        document.body.style.cursor = 'default';
         if (highlightedDrop) {
           updateStrokeWidth(highlightedDrop, true);
           highlightedDrop = null;
@@ -171,13 +179,15 @@ angular.module('sophe.factories.algorithmElement', [])
 
     function createQDMDataElement(config, scope) {
       var options = {
-          x: ((config && config.x) ? config.x : 50), y: ((config && config.y) ? config.y : 50),
-          width: 175, height: 200,
+          x: 0, y: 0, width: 175, height: 200,
           fill: '#dbeef4', name: 'mainRect',
           stroke: 'black', strokeWidth: 1
       };
 
-      var group = new Kinetic.Group({draggable: true});
+      var group = new Kinetic.Group({
+        draggable: true,
+        x: ((config && config.x) ? config.x : 50),
+        y: ((config && config.y) ? config.y : 50)});
       addStandardEventHandlers(group, scope);
       addCursorStyles(group, scope);
 
@@ -212,7 +222,7 @@ angular.module('sophe.factories.algorithmElement', [])
         stroke: '#CCCCCC', strokeWidth: 1
       };
       var termObj = createRectangle(termDropOptions, group);
-      setDroppable(termObj);
+      setDroppable(termObj, ['ValueSet', 'Term', 'Phenotype']);
 
       var termTextOptions = {
         x: termDropOptions.x, y: termDropOptions.y,
@@ -230,7 +240,6 @@ angular.module('sophe.factories.algorithmElement', [])
         stroke: '#CCCCCC', strokeWidth: 1
       };
       var configObj = createRectangle(configOptions, group);
-      setDroppable(configObj);
 
       // Resize the main container to ensure consistent spacing regardless of the
       // height of internal components.
@@ -266,21 +275,23 @@ angular.module('sophe.factories.algorithmElement', [])
     }
 
     function createQDMTemporalOperator(config, scope) {
-      var group = new Kinetic.Group({draggable: true});
+      var group = new Kinetic.Group({
+        draggable: true,
+        x: ((config && config.x) ? config.x : 50),
+        y: ((config && config.y) ? config.y : 50)});
       var spacing = 75;
       addStandardEventHandlers(group, scope);
       addCursorStyles(group, scope);
 
       var options = {
-          x: ((config && config.x) ? config.x : 50), y: ((config && config.y) ? config.y : 50),
-          width: 175, height: 175,
+          x: 0, y: 0, width: 175, height: 175,
           fill: 'white', name: 'eventA',
           stroke: 'gray', strokeWidth: 1
       };
       var eventA = createRectangle(options, group);
       eventA.dash([10, 5]);
       eventA.dashEnabled(true);
-      setDroppable(eventA);
+      setDroppable(eventA, ['Category', 'DataElement', 'LogicalOperator', 'Phenotype']);
 
       var headerOptions = {
           x: options.x, y: options.y,
@@ -301,7 +312,7 @@ angular.module('sophe.factories.algorithmElement', [])
       var eventB = createRectangle(options, group);
       eventB.dash([10, 5]);
       eventB.dashEnabled(true);
-      setDroppable(eventB);
+      setDroppable(eventB, ['Category', 'DataElement', 'LogicalOperator', 'Phenotype']);
 
       headerOptions.x = options.x;
       headerOptions.y = options.y;
@@ -332,20 +343,22 @@ angular.module('sophe.factories.algorithmElement', [])
 
     function createQDMLogicalOperator(config, scope) {
       var options = {
-          x: ((config && config.x) ? config.x : 50), y: ((config && config.y) ? config.y : 50),
-          width: 200, height: 200,
+          x: 0, y: 0, width: 200, height: 200,
           fill: '#eeeeee', name: 'mainRect',
           stroke: 'gray', strokeWidth: 1
       };
 
-      var group = new Kinetic.Group({draggable: true});
+      var group = new Kinetic.Group({
+        draggable: true,
+        x: ((config && config.x) ? config.x : 50),
+        y: ((config && config.y) ? config.y : 50)});
       addStandardEventHandlers(group, scope);
       addCursorStyles(group, scope);
 
       var workflowObj = createRectangle(options, group);
       workflowObj.dash([10, 5]);
       workflowObj.dashEnabled(true);
-      setDroppable(workflowObj);
+      setDroppable(workflowObj, ['Category', 'DataElement', 'LogicalOperator']);
 
       var headerOptions = {
           x: options.x, y: options.y,
@@ -364,13 +377,15 @@ angular.module('sophe.factories.algorithmElement', [])
 
     function createGenericElement(config, scope) {
       var options = {
-          x: ((config && config.x) ? config.x : 50), y: ((config && config.y) ? config.y : 50),
-          width: 175, height: 100,
+          x: 0, y: 0, width: 175, height: 100,
           fill: '#dbeef4', name: 'mainRect',
           stroke: 'black', strokeWidth: 1
       };
 
-      var group = new Kinetic.Group({draggable: true});
+      var group = new Kinetic.Group({
+        draggable: true,
+        x: ((config && config.x) ? config.x : 50),
+        y: ((config && config.y) ? config.y : 50)});
       addStandardEventHandlers(group, scope);
       addCursorStyles(group, scope);
       var workflowObj = createRectangle(options, group);
@@ -390,6 +405,28 @@ angular.module('sophe.factories.algorithmElement', [])
       mainLayer.add(group);
       mainLayer.draw();
       return group;
+    }
+
+    // Determines if an element being dragged can be dropped onto another element
+    function allowsDrop(dragElement, dropElement) {
+      if (!dragElement || !dropElement) {
+        console.error('No drag or drop element was specified');
+        return false;
+      }
+
+      if (!dropElement.droppable || (!dropElement.droppableElementTypes) || dropElement.droppableElementTypes.length === 0) {
+        console.error('This element is not configured to accept drops');
+        return false;
+      }
+
+      var index = 0;
+      for (index = 0; index < dropElement.droppableElementTypes.length; index++) {
+        if (dropElement.droppableElementTypes[index] === dragElement.element.type) {
+          return true;
+        }
+      }
+
+      return false;
     }
 
     var factory = {};
@@ -414,11 +451,21 @@ angular.module('sophe.factories.algorithmElement', [])
       else if (config.element.type === 'LogicalOperator') {
         workflowObject = createQDMLogicalOperator(config, scope);
       }
+      else if (config.element.type === 'Phenotype') {
+        workflowObject = createGenericElement(config, scope);
+      }
       else {
         workflowObject = createGenericElement(config, scope);
       }
 
+      if (workflowObject) {
+        workflowObject.element = config.element;
+      }
+
       return workflowObject;
     };
+
+    factory.allowsDrop = allowsDrop;
+
     return factory;
 });
