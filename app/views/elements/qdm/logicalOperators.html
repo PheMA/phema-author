@@ -1,11 +1,9 @@
-<div id="logical-operators-list" class="phenotype-element-list" tooltip="Drag and drop a logical operator onto the canvas" tooltip-placement="right">
-  <div class="phenotype-element-header">Logical Operators</div>
-  <div treecontrol class="tree-classic"
-     tree-model="logicalOperators"
-     options="treeOptions">
-     <span draggable>
-      {{node.name}}
-      <input type="hidden" value="{{node}}"></input>
-     </span>
-  </div>
+<div treecontrol class="tree-classic"
+   tree-model="logicalOperators"
+   options="treeOptions"
+   tooltip="Drag and drop a logical operator onto the canvas" tooltip-placement="right">
+   <span draggable>
+    {{node.name}}
+    <input type="hidden" value="{{node}}"></input>
+   </span>
 </div>

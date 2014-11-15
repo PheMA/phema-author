@@ -128,3 +128,17 @@ table.phenotype-list {
   margin-left: 0px;
   margin-right: 0px;
 }
+
+.panel-group {
+  .panel-heading {
+    padding: 7px;
+  }
+
+  .panel-body {
+    padding: 7px;
+  }
+}
+
+.accordion-toggle:hover {
+  cursor: pointer;
+}

@@ -1,12 +1,9 @@
-<div id="temporal-operators-list" class="phenotype-element-list"
-tooltip="Drag and drop a temporal operator onto the canvas" tooltip-placement="right">
-  <div class="phenotype-element-header">Temporal Operators</div>
-  <div treecontrol class="tree-classic"
-     tree-model="temporalOperators"
-     options="treeOptions">
-     <span draggable>
-      {{node.name}}
-      <input type="hidden" value="{{node}}"></input>
-     </span>
-  </div>
+<div treecontrol class="tree-classic"
+   tree-model="temporalOperators"
+   options="treeOptions"
+   tooltip="Drag and drop a temporal operator onto the canvas" tooltip-placement="right">
+   <span draggable>
+    {{node.name}}
+    <input type="hidden" value="{{node}}"></input>
+   </span>
 </div>

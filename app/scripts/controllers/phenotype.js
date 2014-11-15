@@ -10,6 +10,7 @@
 angular.module('sopheAuthorApp')
   .controller('PhenotypeCtrl', ['$scope', '$http', '$routeParams', 'algorithmElementFactory', function ($scope, $http, $routeParams, algorithmElementFactory) {
     $scope.phenotype = $routeParams.id;
+    $scope.status = { open: [true, false, false, false]};
 
     function sortByName(obj1, obj2) {
       return obj1.name.localeCompare(obj2.name);

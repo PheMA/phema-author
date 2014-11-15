@@ -38,12 +38,16 @@
   border-radius: 2px;
   margin-bottom: 15px;
 
-  .phenotype-element-header {
+  .panel-heading {
     background-color: $dashboard-header-background-color;
     color: white;
     padding: 3px 5px;
     text-align: center;
     border-bottom: solid 2px black;
+
+    .panel-title {
+      font-size: 14px;
+    }
   }
 
   ul {

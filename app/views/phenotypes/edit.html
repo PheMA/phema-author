@@ -4,10 +4,32 @@
 </div>
 <div class="row">
   <div class="col-md-3">
-    <div phenotype-elements></div>
-    <div logical-operators></div>
-    <div temporal-operators></div>
-    <div qdm-data-elements></div>
+    <accordion close-others="oneAtATime">
+      <accordion-group class="phenotype-element-list" is-open="status.open[0]">
+        <accordion-heading>
+          Phenotype Elements <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[0], 'glyphicon-chevron-right': !status.open[0]}"></i>
+        </accordion-heading>
+        <div phenotype-elements></div>
+      </accordion-group>
+      <accordion-group id="logical-operators-list" class="phenotype-element-list" is-open="status.open[1]">
+        <accordion-heading>
+          Logical Operators <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[1], 'glyphicon-chevron-right': !status.open[1]}"></i>
+        </accordion-heading>
+        <div logical-operators></div>
+      </accordion-group>
+      <accordion-group id="temporal-operators-list" class="phenotype-element-list" is-open="status.open[2]">
+        <accordion-heading>
+          Temporal Operators <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[2], 'glyphicon-chevron-right': !status.open[2]}"></i>
+        </accordion-heading>
+        <div temporal-operators></div>
+      </accordion-group>
+      <accordion-group id="data-elements-list" class="phenotype-element-list" is-open="status.open[3]">
+        <accordion-heading>
+          Data Elements <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[3], 'glyphicon-chevron-right': !status.open[3]}"></i>
+        </accordion-heading>
+        <div qdm-data-elements></div>
+      </accordion-group>
+    </accordion>
   </div>
   <div droppable drop="addWorkflowObject(config)" class="col-md-9">
     <div data-kinetic-canvas data-canvas-details="canvasDetails" style="border: solid grey 1px;" id="canvas">&nbsp;</div>
