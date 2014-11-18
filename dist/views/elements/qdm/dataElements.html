@@ -1,11 +1,9 @@
-<div id="data-elements-list" class="phenotype-element-list" tooltip="Drag and drop a data element onto the canvas" tooltip-placement="right">
-  <div class="phenotype-element-header">Data Elements</div>
-  <div treecontrol class="tree-classic"
-     tree-model="dataElements"
-     options="treeOptions">
-     <span draggable>
-      {{node.name}}
-      <input type="hidden" value="{{node}}"></input>
-     </span>
-  </div>
+<div treecontrol class="tree-classic"
+   tree-model="dataElements"
+   options="treeOptions"
+   tooltip="Drag and drop a data element onto the canvas" tooltip-placement="right">
+   <span draggable>
+    {{node.name}}
+    <input type="hidden" value="{{node}}"></input>
+   </span>
 </div>
