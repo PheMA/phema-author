@@ -1,4 +1,5 @@
 /* globals Kinetic */
+/* exported startConnector, endConnector, updateActiveLineLocation */
 
 'use strict';
 

@@ -465,6 +465,21 @@ angular.module('sophe.factories.algorithmElement', [])
       return workflowObject;
     };
 
+    factory.deleteSelectedObjects = function(scope) {
+      // If there is no canvas to remove from, we are done here
+      if('undefined' === typeof scope.canvasDetails) {
+          return null;
+      }
+
+      var stage = scope.canvasDetails.kineticStageObj;
+      stage.mainLayer.get('Group').each(function(group) {
+        if (group.selected === true) {
+          group.destroy();
+        }
+      });
+      stage.draw();
+    };
+
     factory.allowsDrop = allowsDrop;
 
     return factory;

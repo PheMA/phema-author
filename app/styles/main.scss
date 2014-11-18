@@ -142,3 +142,23 @@ table.phenotype-list {
 .accordion-toggle:hover {
   cursor: pointer;
 }
+
+.position-fixed {
+  position: fixed;
+}
+
+.context-menu {
+  .divider {
+    text-align: center;
+    border-bottom: 1px solid black;
+  }
+}
+
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

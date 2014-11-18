@@ -16,7 +16,9 @@
     "angular-bootstrap": "~0.11.2",
     "font-awesome": "~4.2.0",
     "kineticjs": "~5.1.0",
-    "angular-tree-control": "~0.2.5"
+    "angular-tree-control": "~0.2.5",
+    "ng-context-menu": "~1.0.1",
+    "angular-history": "~0.7.5"
   },
   "devDependencies": {
     "angular-mocks": "1.2.16",

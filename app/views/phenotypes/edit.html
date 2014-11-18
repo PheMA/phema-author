@@ -32,6 +32,23 @@
     </accordion>
   </div>
   <div droppable drop="addWorkflowObject(config)" class="col-md-9">
-    <div data-kinetic-canvas data-canvas-details="canvasDetails" style="border: solid grey 1px;" id="canvas">&nbsp;</div>
+    <div context-menu="onRightClick(message)" context-menu-close="onClose(closeMessage)" data-target="phenotypeMenu">
+      <div data-kinetic-canvas data-canvas-details="canvasDetails" style="border: solid grey 1px;" id="canvas">&nbsp;</div>
+    </div>
+  </div>
+
+  <div class="dropdown position-fixed context-menu" id="phenotypeMenu">
+    <ul class="dropdown-menu" role="menu">
+      <li>
+        <a class="pointer ng-binding" role="menuitem" tabindex="2" ng-click="copy()">Copy</a>
+      </li>
+      <li>
+        <a class="pointer ng-binding" role="menuitem" tabindex="3" ng-click="paste()">Paste</a>
+      </li>
+      <li class="divider">&nbsp;</li>
+      <li>
+        <a class="pointer ng-binding" role="menuitem" tabindex="1" ng-click="delete()">Delete</a>
+      </li>
+    </ul>
   </div>
 </div>

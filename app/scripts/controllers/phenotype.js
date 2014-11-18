@@ -110,4 +110,16 @@ angular.module('sopheAuthorApp')
     $scope.addWorkflowObject = function (config) {
       return algorithmElementFactory.addWorkflowObject(config, $scope);
     };
+
+    $scope.copy = function() {
+      console.log('Copy');
+    };
+
+    $scope.delete = function() {
+      algorithmElementFactory.deleteSelectedObjects($scope);
+    };
+
+    $scope.paste = function() {
+      console.log('Paste');
+    };
   }]);

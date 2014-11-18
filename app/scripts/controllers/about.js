@@ -8,5 +8,5 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('AboutCtrl', function ($scope) {
+  .controller('AboutCtrl', function (/*$scope*/) {
   });

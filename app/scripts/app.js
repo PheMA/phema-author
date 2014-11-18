@@ -19,7 +19,8 @@ var app = angular.module('sopheAuthorApp', [
     'treeControl',
     'ui.bootstrap',
     'sophe',
-    'security'
+    'security',
+    'ng-context-menu'
   ]);
 
 app.config(function ($routeProvider) {
