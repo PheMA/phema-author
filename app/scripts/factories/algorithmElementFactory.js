@@ -114,7 +114,6 @@ angular.module('sophe.factories.algorithmElement', [])
 
       dragItem.on('dragend',function(){
         var pos = stage.getPointerPosition();
-        console.log(stage.mainLayer.getIntersection(pos));
         dragItem.moveTo(stage.mainLayer);
         document.body.style.cursor = 'default';
         if (highlightedDrop) {
