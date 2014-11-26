@@ -1,5 +1,5 @@
 /* globals Kinetic */
-/* exported startConnector, endConnector, updateActiveLineLocation */
+/* exported startConnector, endConnector, updateActiveLineLocation, getIntersectingShape, addElementToContainer */
 
 'use strict';
 
@@ -18,6 +18,11 @@ function updateStrokeWidth(kineticObj, normal) {
   else {
     kineticObj.setStrokeWidth(strokeWidth);
   }
+}
+
+function addElementToContainer(stage, container, object) {
+  var group = (container.nodeType === 'Group' ? container : container.parent);
+  console.log(group);
 }
 
 function selectObject(stage, selectObj) {
@@ -147,4 +152,46 @@ function endConnector(stage, connectorObj) {
 
   stage.connector = {};
   stage.drawScene();
+}
+
+function checkCollide(pointX, pointY, objectx, objecty, objectw, objecth) { // pointX, pointY belong to one rectangle, while the object variables belong to another rectangle
+  var oTop = objecty;
+  var oLeft = objectx;
+  var oRight = objectx+objectw;
+  var oBottom = objecty+objecth;
+
+  if(pointX > oLeft && pointX < oRight){
+    if(pointY > oTop && pointY < oBottom ){
+      return true;
+    }
+  }
+  return false;
+}
+
+function getIntersectingShape(layer, pos) {
+  var groups = layer.getChildren();
+  var shapes = null;
+  var intersectingGroup = null;
+  for (var groupIndex = 0; groupIndex < groups.length; groupIndex++) {
+    if (checkCollide(pos.x, pos.y, groups[groupIndex].getX(), groups[groupIndex].getY(), groups[groupIndex].getWidth(), groups[groupIndex].getHeight())) {
+      intersectingGroup = groups[groupIndex];
+
+      // Once we identify an intersected group, we need to look for the underlying droppable Rect that should
+      // be considered the actual drop target.  We always use a Rect because our visual indicator of
+      // a drop target is to modify the Rect itself.
+      shapes = intersectingGroup.getChildren();
+      for (var shapeIndex = 0; shapeIndex < shapes.length; shapeIndex++) {
+        if (shapes[shapeIndex].droppable) {
+          // Shapes within the group are oriented at (0, 0).  Offset the X and Y coordinates with that of the group
+          if (checkCollide(pos.x, pos.y, shapes[shapeIndex].getX() + intersectingGroup.getX(), shapes[shapeIndex].getY() + intersectingGroup.getY(), 
+              shapes[shapeIndex].getWidth(), shapes[shapeIndex].getHeight())) {
+            return shapes[shapeIndex];
+          }
+        }
+      }
+
+    }
+  }
+
+  return null;
 }

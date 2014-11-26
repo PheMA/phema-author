@@ -1,5 +1,5 @@
 'use strict';
-/* globals endConnector, updateActiveLineLocation, startConnector, clearSelections, selectObject, changeConnectorEndpoints, addOutlineStyles, updateStrokeWidth, Kinetic */
+/* globals endConnector, updateActiveLineLocation, startConnector, clearSelections, selectObject, changeConnectorEndpoints, addOutlineStyles, updateStrokeWidth, Kinetic, getIntersectingShape, addElementToContainer */
 
 angular.module('sophe.factories.algorithmElement', [])
   .factory('algorithmElementFactory', function() {
@@ -82,7 +82,10 @@ angular.module('sophe.factories.algorithmElement', [])
 
       dragItem.on('dragmove',function(e){
         var pos = stage.getPointerPosition();
-        var shape = stage.mainLayer.getIntersection(pos);
+        // We can't use the KineticJS getIntersection because when we are moving the mouse we
+        // need to redraw the different layers to account for connector arrows moving.  Because
+        // we do the redraw, it invalidates the underlying image that getIntersections relies on.
+        var shape = getIntersectingShape(stage.mainLayer, pos);
         if (!shape) {
           // If we don't have a spot to drop, but we did before, clean up the old shape so it's not
           // still highlighted as an active drop target.
@@ -93,20 +96,6 @@ angular.module('sophe.factories.algorithmElement', [])
           }
           document.body.style.cursor = 'default';
           return;
-        }
-
-        // If we land on a Text element, we need to look for the underlying droppable Rect that should
-        // be considered the actual drop target.  We always use a Rect because our visual indicator of
-        // a drop target is to modify the Rect itself.
-        if (shape.className === 'Text') {
-          var allShapes = shape.getParent().getAllIntersections(pos);
-          var index = 0;
-          for (index = 0; index < allShapes.length; index++) {
-            if (allShapes[index].droppable) {
-              shape = allShapes[index];
-              break;
-            }
-          }
         }
 
         if (shape.droppable && shape !== highlightedDrop) {
@@ -124,9 +113,12 @@ angular.module('sophe.factories.algorithmElement', [])
       });
 
       dragItem.on('dragend',function(){
+        var pos = stage.getPointerPosition();
+        console.log(stage.mainLayer.getIntersection(pos));
         dragItem.moveTo(stage.mainLayer);
         document.body.style.cursor = 'default';
         if (highlightedDrop) {
+          addElementToContainer(stage, highlightedDrop, dragItem);
           updateStrokeWidth(highlightedDrop, true);
           highlightedDrop = null;
           stage.mainLayer.draw();
@@ -203,7 +195,7 @@ angular.module('sophe.factories.algorithmElement', [])
         var stage = group.getStage();
         updateConnectedLines(e.target.find('.rightConnector')[0], stage);
         updateConnectedLines(e.target.find('.leftConnector')[0], stage);
-        stage.draw();
+        stage.find('#mainLayer').draw();
       });
 
       var headerOptions = {
@@ -267,11 +259,15 @@ angular.module('sophe.factories.algorithmElement', [])
       addConnectionHandler(rightObj, scope);
       rightObj.connections = [];
 
+      // Now that the shape is built, define the bounds of the group
+      group.setWidth(workflowObj.getWidth());
+      group.setHeight(workflowObj.getHeight());
+
       var mainLayer = scope.canvasDetails.kineticStageObj.find('#mainLayer');
       mainLayer.add(group);
       mainLayer.draw();
 
-      return workflowObj;
+      return group;
     }
 
     function createQDMTemporalOperator(config, scope) {
@@ -335,6 +331,10 @@ angular.module('sophe.factories.algorithmElement', [])
       group.add(line);
       changeConnectorEndpoints(stage, line, {x: 0, y: 0}, {x: spacing, y: 0});
 
+      // Now that the shape is built, define the bounds of the group
+      group.setWidth(eventB.getX() + eventB.getWidth() - eventA.getX());
+      group.setHeight(eventA.getHeight());
+
       var mainLayer = stage.find('#mainLayer');
       mainLayer.add(group);
       mainLayer.draw();
@@ -351,7 +351,8 @@ angular.module('sophe.factories.algorithmElement', [])
       var group = new Kinetic.Group({
         draggable: true,
         x: ((config && config.x) ? config.x : 50),
-        y: ((config && config.y) ? config.y : 50)});
+        y: ((config && config.y) ? config.y : 50),
+        width: options.width, height: options.height });
       addStandardEventHandlers(group, scope);
       addCursorStyles(group, scope);
 
@@ -401,6 +402,10 @@ angular.module('sophe.factories.algorithmElement', [])
 
       workflowObj.setHeight(headerObj.getHeight() + 10);
 
+      // Now that the shape is built, define the bounds of the group
+      group.setWidth(workflowObj.getWidth());
+      group.setHeight(workflowObj.getHeight());
+
       var mainLayer = scope.canvasDetails.kineticStageObj.find('#mainLayer');
       mainLayer.add(group);
       mainLayer.draw();
@@ -433,10 +438,11 @@ angular.module('sophe.factories.algorithmElement', [])
     factory.addWorkflowObject = function (config, scope) {
       // If there is no canvas to add to, we are done here
       if('undefined' === typeof scope.canvasDetails) {
-          return null;
+        console.error('No canvas is defined');
+        return null;
       }
 
-      if (!config.element) {
+      if ('undefined' === typeof(config) || null === config || !config.element) {
         console.error('No element definition was provided');
         return null;
       }
