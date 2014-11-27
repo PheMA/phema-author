@@ -22,9 +22,26 @@ function updateStrokeWidth(kineticObj, normal) {
   }
 }
 
+function updateSizeOfMainRect(rect, group, width, height) {
+  rect.setWidth(width);
+  rect.setHeight(height);
+  group.setWidth(width);
+  group.setHeight(height);
+}
+
+// For a container (represented by group), lay out all contained elements within the
+// main rectangle.
 function layoutElementsInContainer(group) {
-  var currentX = BORDER;
   var header = group.getChildren(function(node) { return node.getClassName() === 'Text'; })[0];
+  var rect = group.getChildren(function(node) { return node.getClassName() === 'Rect'; })[0];
+  
+  if (group.containedElements.length == 0) {
+    updateSizeOfMainRect(rect, group, 200, 200);
+    header.setWidth(rect.getWidth());
+    return;
+  }
+
+  var currentX = BORDER;
   var currentY = header.getHeight() + BORDER;
   var maxHeight = 0;
   var element = null;
@@ -37,13 +54,8 @@ function layoutElementsInContainer(group) {
     maxHeight = Math.max(currentY, currentY + element.getHeight() + BORDER);
   }
 
-  var rect = group.getChildren(function(node) { return node.getClassName() === 'Rect'; })[0];
-  rect.setWidth(currentX);
-  rect.setHeight(maxHeight);
+  updateSizeOfMainRect(rect, group, currentX, maxHeight);
   header.setWidth(rect.getWidth());
-
-  group.setWidth(rect.getWidth());
-  group.setHeight(rect.getHeight());
 }
 
 // Given a droppable container, handle adding the element to that container
@@ -70,7 +82,12 @@ function addElementToContainer(stage, container, element) {
 function removeElementFromContainer(stage, element) {
   if (element && element.container) {
     var group = (element.container.nodeType === 'Group' ? element.container : element.container.parent);
-    group.containedElements = group.containedElements.splice(group.containedElements.indexOf(element), 1);
+    var foundIndex = group.containedElements.indexOf(element);
+    if (foundIndex < 0) {
+      console.error('Unable to find element to remove from container');
+      return;
+    }
+    group.containedElements.splice(foundIndex, 1);
     element.container = null;
     layoutElementsInContainer(group);
     stage.mainLayer.draw();
