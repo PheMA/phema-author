@@ -3,6 +3,8 @@
 
 'use strict';
 
+var BORDER = 10;
+
 function updateStrokeWidth(kineticObj, normal) {
   var strokeWidth = kineticObj.originalStrokeWidth || 1;
   if (!normal) {
@@ -20,9 +22,59 @@ function updateStrokeWidth(kineticObj, normal) {
   }
 }
 
-function addElementToContainer(stage, container, object) {
+function layoutElementsInContainer(group) {
+  var currentX = BORDER;
+  var header = group.getChildren(function(node) { return node.getClassName() === 'Text'; })[0];
+  var currentY = header.getHeight() + BORDER;
+  var maxHeight = 0;
+  var element = null;
+  for (var index = 0; index < group.containedElements.length; index ++) {
+    element = group.containedElements[index];
+    element.moveTo(group);
+    element.setX(currentX);
+    element.setY(currentY);
+    currentX = currentX + element.getWidth() + BORDER;
+    maxHeight = Math.max(currentY, currentY + element.getHeight() + BORDER);
+  }
+
+  var rect = group.getChildren(function(node) { return node.getClassName() === 'Rect'; })[0];
+  rect.setWidth(currentX);
+  rect.setHeight(maxHeight);
+  header.setWidth(rect.getWidth());
+
+  group.setWidth(rect.getWidth());
+  group.setHeight(rect.getHeight());
+}
+
+// Given a droppable container, handle adding the element to that container
+function addElementToContainer(stage, container, element) {
   var group = (container.nodeType === 'Group' ? container : container.parent);
-  console.log(group);
+  if (group) {
+    if (group.element.type === 'TemporalOperator') {
+      // Replace container with element
+    }
+    else if (group.element.type === 'DataElement' || group.element.type === 'Category') {
+    }
+    else if (group.element.type === 'LogicalOperator') {
+      // Add the item (if it's not already in the array)
+      if (group.containedElements.indexOf(element) === -1) {
+        group.containedElements.push(element);
+        element.container = group;
+      }
+      layoutElementsInContainer(group);
+      stage.draw();
+    }
+  }
+}
+
+function removeElementFromContainer(stage, element) {
+  if (element && element.container) {
+    var group = (element.container.nodeType === 'Group' ? element.container : element.container.parent);
+    group.containedElements = group.containedElements.splice(group.containedElements.indexOf(element), 1);
+    element.container = null;
+    layoutElementsInContainer(group);
+    stage.mainLayer.draw();
+  }
 }
 
 function selectObject(stage, selectObj) {

@@ -29,6 +29,7 @@ module.exports = function(config) {
       'bower_components/angular-touch/angular-touch.js',
       'bower_components/kineticjs/kinetic.js',
       'bower_components/angular-tree-control/angular-tree-control.js',
+      'bower_components/ng-context-menu/dist/ng-context-menu.js',
       'app/scripts/**/*.js',
       'test/mock/**/*.js',
       'test/spec/**/*.js'

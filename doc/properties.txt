@@ -27,10 +27,15 @@ Group : Element    (considered a special type of Kinetic.Group) {
   element             object  (the original element that was used to create the Kinetic element)
 }
 
+Group : LogicalOperator  (considered a special type of Kinetic.Group and Element) {
+  containedElements   []  (the SoPhe elements that are contained within the group)
+}
+
 Any element {
   droppable           bool      (can have shapes dropped on it)
   droppableElementTypes []      string[]  (the element types that may be dropped, or 'Any' if anything is accepted)
   originalStrokeWidth int       (the original width of the shape)
+  container           object    (the container, if any, that this element is in)
 }
 
 

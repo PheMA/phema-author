@@ -114,7 +114,8 @@ angular.module('sophe.factories.algorithmElement', [])
 
       dragItem.on('dragend',function(){
         var pos = stage.getPointerPosition();
-        dragItem.moveTo(stage.mainLayer);
+        dragItem.moveTo(stage.mainLayer); // Must do this before remove element
+        removeElementFromContainer(stage, dragItem);  // Clear from a container, if it was in one before
         document.body.style.cursor = 'default';
         if (highlightedDrop) {
           addElementToContainer(stage, highlightedDrop, dragItem);
@@ -364,11 +365,12 @@ angular.module('sophe.factories.algorithmElement', [])
           x: options.x, y: options.y,
           width: options.width, // Leave out height so it auto-sizes
           fontFamily: 'Calibri', fontSize: 14, fill: 'black',
-          text: config.element.name,
+          text: config.element.name, name: 'header',
           align: 'center', padding: 5
       };
       createText(headerOptions, group);
 
+      group.containedElements = [];
       var mainLayer = scope.canvasDetails.kineticStageObj.find('#mainLayer');
       mainLayer.add(group);
       mainLayer.draw();

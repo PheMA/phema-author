@@ -7,11 +7,12 @@ describe('Factory: AlgorithmElementFactory', function () {
   // beforeEach(module('treeControl'));
   beforeEach(module('sopheAuthorApp'));
 
-  var algorithmElementFactory, dragElement, dropElement;
+  var algorithmElementFactory, scope, dragElement, dropElement;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function (_algorithmElementFactory_) {
+  beforeEach(inject(function (_algorithmElementFactory_, $rootScope) {
     algorithmElementFactory = _algorithmElementFactory_;
+    scope = $rootScope.$new();
     dragElement = { droppable: false, element: {} };
     dropElement = { droppable: true, element: {}, droppableElementTypes: [] };
 
@@ -54,6 +55,34 @@ describe('Factory: AlgorithmElementFactory', function () {
       dragElement.element.type = 'DataElement';
       var response = algorithmElementFactory.allowsDrop(dragElement, dropElement);
       expect(response).toEqual(false);
+    }));
+  });
+
+  describe('addWorkflowObject', function() {
+    beforeEach(inject(function (_algorithmElementFactory_, $rootScope) {
+      scope.canvasDetails = {};
+    }));
+
+    it('returns null when there is no canvas', inject(function() {
+      scope = {};
+      var response = algorithmElementFactory.addWorkflowObject(null, scope);
+      expect(console.error).toHaveBeenCalledWith('No canvas is defined');
+    }));
+
+    it('handles null configuration', inject(function() {
+      var response = algorithmElementFactory.addWorkflowObject(null, scope);
+      expect(console.error).toHaveBeenCalledWith('No element definition was provided');
+    }));
+
+    it('handles empty configuration', inject(function() {
+      var config = {};
+      var response = algorithmElementFactory.addWorkflowObject(config, scope);
+      expect(console.error).toHaveBeenCalledWith('No element definition was provided');
+    }));
+
+    it('creates a temporal operator', inject(function() {
+      var config = {element: {type: 'TemporalOperator'}};
+      var response = algorithmElementFactory.addWorkflowObject(config, scope);
     }));
   });
 });
