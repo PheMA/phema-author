@@ -168,6 +168,44 @@ angular.module('sophe.factories.algorithmElement', [])
         changeConnectorEndpoints(stage, line, startPos, endPos);
       }
     }
+    
+    function addConnectors(scope, mainRect, group) {
+      var leftConnectOptions = {
+        x: 0, y: (mainRect.getHeight() / 2),
+        width: 15, height: 15,
+        fill: 'white', name: 'leftConnector',
+        stroke: 'black', strokeWidth: 1
+      };
+      var leftObj = createCircle(leftConnectOptions, group);
+      addOutlineStyles(leftObj);
+      addConnectionHandler(leftObj, scope);
+      leftObj.connections = [];
+
+      var rightConnectOptions = {
+        x: mainRect.getWidth(), y: (mainRect.getHeight() / 2),
+        width: 15, height: 15,
+        fill: 'white', name: 'rightConnector',
+        stroke: 'black', strokeWidth: 1
+      };
+      var rightObj = createCircle(rightConnectOptions, group);
+      addOutlineStyles(rightObj);
+      addConnectionHandler(rightObj, scope);
+      rightObj.connections = [];
+      
+      group.on('dragmove', function(e) {
+        // e.target is assumed to be a Group
+        if (e.target.nodeType !== 'Group') {
+          console.error('Unsupported object' + e.target);
+          return;
+        }
+
+        // For the element we are moving, redraw all connection lines
+        var stage = group.getStage();
+        updateConnectedLines(e.target.find('.rightConnector')[0], stage);
+        updateConnectedLines(e.target.find('.leftConnector')[0], stage);
+        stage.find('#mainLayer').draw();
+      });
+    }
 
     function createQDMDataElement(config, scope) {
       var options = {
@@ -184,19 +222,6 @@ angular.module('sophe.factories.algorithmElement', [])
       addCursorStyles(group, scope);
 
       var workflowObj = createRectangle(options, group);
-      group.on('dragmove', function(e) {
-        // e.target is assumed to be a Group
-        if (e.target.nodeType !== 'Group') {
-          console.error('Unsupported object' + e.target);
-          return;
-        }
-
-        // For the element we are moving, redraw all connection lines
-        var stage = group.getStage();
-        updateConnectedLines(e.target.find('.rightConnector')[0], stage);
-        updateConnectedLines(e.target.find('.leftConnector')[0], stage);
-        stage.find('#mainLayer').draw();
-      });
 
       var headerOptions = {
           x: options.x, y: options.y,
@@ -237,27 +262,7 @@ angular.module('sophe.factories.algorithmElement', [])
       // height of internal components.
       workflowObj.setHeight(configObj.getY() + configObj.getHeight() - options.y + 10);
 
-      var leftConnectOptions = {
-        x: options.x, y: options.y + (workflowObj.getHeight() / 2),
-        width: 15, height: 15,
-        fill: 'white', name: 'leftConnector',
-        stroke: 'black', strokeWidth: 1
-      };
-      var leftObj = createCircle(leftConnectOptions, group);
-      addOutlineStyles(leftObj);
-      addConnectionHandler(leftObj, scope);
-      leftObj.connections = [];
-
-      var rightConnectOptions = {
-        x: options.x + options.width, y: options.y + (workflowObj.getHeight() / 2),
-        width: 15, height: 15,
-        fill: 'white', name: 'rightConnector',
-        stroke: 'black', strokeWidth: 1
-      };
-      var rightObj = createCircle(rightConnectOptions, group);
-      addOutlineStyles(rightObj);
-      addConnectionHandler(rightObj, scope);
-      rightObj.connections = [];
+      addConnectors(scope, workflowObj, group);
 
       // Now that the shape is built, define the bounds of the group
       group.setWidth(workflowObj.getWidth());
@@ -369,6 +374,8 @@ angular.module('sophe.factories.algorithmElement', [])
           align: 'center', padding: 5
       };
       createText(headerOptions, group);
+      
+      addConnectors(scope, workflowObj, group);
 
       group.containedElements = [];
       var mainLayer = scope.canvasDetails.kineticStageObj.find('#mainLayer');
@@ -401,11 +408,13 @@ angular.module('sophe.factories.algorithmElement', [])
       };
       var headerObj = createText(headerOptions, group);
 
-      workflowObj.setHeight(headerObj.getHeight() + 10);
+      workflowObj.setHeight(headerObj.getHeight() + 30);
 
       // Now that the shape is built, define the bounds of the group
       group.setWidth(workflowObj.getWidth());
       group.setHeight(workflowObj.getHeight());
+      
+      addConnectors(scope, workflowObj, group);
 
       var mainLayer = scope.canvasDetails.kineticStageObj.find('#mainLayer');
       mainLayer.add(group);
