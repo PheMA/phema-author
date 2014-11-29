@@ -1,9 +1,9 @@
 /* globals Kinetic */
-/* exported startConnector, endConnector, updateActiveLineLocation, getIntersectingShape, addElementToContainer */
+/* exported startConnector, endConnector, updateActiveLineLocation, getIntersectingShape, addElementToContainer, removeElementFromContainer */
 
 'use strict';
 
-var BORDER = 10;
+var BORDER = 20;
 
 function updateStrokeWidth(kineticObj, normal) {
   var strokeWidth = kineticObj.originalStrokeWidth || 1;
@@ -22,11 +22,28 @@ function updateStrokeWidth(kineticObj, normal) {
   }
 }
 
+function setConnectorLocation(rect, group, connectorName, x, y) {
+  // If there are connectors, move them to the appropriate locations
+  var connector = group.find('.' + connectorName);
+  if (connector.length > 0) {
+    connector.each(function(node) {
+      if (node.getParent() === group) {
+        node.setX(x);
+        node.setY(y);
+      }
+    });
+  }
+}
+
 function updateSizeOfMainRect(rect, group, width, height) {
   rect.setWidth(width);
   rect.setHeight(height);
   group.setWidth(width);
   group.setHeight(height);
+
+  var y = (rect.getHeight() / 2);
+  setConnectorLocation(rect, group, 'rightConnector', rect.getWidth(), y);
+  setConnectorLocation(rect, group, 'leftConnector', 0, y);
 }
 
 // For a container (represented by group), lay out all contained elements within the
@@ -34,8 +51,8 @@ function updateSizeOfMainRect(rect, group, width, height) {
 function layoutElementsInContainer(group) {
   var header = group.getChildren(function(node) { return node.getClassName() === 'Text'; })[0];
   var rect = group.getChildren(function(node) { return node.getClassName() === 'Rect'; })[0];
-  
-  if (group.containedElements.length == 0) {
+
+  if (group.containedElements.length === 0) {
     updateSizeOfMainRect(rect, group, 200, 200);
     header.setWidth(rect.getWidth());
     return;
@@ -51,7 +68,7 @@ function layoutElementsInContainer(group) {
     element.setX(currentX);
     element.setY(currentY);
     currentX = currentX + element.getWidth() + BORDER;
-    maxHeight = Math.max(currentY, currentY + element.getHeight() + BORDER);
+    maxHeight = Math.max(maxHeight, currentY + element.getHeight() + BORDER);
   }
 
   updateSizeOfMainRect(rect, group, currentX, maxHeight);

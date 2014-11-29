@@ -1,5 +1,7 @@
 'use strict';
-/* globals endConnector, updateActiveLineLocation, startConnector, clearSelections, selectObject, changeConnectorEndpoints, addOutlineStyles, updateStrokeWidth, Kinetic, getIntersectingShape, addElementToContainer */
+/* globals endConnector, updateActiveLineLocation, startConnector, clearSelections, selectObject,
+  changeConnectorEndpoints, addOutlineStyles, updateStrokeWidth, Kinetic, getIntersectingShape,
+  addElementToContainer, removeElementFromContainer */
 
 angular.module('sophe.factories.algorithmElement', [])
   .factory('algorithmElementFactory', function() {
