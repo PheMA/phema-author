@@ -1,7 +1,7 @@
 'use strict';
 /* globals endConnector, updateActiveLineLocation, startConnector, clearSelections, selectObject,
-  changeConnectorEndpoints, addOutlineStyles, updateStrokeWidth, Kinetic, getIntersectingShape,
-  addElementToContainer, removeElementFromContainer */
+  addOutlineStyles, updateStrokeWidth, Kinetic, getIntersectingShape,
+  addElementToContainer, removeElementFromContainer, updateConnectedLines */
 
 angular.module('sophe.factories.algorithmElement', [])
   .factory('algorithmElementFactory', function() {
@@ -115,7 +115,6 @@ angular.module('sophe.factories.algorithmElement', [])
       });
 
       dragItem.on('dragend',function(){
-        var pos = stage.getPointerPosition();
         dragItem.moveTo(stage.mainLayer); // Must do this before remove element
         removeElementFromContainer(stage, dragItem);  // Clear from a container, if it was in one before
         document.body.style.cursor = 'default';
@@ -152,28 +151,11 @@ angular.module('sophe.factories.algorithmElement', [])
       return kineticObj;
     }
 
-    function updateConnectedLines(connector, stage) {
-      var i = 0;
-      for (i = connector.connections.length - 1; i >= 0; i--) {
-        var line = connector.connections[i];
-        var startPos = {};
-        var endPos = {};
-        if (line.connectors.start === connector) {
-          line.setAbsolutePosition(connector.getAbsolutePosition());
-        }
+    function addConnectors(scope, mainRect, group, trackDrag) {
+      trackDrag = (typeof trackDrag !== 'undefined') ? trackDrag : true;
 
-        startPos = {x: line.getPoints()[0], y: line.getPoints()[1]};
-        endPos = {
-          x: line.connectors.end.getAbsolutePosition().x - line.connectors.start.getAbsolutePosition().x,
-          y: line.connectors.end.getAbsolutePosition().y - line.connectors.start.getAbsolutePosition().y,
-        };
-        changeConnectorEndpoints(stage, line, startPos, endPos);
-      }
-    }
-    
-    function addConnectors(scope, mainRect, group) {
       var leftConnectOptions = {
-        x: 0, y: (mainRect.getHeight() / 2),
+        x: mainRect.getX(), y: (mainRect.getHeight() / 2),
         width: 15, height: 15,
         fill: 'white', name: 'leftConnector',
         stroke: 'black', strokeWidth: 1
@@ -184,7 +166,7 @@ angular.module('sophe.factories.algorithmElement', [])
       leftObj.connections = [];
 
       var rightConnectOptions = {
-        x: mainRect.getWidth(), y: (mainRect.getHeight() / 2),
+        x: mainRect.getX() + mainRect.getWidth(), y: (mainRect.getHeight() / 2),
         width: 15, height: 15,
         fill: 'white', name: 'rightConnector',
         stroke: 'black', strokeWidth: 1
@@ -193,20 +175,24 @@ angular.module('sophe.factories.algorithmElement', [])
       addOutlineStyles(rightObj);
       addConnectionHandler(rightObj, scope);
       rightObj.connections = [];
-      
-      group.on('dragmove', function(e) {
-        // e.target is assumed to be a Group
-        if (e.target.nodeType !== 'Group') {
-          console.error('Unsupported object' + e.target);
-          return;
-        }
 
-        // For the element we are moving, redraw all connection lines
-        var stage = group.getStage();
-        updateConnectedLines(e.target.find('.rightConnector')[0], stage);
-        updateConnectedLines(e.target.find('.leftConnector')[0], stage);
-        stage.find('#mainLayer').draw();
-      });
+      if (trackDrag) {
+        group.on('dragmove', function(e) {
+          // e.target is assumed to be a Group
+          if (e.target.nodeType !== 'Group') {
+            console.error('Unsupported object' + e.target);
+            return;
+          }
+
+          // For the element we are moving, redraw all connection lines
+          var stage = group.getStage();
+          updateConnectedLines(e.target.find('.rightConnector')[0], stage);
+          updateConnectedLines(e.target.find('.leftConnector')[0], stage);
+          stage.find('#mainLayer').draw();
+        });
+      }
+
+      return [leftObj, rightObj];
     }
 
     function createQDMDataElement(config, scope) {
@@ -295,48 +281,47 @@ angular.module('sophe.factories.algorithmElement', [])
       eventA.dash([10, 5]);
       eventA.dashEnabled(true);
       setDroppable(eventA, ['Category', 'DataElement', 'LogicalOperator', 'Phenotype']);
+      var eventAConnectors = addConnectors(scope, eventA, group, false);
 
       var headerOptions = {
           x: options.x, y: options.y,
           width: options.width, // Leave out height so it auto-sizes
           fontFamily: 'Calibri', fontSize: 18, fill: 'black',
-          text: 'Event A',
+          text: 'Event A', name: 'eventALabel',
           align: 'center', padding: 5
       };
       var eventAText = createText(headerOptions, group);
       createText({
         x: eventAText.getX(), y: eventAText.getY() + eventAText.getHeight() + 25,
         width: options.width, // Leave out height so it auto-sizes
-        fontFamily: 'Calibri', fontSize: 14, fill: 'black',
+        fontFamily: 'Calibri', fontSize: 14, fill: 'black', name: 'eventAText',
         text: '(Drag and drop a data element here to define the event)',
         align: 'center', padding: 5}, group);
 
       options.x = options.x + options.width + spacing;
+      options.name = 'eventB';
       var eventB = createRectangle(options, group);
       eventB.dash([10, 5]);
       eventB.dashEnabled(true);
       setDroppable(eventB, ['Category', 'DataElement', 'LogicalOperator', 'Phenotype']);
+      var eventBConnectors = addConnectors(scope, eventB, group, false);
 
       headerOptions.x = options.x;
       headerOptions.y = options.y;
       headerOptions.text = 'Event B';
+      headerOptions.name = 'eventBLabel';
       var eventBText = createText(headerOptions, group);
       createText({
         x: eventBText.getX(), y: eventBText.getY() + eventBText.getHeight() + 25,
         width: options.width, // Leave out height so it auto-sizes
-        fontFamily: 'Calibri', fontSize: 14, fill: 'black',
+        fontFamily: 'Calibri', fontSize: 14, fill: 'black', name: 'eventBText',
         text: '(Drag and drop a data element here to define the event)',
         align: 'center', padding: 5}, group);
 
       var stage = scope.canvasDetails.kineticStageObj;
-      var line = new Kinetic.Line({
-        x: eventA.getX() + eventA.getWidth(),
-        y: eventA.getY() + eventA.getHeight() / 2,
-        points: [0, 0],
-        stroke: 'black', strokeWidth: 2
-      });
-      group.add(line);
-      changeConnectorEndpoints(stage, line, {x: 0, y: 0}, {x: spacing, y: 0});
+      startConnector(stage, eventAConnectors[1]);
+      endConnector(stage, eventBConnectors[0]);
+      updateConnectedLines(eventAConnectors[1], stage);
 
       // Now that the shape is built, define the bounds of the group
       group.setWidth(eventB.getX() + eventB.getWidth() - eventA.getX());

@@ -14,6 +14,7 @@ Circle : Connector  (considered a special type of Kinetic.Circle)  {
   connections []      All Kinetic.Line objects connected here
 }
 
+
 Line : Connection   (considered a special type of Kinetic.Line) {
   connector {
     start             Kinetic.Circle that we are drawn from (non-arrow end)

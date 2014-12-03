@@ -1,5 +1,6 @@
 /* globals Kinetic */
-/* exported startConnector, endConnector, updateActiveLineLocation, getIntersectingShape, addElementToContainer, removeElementFromContainer */
+/* exported startConnector, endConnector, updateActiveLineLocation, getIntersectingShape,
+  addElementToContainer, removeElementFromContainer, updateConnectedLines, changeConnectorEndpoints */
 
 'use strict';
 
@@ -75,12 +76,98 @@ function layoutElementsInContainer(group) {
   header.setWidth(rect.getWidth());
 }
 
+function findParentElementByName(parent, elementName) {
+  var elements = Kinetic.names[elementName];
+  var length = elements.length;
+  for (var index = 0; index < length; index++) {
+    if (elements[index].getParent() === parent) {
+      return elements[index];
+    }
+  }
+
+  return null;
+}
+
+// Update a connector line so that it is drawn between a start position and an
+// end position.
+function changeConnectorEndpoints(stage, line, startPos, endPos) {
+  var x = endPos.x;
+  var y = endPos.y;
+  line.points([0, 0, x - startPos.x, y - startPos.y]);
+
+  // Arrow head: http://jsfiddle.net/cmcculloh/M56w4/
+  var fromx = 0;
+  var fromy = 0;
+  var tox = x - startPos.x;
+  var toy = y - startPos.y;
+  var headlen = 15;
+  var angle = Math.atan2(toy-fromy,tox-fromx);
+  line.points(
+    [fromx,
+     fromy,
+     tox,
+     toy,
+     tox-headlen*Math.cos(angle-Math.PI/6),
+     toy-headlen*Math.sin(angle-Math.PI/6),
+     tox,
+     toy,
+     tox-headlen*Math.cos(angle+Math.PI/6),
+     toy-headlen*Math.sin(angle+Math.PI/6)]
+  );
+}
+
+function updateConnectedLines(connector, stage) {
+  var i = 0;
+  for (i = connector.connections.length - 1; i >= 0; i--) {
+    var line = connector.connections[i];
+    var startPos = {};
+    var endPos = {};
+    if (line.connectors.start === connector) {
+      line.setAbsolutePosition(connector.getAbsolutePosition());
+    }
+
+    startPos = {x: line.getPoints()[0], y: line.getPoints()[1]};
+    endPos = {
+      x: line.connectors.end.getAbsolutePosition().x - line.connectors.start.getAbsolutePosition().x,
+      y: line.connectors.end.getAbsolutePosition().y - line.connectors.start.getAbsolutePosition().y,
+    };
+    changeConnectorEndpoints(stage, line, startPos, endPos);
+  }
+}
+
 // Given a droppable container, handle adding the element to that container
 function addElementToContainer(stage, container, element) {
   var group = (container.nodeType === 'Group' ? container : container.parent);
   if (group) {
     if (group.element.type === 'TemporalOperator') {
       // Replace container with element
+      var containerParent = container.getParent();
+      if (container === containerParent.find('.eventA')[0]) {
+        // Connect element right connector to line
+        var connector = findParentElementByName(element, 'rightConnector');
+        if (connector === null) {
+          return;
+        }
+
+        // Move the element to be centered in the placeholder
+
+        // Clean up the elements that make up the placeholder
+        containerParent.find('.eventALabel')[0].destroy();
+        containerParent.find('.eventAText')[0].destroy();
+        containerParent.find('.leftConnector')[0].destroy();
+        var oldConnector = containerParent.find('.rightConnector')[0];
+        var line = oldConnector.connections[0];
+        oldConnector.connections = [];
+        oldConnector.destroy();
+        container.destroy();
+
+        line.connectors.start = connector;
+        connector.connections.push(line);
+        updateConnectedLines(connector, stage);
+      }
+      else if (container === container.getParent().find('.eventB')[0]) {
+        console.log('eventB');
+      }
     }
     else if (group.element.type === 'DataElement' || group.element.type === 'Category') {
     }
@@ -149,34 +236,6 @@ function addOutlineStyles(kineticObj, originalWidth) {
   });
 }
 
-// Update a connector line so that it is drawn between a start position and an
-// end position.
-function changeConnectorEndpoints(stage, line, startPos, endPos) {
-  var x = endPos.x;
-  var y = endPos.y;
-  line.points([0, 0, x - startPos.x, y - startPos.y]);
-
-  // Arrow head: http://jsfiddle.net/cmcculloh/M56w4/
-  var fromx = 0;
-  var fromy = 0;
-  var tox = x - startPos.x;
-  var toy = y - startPos.y;
-  var headlen = 15;
-  var angle = Math.atan2(toy-fromy,tox-fromx);
-  line.points(
-    [fromx,
-     fromy,
-     tox,
-     toy,
-     tox-headlen*Math.cos(angle-Math.PI/6),
-     toy-headlen*Math.sin(angle-Math.PI/6),
-     tox,
-     toy,
-     tox-headlen*Math.cos(angle+Math.PI/6),
-     toy-headlen*Math.sin(angle+Math.PI/6)]
-  );
-}
-
 // Responding to a mouse move event, update the current connector line that is being drawn
 // to end at the cursor.
 function updateActiveLineLocation(stage, evt) {
@@ -190,9 +249,12 @@ function updateActiveLineLocation(stage, evt) {
 
 // Start a connector line, anchored at a connector object
 function startConnector(stage, connectorObj) {
+  var connectorParent = connectorObj.getParent();
   var line = new Kinetic.Line({
-    x: stage.getPointerPosition().x,
-    y: stage.getPointerPosition().y,
+    //x: stage.getPointerPosition().x,
+    //y: stage.getPointerPosition().y,
+    x: connectorParent.getX() + connectorObj.getX(),
+    y: connectorParent.getY() + connectorObj.getY(),
     points: [0, 0],
     stroke: 'black', strokeWidth: 2
   });
