@@ -322,8 +322,11 @@ angular.module('sophe.factories.algorithmElement', [])
 
       var stage = scope.canvasDetails.kineticStageObj;
       startConnector(stage, eventAConnectors[1]);
-      endConnector(stage, eventBConnectors[0]);
+      var line = endConnector(stage, eventBConnectors[0]);
       updateConnectedLines(eventAConnectors[1], stage);
+      if (line !== null) {
+        line.label.setText(config.element.name);
+      }
 
       // Now that the shape is built, define the bounds of the group
       group.setWidth(eventB.getX() + eventB.getWidth() - eventA.getX());
@@ -363,7 +366,7 @@ angular.module('sophe.factories.algorithmElement', [])
           align: 'center', padding: 5
       };
       createText(headerOptions, group);
-      
+
       addConnectors(scope, workflowObj, group);
 
       group.containedElements = [];
@@ -402,7 +405,7 @@ angular.module('sophe.factories.algorithmElement', [])
       // Now that the shape is built, define the bounds of the group
       group.setWidth(workflowObj.getWidth());
       group.setHeight(workflowObj.getHeight());
-      
+
       addConnectors(scope, workflowObj, group);
 
       var mainLayer = scope.canvasDetails.kineticStageObj.find('#mainLayer');

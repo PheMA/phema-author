@@ -21,6 +21,7 @@ Line : Connection   (considered a special type of Kinetic.Line) {
     end               Kinetic.Circle that we are drawn to (arrow end)
   }
   selected            bool  (is the object currently selected)
+  label               Kinetic.Text that is associated with the line
 }
 
 Group : Element    (considered a special type of Kinetic.Group) {

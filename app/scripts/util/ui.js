@@ -132,6 +132,14 @@ function updateConnectedLines(connector, stage) {
       y: line.connectors.end.getAbsolutePosition().y - line.connectors.start.getAbsolutePosition().y,
     };
     changeConnectorEndpoints(stage, line, startPos, endPos);
+    var label = line.label;
+    if (label !== null && typeof(label) !== 'undefined') {
+      label.x(line.connectors.start.getAbsolutePosition().x);
+      label.y(line.connectors.start.getAbsolutePosition().y + 5);
+      label.width(endPos.x - startPos.x);
+      var slope = (endPos.y - startPos.y) / (endPos.x - startPos.x);
+      label.rotation(Math.atan(slope));
+    }
   }
 }
 
@@ -180,6 +188,7 @@ function addElementToContainer(stage, container, element) {
       }
     }
     else if (group.element.type === 'DataElement' || group.element.type === 'Category') {
+      console.log('QDM element');
     }
     else if (group.element.type === 'LogicalOperator') {
       // Add the item (if it's not already in the array)
@@ -285,6 +294,7 @@ function startConnector(stage, connectorObj) {
 // For a line in progress, end the line at the given connector.  If no connector is present,
 // or the connector isn't valid, remove the in progress line.
 function endConnector(stage, connectorObj) {
+  var line = null;
   if (stage.connector.status === 'drawing') {
     // If we are dropping where we started, or there is no end connection point, the line
     // is invalid and we will just clear it
@@ -294,13 +304,25 @@ function endConnector(stage, connectorObj) {
     // Otherwise we have a valid line.  Update the internal collections tracking how objects
     // are related.
     else {
-      stage.connector.line.connectors.end = connectorObj;
-      connectorObj.connections.push(stage.connector.line);
-      stage.connector.line.connectors.start.connections.push(stage.connector.line);
-      stage.connector.line.on('mouseup', function(e) {
+      line = stage.connector.line;
+      line.connectors.end = connectorObj;
+      connectorObj.connections.push(line);
+      line.connectors.start.connections.push(line);
+      line.on('mouseup', function(e) {
         clearSelections(stage);
         selectObject(stage, e.target);
       });
+
+      var labelTextOptions = {
+        x: line.x(), y: line.y(),
+        width: 100,
+        fontFamily: 'Calibri', fontSize: 12, fill: 'black',
+        text: '',
+        align: 'center'
+      };
+      var labelObj = new Kinetic.Text(labelTextOptions);
+      stage.find('#mainLayer').add(labelObj);
+      line.label = labelObj;
     }
   }
 
@@ -310,6 +332,7 @@ function endConnector(stage, connectorObj) {
 
   stage.connector = {};
   stage.drawScene();
+  return line;
 }
 
 function checkCollide(pointX, pointY, objectx, objecty, objectw, objecth) { // pointX, pointY belong to one rectangle, while the object variables belong to another rectangle
