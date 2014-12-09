@@ -174,51 +174,9 @@ function addElementToContainer(stage, container, element) {
       var containerParent = container.getParent();
       if (container === containerParent.find('.eventA')[0]) {
         _replaceTemporalElement(true, containerParent, container, element, stage);
-        // // Connect element right connector to line
-        // var connector = findParentElementByName(element, 'rightConnector');
-        // if (connector === null) {
-        //   return;
-        // }
-
-        // // Move the element to be centered in the placeholder
-
-        // // Clean up the elements that make up the placeholder
-        // containerParent.find('.eventALabel')[0].destroy();
-        // containerParent.find('.eventAText')[0].destroy();
-        // containerParent.find('.leftConnector')[0].destroy();
-        // var oldConnector = containerParent.find('.rightConnector')[0];
-        // var line = oldConnector.connections[0];
-        // oldConnector.connections = [];
-        // oldConnector.destroy();
-        // container.destroy();
-
-        // line.connectors.start = connector;
-        // connector.connections.push(line);
-        // updateConnectedLines(connector, stage);
       }
       else if (container === container.getParent().find('.eventB')[0]) {
         _replaceTemporalElement(false, containerParent, container, element, stage);
-        // // Connect element left connector to line
-        // var connector = findParentElementByName(element, 'leftConnector');
-        // if (connector === null) {
-        //   return;
-        // }
-
-        // // Move the element to be centered in the placeholder
-
-        // // Clean up the elements that make up the placeholder
-        // containerParent.find('.eventBLabel')[0].destroy();
-        // containerParent.find('.eventBText')[0].destroy();
-        // containerParent.find('.rightConnector')[1].destroy();
-        // var oldConnector = containerParent.find('.leftConnector')[1];
-        // var line = oldConnector.connections[0];
-        // oldConnector.connections = [];
-        // oldConnector.destroy();
-        // container.destroy();
-
-        // line.connectors.end = connector;
-        // connector.connections.push(line);
-        // updateConnectedLines(connector, stage);
       }
     }
     else if (group.element.type === 'DataElement' || group.element.type === 'Category') {
