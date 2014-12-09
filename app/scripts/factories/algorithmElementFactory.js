@@ -119,7 +119,9 @@ angular.module('sophe.factories.algorithmElement', [])
         removeElementFromContainer(stage, dragItem);  // Clear from a container, if it was in one before
         document.body.style.cursor = 'default';
         if (highlightedDrop) {
-          addElementToContainer(stage, highlightedDrop, dragItem);
+          if (allowsDrop(dragItem, highlightedDrop)) {
+            addElementToContainer(stage, highlightedDrop, dragItem);
+          }
           updateStrokeWidth(highlightedDrop, true);
           highlightedDrop = null;
           stage.mainLayer.draw();
@@ -227,7 +229,7 @@ angular.module('sophe.factories.algorithmElement', [])
         stroke: '#CCCCCC', strokeWidth: 1
       };
       var termObj = createRectangle(termDropOptions, group);
-      setDroppable(termObj, ['ValueSet', 'Term', 'Phenotype']);
+      setDroppable(termObj, ['ValueSet', 'Term']);
 
       var termTextOptions = {
         x: termDropOptions.x, y: termDropOptions.y,
