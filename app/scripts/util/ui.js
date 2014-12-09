@@ -135,6 +135,36 @@ function updateConnectedLines(connector, stage) {
   }
 }
 
+function _replaceTemporalElement(isEventA, containerParent, container, element, stage) {
+  // Connect element connector to line
+  var connector = findParentElementByName(element, (isEventA ? 'rightConnector' : 'leftConnector'));
+  if (connector === null) {
+    return;
+  }
+
+  // Clean up the elements that make up the placeholder
+  containerParent.find(isEventA ? '.eventALabel' : '.eventBLabel')[0].destroy();
+  containerParent.find(isEventA ? '.eventAText' : '.eventBText')[0].destroy();
+  var connectorCollection = containerParent.find((isEventA ? '.leftConnector' : '.rightConnector'));
+  var connectorIndex = isEventA ? 0 : (connectorCollection.length === 1 ? 0 : 1);
+  connectorCollection[connectorIndex].destroy();
+  var oldConnector = containerParent.find((isEventA ? '.rightConnector' : '.leftConnector'))[connectorIndex];
+  var line = oldConnector.connections[0];
+  oldConnector.connections = [];
+  oldConnector.destroy();
+  container.destroy();
+
+  // Update our tracking collections for how things are connected
+  if (isEventA) {
+    line.connectors.start = connector;
+  }
+  else {
+    line.connectors.end = connector;
+  }
+  connector.connections.push(line);
+  updateConnectedLines(connector, stage);
+}
+
 // Given a droppable container, handle adding the element to that container
 function addElementToContainer(stage, container, element) {
   var group = (container.nodeType === 'Group' ? container : container.parent);
@@ -143,30 +173,52 @@ function addElementToContainer(stage, container, element) {
       // Replace container with element
       var containerParent = container.getParent();
       if (container === containerParent.find('.eventA')[0]) {
-        // Connect element right connector to line
-        var connector = findParentElementByName(element, 'rightConnector');
-        if (connector === null) {
-          return;
-        }
+        _replaceTemporalElement(true, containerParent, container, element, stage);
+        // // Connect element right connector to line
+        // var connector = findParentElementByName(element, 'rightConnector');
+        // if (connector === null) {
+        //   return;
+        // }
 
-        // Move the element to be centered in the placeholder
+        // // Move the element to be centered in the placeholder
 
-        // Clean up the elements that make up the placeholder
-        containerParent.find('.eventALabel')[0].destroy();
-        containerParent.find('.eventAText')[0].destroy();
-        containerParent.find('.leftConnector')[0].destroy();
-        var oldConnector = containerParent.find('.rightConnector')[0];
-        var line = oldConnector.connections[0];
-        oldConnector.connections = [];
-        oldConnector.destroy();
-        container.destroy();
+        // // Clean up the elements that make up the placeholder
+        // containerParent.find('.eventALabel')[0].destroy();
+        // containerParent.find('.eventAText')[0].destroy();
+        // containerParent.find('.leftConnector')[0].destroy();
+        // var oldConnector = containerParent.find('.rightConnector')[0];
+        // var line = oldConnector.connections[0];
+        // oldConnector.connections = [];
+        // oldConnector.destroy();
+        // container.destroy();
 
-        line.connectors.start = connector;
-        connector.connections.push(line);
-        updateConnectedLines(connector, stage);
+        // line.connectors.start = connector;
+        // connector.connections.push(line);
+        // updateConnectedLines(connector, stage);
       }
       else if (container === container.getParent().find('.eventB')[0]) {
-        console.log('eventB');
+        _replaceTemporalElement(false, containerParent, container, element, stage);
+        // // Connect element left connector to line
+        // var connector = findParentElementByName(element, 'leftConnector');
+        // if (connector === null) {
+        //   return;
+        // }
+
+        // // Move the element to be centered in the placeholder
+
+        // // Clean up the elements that make up the placeholder
+        // containerParent.find('.eventBLabel')[0].destroy();
+        // containerParent.find('.eventBText')[0].destroy();
+        // containerParent.find('.rightConnector')[1].destroy();
+        // var oldConnector = containerParent.find('.leftConnector')[1];
+        // var line = oldConnector.connections[0];
+        // oldConnector.connections = [];
+        // oldConnector.destroy();
+        // container.destroy();
+
+        // line.connectors.end = connector;
+        // connector.connections.push(line);
+        // updateConnectedLines(connector, stage);
       }
     }
     else if (group.element.type === 'DataElement' || group.element.type === 'Category') {
