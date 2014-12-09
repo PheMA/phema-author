@@ -283,7 +283,7 @@ angular.module('sophe.factories.algorithmElement', [])
       eventA.dash([10, 5]);
       eventA.dashEnabled(true);
       setDroppable(eventA, ['Category', 'DataElement', 'LogicalOperator', 'Phenotype']);
-      var eventAConnectors = addConnectors(scope, eventA, group, false);
+      var eventAConnectors = addConnectors(scope, eventA, group);
 
       var headerOptions = {
           x: options.x, y: options.y,
@@ -306,7 +306,7 @@ angular.module('sophe.factories.algorithmElement', [])
       eventB.dash([10, 5]);
       eventB.dashEnabled(true);
       setDroppable(eventB, ['Category', 'DataElement', 'LogicalOperator', 'Phenotype']);
-      var eventBConnectors = addConnectors(scope, eventB, group, false);
+      var eventBConnectors = addConnectors(scope, eventB, group);
 
       headerOptions.x = options.x;
       headerOptions.y = options.y;
