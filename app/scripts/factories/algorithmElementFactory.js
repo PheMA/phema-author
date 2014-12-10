@@ -436,6 +436,22 @@ angular.module('sophe.factories.algorithmElement', [])
       return false;
     }
 
+    // Manages cleaning up all editor elements that may be associated with a group, such
+    // as connector lines, references to connector lines, connector labels, etc.
+    function _destroyGroup(group) {
+      // In the group, find all connectors
+      var connectors = group.find('.leftConnector, .rightConnector');
+      connectors.each(function(connector) {
+        var length = connector.connections.length;
+        for (var index = length-1; index >=0 ; index--) {
+          connector.connections[index].label.destroy();
+          connector.connections[index].destroy();
+          delete connector.connections[index];
+        }
+      });
+      group.destroy();
+    }
+
     var factory = {};
     factory.addWorkflowObject = function (config, scope) {
       // If there is no canvas to add to, we are done here
@@ -482,7 +498,7 @@ angular.module('sophe.factories.algorithmElement', [])
       var stage = scope.canvasDetails.kineticStageObj;
       stage.mainLayer.get('Group').each(function(group) {
         if (group.selected === true) {
-          group.destroy();
+          _destroyGroup(group);
         }
       });
       stage.draw();
