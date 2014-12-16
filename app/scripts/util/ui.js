@@ -226,14 +226,21 @@ function selectObject(stage, selectObj) {
   stage.draw();
 }
 
+function _clearSelection(item) {
+  var counter = 0;
+  var children = item.getChildren();
+  for (counter = 0; counter < children.length; counter++) {
+    if (children[counter].nodeType === 'Group') {
+      children[counter].selected = false;
+      updateStrokeWidth(children[counter], true);
+      _clearSelection(children[counter]);
+    }
+  }
+}
+
 function clearSelections(stage) {
   var layer = stage.find('#mainLayer')[0];
-  var counter = 0;
-  var children = layer.getChildren();
-  for (counter = 0; counter < children.length; counter++) {
-    children[counter].selected = false;
-    updateStrokeWidth(children[counter], true);
-  }
+  _clearSelection(layer);
   stage.draw();
 }
 
