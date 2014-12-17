@@ -1,5 +1,5 @@
 'use strict';
-/* globals Kinetic */
+/* globals updateActiveLineLocation, endConnector, clearSelections, Kinetic */
 
 angular.module('sophe.factories.kineticStage', [])
   .factory('kineticStageFactory', function() {

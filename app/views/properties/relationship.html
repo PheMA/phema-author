@@ -1,0 +1,18 @@
+<div class="modal-header">
+    <h3 class="modal-title">Define the temporal relationship</h3>
+</div>
+<div class="modal-body">
+    Event A
+    <select ng-click="change()">
+        <option selected="selected">is concurrent with</option>
+        <option>starts</option>
+        <option>ends</option>
+        <option>occurs during</option>
+        <option>overlaps</option>
+    </select>
+    Event B
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

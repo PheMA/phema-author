@@ -8,7 +8,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PhenotypeCtrl', ['$scope', '$http', '$routeParams', 'algorithmElementFactory', function ($scope, $http, $routeParams, algorithmElementFactory) {
+  .controller('PhenotypeCtrl', ['$scope', '$http', '$routeParams', '$modal', 'algorithmElementFactory', function ($scope, $http, $routeParams, $modal, algorithmElementFactory) {
     $scope.phenotype = $routeParams.id;
     $scope.status = { open: [true, false, false, false]};
 
@@ -121,5 +121,29 @@ angular.module('sopheAuthorApp')
 
     $scope.paste = function() {
       console.log('Paste');
+    };
+
+    $scope.showProperties = function() {
+      var selectedElement = algorithmElementFactory.getFirstSelectedItem($scope);
+      if (!selectedElement) {
+        return;
+      }
+
+      var modalInstance = $modal.open({
+        templateUrl: 'views/properties/relationship.html',
+        controller: 'RelationshipPropertiesCtrl',
+        size: 'lg',
+        resolve: {
+          element: function () {
+            return selectedElement.element;
+          }
+        }
+      });
+
+      modalInstance.result.then(function () {
+        // Clicked 'OK'
+      }, function () {
+        // Clicked 'Cancel'
+      });
     };
   }]);

@@ -1,5 +1,3 @@
-/* globals updateActiveLineLocation, endConnector, clearSelections, Kinetic */
-
 (function() {
     'use strict';
     angular.module('sophe.kinetic', [])

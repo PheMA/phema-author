@@ -504,6 +504,23 @@ angular.module('sophe.factories.algorithmElement', [])
       stage.draw();
     };
 
+    factory.getFirstSelectedItem = function(scope) {
+      if (!scope.canvasDetails || !scope.canvasDetails.kineticStageObj) {
+        return null;
+      }
+
+      var stage = scope.canvasDetails.kineticStageObj;
+      var layer = stage.find('#mainLayer')[0];
+      var children = layer.getChildren();
+      for (var counter = 0; counter < children.length; counter++) {
+        if (children[counter].selected) {
+          return children[counter];
+        }
+      }
+
+      return null;
+    };
+
     factory.allowsDrop = allowsDrop;
 
     return factory;
