@@ -230,7 +230,7 @@ function _clearSelection(item) {
   var counter = 0;
   var children = item.getChildren();
   for (counter = 0; counter < children.length; counter++) {
-    if (children[counter].nodeType === 'Group') {
+    if (children[counter].selected) {
       children[counter].selected = false;
       updateStrokeWidth(children[counter], true);
       _clearSelection(children[counter]);
