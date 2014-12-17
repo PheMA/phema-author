@@ -457,7 +457,7 @@ module.exports = function (grunt) {
     'uglify',
     'filerev',
     'usemin',
-    'htmlmin'
+    //'htmlmin'  -- Don't use htmlmin, it's inappropriately throwing errors for custom directives
   ]);
 
   grunt.registerTask('default', [

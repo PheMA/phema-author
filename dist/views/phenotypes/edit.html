@@ -1,1 +1,58 @@
-<h1>Define Phenotype</h1> <div class="row col-md-12"> <phenotype-toolbar> </div> <div class="row"> <div class="col-md-3"> <accordion close-others="oneAtATime"> <accordion-group class="phenotype-element-list" is-open="status.open[0]"> <accordion-heading> Phenotype Elements <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[0], 'glyphicon-chevron-right': !status.open[0]}"></i> </accordion-heading> <div phenotype-elements></div> </accordion-group> <accordion-group id="logical-operators-list" class="phenotype-element-list" is-open="status.open[1]"> <accordion-heading> Logical Operators <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[1], 'glyphicon-chevron-right': !status.open[1]}"></i> </accordion-heading> <div logical-operators></div> </accordion-group> <accordion-group id="temporal-operators-list" class="phenotype-element-list" is-open="status.open[2]"> <accordion-heading> Temporal Operators <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[2], 'glyphicon-chevron-right': !status.open[2]}"></i> </accordion-heading> <div temporal-operators></div> </accordion-group> <accordion-group id="data-elements-list" class="phenotype-element-list" is-open="status.open[3]"> <accordion-heading> Data Elements <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[3], 'glyphicon-chevron-right': !status.open[3]}"></i> </accordion-heading> <div qdm-data-elements></div> </accordion-group> </accordion> </div> <div droppable drop="addWorkflowObject(config)" class="col-md-9"> <div context-menu="onRightClick(message)" context-menu-close="onClose(closeMessage)" data-target="phenotypeMenu"> <div data-kinetic-canvas data-canvas-details="canvasDetails" style="border: solid grey 1px" id="canvas">&nbsp;</div> </div> </div> <div class="dropdown position-fixed context-menu" id="phenotypeMenu"> <ul class="dropdown-menu" role="menu"> <li> <a class="pointer ng-binding" role="menuitem" tabindex="2" ng-click="copy()">Copy</a> </li> <li> <a class="pointer ng-binding" role="menuitem" tabindex="3" ng-click="paste()">Paste</a> </li> <li class="divider">&nbsp;</li> <li> <a class="pointer ng-binding" role="menuitem" tabindex="1" ng-click="delete()">Delete</a> </li> </ul> </div> </div>
+<h1>Define Phenotype</h1>
+<div class="row col-md-12">
+  <phenotype-toolbar/>
+</div>
+<div class="row">
+  <div class="col-md-3">
+    <accordion close-others="oneAtATime">
+      <accordion-group class="phenotype-element-list" is-open="status.open[0]">
+        <accordion-heading>
+          Phenotype Elements <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[0], 'glyphicon-chevron-right': !status.open[0]}"></i>
+        </accordion-heading>
+        <div phenotype-elements></div>
+      </accordion-group>
+      <accordion-group id="logical-operators-list" class="phenotype-element-list" is-open="status.open[1]">
+        <accordion-heading>
+          Logical Operators <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[1], 'glyphicon-chevron-right': !status.open[1]}"></i>
+        </accordion-heading>
+        <div logical-operators></div>
+      </accordion-group>
+      <accordion-group id="temporal-operators-list" class="phenotype-element-list" is-open="status.open[2]">
+        <accordion-heading>
+          Temporal Operators <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[2], 'glyphicon-chevron-right': !status.open[2]}"></i>
+        </accordion-heading>
+        <div temporal-operators></div>
+      </accordion-group>
+      <accordion-group id="data-elements-list" class="phenotype-element-list" is-open="status.open[3]">
+        <accordion-heading>
+          Data Elements <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[3], 'glyphicon-chevron-right': !status.open[3]}"></i>
+        </accordion-heading>
+        <div qdm-data-elements></div>
+      </accordion-group>
+    </accordion>
+  </div>
+  <div droppable drop="addWorkflowObject(config)" class="col-md-9">
+    <div context-menu="onRightClick(message)" context-menu-close="onClose(closeMessage)" data-target="phenotypeMenu">
+      <div data-kinetic-canvas data-canvas-details="canvasDetails" style="border: solid grey 1px;" id="canvas">&nbsp;</div>
+    </div>
+  </div>
+
+  <div class="dropdown position-fixed context-menu" id="phenotypeMenu">
+    <ul class="dropdown-menu" role="menu">
+      <li>
+        <a class="pointer ng-binding" role="menuitem" tabindex="1" ng-click="copy()">Copy</a>
+      </li>
+      <li>
+        <a class="pointer ng-binding" role="menuitem" tabindex="2" ng-click="paste()">Paste</a>
+      </li>
+      <li class="divider">&nbsp;</li>
+      <li>
+        <a class="pointer ng-binding" role="menuitem" tabindex="3" ng-click="delete()">Delete</a>
+      </li>
+      <li class="divider">&nbsp;</li>
+      <li>
+        <a class="pointer ng-binding" role="menuitem" tabindex="4" ng-click="showProperties()">Properties</a>
+      </li>
+    </ul>
+  </div>
+</div>

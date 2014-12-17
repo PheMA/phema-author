@@ -23,7 +23,8 @@ RelationshipPropertiesHelper = {
     for (var index = 0; index < temporalOperators.length; index++) {
       var item = temporalOperators[index];
       if (item.name.search(regexp) == 0) {
-        relationship.modifiers.push({id: item.uri, label: item.name.toLowerCase().replace(regexp, '').trim()});
+        var lowerName = item.name.toLowerCase();
+        relationship.modifiers.push({id: item.uri, label: lowerName.replace(regexp, '').trim()});
       }
     }
   }

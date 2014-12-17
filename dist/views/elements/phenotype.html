@@ -1,1 +1,6 @@
-<ul tooltip="Drag and drop a phenotype onto the canvas to use it in a new phenotype" tooltip-placement="right"> <li class="phenotype-element" draggable ng-repeat="pheno in phenotypes"> {{pheno.name}} <input type="hidden" value="{{pheno}}"> </li> </ul>
+<ul tooltip="Drag and drop a phenotype onto the canvas to use it in a new phenotype" tooltip-placement="right">
+  <li class="phenotype-element" draggable ng-repeat="pheno in phenotypes">
+    {{pheno.name}}
+    <input type="hidden" value="{{pheno}}"></input>
+  </li>
+</ul>
