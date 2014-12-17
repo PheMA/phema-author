@@ -58,3 +58,33 @@ Allowed drop targets:
     - Category, DataElement, LogicalOperator
   TemporalOperator
     - Category, DataElement, LogicalOperator, Phenotype
+
+
+Relationship (in Properties dialog)
+  {
+    relationship
+      base
+      modifier
+    timeRange
+      comparison
+      start
+        value
+        units
+      end
+        value
+        units
+  }
+
+Element (used by Line)
+  {
+    uri
+    name
+    timeRange
+      comparison
+      start
+        value
+        units
+      end
+        value
+        units
+  }

@@ -1,4 +1,5 @@
 'use strict';
+/* globals ArrayUtil */
 
 /**
  * @ngdoc function
@@ -8,7 +9,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PhenotypeCtrl', ['$scope', '$http', '$routeParams', 'algorithmElementFactory', function ($scope, $http, $routeParams, algorithmElementFactory) {
+  .controller('PhenotypeCtrl', ['$scope', '$http', '$routeParams', '$modal', 'algorithmElementFactory', function ($scope, $http, $routeParams, $modal, algorithmElementFactory) {
     $scope.phenotype = $routeParams.id;
     $scope.status = { open: [true, false, false, false]};
 
@@ -121,5 +122,41 @@ angular.module('sopheAuthorApp')
 
     $scope.paste = function() {
       console.log('Paste');
+    };
+
+    $scope.showProperties = function() {
+      var selectedElement = algorithmElementFactory.getFirstSelectedItem($scope);
+      if (!selectedElement || !selectedElement.element) {
+        return;
+      }
+
+      if (selectedElement.element.type === 'TemporalOperator') {
+        var modalInstance = $modal.open({
+          templateUrl: 'views/properties/relationship.html',
+          controller: 'RelationshipPropertiesCtrl',
+          size: 'lg',
+          resolve: {
+            element: function () {
+              return angular.copy(selectedElement.element);
+            },
+            temporalOperators: function() {
+              return $scope.temporalOperators;
+            }
+          }
+        });
+
+        modalInstance.result.then(function (result) {
+          // Clicked 'OK'
+          var uri = ((result.relationship.modifier) ? result.relationship.modifier.id : result.relationship.base.uri);
+          selectedElement.element.uri = uri;
+          selectedElement.element.name = ArrayUtil.findInArray($scope.temporalOperators, 'uri', uri).name;
+          selectedElement.element.timeRange = result.timeRange;
+          if (result.timeRange.comparison) {
+            selectedElement.element.timeRange.comparison = result.timeRange.comparison.name;
+          }
+          selectedElement.label.setText(selectedElement.element.name);
+          selectedElement.label.getStage().draw();
+        });
+      }
     };
   }]);

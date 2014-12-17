@@ -326,6 +326,7 @@ angular.module('sophe.factories.algorithmElement', [])
       updateConnectedLines(eventAConnectors[1], stage);
       if (line !== null) {
         line.label.setText(config.element.name);
+        line.element = config.element;
       }
 
       // Now that the shape is built, define the bounds of the group
@@ -502,6 +503,23 @@ angular.module('sophe.factories.algorithmElement', [])
         }
       });
       stage.draw();
+    };
+
+    factory.getFirstSelectedItem = function(scope) {
+      if (!scope.canvasDetails || !scope.canvasDetails.kineticStageObj) {
+        return null;
+      }
+
+      var stage = scope.canvasDetails.kineticStageObj;
+      var layer = stage.find('#mainLayer')[0];
+      var children = layer.getChildren();
+      for (var counter = 0; counter < children.length; counter++) {
+        if (children[counter].selected) {
+          return children[counter];
+        }
+      }
+
+      return null;
     };
 
     factory.allowsDrop = allowsDrop;
