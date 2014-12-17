@@ -26,26 +26,6 @@ RelationshipPropertiesHelper = {
         relationship.modifiers.push({id: item.uri, label: item.name.toLowerCase().replace(regexp, '').trim()});
       }
     }
-  },
-  findMatchingBase: function(base, relationships) {
-    return ArrayUtil.findInArray(relationships, 'id', base);
-    // for (var index = 0; index < relationships.length; index++) {
-    //   if (relationships[index].id === base) {
-    //     return relationships[index];
-    //   }
-    // }
-
-    // return null;
-  },
-  findMatchingModifier: function(modifier, baseItem) {
-    return ArrayUtil.findInArray(baseItem.modifiers, 'label', modifier);
-    // for (var index = 0; index < baseItem.modifiers.length; index++) {
-    //   if (baseItem.modifiers[index].label === modifier) {
-    //     return baseItem.modifiers[index];
-    //   }
-    // }
-
-    // return null;
   }
 };
 
@@ -103,19 +83,22 @@ angular.module('sopheAuthorApp')
         id: 'concurrent with',
         label: 'is concurrent with',
         modifiers: [],
-        allowsTimeRange: false
+        allowsTimeRange: false,
+        uri: ArrayUtil.findInArray(temporalOperators, 'name', 'Concurrent With').uri
       },
       {
         id: 'during',
         label: 'occurs during',
         modifiers: [],
-        allowsTimeRange: false
+        allowsTimeRange: false,
+        uri: ArrayUtil.findInArray(temporalOperators, 'name', 'During').uri
       },
       {
         id: 'overlaps',
         label: 'overlaps with',
         modifiers: [],
-        allowsTimeRange: false
+        allowsTimeRange: false,
+        uri: ArrayUtil.findInArray(temporalOperators, 'name', 'Overlaps').uri
       }
     ];
 
@@ -124,14 +107,13 @@ angular.module('sopheAuthorApp')
 
     var elementData = RelationshipPropertiesHelper.convertQDMToSoPhe(element.uri, temporalOperators);
     if (elementData != null) {
-      $scope.relationship.relationship.base = RelationshipPropertiesHelper.findMatchingBase(elementData.base, $scope.relationships);
-      $scope.relationship.relationship.modifier = RelationshipPropertiesHelper.findMatchingModifier(elementData.modifier, $scope.relationship.relationship.base);
-      console.log($scope.relationship);
+      $scope.relationship.relationship.base = ArrayUtil.findInArray($scope.relationships, 'id', elementData.base);
+      $scope.relationship.relationship.modifier = ArrayUtil.findInArray($scope.relationship.relationship.base.modifiers, 'label', elementData.modifier);
     }
 
     if (element.timeRange) {
-      $scope.relationship.timeRange = element.relationship.timeRange;
-      console.log($scope.relationship);
+      $scope.relationship.timeRange = element.timeRange;
+      $scope.relationship.timeRange.comparison = ArrayUtil.findInArray($scope.comparisons, 'name', element.timeRange.comparison);
     }
 
     $scope.ok = function () {

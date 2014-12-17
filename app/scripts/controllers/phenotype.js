@@ -1,4 +1,5 @@
 'use strict';
+/* globals ArrayUtil */
 
 /**
  * @ngdoc function
@@ -136,7 +137,7 @@ angular.module('sopheAuthorApp')
           size: 'lg',
           resolve: {
             element: function () {
-              return selectedElement.element;
+              return angular.copy(selectedElement.element);
             },
             temporalOperators: function() {
               return $scope.temporalOperators;
@@ -144,11 +145,17 @@ angular.module('sopheAuthorApp')
           }
         });
 
-        modalInstance.result.then(function (relationship) {
+        modalInstance.result.then(function (result) {
           // Clicked 'OK'
-          selectedElement.element.relationship = relationship;
-        }, function () {
-          // Clicked 'Cancel'
+          var uri = ((result.relationship.modifier) ? result.relationship.modifier.id : result.relationship.base.uri);
+          selectedElement.element.uri = uri;
+          selectedElement.element.name = ArrayUtil.findInArray($scope.temporalOperators, 'uri', uri).name;
+          selectedElement.element.timeRange = result.timeRange;
+          if (result.timeRange.comparison) {
+            selectedElement.element.timeRange.comparison = result.timeRange.comparison.name;
+          }
+          selectedElement.label.setText(selectedElement.element.name);
+          selectedElement.label.getStage().draw();
         });
       }
     };
