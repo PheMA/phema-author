@@ -125,25 +125,31 @@ angular.module('sopheAuthorApp')
 
     $scope.showProperties = function() {
       var selectedElement = algorithmElementFactory.getFirstSelectedItem($scope);
-      if (!selectedElement) {
+      if (!selectedElement || !selectedElement.element) {
         return;
       }
 
-      var modalInstance = $modal.open({
-        templateUrl: 'views/properties/relationship.html',
-        controller: 'RelationshipPropertiesCtrl',
-        size: 'lg',
-        resolve: {
-          element: function () {
-            return selectedElement.element;
+      if (selectedElement.element.type === 'TemporalOperator') {
+        var modalInstance = $modal.open({
+          templateUrl: 'views/properties/relationship.html',
+          controller: 'RelationshipPropertiesCtrl',
+          size: 'lg',
+          resolve: {
+            element: function () {
+              return selectedElement.element;
+            },
+            temporalOperators: function() {
+              return $scope.temporalOperators;
+            }
           }
-        }
-      });
+        });
 
-      modalInstance.result.then(function () {
-        // Clicked 'OK'
-      }, function () {
-        // Clicked 'Cancel'
-      });
+        modalInstance.result.then(function (relationship) {
+          // Clicked 'OK'
+          selectedElement.element.relationship = relationship;
+        }, function () {
+          // Clicked 'Cancel'
+        });
+      }
     };
   }]);

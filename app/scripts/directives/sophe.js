@@ -2,6 +2,7 @@ angular.module('sophe', [
   'sophe.kinetic',
   'sophe.draggable',
   'sophe.droppable',
+  'sophe.onlyDigits',
   'sophe.factories.algorithmElement',
   'sophe.factories.kineticStage',
   'sophe.elements.qdm.dataElements',

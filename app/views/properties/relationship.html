@@ -1,15 +1,22 @@
 <div class="modal-header">
     <h3 class="modal-title">Define the temporal relationship</h3>
 </div>
-<div class="modal-body">
+<div class="modal-body" id="relationship-properties">
     Event A
-    <select ng-click="change()">
-        <option selected="selected">is concurrent with</option>
-        <option>starts</option>
-        <option>ends</option>
-        <option>occurs during</option>
-        <option>overlaps</option>
-    </select>
+    <select ng-options="item as item.label for item in relationships" ng-model="relationship.relationship.base"></select>
+    <select ng-options="item as item.name for item in comparisons" ng-model="relationship.timeRange.comparison"
+        ng-show="relationship.relationship.base.allowsTimeRange"></select>
+    <div class="range" ng-show="relationship.relationship.base.allowsTimeRange && relationship.timeRange.comparison.showStartTime">
+        <input type="text" only-digits ng-model="relationship.timeRange.start.value"></input>
+        <select ng-options="item.value as item.name for item in units" ng-model="relationship.timeRange.start.units"></select>
+    </div>
+    <div class="range" ng-show="relationship.relationship.base.allowsTimeRange && relationship.timeRange.comparison.showEndTime">
+        and
+        <input type="text" only-digits ng-model="relationship.timeRange.end.value"></input>
+        <select ng-options="item.value as item.name for item in units" ng-model="relationship.timeRange.end.units"></select>
+    </div>
+    <select ng-options="item as item.label for item in relationship.relationship.base.modifiers"
+        ng-model="relationship.relationship.modifier" ng-show="relationship.relationship.base.modifiers.length > 0"></select>
     Event B
 </div>
 <div class="modal-footer">

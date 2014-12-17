@@ -326,6 +326,7 @@ angular.module('sophe.factories.algorithmElement', [])
       updateConnectedLines(eventAConnectors[1], stage);
       if (line !== null) {
         line.label.setText(config.element.name);
+        line.element = config.element;
       }
 
       // Now that the shape is built, define the bounds of the group
