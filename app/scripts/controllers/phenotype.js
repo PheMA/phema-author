@@ -116,6 +116,10 @@ angular.module('sopheAuthorApp')
       console.log('Copy');
     };
 
+    $scope.canDelete = function() {
+      return (algorithmElementFactory.getFirstSelectedItem($scope) !== null);
+    };
+
     $scope.delete = function() {
       algorithmElementFactory.deleteSelectedObjects($scope);
     };
@@ -124,9 +128,18 @@ angular.module('sopheAuthorApp')
       console.log('Paste');
     };
 
+    $scope.canShowProperties = function(element) {
+      var selectedElement = element || algorithmElementFactory.getFirstSelectedItem($scope);
+      if (!selectedElement || !selectedElement.element) {
+        return false;
+      }
+
+      return (selectedElement.element.type === 'TemporalOperator');
+    };
+
     $scope.showProperties = function() {
       var selectedElement = algorithmElementFactory.getFirstSelectedItem($scope);
-      if (!selectedElement || !selectedElement.element) {
+      if (!$scope.canShowProperties(selectedElement)) {
         return;
       }
 
