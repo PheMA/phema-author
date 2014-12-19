@@ -330,6 +330,7 @@ function endConnector(stage, connectorObj) {
       var labelObj = new Kinetic.Text(labelTextOptions);
       stage.find('#mainLayer').add(labelObj);
       line.label = labelObj;
+      line.element = {name: labelTextOptions.text, uri: '', type: 'TemporalOperator'};
     }
   }
 
