@@ -49,12 +49,14 @@ angular.module('sopheAuthorApp')
       }
     };
 
+    // Unit values based on UCUM specification
     $scope.units = [
+      { name: 'minutes', value: 'm' },
       { name: 'hours', value: 'h' },
       { name: 'days', value: 'd' },
-      { name: 'weeks', value: 'w' },
-      { name: 'months', value: 'm' },
-      { name: 'years', value: 'y' }
+      { name: 'weeks', value: 'wk' },
+      { name: 'months', value: 'mo' },
+      { name: 'years', value: 'a' }
     ];
 
     $scope.comparisons = [
