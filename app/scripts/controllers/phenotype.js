@@ -1,5 +1,5 @@
 'use strict';
-/* globals ArrayUtil */
+/* globals ArrayUtil, findParentElementByName */
 
 /**
  * @ngdoc function
@@ -106,7 +106,8 @@ angular.module('sopheAuthorApp')
         return false;
       }
 
-      return (selectedElement.element.type === 'TemporalOperator');
+      return (selectedElement.element.type === 'TemporalOperator' ||
+        selectedElement.element.type === 'LogicalOperator');
     };
 
     $scope.showProperties = function() {
@@ -115,8 +116,9 @@ angular.module('sopheAuthorApp')
         return;
       }
 
+      var modalInstance = null;
       if (selectedElement.element.type === 'TemporalOperator') {
-        var modalInstance = $modal.open({
+        modalInstance = $modal.open({
           templateUrl: 'views/properties/relationship.html',
           controller: 'RelationshipPropertiesCtrl',
           size: 'lg',
@@ -141,6 +143,40 @@ angular.module('sopheAuthorApp')
           }
           selectedElement.label.setText(selectedElement.element.name);
           selectedElement.label.getStage().draw();
+        });
+      }
+      else if (selectedElement.element.type === 'LogicalOperator') {
+        modalInstance = $modal.open({
+          templateUrl: 'views/properties/logicalOperator.html',
+          controller: 'LogicalOperatorPropertiesCtrl',
+          size: 'lg',
+          resolve: {
+            element: function () {
+              return angular.copy(selectedElement.element);
+            },
+            containedElements: function () {
+              return selectedElement.containedElements;
+            },
+            logicalOperators: function() {
+              return $scope.logicalOperators;
+            }
+          }
+        });
+
+        modalInstance.result.then(function (result) {
+          selectedElement.element = result;
+          findParentElementByName(selectedElement, 'header').setText(selectedElement.element.name);
+          selectedElement.getStage().draw();
+          // Clicked 'OK'
+          //var uri = ((result.relationship.modifier) ? result.relationship.modifier.id : result.relationship.base.uri);
+          // selectedElement.element.uri = uri;
+          // selectedElement.element.name = ArrayUtil.findInArray($scope.temporalOperators, 'uri', uri).name;
+          // selectedElement.element.timeRange = result.timeRange;
+          // if (result.timeRange.comparison) {
+          //   selectedElement.element.timeRange.comparison = result.timeRange.comparison.name;
+          // }
+          // selectedElement.label.setText(selectedElement.element.name);
+          // selectedElement.label.getStage().draw();
         });
       }
     };

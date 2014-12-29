@@ -7,12 +7,13 @@ describe('Controller: PhenotypeCtrl', function () {
   beforeEach(module('treeControl'));
   beforeEach(module('sopheAuthorApp'));
   var PhenotypeCtrl,
-    scope, routeParams, $http, $httpBackend;
+    scope, routeParams, $http, $httpBackend, algorithmElementFactory;
 
   // Setup http mocks
-  beforeEach(inject(function (_$http_, _$httpBackend_){
+  beforeEach(inject(function (_algorithmElementFactory_, _$http_, _$httpBackend_){
     $http = _$http_;
     $httpBackend = _$httpBackend_;
+    algorithmElementFactory = _algorithmElementFactory_;
   }));
 
   // Initialize the controller and a mock scope
@@ -22,6 +23,7 @@ describe('Controller: PhenotypeCtrl', function () {
     PhenotypeCtrl = $controller('PhenotypeCtrl', {
       $scope: scope
     });
+    this.controller = null;
   }));
 
   it('should take an id in the route param', inject(function ($controller) {
@@ -175,4 +177,34 @@ describe('Controller: PhenotypeCtrl', function () {
     expect(obj.getX()).toEqual(100);
     expect(obj.getY()).toEqual(77);
   }));
+
+  describe('can show properties', function() {
+    beforeEach(inject(function($compile, $controller) {
+      angular.element(document.body).append('<div data-kinetic-canvas data-canvas-details="canvasDetails" id="canvas">&nbsp;</div>');
+      var linkingFn = $compile('<div data-kinetic-canvas data-canvas-details="canvasDetails" id="canvas">&nbsp;</div>');
+      var element = linkingFn(scope);
+      $httpBackend.whenGET('data/qdm-categories.json').respond([]);
+      $httpBackend.whenGET('data/qdm-elements.json').respond([]);
+      $httpBackend.whenGET('data/qdm-logicalOperators.json').respond([]);
+      $httpBackend.whenGET('data/qdm-temporalOperators.json').respond([]);
+      $httpBackend.whenGET('data/phenotypes.json').respond([]);
+      this.controller = $controller('PhenotypeCtrl', { $scope: scope });
+      $httpBackend.flush();
+    }));
+
+    it('allows properties for temporal operators', inject(function () {
+      spyOn(algorithmElementFactory, 'getFirstSelectedItem').andReturn({ element: { type: 'TemporalOperator'} });
+      expect(scope.canShowProperties(null)).toEqual(true);
+    }));
+
+    it('allows properties for logical operators', inject(function() {
+      spyOn(algorithmElementFactory, 'getFirstSelectedItem').andReturn({ element: { type: 'LogicalOperator'} });
+      expect(scope.canShowProperties(null)).toEqual(true);
+    }));
+
+    it('does not allow properties for unknown items', inject(function() {
+      spyOn(algorithmElementFactory, 'getFirstSelectedItem').andReturn({ element: { type: 'UnknownOperator'} });
+      expect(scope.canShowProperties(null)).toEqual(false);
+    }));
+  });
 });

@@ -28,7 +28,7 @@ describe('Factory: TemporalOperatorService', function () {
       var promise = TemporalOperatorService.load();
       expect(promise.success).toNotEqual(null);
     }));
-  })
+  });
 
   describe('processValues', function() {
     it('processes the operators', inject(function() {
@@ -40,13 +40,13 @@ describe('Factory: TemporalOperatorService', function () {
                 value: 'http://rdf.healthit.gov/qdm/element#sbs'
               },
               context: {
-                  type: "uri",
-                  value: "http://rdf.healthit.gov/qdm/element#qdm"
+                  type: 'uri',
+                  value: 'http://rdf.healthit.gov/qdm/element#qdm'
               },
               temporalOperatorLabel: {
-                  type: "literal",
-                  value: "Start Before Start",
-                  datatype: "http://www.w3.org/2001/XMLSchema#string"
+                  type: 'literal',
+                  value: 'Start Before Start',
+                  datatype: 'http://www.w3.org/2001/XMLSchema#string'
               }
           },
           {
@@ -55,13 +55,13 @@ describe('Factory: TemporalOperatorService', function () {
                 value: 'http://rdf.healthit.gov/qdm/element#sas'
               },
               context: {
-                  type: "uri",
-                  value: "http://rdf.healthit.gov/qdm/element#qdm"
+                  type: 'uri',
+                  value: 'http://rdf.healthit.gov/qdm/element#qdm'
               },
               temporalOperatorLabel: {
-                  type: "literal",
-                  value: "Start After Start",
-                  datatype: "http://www.w3.org/2001/XMLSchema#string"
+                  type: 'literal',
+                  value: 'Start After Start',
+                  datatype: 'http://www.w3.org/2001/XMLSchema#string'
               }
           }
         ]}
@@ -75,5 +75,5 @@ describe('Factory: TemporalOperatorService', function () {
       expect(temporalOperators.length).toEqual(2);
       expect(temporalOperators[0].name).toEqual('Start After Start');
     }));
-  })
+  });
 });

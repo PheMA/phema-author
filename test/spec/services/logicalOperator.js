@@ -28,7 +28,7 @@ describe('Factory: LogicalOperatorService', function () {
       var promise = LogicalOperatorService.load();
       expect(promise.success).toNotEqual(null);
     }));
-  })
+  });
 
   describe('processValues', function() {
     it('processes the operators', inject(function() {
@@ -40,13 +40,13 @@ describe('Factory: LogicalOperatorService', function () {
                 value: 'http://rdf.healthit.gov/qdm/element#or'
               },
               context: {
-                  type: "uri",
-                  value: "http://rdf.healthit.gov/qdm/element#qdm"
+                  type: 'uri',
+                  value: 'http://rdf.healthit.gov/qdm/element#qdm'
               },
               logicalOperatorLabel: {
-                  type: "literal",
-                  value: "Or",
-                  datatype: "http://www.w3.org/2001/XMLSchema#string"
+                  type: 'literal',
+                  value: 'Or',
+                  datatype: 'http://www.w3.org/2001/XMLSchema#string'
               }
           },
           {
@@ -55,13 +55,13 @@ describe('Factory: LogicalOperatorService', function () {
                 value: 'http://rdf.healthit.gov/qdm/element#and'
               },
               context: {
-                  type: "uri",
-                  value: "http://rdf.healthit.gov/qdm/element#qdm"
+                  type: 'uri',
+                  value: 'http://rdf.healthit.gov/qdm/element#qdm'
               },
               logicalOperatorLabel: {
-                  type: "literal",
-                  value: "And",
-                  datatype: "http://www.w3.org/2001/XMLSchema#string"
+                  type: 'literal',
+                  value: 'And',
+                  datatype: 'http://www.w3.org/2001/XMLSchema#string'
               }
           }
         ] }
@@ -75,5 +75,5 @@ describe('Factory: LogicalOperatorService', function () {
       expect(logicalOperators.length).toEqual(2);
       expect(logicalOperators[0].name).toEqual('And');
     }));
-  })
+  });
 });
