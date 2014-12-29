@@ -11,4 +11,5 @@ angular.module('sophe', [
   'sophe.elements.phenotype',
   'sophe.phenotype.toolbar',
   'sophe.services.temporalOperator',
+  'sophe.services.qdmElement',
   'sophe.services.logicalOperator']);

@@ -3,13 +3,13 @@
 
 /**
  * @ngdoc function
- * @name sopheAuthorApp.controller:PhenotypectrlCtrl
+ * @name sopheAuthorApp.controller:PhenotypeController
  * @description
- * # PhenotypectrlCtrl
+ * # PhenotypeController
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PhenotypeCtrl', ['$scope', '$http', '$routeParams', '$modal', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', function ($scope, $http, $routeParams, $modal, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService) {
+  .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'QDMElementService', function ($scope, $http, $routeParams, $modal, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, QDMElementService) {
     $scope.phenotype = $routeParams.id;
     $scope.status = { open: [true, false, false, false]};
     $scope.isDeleteDisabled = true;
@@ -27,44 +27,9 @@ angular.module('sopheAuthorApp')
       $scope.phenotypes = transformedData.sort(ArrayUtil.sortByName);
     });
 
-    $http.get('data/qdm-categories.json').success (function(data){
-      $scope.dataElements = [];
-      if (data && data.results) {
-        var transformedData = [];
-        var originalData = data.results.bindings;
-        for (var index = 0; index < originalData.length; index++) {
-          transformedData.push({
-            name: originalData[index].categoryLabel.value,
-            uri: originalData[index].id.value,
-            type: 'Category',
-            children: []} );
-        }
-        $scope.dataElements = transformedData.sort(ArrayUtil.sortByName);
-      }
-    });
-
-    $http.get('data/qdm-elements.json').success (function(data){
-      if (data && data.results) {
-        var originalData = data.results.bindings;
-        var categoryIndex = 0;
-        for (var index = 0; index < originalData.length; index++) {
-          for (categoryIndex = 0; categoryIndex < $scope.dataElements.length; categoryIndex++) {
-            if ($scope.dataElements[categoryIndex].uri === originalData[index].context.value) {
-              $scope.dataElements[categoryIndex].children.push({
-                name: originalData[index].dataElementLabel.value,
-                uri: originalData[index].id.value,
-                type: 'DataElement'
-              });
-              break;
-            }
-          }
-        }
-
-        for (categoryIndex = 0; categoryIndex < $scope.dataElements.length; categoryIndex++) {
-          $scope.dataElements[categoryIndex].children = $scope.dataElements[categoryIndex].children.sort(ArrayUtil.sortByName);
-        }
-      }
-    });
+    QDMElementService.load()
+      .then(QDMElementService.processValues)
+      .then(function(elements) { $scope.dataElements = elements; });
 
     LogicalOperatorService.load()
       .then(LogicalOperatorService.processValues)

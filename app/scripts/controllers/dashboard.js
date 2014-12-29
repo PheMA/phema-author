@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name sopheAuthorApp.controller:DashboardCtrl
+ * @name sopheAuthorApp.controller:DashboardController
  * @description
- * # DashboardCtrl
+ * # DashboardController
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('DashboardCtrl', function ($scope) {
+  .controller('DashboardController', function ($scope) {
     $scope.newsItems = [];
     $scope.phenotypes = [];
   });

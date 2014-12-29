@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name sopheAuthorApp.controller:RelationshipPropertiesCtrl
+ * @name sopheAuthorApp.controller:RelationshipPropertiesController
  * @description
- * # RelationshipPropertiesCtrl
+ * # RelationshipPropertiesController
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('RelationshipPropertiesCtrl', function ($scope, $modalInstance, TemporalOperatorService, element, temporalOperators) {
+  .controller('RelationshipPropertiesController', function ($scope, $modalInstance, TemporalOperatorService, element, temporalOperators) {
     $scope.element = element;
     $scope.relationship = {
       relationship: {base: '', modifier: '', value: element.uri},

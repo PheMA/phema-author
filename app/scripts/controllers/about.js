@@ -2,11 +2,11 @@
 
 /**
  * @ngdoc function
- * @name sopheAuthorApp.controller:AboutCtrl
+ * @name sopheAuthorApp.controller:AboutController
  * @description
- * # AboutCtrl
+ * # AboutController
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('AboutCtrl', function (/*$scope*/) {
+  .controller('AboutController', function (/*$scope*/) {
   });

@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name sopheAuthorApp.controller:MainCtrl
+ * @name sopheAuthorApp.controller:MainController
  * @description
- * # MainCtrl
+ * # MainController
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('MainCtrl', function ($scope) {
+  .controller('MainController', function ($scope) {
     $scope.numberOfPhenotypes = 0;
 
     $scope.hasPhenotypes = function() {

@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name sopheAuthorApp.controller:LogicalOperatorPropertiesCtrl
+ * @name sopheAuthorApp.controller:LogicalOperatorPropertiesController
  * @description
- * # RelationshipPropertiesCtrl
+ * # LogicalOperatorPropertiesController
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('LogicalOperatorPropertiesCtrl', function ($scope, $modalInstance, LogicalOperatorService, element, containedElements, logicalOperators) {
+  .controller('LogicalOperatorPropertiesController', function ($scope, $modalInstance, LogicalOperatorService, element, containedElements, logicalOperators) {
     $scope.logicalOperators = logicalOperators;
     LogicalOperatorService.addDescriptionForProperties($scope.logicalOperators);
     $scope.logicalOperator = ArrayUtil.findInArray($scope.logicalOperators, 'name', element.name);

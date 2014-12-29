@@ -25,17 +25,17 @@ var app = angular.module('sopheAuthorApp', [
 app.config(function ($routeProvider) {
     $routeProvider
       .when('/', {
-        title: 'Home', templateUrl: 'views/main.html', controller: 'MainCtrl' })
+        title: 'Home', templateUrl: 'views/main.html', controller: 'MainController' })
       .when('/dashboard', {
-        title: 'Dashboard', templateUrl: 'views/dashboard.html', controller: 'DashboardCtrl' })
+        title: 'Dashboard', templateUrl: 'views/dashboard.html', controller: 'DashboardController' })
       .when('/about', {
-        title: 'About', templateUrl: 'views/about.html', controller: 'AboutCtrl' })
+        title: 'About', templateUrl: 'views/about.html', controller: 'AboutController' })
       .when('/phenotype', {
-        title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeCtrl' })
+        title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
       .when('/phenotype/new', {
-        title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeCtrl' })
+        title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
       .when('/phenotype/:id', {
-        title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeCtrl' })
+        title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
       .otherwise({
         redirectTo: '/'
       });
