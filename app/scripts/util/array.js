@@ -9,5 +9,9 @@ ArrayUtil = {
         }
     }
     return null;
+  },
+
+  sortByName: function(obj1, obj2) {
+    return obj1.name.localeCompare(obj2.name);
   }
 };

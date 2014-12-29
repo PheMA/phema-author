@@ -9,4 +9,5 @@ angular.module('sophe', [
   'sophe.elements.qdm.logicalOperators',
   'sophe.elements.qdm.temporalOperators',
   'sophe.elements.phenotype',
-  'sophe.phenotype.toolbar']);
+  'sophe.phenotype.toolbar',
+  'sophe.services.temporalOperator']);

@@ -15,7 +15,6 @@ var app = angular.module('sopheAuthorApp', [
     'ngRoute',
     //'ngSanitize',
     //'ngTouch',
-    //'canvasModule',
     'treeControl',
     'ui.bootstrap',
     'sophe',

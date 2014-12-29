@@ -9,13 +9,9 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PhenotypeCtrl', ['$scope', '$http', '$routeParams', '$modal', 'algorithmElementFactory', function ($scope, $http, $routeParams, $modal, algorithmElementFactory) {
+  .controller('PhenotypeCtrl', ['$scope', '$http', '$routeParams', '$modal', 'algorithmElementFactory', 'TemporalOperatorService', function ($scope, $http, $routeParams, $modal, algorithmElementFactory, TemporalOperatorService) {
     $scope.phenotype = $routeParams.id;
     $scope.status = { open: [true, false, false, false]};
-
-    function sortByName(obj1, obj2) {
-      return obj1.name.localeCompare(obj2.name);
-    }
 
     $http.get('data/phenotypes.json').success (function(data) {
       var transformedData = [];
@@ -26,7 +22,7 @@ angular.module('sopheAuthorApp')
         });
       }
 
-      $scope.phenotypes = transformedData.sort(sortByName);
+      $scope.phenotypes = transformedData.sort(ArrayUtil.sortByName);
     });
 
     $http.get('data/qdm-categories.json').success (function(data){
@@ -41,7 +37,7 @@ angular.module('sopheAuthorApp')
             type: 'Category',
             children: []} );
         }
-        $scope.dataElements = transformedData.sort(sortByName);
+        $scope.dataElements = transformedData.sort(ArrayUtil.sortByName);
       }
     });
 
@@ -63,7 +59,7 @@ angular.module('sopheAuthorApp')
         }
 
         for (categoryIndex = 0; categoryIndex < $scope.dataElements.length; categoryIndex++) {
-          $scope.dataElements[categoryIndex].children = $scope.dataElements[categoryIndex].children.sort(sortByName);
+          $scope.dataElements[categoryIndex].children = $scope.dataElements[categoryIndex].children.sort(ArrayUtil.sortByName);
         }
       }
     });
@@ -80,25 +76,14 @@ angular.module('sopheAuthorApp')
             type: 'LogicalOperator',
             children: []} );
         }
-        $scope.logicalOperators = transformedData.sort(sortByName);
+        $scope.logicalOperators = transformedData.sort(ArrayUtil.sortByName);
       }
     });
 
-    $http.get('data/qdm-temporalOperators.json').success (function(data){
-      $scope.temporalOperators = [];
-      if (data && data.results) {
-        var transformedData = [];
-        var originalData = data.results.bindings;
-        for (var index = 0; index < originalData.length; index++) {
-          transformedData.push({
-            name: originalData[index].temporalOperatorLabel.value,
-            uri: originalData[index].id.value,
-            type: 'TemporalOperator',
-            children: []} );
-        }
-        $scope.temporalOperators = transformedData.sort(sortByName);
-      }
-    });
+    // Temporal operator service goes here
+    TemporalOperatorService.load()
+      .then(TemporalOperatorService.processValues)
+      .then(function(operators) { $scope.temporalOperators = operators; });
 
     $scope.treeOptions = {
       dirSelectable: false

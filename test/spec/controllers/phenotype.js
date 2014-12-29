@@ -177,50 +177,6 @@ describe('Controller: PhenotypeCtrl', function () {
     expect(scope.logicalOperators[0].name).toEqual('And');
   }));
 
-  it('sorts a list of temporal operators', inject(function ($controller) {
-    $httpBackend.whenGET('data/qdm-categories.json').respond([]);
-    $httpBackend.whenGET('data/qdm-elements.json').respond([]);
-    $httpBackend.whenGET('data/qdm-logicalOperators.json').respond([]);
-    $httpBackend.whenGET('data/qdm-temporalOperators.json').respond({
-      results: {bindings: [
-        {
-            id: {
-              type: 'uri',
-              value: 'http://rdf.healthit.gov/qdm/element#sbs'
-            },
-            context: {
-                type: "uri",
-                value: "http://rdf.healthit.gov/qdm/element#qdm"
-            },
-            temporalOperatorLabel: {
-                type: "literal",
-                value: "Start Before Start",
-                datatype: "http://www.w3.org/2001/XMLSchema#string"
-            }
-        },
-        {
-            id: {
-              type: 'uri',
-              value: 'http://rdf.healthit.gov/qdm/element#sas'
-            },
-            context: {
-                type: "uri",
-                value: "http://rdf.healthit.gov/qdm/element#qdm"
-            },
-            temporalOperatorLabel: {
-                type: "literal",
-                value: "Start After Start",
-                datatype: "http://www.w3.org/2001/XMLSchema#string"
-            }
-        }
-      ]}});
-    $httpBackend.whenGET('data/phenotypes.json').respond([]);
-    var ctrl = $controller('PhenotypeCtrl', { $scope: scope });
-    $httpBackend.flush();
-    expect(scope.temporalOperators.length).toEqual(2);
-    expect(scope.temporalOperators[0].name).toEqual('Start After Start');
-  }));
-
   it('does not add an element if there is no canvas', inject(function ($compile, $controller) {
     $httpBackend.whenGET('data/qdm-categories.json').respond([]);
     $httpBackend.whenGET('data/qdm-elements.json').respond([]);
