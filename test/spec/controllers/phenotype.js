@@ -133,50 +133,6 @@ describe('Controller: PhenotypeCtrl', function () {
     expect(scope.dataElements[0].children[0].name).toEqual('Substance, Intolerance');
   }));
 
-  it('sorts a list of logical operators', inject(function ($controller) {
-    $httpBackend.whenGET('data/qdm-categories.json').respond([]);
-    $httpBackend.whenGET('data/qdm-elements.json').respond([]);
-    $httpBackend.whenGET('data/qdm-logicalOperators.json').respond({
-      results: {bindings: [
-        {
-            id: {
-              type: 'uri',
-              value: 'http://rdf.healthit.gov/qdm/element#or'
-            },
-            context: {
-                type: "uri",
-                value: "http://rdf.healthit.gov/qdm/element#qdm"
-            },
-            logicalOperatorLabel: {
-                type: "literal",
-                value: "Or",
-                datatype: "http://www.w3.org/2001/XMLSchema#string"
-            }
-        },
-        {
-            id: {
-              type: 'uri',
-              value: 'http://rdf.healthit.gov/qdm/element#and'
-            },
-            context: {
-                type: "uri",
-                value: "http://rdf.healthit.gov/qdm/element#qdm"
-            },
-            logicalOperatorLabel: {
-                type: "literal",
-                value: "And",
-                datatype: "http://www.w3.org/2001/XMLSchema#string"
-            }
-        }
-      ]}});
-    $httpBackend.whenGET('data/qdm-temporalOperators.json').respond([]);
-    $httpBackend.whenGET('data/phenotypes.json').respond([]);
-    var ctrl = $controller('PhenotypeCtrl', { $scope: scope });
-    $httpBackend.flush();
-    expect(scope.logicalOperators.length).toEqual(2);
-    expect(scope.logicalOperators[0].name).toEqual('And');
-  }));
-
   it('does not add an element if there is no canvas', inject(function ($compile, $controller) {
     $httpBackend.whenGET('data/qdm-categories.json').respond([]);
     $httpBackend.whenGET('data/qdm-elements.json').respond([]);

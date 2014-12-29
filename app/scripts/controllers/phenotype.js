@@ -9,7 +9,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PhenotypeCtrl', ['$scope', '$http', '$routeParams', '$modal', 'algorithmElementFactory', 'TemporalOperatorService', function ($scope, $http, $routeParams, $modal, algorithmElementFactory, TemporalOperatorService) {
+  .controller('PhenotypeCtrl', ['$scope', '$http', '$routeParams', '$modal', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', function ($scope, $http, $routeParams, $modal, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService) {
     $scope.phenotype = $routeParams.id;
     $scope.status = { open: [true, false, false, false]};
 
@@ -64,23 +64,10 @@ angular.module('sopheAuthorApp')
       }
     });
 
-    $http.get('data/qdm-logicalOperators.json').success (function(data){
-      $scope.logicalOperators = [];
-      if (data && data.results) {
-        var transformedData = [];
-        var originalData = data.results.bindings;
-        for (var index = 0; index < originalData.length; index++) {
-          transformedData.push({
-            name: originalData[index].logicalOperatorLabel.value,
-            uri: originalData[index].id.value,
-            type: 'LogicalOperator',
-            children: []} );
-        }
-        $scope.logicalOperators = transformedData.sort(ArrayUtil.sortByName);
-      }
-    });
+    LogicalOperatorService.load()
+      .then(LogicalOperatorService.processValues)
+      .then(function(operators) { $scope.logicalOperators = operators; });
 
-    // Temporal operator service goes here
     TemporalOperatorService.load()
       .then(TemporalOperatorService.processValues)
       .then(function(operators) { $scope.temporalOperators = operators; });
