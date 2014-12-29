@@ -8,13 +8,13 @@ angular.module('sophe.factories.algorithmElement', [])
     function addConnectionHandler(kineticObj, scope) {
       var stage = scope.canvasDetails.kineticStageObj;
       kineticObj.on('mouseup', function (e) {
-        endConnector(stage, e.target);
+        endConnector(stage, e.target, scope);
       });
       kineticObj.on('mousemove', function(evt) {
         updateActiveLineLocation(stage, evt);
       });
       kineticObj.on('mousedown', function (e) {
-        endConnector(stage, undefined);  // Make sure it's not carrying over from before
+        endConnector(stage, undefined, scope);  // Make sure it's not carrying over from before
         startConnector(stage, e.target);
       });
     }
@@ -25,12 +25,9 @@ angular.module('sophe.factories.algorithmElement', [])
         updateActiveLineLocation(stage, evt);
       });
       kineticObj.on('mouseup', function() {
-        endConnector(stage, undefined);
+        endConnector(stage, undefined, scope);
         clearSelections(stage);
-        selectObject(stage, kineticObj);
-        // Because of the order in which events are handled, we need to broadcast an event that
-        // we selected an item.  This is needed to update the context menu appropriately.
-        scope.$root.$broadcast('sophe-element-selected', kineticObj);
+        selectObject(stage, kineticObj, scope);
       });
 
       // When we are dragging, move the drag object to be the top element, clear all
@@ -38,7 +35,7 @@ angular.module('sophe.factories.algorithmElement', [])
       kineticObj.on('dragstart', function() {
         kineticObj.setZIndex(999);
         clearSelections(stage);
-        selectObject(stage, kineticObj);
+        selectObject(stage, kineticObj, scope);
         kineticObj.draw();
       });
 
@@ -325,7 +322,7 @@ angular.module('sophe.factories.algorithmElement', [])
 
       var stage = scope.canvasDetails.kineticStageObj;
       startConnector(stage, eventAConnectors[1]);
-      var line = endConnector(stage, eventBConnectors[0]);
+      var line = endConnector(stage, eventBConnectors[0], scope);
       updateConnectedLines(eventAConnectors[1], stage);
       if (line !== null) {
         line.label.setText(config.element.name);

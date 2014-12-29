@@ -217,13 +217,19 @@ function removeElementFromContainer(stage, element) {
   }
 }
 
-function selectObject(stage, selectObj) {
+function selectObject(stage, selectObj, scope) {
   if (stage.connector && stage.connector.status === 'drawing') {
     return;
   }
   selectObj.selected = true;
   updateStrokeWidth(selectObj, false);
   stage.draw();
+
+  if (scope) {
+    // Because of the order in which events are handled, we need to broadcast an event that
+    // we selected an item.  This is needed to update the context menu appropriately.
+    scope.$root.$broadcast('sophe-element-selected', selectObj);
+  }
 }
 
 function _clearSelection(item) {
@@ -300,7 +306,7 @@ function startConnector(stage, connectorObj) {
 
 // For a line in progress, end the line at the given connector.  If no connector is present,
 // or the connector isn't valid, remove the in progress line.
-function endConnector(stage, connectorObj) {
+function endConnector(stage, connectorObj, scope) {
   var line = null;
   if (stage.connector.status === 'drawing') {
     // If we are dropping where we started, or there is no end connection point, the line
@@ -317,7 +323,7 @@ function endConnector(stage, connectorObj) {
       line.connectors.start.connections.push(line);
       line.on('mouseup', function(e) {
         clearSelections(stage);
-        selectObject(stage, e.target);
+        selectObject(stage, e.target, scope);
       });
 
       var labelTextOptions = {

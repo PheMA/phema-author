@@ -94,7 +94,7 @@ angular.module('sopheAuthorApp')
       if (selectedElement.element.type === 'TemporalOperator') {
         modalInstance = $modal.open({
           templateUrl: 'views/properties/relationship.html',
-          controller: 'RelationshipPropertiesCtrl',
+          controller: 'RelationshipPropertiesController',
           size: 'lg',
           resolve: {
             element: function () {
@@ -122,7 +122,7 @@ angular.module('sopheAuthorApp')
       else if (selectedElement.element.type === 'LogicalOperator') {
         modalInstance = $modal.open({
           templateUrl: 'views/properties/logicalOperator.html',
-          controller: 'LogicalOperatorPropertiesCtrl',
+          controller: 'LogicalOperatorPropertiesController',
           size: 'lg',
           resolve: {
             element: function () {
