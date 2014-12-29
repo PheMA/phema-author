@@ -28,6 +28,9 @@ angular.module('sophe.factories.algorithmElement', [])
         endConnector(stage, undefined);
         clearSelections(stage);
         selectObject(stage, kineticObj);
+        // Because of the order in which events are handled, we need to broadcast an event that
+        // we selected an item.  This is needed to update the context menu appropriately.
+        scope.$root.$broadcast('sophe-element-selected', kineticObj);
       });
 
       // When we are dragging, move the drag object to be the top element, clear all

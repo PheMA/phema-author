@@ -207,4 +207,43 @@ describe('Controller: PhenotypeCtrl', function () {
       expect(scope.canShowProperties(null)).toEqual(false);
     }));
   });
+
+  describe('updates context menu visibility appropriately', function() {
+    beforeEach(inject(function($compile, $controller) {
+      angular.element(document.body).append('<div data-kinetic-canvas data-canvas-details="canvasDetails" id="canvas">&nbsp;</div>');
+      var linkingFn = $compile('<div data-kinetic-canvas data-canvas-details="canvasDetails" id="canvas">&nbsp;</div>');
+      var element = linkingFn(scope);
+      $httpBackend.whenGET('data/qdm-categories.json').respond([]);
+      $httpBackend.whenGET('data/qdm-elements.json').respond([]);
+      $httpBackend.whenGET('data/qdm-logicalOperators.json').respond([]);
+      $httpBackend.whenGET('data/qdm-temporalOperators.json').respond([]);
+      $httpBackend.whenGET('data/phenotypes.json').respond([]);
+      this.controller = $controller('PhenotypeCtrl', { $scope: scope });
+      $httpBackend.flush();
+    }));
+
+    it('disables delete', inject(function() {
+      spyOn(algorithmElementFactory, 'getFirstSelectedItem').andReturn(null);
+      scope.$root.$broadcast('sophe-element-selected');
+      expect(scope.isDeleteDisabled).toEqual(true);
+    }));
+
+    it('enables delete', inject(function() {
+      spyOn(algorithmElementFactory, 'getFirstSelectedItem').andReturn({ element: { type: 'LogicalOperator'} });
+      scope.$root.$broadcast('sophe-element-selected');
+      expect(scope.isDeleteDisabled).toEqual(false);
+    }));
+
+    it('disables properties', inject(function() {
+      spyOn(algorithmElementFactory, 'getFirstSelectedItem').andReturn(null);
+      scope.$root.$broadcast('sophe-element-selected');
+      expect(scope.isPropertiesDisabled).toEqual(true);
+    }));
+
+    it('enables properties', inject(function() {
+      spyOn(algorithmElementFactory, 'getFirstSelectedItem').andReturn({ element: { type: 'LogicalOperator'} });
+      scope.$root.$broadcast('sophe-element-selected');
+      expect(scope.isDeleteDisabled).toEqual(false);
+    }));
+  });
 });

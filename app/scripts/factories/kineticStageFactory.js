@@ -56,6 +56,7 @@ angular.module('sophe.factories.kineticStage', [])
         background.on('mouseup', function() {
           endConnector(stage, undefined);
           clearSelections(stage);
+          scope.$root.$broadcast('sophe-element-selected', null);
         });
       }
     };

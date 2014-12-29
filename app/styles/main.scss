@@ -152,6 +152,12 @@ table.phenotype-list {
     text-align: center;
     border-bottom: 1px solid black;
   }
+
+  .disabled {
+    pointer-events: none;
+    cursor: default;
+    color: gray;
+  }
 }
 
 .noselect {

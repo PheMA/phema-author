@@ -12,6 +12,8 @@ angular.module('sopheAuthorApp')
   .controller('PhenotypeCtrl', ['$scope', '$http', '$routeParams', '$modal', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', function ($scope, $http, $routeParams, $modal, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService) {
     $scope.phenotype = $routeParams.id;
     $scope.status = { open: [true, false, false, false]};
+    $scope.isDeleteDisabled = true;
+    $scope.isPropertiesDisabled = true;
 
     $http.get('data/phenotypes.json').success (function(data) {
       var transformedData = [];
@@ -75,6 +77,13 @@ angular.module('sopheAuthorApp')
     $scope.treeOptions = {
       dirSelectable: false
     };
+
+    $scope.$on('sophe-element-selected', function(evt, args) {
+      $scope.$apply(function() {
+        $scope.isPropertiesDisabled = !$scope.canShowProperties(args);
+        $scope.isDeleteDisabled = !$scope.canDelete();
+      });
+    });
 
     // config object:
     //   x
@@ -164,19 +173,10 @@ angular.module('sopheAuthorApp')
         });
 
         modalInstance.result.then(function (result) {
+          // Clicked 'OK'
           selectedElement.element = result;
           findParentElementByName(selectedElement, 'header').setText(selectedElement.element.name);
           selectedElement.getStage().draw();
-          // Clicked 'OK'
-          //var uri = ((result.relationship.modifier) ? result.relationship.modifier.id : result.relationship.base.uri);
-          // selectedElement.element.uri = uri;
-          // selectedElement.element.name = ArrayUtil.findInArray($scope.temporalOperators, 'uri', uri).name;
-          // selectedElement.element.timeRange = result.timeRange;
-          // if (result.timeRange.comparison) {
-          //   selectedElement.element.timeRange.comparison = result.timeRange.comparison.name;
-          // }
-          // selectedElement.label.setText(selectedElement.element.name);
-          // selectedElement.label.getStage().draw();
         });
       }
     };
