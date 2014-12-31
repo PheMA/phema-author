@@ -4,35 +4,26 @@ describe('Factory: LogicalOperatorService', function () {
 
   beforeEach(module('sophe.services.logicalOperator'));
 
-  var LogicalOperatorService, $http, $httpBackend;
-
   // Initialize the controller and a mock scope
   beforeEach(inject(function (_LogicalOperatorService_, _$http_, _$httpBackend_) {
-    LogicalOperatorService = _LogicalOperatorService_;
-    $http = _$http_;
-    $httpBackend = _$httpBackend_;
+    this.LogicalOperatorService = _LogicalOperatorService_;
+    this.$http = _$http_;
+    this.$httpBackend = _$httpBackend_;
+    this.operatorGet = this.$httpBackend.when('GET', 'data/qdm-logicalOperators.json');
+    this.operatorGet.respond([]);
   }));
 
   describe('load', function() {
     it('returns a promise', inject(function() {
-      spyOn(LogicalOperatorService, 'load').andCallFake(function() {
-        return {
-          success: function(callback) {
-            callback({
-              results: {bindings: []}}
-            );
-          }
-        };
-      });
-
-      var promise = LogicalOperatorService.load();
-      expect(promise.success).toNotEqual(null);
+      var promise = this.LogicalOperatorService.load();
+      this.$httpBackend.flush();
+      expect(promise.then).toNotEqual(null);
     }));
   });
 
   describe('processValues', function() {
     it('processes the operators', inject(function() {
-      $httpBackend.whenGET('data/qdm-logicalOperators.json').respond({
+      this.operatorGet.respond({
         results: {bindings: [
           {
               id: {
@@ -68,10 +59,10 @@ describe('Factory: LogicalOperatorService', function () {
       });
 
       var logicalOperators = [];
-      LogicalOperatorService.load()
-        .then(LogicalOperatorService.processValues)
+      this.LogicalOperatorService.load()
+        .then(this.LogicalOperatorService.processValues)
         .then(function(operators) { logicalOperators = operators; });
-      $httpBackend.flush();
+      this.$httpBackend.flush();
       expect(logicalOperators.length).toEqual(2);
       expect(logicalOperators[0].name).toEqual('And');
     }));

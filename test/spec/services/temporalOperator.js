@@ -4,35 +4,26 @@ describe('Factory: TemporalOperatorService', function () {
 
   beforeEach(module('sophe.services.temporalOperator'));
 
-  var TemporalOperatorService, $http, $httpBackend;
-
   // Initialize the controller and a mock scope
   beforeEach(inject(function (_TemporalOperatorService_, _$http_, _$httpBackend_) {
-    TemporalOperatorService = _TemporalOperatorService_;
-    $http = _$http_;
-    $httpBackend = _$httpBackend_;
+    this.TemporalOperatorService = _TemporalOperatorService_;
+    this.$http = _$http_;
+    this.$httpBackend = _$httpBackend_;
+    this.temporalOperatorsGet = this.$httpBackend.when('GET', 'data/qdm-temporalOperators.json');
+    this.temporalOperatorsGet.respond([]);
   }));
 
   describe('load', function() {
     it('returns a promise', inject(function() {
-      spyOn(TemporalOperatorService, 'load').andCallFake(function() {
-        return {
-          success: function(callback) {
-            callback({
-              results: {bindings: []}}
-            );
-          }
-        };
-      });
-
-      var promise = TemporalOperatorService.load();
-      expect(promise.success).toNotEqual(null);
+      var promise = this.TemporalOperatorService.load();
+      this.$httpBackend.flush();
+      expect(promise.then).toNotEqual(null);
     }));
   });
 
   describe('processValues', function() {
     it('processes the operators', inject(function() {
-      $httpBackend.whenGET('data/qdm-temporalOperators.json').respond({
+      this.temporalOperatorsGet.respond({
         results: {bindings: [
           {
               id: {
@@ -68,10 +59,10 @@ describe('Factory: TemporalOperatorService', function () {
       });
 
       var temporalOperators = [];
-      TemporalOperatorService.load()
-        .then(TemporalOperatorService.processValues)
+      this.TemporalOperatorService.load()
+        .then(this.TemporalOperatorService.processValues)
         .then(function(operators) { temporalOperators = operators; });
-      $httpBackend.flush();
+      this.$httpBackend.flush();
       expect(temporalOperators.length).toEqual(2);
       expect(temporalOperators[0].name).toEqual('Start After Start');
     }));

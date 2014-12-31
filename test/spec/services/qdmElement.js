@@ -4,35 +4,28 @@ describe('Factory: QDMElementService', function () {
 
   beforeEach(module('sophe.services.qdmElement'));
 
-  var QDMElementService, $http, $httpBackend;
-
   // Initialize the controller and a mock scope
   beforeEach(inject(function (_QDMElementService_, _$http_, _$httpBackend_) {
-    QDMElementService = _QDMElementService_;
-    $http = _$http_;
-    $httpBackend = _$httpBackend_;
+    this.QDMElementService = _QDMElementService_;
+    this.$http = _$http_;
+    this.$httpBackend = _$httpBackend_;
+    this.categoryGet = this.$httpBackend.when('GET', 'data/qdm-categories.json');
+    this.categoryGet.respond([]);
+    this.elementsGet = this.$httpBackend.when('GET', 'data/qdm-elements.json');
+    this.elementsGet.respond([]);
   }));
 
   describe('load', function() {
     it('returns a promise', inject(function() {
-      spyOn(QDMElementService, 'load').andCallFake(function() {
-        return {
-          success: function(callback) {
-            callback({
-              results: {bindings: []}}
-            );
-          }
-        };
-      });
-
-      var promise = QDMElementService.load();
-      expect(promise.success).toNotEqual(null);
+      var promise = this.QDMElementService.load();
+      this.$httpBackend.flush();
+      expect(promise.then).toNotEqual(null);
     }));
   });
 
   describe('processValues', function() {
     it('processes the operators', inject(function() {
-      $httpBackend.whenGET('data/qdm-categories.json').respond({
+      this.categoryGet.respond({
         results: {bindings: [
           {
             id: {
@@ -66,7 +59,7 @@ describe('Factory: QDMElementService', function () {
         }
       ]}});
 
-      $httpBackend.whenGET('data/qdm-elements.json').respond({
+      this.elementsGet.respond({
         results: {bindings: [
           {
               id: {
@@ -101,10 +94,10 @@ describe('Factory: QDMElementService', function () {
       ]}});
 
       var dataElements = [];
-      QDMElementService.load()
-        .then(QDMElementService.processValues)
+      this.QDMElementService.load()
+        .then(this.QDMElementService.processValues)
         .then(function(operators) { dataElements = operators; });
-      $httpBackend.flush();
+      this.$httpBackend.flush();
       expect(dataElements.length).toEqual(2);
       expect(dataElements[0].name).toEqual('Test');
       expect(dataElements[0].children.length).toEqual(2);
