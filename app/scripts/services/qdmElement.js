@@ -73,11 +73,11 @@ angular.module('sophe.services.qdmElement', ['sophe.services.qdmAttribute'])
     var promise = null;
     if (element.type === 'Category') {
       promise = QDMAttributeService.loadCategory(element.id)
-        .then(QDMAttributeService.processValues)
+        .then(QDMAttributeService.processValues);
     }
     else if (element.type === 'DataElement') {
       promise = QDMAttributeService.loadElement(element.id)
-        .then(QDMAttributeService.processValues)
+        .then(QDMAttributeService.processValues);
     }
 
     return promise;

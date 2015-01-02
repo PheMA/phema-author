@@ -10,7 +10,7 @@
 angular.module('sopheAuthorApp')
   .controller('QDMElementPropertiesController', function ($scope, $modalInstance, QDMElementService, QDMAttributeService, element) {
     $scope.element = element;
-    $scope.formData = {};
+    $scope.formData = element.attributes || {};
 
     // Load the attributes (makes a call to the data services) and map into the dynamic form format.
     // We are assigning a promise to the form template so that it will load when the data is loaded.

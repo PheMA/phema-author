@@ -109,7 +109,6 @@ angular.module('sopheAuthorApp')
         });
 
         modalInstance.result.then(function (result) {
-          // Clicked 'OK'
           var uri = ((result.relationship.modifier) ? result.relationship.modifier.id : result.relationship.base.uri);
           selectedElement.element.uri = uri;
           selectedElement.element.name = ArrayUtil.findInArray($scope.temporalOperators, 'uri', uri).name;
@@ -140,7 +139,6 @@ angular.module('sopheAuthorApp')
         });
 
         modalInstance.result.then(function (result) {
-          // Clicked 'OK'
           selectedElement.element = result;
           findParentElementByName(selectedElement, 'header').setText(selectedElement.element.name);
           selectedElement.getStage().draw();
@@ -159,10 +157,7 @@ angular.module('sopheAuthorApp')
         });
 
         modalInstance.result.then(function (result) {
-          // Clicked 'OK'
-          // selectedElement.element = result;
-          // findParentElementByName(selectedElement, 'header').setText(selectedElement.element.name);
-          // selectedElement.getStage().draw();
+          selectedElement.element.attributes = result;
         });
       }
     };

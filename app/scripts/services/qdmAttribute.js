@@ -1,7 +1,5 @@
 'use strict';
 
-/* globals ArrayUtil */
-
 angular.module('sophe.services.qdmAttribute', [])
 .service('QDMAttributeService', ['$http', '$q', function($http, $q) {
   this._load = function(url) {
@@ -45,9 +43,9 @@ angular.module('sophe.services.qdmAttribute', [])
 
   this.translateQDMToForm = function(attribute) {
     var item = {
-      "type": "text",
-      "label": attribute.name,
-      "model": attribute.id
+      'type': 'text',
+      'label': attribute.name,
+      'model': attribute.id
     };
 
     if (attribute.id === 'Reason') {
@@ -62,5 +60,5 @@ angular.module('sophe.services.qdmAttribute', [])
     }
 
     return item;
-  }
+  };
 }]);
