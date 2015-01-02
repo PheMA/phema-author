@@ -38,6 +38,11 @@ describe('Factory: TemporalOperatorService', function () {
                   type: 'literal',
                   value: 'Start Before Start',
                   datatype: 'http://www.w3.org/2001/XMLSchema#string'
+              },
+              dataElementName: {
+                  type: 'literal',
+                  value: 'SBS',
+                  datatype: 'http://www.w3.org/2001/XMLSchema#string'
               }
           },
           {
@@ -53,6 +58,11 @@ describe('Factory: TemporalOperatorService', function () {
                   type: 'literal',
                   value: 'Start After Start',
                   datatype: 'http://www.w3.org/2001/XMLSchema#string'
+              },
+              dataElementName: {
+                  type: 'literal',
+                  value: 'SAS',
+                  datatype: 'http://www.w3.org/2001/XMLSchema#string'
               }
           }
         ]}
@@ -65,6 +75,7 @@ describe('Factory: TemporalOperatorService', function () {
       this.$httpBackend.flush();
       expect(temporalOperators.length).toEqual(2);
       expect(temporalOperators[0].name).toEqual('Start After Start');
+      expect(temporalOperators[0].id).toEqual('SAS');
     }));
   });
 });

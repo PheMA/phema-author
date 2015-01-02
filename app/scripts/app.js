@@ -19,7 +19,8 @@ var app = angular.module('sopheAuthorApp', [
     'ui.bootstrap',
     'sophe',
     'security',
-    'ng-context-menu'
+    'ng-context-menu',
+    'dynform'
   ]);
 
 app.config(function ($routeProvider) {

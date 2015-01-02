@@ -102,6 +102,16 @@ describe('Controller: PhenotypeController', function () {
       expect(this.scope.canShowProperties(null)).toEqual(true);
     }));
 
+    it('allows properties for categories', inject(function() {
+      spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn({ element: { type: 'Category'} });
+      expect(this.scope.canShowProperties(null)).toEqual(true);
+    }));
+
+    it('allows properties for data elements', inject(function() {
+      spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn({ element: { type: 'DataElement'} });
+      expect(this.scope.canShowProperties(null)).toEqual(true);
+    }));
+
     it('does not allow properties for unknown items', inject(function() {
       spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn({ element: { type: 'UnknownOperator'} });
       expect(this.scope.canShowProperties(null)).toEqual(false);

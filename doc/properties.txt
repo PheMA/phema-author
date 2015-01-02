@@ -88,3 +88,11 @@ Element (used by Line)
         value
         units
   }
+
+
+Attribute
+{
+  name
+  uri
+  type
+}

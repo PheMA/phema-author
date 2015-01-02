@@ -38,6 +38,11 @@ describe('Factory: LogicalOperatorService', function () {
                   type: 'literal',
                   value: 'Or',
                   datatype: 'http://www.w3.org/2001/XMLSchema#string'
+              },
+              dataElementName: {
+                  type: 'literal',
+                  value: 'Or',
+                  datatype: 'http://www.w3.org/2001/XMLSchema#string'
               }
           },
           {
@@ -53,6 +58,11 @@ describe('Factory: LogicalOperatorService', function () {
                   type: 'literal',
                   value: 'And',
                   datatype: 'http://www.w3.org/2001/XMLSchema#string'
+              },
+              dataElementName: {
+                  type: 'literal',
+                  value: 'And',
+                  datatype: 'http://www.w3.org/2001/XMLSchema#string'
               }
           }
         ] }
@@ -65,6 +75,7 @@ describe('Factory: LogicalOperatorService', function () {
       this.$httpBackend.flush();
       expect(logicalOperators.length).toEqual(2);
       expect(logicalOperators[0].name).toEqual('And');
+      expect(logicalOperators[0].id).toEqual('And');
     }));
   });
 });
