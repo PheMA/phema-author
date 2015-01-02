@@ -81,7 +81,9 @@ angular.module('sopheAuthorApp')
       }
 
       return (selectedElement.element.type === 'TemporalOperator' ||
-        selectedElement.element.type === 'LogicalOperator');
+        selectedElement.element.type === 'LogicalOperator' ||
+        selectedElement.element.type === 'Category' ||
+        selectedElement.element.type === 'DataElement');
     };
 
     $scope.showProperties = function() {
@@ -142,6 +144,25 @@ angular.module('sopheAuthorApp')
           selectedElement.element = result;
           findParentElementByName(selectedElement, 'header').setText(selectedElement.element.name);
           selectedElement.getStage().draw();
+        });
+      }
+      else if (selectedElement.element.type === 'Category' || selectedElement.element.type === 'DataElement') {
+        modalInstance = $modal.open({
+          templateUrl: 'views/properties/qdmElement.html',
+          controller: 'QDMElementPropertiesController',
+          size: 'lg',
+          resolve: {
+            element: function () {
+              return angular.copy(selectedElement.element);
+            }
+          }
+        });
+
+        modalInstance.result.then(function (result) {
+          // Clicked 'OK'
+          // selectedElement.element = result;
+          // findParentElementByName(selectedElement, 'header').setText(selectedElement.element.name);
+          // selectedElement.getStage().draw();
         });
       }
     };

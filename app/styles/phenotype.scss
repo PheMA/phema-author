@@ -89,3 +89,14 @@
     padding-top: 10px;
   }
 }
+
+#data-element-properties {
+  label {
+    width: 48%;
+    padding-right: 25px;
+    input {
+      font-weight: normal;
+      float: right;
+    }
+  }
+}

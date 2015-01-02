@@ -21,6 +21,7 @@ angular.module('sophe.services.logicalOperator', [])
       var originalData = data.results.bindings;
       for (var index = 0; index < originalData.length; index++) {
         transformedData.push({
+          id: originalData[index].dataElementName.value,
           name: originalData[index].logicalOperatorLabel.value,
           uri: originalData[index].id.value,
           type: 'LogicalOperator',

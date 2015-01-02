@@ -2,8 +2,8 @@
 
 /* globals ArrayUtil */
 
-angular.module('sophe.services.qdmElement', [])
-.service('QDMElementService', ['$http', '$q', function($http, $q) {
+angular.module('sophe.services.qdmElement', ['sophe.services.qdmAttribute'])
+.service('QDMElementService', ['$http', '$q', 'QDMAttributeService', function($http, $q, QDMAttributeService) {
   this.loadCategories = function() {
     var deferred = $q.defer();
     $http.get('data/qdm-categories.json').success(function(data) {
@@ -36,6 +36,7 @@ angular.module('sophe.services.qdmElement', [])
       var originalCategoryData = data.categories.results.bindings;
       for (index = 0; index < originalCategoryData.length; index++) {
         transformedData.push({
+          id: originalCategoryData[index].dataElementName.value,
           name: originalCategoryData[index].categoryLabel.value,
           uri: originalCategoryData[index].id.value,
           type: 'Category',
@@ -51,6 +52,7 @@ angular.module('sophe.services.qdmElement', [])
         for (categoryIndex = 0; categoryIndex < dataElements.length; categoryIndex++) {
           if (dataElements[categoryIndex].uri === originalElementData[index].context.value) {
             dataElements[categoryIndex].children.push({
+              id: originalElementData[index].dataElementName.value,
               name: originalElementData[index].dataElementLabel.value,
               uri: originalElementData[index].id.value,
               type: 'DataElement'
@@ -65,5 +67,19 @@ angular.module('sophe.services.qdmElement', [])
       }
     }
     return dataElements;
+  };
+
+  this.getAttributes = function(element) {
+    var promise = null;
+    if (element.type === 'Category') {
+      promise = QDMAttributeService.loadCategory(element.id)
+        .then(QDMAttributeService.processValues)
+    }
+    else if (element.type === 'DataElement') {
+      promise = QDMAttributeService.loadElement(element.id)
+        .then(QDMAttributeService.processValues)
+    }
+
+    return promise;
   };
 }]);

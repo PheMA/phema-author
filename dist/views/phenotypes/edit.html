@@ -47,11 +47,11 @@
       </li>
       <li class="divider">&nbsp;</li>
       <li>
-        <a class="pointer ng-binding" role="menuitem" tabindex="3" ng-click="delete()">Delete</a>
+        <a class="pointer ng-binding" role="menuitem" tabindex="3" ng-class="{ 'disabled': isDeleteDisabled }" ng-click="delete()">Delete</a>
       </li>
       <li class="divider">&nbsp;</li>
       <li>
-        <a class="pointer ng-binding" role="menuitem" tabindex="4" ng-click="showProperties()">Properties</a>
+        <a class="pointer ng-binding" role="menuitem" tabindex="4" ng-class="{ 'disabled': isPropertiesDisabled }" ng-click="showProperties()">Properties</a>
       </li>
     </ul>
   </div>
