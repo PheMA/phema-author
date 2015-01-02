@@ -10,7 +10,7 @@ describe('Factory: LogicalOperatorService', function () {
     this.$http = _$http_;
     this.$httpBackend = _$httpBackend_;
     this.operatorGet = this.$httpBackend.when('GET', 'data/qdm-logicalOperators.json');
-    this.operatorGet.respond([]);
+    this.operatorGet.respond({});
   }));
 
   describe('load', function() {

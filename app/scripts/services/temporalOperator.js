@@ -2,13 +2,13 @@
 
 /* globals ArrayUtil */
 
-angular.module('sophe.services.temporalOperator', [])
-.service('TemporalOperatorService', ['$http', '$q', function($http, $q) {
+angular.module('sophe.services.temporalOperator', ['sophe.services.url', 'ngResource'])
+.service('TemporalOperatorService', ['$resource', '$q', 'URLService', function($resource, $q, URLService) {
   this.load = function() {
     var deferred = $q.defer();
-    $http.get('data/qdm-temporalOperators.json').success(function(data) {
+    $resource(URLService.getDataServiceURL('temporalOperators')).get(function(data) {
       deferred.resolve(data);
-    }).error (function(data, status) {
+    }, function(data, status) {
       deferred.reject('There was an error: ' + status);
     });
     return deferred.promise;

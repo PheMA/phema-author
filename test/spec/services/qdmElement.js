@@ -11,11 +11,11 @@ describe('Factory: QDMElementService', function () {
     this.$http = _$http_;
     this.$httpBackend = _$httpBackend_;
     this.categoryGet = this.$httpBackend.when('GET', 'data/qdm-categories.json');
-    this.categoryGet.respond([]);
+    this.categoryGet.respond({});
     this.elementsGet = this.$httpBackend.when('GET', 'data/qdm-elements.json');
-    this.elementsGet.respond([]);
+    this.elementsGet.respond({});
     this.attributesGet = this.$httpBackend.when('GET', 'data/test-attribute_specificDatatype.json');
-    this.attributesGet.respond([]);
+    this.attributesGet.respond({});
   }));
 
   describe('load', function() {

@@ -1,27 +1,27 @@
 'use strict';
 
-angular.module('sophe.services.qdmAttribute', [])
-.service('QDMAttributeService', ['$http', '$q', function($http, $q) {
-  this._load = function(url) {
+angular.module('sophe.services.qdmAttribute', ['sophe.services.url', 'ngResource'])
+.service('QDMAttributeService', ['URLService', '$resource', '$q', function(URLService, $resource, $q) {
+  this._load = function(url, parameters) {
     var deferred = $q.defer();
-    $http.get(url).success(function(data) {
+    $resource(url).get(parameters, function(data) {
       deferred.resolve(data);
-    }).error (function(data, status) {
+    }, function(data, status) {
       deferred.reject('There was an error: ' + status);
     });
     return deferred.promise;
   };
 
   this.loadAll = function() {
-    return this._load('data/test-attribute_specificDatatype.json');
+    return this._load(URLService.getDataServiceURL('attributes'));
   };
 
   this.loadCategory = function(id) {
-    return this._load('data/test-attribute_specificDatatype.json');
+    return this._load(URLService.getDataServiceURL('category/:category/attributes'), {category: id});
   };
 
   this.loadElement = function(id) {
-    return this._load('data/test-attribute_specificDatatype.json');
+    return this._load(URLService.getDataServiceURL('dataElement/:dataElement/attributes'), {dataElement: id});
   };
 
   this.processValues = function(data) {

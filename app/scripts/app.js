@@ -11,7 +11,7 @@
 var app = angular.module('sopheAuthorApp', [
     //'ngAnimate',
     //'ngCookies',
-    //'ngResource',
+    'ngResource',
     'ngRoute',
     //'ngSanitize',
     //'ngTouch',

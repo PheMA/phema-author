@@ -9,23 +9,15 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'QDMElementService', function ($scope, $http, $routeParams, $modal, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, QDMElementService) {
+  .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'QDMElementService', 'LibraryService', function ($scope, $http, $routeParams, $modal, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, QDMElementService, LibraryService) {
     $scope.phenotype = $routeParams.id;
     $scope.status = { open: [true, false, false, false]};
     $scope.isDeleteDisabled = true;
     $scope.isPropertiesDisabled = true;
 
-    $http.get('data/phenotypes.json').success (function(data) {
-      var transformedData = [];
-      for (var index = 0; index < data.length; index++) {
-        transformedData.push({
-          name: data[index].name,
-          type: 'Phenotype'
-        });
-      }
-
-      $scope.phenotypes = transformedData.sort(ArrayUtil.sortByName);
-    });
+    LibraryService.load()
+      .then(LibraryService.processValues)
+      .then(function(elements) { $scope.phenotypes = elements; });
 
     QDMElementService.load()
       .then(QDMElementService.processValues)

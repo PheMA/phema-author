@@ -13,13 +13,13 @@ describe('Controller: PhenotypeController', function () {
     this.$httpBackend = _$httpBackend_;
     this.algorithmElementFactory = _algorithmElementFactory_;
     this.categoryGet = this.$httpBackend.when('GET', 'data/qdm-categories.json');
-    this.categoryGet.respond([]);
+    this.categoryGet.respond({});
     this.elementsGet = this.$httpBackend.when('GET', 'data/qdm-elements.json');
-    this.elementsGet.respond([]);
+    this.elementsGet.respond({});
     this.logicalOperatorsGet = this.$httpBackend.when('GET', 'data/qdm-logicalOperators.json');
-    this.logicalOperatorsGet.respond([]);
+    this.logicalOperatorsGet.respond({});
     this.temporalOperatorsGet = this.$httpBackend.when('GET', 'data/qdm-temporalOperators.json');
-    this.temporalOperatorsGet.respond([]);
+    this.temporalOperatorsGet.respond({});
     this.phenotypeGet = this.$httpBackend.when('GET', 'data/phenotypes.json');
     this.phenotypeGet.respond([]);
 

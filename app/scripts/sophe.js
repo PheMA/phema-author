@@ -1,4 +1,5 @@
 angular.module('sophe', [
+  'sophe.config',
   'sophe.kinetic',
   'sophe.draggable',
   'sophe.droppable',
@@ -13,4 +14,6 @@ angular.module('sophe', [
   'sophe.services.qdmAttribute',
   'sophe.services.temporalOperator',
   'sophe.services.qdmElement',
-  'sophe.services.logicalOperator']);
+  'sophe.services.library',
+  'sophe.services.logicalOperator',
+  'sophe.services.url']);

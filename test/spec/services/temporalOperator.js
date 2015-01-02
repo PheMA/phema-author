@@ -10,7 +10,7 @@ describe('Factory: TemporalOperatorService', function () {
     this.$http = _$http_;
     this.$httpBackend = _$httpBackend_;
     this.temporalOperatorsGet = this.$httpBackend.when('GET', 'data/qdm-temporalOperators.json');
-    this.temporalOperatorsGet.respond([]);
+    this.temporalOperatorsGet.respond({});
   }));
 
   describe('load', function() {

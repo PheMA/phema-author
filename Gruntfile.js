@@ -15,11 +15,21 @@ module.exports = function (grunt) {
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
+  // Used to manage constants with environment configuration entries here
+  grunt.loadNpmTasks('grunt-replace');
+
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
     dist: 'dist'
   };
+
+  // Identify the target environment (we default to development)
+  var target = grunt.option('target') || 'local';
+
+  // Read the appropriate environment settings.  These are used in the replace task.
+  var filename = target + '.json';
+  var settings = grunt.file.readJSON('./config/' + filename, 'utf8');
 
   // Define the configuration for all the tasks
   grunt.initConfig({
@@ -411,6 +421,22 @@ module.exports = function (grunt) {
         configFile: 'test/karma.conf.js',
         singleRun: false
       }
+    },
+
+    replace: {
+      dist: {
+        options: {
+          patterns: [
+            {
+              match: 'dataServiceBaseUrl',
+              replacement: settings.dataServiceBaseUrl
+            }
+          ]
+        },
+        files: [
+          {expand: true, flatten: true, src: ['dist/scripts/*.js'], dest: 'dist/scripts'}
+        ]
+      }
     }
   });
 
@@ -458,6 +484,7 @@ module.exports = function (grunt) {
     'filerev',
     'usemin',
     //'htmlmin'  -- Don't use htmlmin, it's inappropriately throwing errors for custom directives
+    'replace:dist',  // Assumes it's being done at the end of the process
   ]);
 
   grunt.registerTask('default', [

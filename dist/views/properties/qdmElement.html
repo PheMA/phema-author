@@ -1,8 +1,8 @@
 <div class="modal-header">
-  <h3 class="modal-title">Define the data element</h3>
+  <h3 class="modal-title">Define the {{element.name}}</h3>
 </div>
 <div class="modal-body" id="data-element-properties">
-  <dynamic-form template="formTemplate"
+  <dynamic-form template-promise="formTemplate"
     ng-model="formData">
   </dynamic-form>
 </div>

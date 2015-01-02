@@ -2,13 +2,13 @@
 
 /* globals ArrayUtil */
 
-angular.module('sophe.services.qdmElement', ['sophe.services.qdmAttribute'])
-.service('QDMElementService', ['$http', '$q', 'QDMAttributeService', function($http, $q, QDMAttributeService) {
+angular.module('sophe.services.qdmElement', ['sophe.services.qdmAttribute', 'sophe.services.url', 'ngResource'])
+.service('QDMElementService', ['$resource', '$q', 'QDMAttributeService', 'URLService', function($resource, $q, QDMAttributeService, URLService) {
   this.loadCategories = function() {
     var deferred = $q.defer();
-    $http.get('data/qdm-categories.json').success(function(data) {
+    $resource(URLService.getDataServiceURL('categories')).get(function(data) {
       deferred.resolve(data);
-    }).error (function(data, status) {
+    }, function(data, status) {
       deferred.reject('There was an error: ' + status);
     });
     return deferred.promise;
@@ -16,9 +16,9 @@ angular.module('sophe.services.qdmElement', ['sophe.services.qdmAttribute'])
 
   this.loadElements = function(categories) {
     var deferred = $q.defer();
-    $http.get('data/qdm-elements.json').success(function(data) {
+    $resource(URLService.getDataServiceURL('elements')).get(function(data) {
       deferred.resolve({categories: categories, elements: data});
-    }).error (function(data, status) {
+    }, function(data, status) {
       deferred.reject('There was an error: ' + status);
     });
     return deferred.promise;
