@@ -73,9 +73,10 @@ describe('Factory: TemporalOperatorService', function () {
         .then(this.TemporalOperatorService.processValues)
         .then(function(operators) { temporalOperators = operators; });
       this.$httpBackend.flush();
-      expect(temporalOperators.length).toEqual(2);
-      expect(temporalOperators[0].name).toEqual('Start After Start');
-      expect(temporalOperators[0].id).toEqual('SAS');
+      expect(temporalOperators.length).toEqual(5);
+      expect(temporalOperators[0].name).toEqual('Occurs Before');
+      expect(temporalOperators[0].children.length).toEqual(1);
+      expect(temporalOperators[0].children[0].name).toEqual('Start Before Start');
     }));
   });
 });

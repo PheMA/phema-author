@@ -15,19 +15,74 @@ angular.module('sophe.services.temporalOperator', ['sophe.services.url', 'ngReso
   };
 
   this.processValues = function(data) {
-    var temporalOperators = [];
+    // We are going to build a hierarchy of operators specific
+    // to our application.  Some of these values are represented in
+    // QDM, while others are our own constructs.
+    var temporalOperators = [
+      {
+        id: 'phema:ob',
+        linkRegex: new RegExp('^[a-z]+\\sbefore', 'i'),
+        name: 'Occurs Before',
+        uri: 'http://projectphema.org/TemporalOperator/OB',
+        type: 'TemporalOperator',
+        children: []
+      },
+      {
+        id: 'phema:oa',
+        linkRegex: new RegExp('^[a-z]+\\safter', 'i'),
+        name: 'Occurs After',
+        uri: 'http://projectphema.org/TemporalOperator/OA',
+        type: 'TemporalOperator',
+        children: []
+      },
+      {
+        id: 'During',
+        uri: 'http://rdf.healthit.gov/qdm/element#During'
+      },
+      {
+        id: 'ConcurrentWith',
+        uri: 'http://rdf.healthit.gov/qdm/element#ConcurrentWith'
+      },
+      {
+        id: 'Overlaps',
+        uri: 'http://rdf.healthit.gov/qdm/element#Overlaps'
+      }
+    ];
+
     if (data && data.results) {
-      var transformedData = [];
       var originalData = data.results.bindings;
-      for (var index = 0; index < originalData.length; index++) {
-        transformedData.push({
+      var index;
+      for (index = 0; index < originalData.length; index++) {
+        var item = {
           id: originalData[index].dataElementName.value,
           name: originalData[index].temporalOperatorLabel.value,
           uri: originalData[index].id.value,
           type: 'TemporalOperator',
-          children: []} );
+          children: []
+        };
+
+        var existingItem = ArrayUtil.findInArray(temporalOperators, 'uri', originalData[index].id.value);
+        if (existingItem) {
+          existingItem.id = item.id;
+          existingItem.name = item.name;
+          existingItem.type = item.type;
+          existingItem.children = item.children;
+        }
+        else {
+          for (var categoryIndex = 0; categoryIndex < temporalOperators.length; categoryIndex++) {
+            if (temporalOperators[categoryIndex].linkRegex &&
+              (item.name.search(temporalOperators[categoryIndex].linkRegex) === 0)) {
+              temporalOperators[categoryIndex].children.push(item);
+            }
+          }
+        }
       }
-      temporalOperators = transformedData.sort(ArrayUtil.sortByName);
+      //temporalOperators = transformedData.sort(ArrayUtil.sortByName);
+
+      for (var index = 0; index < temporalOperators.length; index++) {
+        temporalOperators[index].children = temporalOperators[index].children.sort(ArrayUtil.sortByName);
+      }
+
     }
     return temporalOperators;
   };
