@@ -26,9 +26,16 @@
   }
 }
 
-#data-elements-list, #temporal-operators-list {
+#data-elements-list {
   .tree-classic {
     height: 400px;
+    overflow-x: scroll;
+  }
+}
+
+#temporal-operators-list {
+  .tree-classic {
+    height: 300px;
     overflow-x: scroll;
   }
 }
