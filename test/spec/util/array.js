@@ -1,5 +1,7 @@
 'use strict';
 
+/*globals ArrayUtil*/
+
 describe('Array Util', function () {
 
   beforeEach(function() {

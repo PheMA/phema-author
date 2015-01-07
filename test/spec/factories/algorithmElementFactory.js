@@ -62,30 +62,30 @@ describe('Factory: AlgorithmElementFactory', function () {
     beforeEach(inject(function (_algorithmElementFactory_, kineticStageFactory, $rootScope, $compile) {
       angular.element(document.body).append('<div data-kinetic-canvas data-canvas-details="canvasDetails" id="canvas">&nbsp;</div>');
       var linkingFn = $compile('<div data-kinetic-canvas data-canvas-details="canvasDetails" id="canvas">&nbsp;</div>');
-      var element = linkingFn(scope);
+      linkingFn(scope);
       kineticStageFactory.create(scope, {id: 'canvas'});
     }));
 
     it('returns null when there is no canvas', inject(function() {
       scope = {};
-      var response = algorithmElementFactory.addWorkflowObject(null, scope);
+      algorithmElementFactory.addWorkflowObject(null, scope);
       expect(console.error).toHaveBeenCalledWith('No canvas is defined');
     }));
 
     it('handles null configuration', inject(function() {
       scope.canvasDetails = {};
-      var response = algorithmElementFactory.addWorkflowObject(null, scope);
+      algorithmElementFactory.addWorkflowObject(null, scope);
       expect(console.error).toHaveBeenCalledWith('No element definition was provided');
     }));
 
     it('handles empty configuration', inject(function() {
       var config = {};
       scope.canvasDetails = {};
-      var response = algorithmElementFactory.addWorkflowObject(config, scope);
+      algorithmElementFactory.addWorkflowObject(config, scope);
       expect(console.error).toHaveBeenCalledWith('No element definition was provided');
     }));
 
-    it('creates a temporal operator', inject(function($compile, kineticStageFactory) {
+    it('creates a temporal operator', inject(function() {
       var config = {element: {type: 'TemporalOperator', name: 'Concurrent with'}};
       var response = algorithmElementFactory.addWorkflowObject(config, scope);
       expect(response.nodeType).toEqual('Group');

@@ -26,7 +26,7 @@ describe('Controller: PhenotypeController', function () {
     this.setupDirective = function($compile, $controller) {
       angular.element(document.body).append('<div data-kinetic-canvas data-canvas-details="canvasDetails" id="canvas">&nbsp;</div>');
       var linkingFn = $compile('<div data-kinetic-canvas data-canvas-details="canvasDetails" id="canvas">&nbsp;</div>');
-      var element = linkingFn(this.scope);
+      linkingFn(this.scope);
       this.controller = $controller('PhenotypeController', { $scope: this.scope });
       this.$httpBackend.flush();
     };
@@ -68,7 +68,7 @@ describe('Controller: PhenotypeController', function () {
     expect(this.scope.phenotypes[0].name).toEqual('Pheno 1');
   }));
 
-  it('does not add an element if there is no canvas', inject(function ($compile) {
+  it('does not add an element if there is no canvas', inject(function () {
     this.$httpBackend.flush();
     expect(this.scope.addWorkflowObject()).toEqual(null);
   }));
