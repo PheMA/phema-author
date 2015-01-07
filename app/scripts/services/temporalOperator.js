@@ -90,7 +90,9 @@ angular.module('sophe.services.temporalOperator', ['sophe.services.url', 'ngReso
       }
 
       for (index = 0; index < temporalOperators.length; index++) {
-        temporalOperators[index].children = temporalOperators[index].children.sort(ArrayUtil.sortByName);
+        if (temporalOperators[index].children) {
+          temporalOperators[index].children = temporalOperators[index].children.sort(ArrayUtil.sortByName);
+        }
       }
 
     }
@@ -170,23 +172,9 @@ angular.module('sophe.services.temporalOperator', ['sophe.services.url', 'ngReso
 
   this.convertQDMToSoPhe = function(uri, temporalOperators) {
     var item = ArrayUtil.findInArrayOrChildren(temporalOperators, 'uri', uri);
-    // var item = ArrayUtil.findInArray(temporalOperators, 'uri', uri);
-    // if (item === null) {
-    //   var children = null;
-    //   for (var index = 0; index < temporalOperators.length; index++) {
-    //     children = temporalOperators[index].children;
-    //     if (children && children.length > 0) {
-    //       item = ArrayUtil.findInArray(temporalOperators[index].children, 'uri', uri);
-    //       if (item !== null) {
-    //         break;
-    //       }
-    //     }
-    //   }
-
-    //   if (item === null) {
-    //     return null;
-    //   }
-    // }
+    if (item === null) {
+      return null;
+    }
 
     // We have a pre-defined list of prefixes we look for
     var temporalOperator = item.name;
