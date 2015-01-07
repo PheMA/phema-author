@@ -3,6 +3,17 @@
 /* globals ArrayUtil */
 
 angular.module('sophe.services.temporalOperator', ['sophe.services.url', 'ngResource'])
+.filter('advancedFilter', function() {
+  return function(items, showAdvanced) {
+    if (items) {
+      var advancedRegEx = new RegExp('Or Concurrent With', 'i');
+      var list = items.filter(function(element) {
+        return (showAdvanced || element.label.search(advancedRegEx) === -1);
+      });
+      return list;
+    }
+  };
+})
 .service('TemporalOperatorService', ['$resource', '$q', 'URLService', function($resource, $q, URLService) {
   this.load = function() {
     var deferred = $q.defer();
@@ -20,18 +31,18 @@ angular.module('sophe.services.temporalOperator', ['sophe.services.url', 'ngReso
     // QDM, while others are our own constructs.
     var temporalOperators = [
       {
-        id: 'phema:ob',
+        id: 'Before',
         linkRegex: new RegExp('^[a-z]+\\sbefore', 'i'),
-        name: 'Occurs Before',
-        uri: 'http://projectphema.org/TemporalOperator/OB',
+        name: 'Before',
+        uri: 'http://projectphema.org/TemporalOperator#Before',
         type: 'TemporalOperator',
         children: []
       },
       {
-        id: 'phema:oa',
+        id: 'After',
         linkRegex: new RegExp('^[a-z]+\\safter', 'i'),
-        name: 'Occurs After',
-        uri: 'http://projectphema.org/TemporalOperator/OA',
+        name: 'After',
+        uri: 'http://projectphema.org/TemporalOperator#After',
         type: 'TemporalOperator',
         children: []
       },
@@ -77,9 +88,8 @@ angular.module('sophe.services.temporalOperator', ['sophe.services.url', 'ngReso
           }
         }
       }
-      //temporalOperators = transformedData.sort(ArrayUtil.sortByName);
 
-      for (var index = 0; index < temporalOperators.length; index++) {
+      for (index = 0; index < temporalOperators.length; index++) {
         temporalOperators[index].children = temporalOperators[index].children.sort(ArrayUtil.sortByName);
       }
 
@@ -95,11 +105,28 @@ angular.module('sophe.services.temporalOperator', ['sophe.services.url', 'ngReso
         var lowerName = item.name.toLowerCase();
         relationship.modifiers.push({id: item.uri, label: lowerName.replace(regexp, '').trim()});
       }
+
+      // Also check the children items, as they may contain appropriate modifiers
+      this.buildRelationshipListFromPrefix(prefix, relationship, temporalOperators[index].children);
     }
   };
 
   this.buildRelationshipListForProperties = function(temporalOperators) {
     var relationships = [
+      {
+        id: 'after',
+        label: 'occurs after',
+        modifiers: [],
+        allowsTimeRange: false,
+        uri: ArrayUtil.findInArray(temporalOperators, 'name', 'After').uri
+      },
+      {
+        id: 'before',
+        label: 'occurs before',
+        modifiers: [],
+        allowsTimeRange: false,
+        uri: ArrayUtil.findInArray(temporalOperators, 'name', 'Before').uri
+      },
       {
         id: 'starts',
         label: 'starts',
@@ -135,8 +162,8 @@ angular.module('sophe.services.temporalOperator', ['sophe.services.url', 'ngReso
       }
     ];
 
-    this.buildRelationshipListFromPrefix('starts', relationships[0], temporalOperators);
-    this.buildRelationshipListFromPrefix('ends', relationships[1], temporalOperators);
+    this.buildRelationshipListFromPrefix('starts', relationships[2], temporalOperators);
+    this.buildRelationshipListFromPrefix('ends', relationships[3], temporalOperators);
 
     return relationships;
   };
@@ -149,7 +176,7 @@ angular.module('sophe.services.temporalOperator', ['sophe.services.url', 'ngReso
 
     // We have a pre-defined list of prefixes we look for
     var temporalOperator = item.name;
-    var regexp = new RegExp('^(starts|ends|concurrent with|during)\\s?(.*)', 'i');
+    var regexp = new RegExp('^(starts|ends|concurrent with|during|before|after)\\s?(.*)', 'i');
     var match = regexp.exec(temporalOperator);
     var result = null;
     if (match !== null) {

@@ -9,11 +9,28 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
+  // .filter('temporalFilter', function() {
+  //   return function(items) {
+  //     if (items) {
+  //       var advancedRegEx = new RegExp('^[a-z]+\\sConcurrent With', 'i');
+  //       var list = items.filter(function(element) {
+  //         return (element.label.search(advancedRegEx) === -1);
+  //       });
+  //       return list;
+  //     }
+  //   };
+  // })
   .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'QDMElementService', 'LibraryService', function ($scope, $http, $routeParams, $modal, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, QDMElementService, LibraryService) {
     $scope.phenotype = $routeParams.id;
     $scope.status = { open: [true, false, false, false]};
     $scope.isDeleteDisabled = true;
     $scope.isPropertiesDisabled = true;
+    var advancedRegEx = new RegExp('[a-z]+\\sConcurrent With', 'i');
+    $scope.temporalFilter = function(item) {
+      if (item) {
+        return (item.name.search(advancedRegEx) === -1);
+      }
+    };
 
     LibraryService.load()
       .then(LibraryService.processValues)

@@ -79,4 +79,14 @@ describe('Factory: TemporalOperatorService', function () {
       expect(temporalOperators[0].children[0].name).toEqual('Start Before Start');
     }));
   });
+
+  describe('convertQDMToSoPhe', function() {
+    it('finds a top level item', inject(function() {
+      expect(false).toEqual(true);
+    }));
+
+    it('finds a child item', inject(function() {
+      expect(false).toEqual(true);
+    }));
+  });
 });
