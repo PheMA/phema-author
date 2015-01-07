@@ -73,9 +73,59 @@ describe('Factory: TemporalOperatorService', function () {
         .then(this.TemporalOperatorService.processValues)
         .then(function(operators) { temporalOperators = operators; });
       this.$httpBackend.flush();
-      expect(temporalOperators.length).toEqual(2);
-      expect(temporalOperators[0].name).toEqual('Start After Start');
-      expect(temporalOperators[0].id).toEqual('SAS');
+      expect(temporalOperators.length).toEqual(5);
+      expect(temporalOperators[0].name).toEqual('Before');
+      expect(temporalOperators[0].children.length).toEqual(1);
+      expect(temporalOperators[0].children[0].name).toEqual('Start Before Start');
+    }));
+  });
+
+  describe('convertQDMToSoPhe', function() {
+    it('finds a top level item', inject(function() {
+      var temporalOperators = [];
+      this.TemporalOperatorService.load()
+        .then(this.TemporalOperatorService.processValues)
+        .then(function(operators) { temporalOperators = operators; });
+      this.$httpBackend.flush();
+      var item = this.TemporalOperatorService.convertQDMToSoPhe('http://projectphema.org/TemporalOperator#Before', temporalOperators);
+      expect(item.base).toEqual('before');
+      expect(item.modifier).toEqual('');
+    }));
+
+    it('finds a child item', inject(function() {
+      this.temporalOperatorsGet.respond({
+        results: {bindings: [
+          {
+              id: {
+                type: 'uri',
+                value: 'http://rdf.healthit.gov/qdm/element#sas'
+              },
+              context: {
+                  type: 'uri',
+                  value: 'http://rdf.healthit.gov/qdm/element#qdm'
+              },
+              temporalOperatorLabel: {
+                  type: 'literal',
+                  value: 'Starts After Start',
+                  datatype: 'http://www.w3.org/2001/XMLSchema#string'
+              },
+              dataElementName: {
+                  type: 'literal',
+                  value: 'SAS',
+                  datatype: 'http://www.w3.org/2001/XMLSchema#string'
+              }
+          }
+        ]}
+      });
+
+      var temporalOperators = [];
+      this.TemporalOperatorService.load()
+        .then(this.TemporalOperatorService.processValues)
+        .then(function(operators) { temporalOperators = operators; });
+      this.$httpBackend.flush();
+      var item = this.TemporalOperatorService.convertQDMToSoPhe('http://rdf.healthit.gov/qdm/element#sas', temporalOperators);
+      expect(item.base).toEqual('starts');
+      expect(item.modifier).toEqual('after start');
     }));
   });
 });

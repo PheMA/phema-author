@@ -81,6 +81,14 @@
   div.range {
     display: inline-block;
   }
+  div.options {
+    padding-top: 10px;
+    label {
+      font-weight: normal;
+      width: 48%;
+      padding-right: 25px;
+    }
+  }
 }
 
 #logical-operator-properties {
