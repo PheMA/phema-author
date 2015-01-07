@@ -21,7 +21,7 @@
             ng-model="relationship.relationship.modifier" ng-show="relationship.relationship.base.modifiers.length > 0"></select>
         Event B
     </div>
-    <div class="options">
+    <div class="options" ng-show="relationship.relationship.base.modifiers.length > 0">
         <label>
             Show advanced options:
             <input type="checkbox" ng-model="showAdvanced"></input>

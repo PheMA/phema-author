@@ -120,7 +120,8 @@ angular.module('sopheAuthorApp')
         modalInstance.result.then(function (result) {
           var uri = ((result.relationship.modifier) ? result.relationship.modifier.id : result.relationship.base.uri);
           selectedElement.element.uri = uri;
-          selectedElement.element.name = ArrayUtil.findInArray($scope.temporalOperators, 'uri', uri).name;
+          selectedElement.element.name = ArrayUtil.findInArrayOrChildren($scope.temporalOperators, 'uri', uri).name;
+          //selectedElement.element.name = ArrayUtil.findInArray($scope.temporalOperators, 'uri', uri).name;
           selectedElement.element.timeRange = result.timeRange;
           if (result.timeRange.comparison) {
             selectedElement.element.timeRange.comparison = result.timeRange.comparison.name;
