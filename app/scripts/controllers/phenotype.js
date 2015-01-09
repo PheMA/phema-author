@@ -83,6 +83,20 @@ angular.module('sopheAuthorApp')
       console.log('Paste');
     };
 
+    $scope.save = function() {
+      console.log($scope.canvasDetails.kineticStageObj.toJSON());
+    };
+
+    $scope.buttons = [
+      {text: 'Save', iconClass:'fa fa-save', event: $scope.save},
+      {text: 'Export', iconClass:'fa fa-arrow-circle-down'},
+      {spacer: true},
+      {text: 'Copy', iconClass:'fa fa-copy', event: $scope.copy},
+      {text: 'Paste', iconClass:'fa fa-paste', event: $scope.paste},
+      {text: 'Undo', iconClass:'fa fa-undo'},
+      {text: 'Redo', iconClass:'fa fa-repeat'}
+    ];
+
     $scope.canShowProperties = function(element) {
       var selectedElement = element || algorithmElementFactory.getFirstSelectedItem($scope);
       if (!selectedElement || !selectedElement.element) {
