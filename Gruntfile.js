@@ -18,6 +18,9 @@ module.exports = function (grunt) {
   // Used to manage constants with environment configuration entries here
   grunt.loadNpmTasks('grunt-replace');
 
+  // Unit testing for Node.js code
+  grunt.loadNpmTasks('grunt-contrib-nodeunit');
+
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
@@ -53,6 +56,10 @@ module.exports = function (grunt) {
       jsTest: {
         files: ['test/spec/{,*/}*.js'],
         tasks: ['newer:jshint:test', 'karma']
+      },
+      nodeunit: {
+        files: ['services/test/{,*/}*.js'],
+        tasks: ['jshint:test', 'nodeunit']
       },
       compass: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
@@ -137,6 +144,12 @@ module.exports = function (grunt) {
           jshintrc: 'test/.jshintrc'
         },
         src: ['test/spec/{,*/}*.js']
+      },
+      nodeunit: {
+        options: {
+          jshintrc: 'services/test/.jshintrc'
+        },
+        src: ['services/test/{,*/}*.js']
       }
     },
 
@@ -437,6 +450,10 @@ module.exports = function (grunt) {
           {expand: true, flatten: true, src: ['dist/scripts/*.js'], dest: 'dist/scripts'}
         ]
       }
+    },
+
+    nodeunit: {
+      files: ['services/test/**/*.js'],
     }
   });
 
