@@ -20,6 +20,7 @@ module.exports = function (grunt) {
 
   // Unit testing for Node.js code
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
+  grunt.loadNpmTasks('grunt-jasmine-node');
 
   // Configurable paths for the application
   var appConfig = {
@@ -185,9 +186,6 @@ module.exports = function (grunt) {
 
     // Automatically inject Bower components into the app
     wiredep: {
-      options: {
-        cwd: '<%= yeoman.app %>'
-      },
       app: {
         src: ['<%= yeoman.app %>/index.html'],
         ignorePath:  /\.\.\//
@@ -454,7 +452,18 @@ module.exports = function (grunt) {
 
     nodeunit: {
       files: ['services/test/**/*.js'],
-    }
+    },
+
+    jasmine_node: {
+        options: {
+          forceExit: true,
+          match: '.',
+          matchall: false,
+          extensions: 'js',
+          specNameMatcher: 'spec',
+        },
+        all: ['services/test/']
+      }
   });
 
 
@@ -484,6 +493,11 @@ module.exports = function (grunt) {
     'autoprefixer',
     'connect:test',
     'karma'
+  ]);
+
+  grunt.registerTask('testnode', [
+    'jasmine_node',
+    //'watch'
   ]);
 
   grunt.registerTask('build', [

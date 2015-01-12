@@ -3,6 +3,8 @@
 angular.module('sophe.services.url', ['sophe.config'])
 .service('URLService', ['environment', 'dataServiceBaseUrl', function(environment, dataServiceBaseUrl) {
   this.getDataServiceURL = function(resource) {
+    // environment = 'dev';
+    // dataServiceBaseUrl = 'services/api/';
     if (environment === 'local' || environment === '@@environment') {
       // For our local setup, we sometimes stub things in.  This isn't code we plan to
       // use in production, so it's okay if it's a little messy.
