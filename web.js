@@ -13,6 +13,7 @@ app.use(express.static("" + __dirname + "/dist", {maxAge: 1}));
 // Routing examples at: https://github.com/strongloop/express/tree/master/examples/route-separation
 app.get('/', site.index);
 app.get('/api/qdm/:type', elements.index);
+app.get('/api/qdm/:type/:item/attributes', elements.attributes);
 
 
 app.listen(process.env.PORT || 5000);

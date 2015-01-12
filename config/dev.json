@@ -1,4 +1,4 @@
 {
   "environment":"dev",
-  "dataServiceBaseUrl":"services/api/"
+  "dataServiceBaseUrl":"api/qdm/"
 }

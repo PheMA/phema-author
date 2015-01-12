@@ -439,6 +439,10 @@ module.exports = function (grunt) {
         options: {
           patterns: [
             {
+              match: 'environment',
+              replacement: settings.environment
+            },
+            {
               match: 'dataServiceBaseUrl',
               replacement: settings.dataServiceBaseUrl
             }
