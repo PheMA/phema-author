@@ -458,7 +458,7 @@ module.exports = function (grunt) {
       files: ['services/test/**/*.js'],
     },
 
-    jasmine_node: {
+    jasmineNode: {
         options: {
           forceExit: true,
           match: '.',
@@ -500,7 +500,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('testnode', [
-    'jasmine_node',
+    'jasmineNode',
     //'watch'
   ]);
 
