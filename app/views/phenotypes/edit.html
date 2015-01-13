@@ -1,6 +1,6 @@
 <h1>Define Phenotype</h1>
 <div class="row col-md-12">
-  <div class="phenotype-toolbar">
+  <div class="phenotype-toolbar" id="phenotypeToolbar">
     <ul>
       <li ng-repeat="btn in buttons">
         <button ng-hide="{{btn.spacer}}" type="button" class="btn phenotype-toolbar-button" ng-click="btn.event()">
@@ -42,7 +42,7 @@
   </div>
   <div droppable drop="addWorkflowObject(config)" class="col-md-9">
     <div context-menu="onRightClick(message)" context-menu-close="onClose(closeMessage)" data-target="phenotypeMenu">
-      <div data-kinetic-canvas data-canvas-details="canvasDetails" data-minimum-width="400" data-minimum-height="400" style="border: solid grey 1px; width: 800px; height: 600px;" id="canvas">&nbsp;</div>
+      <div data-kinetic-canvas data-canvas-details="canvasDetails" data-right-align-to="phenotypeToolbar" style="border: solid grey 1px; width: 800px; height: 600px;" id="canvas">&nbsp;</div>
     </div>
   </div>
 
