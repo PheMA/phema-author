@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <link rel="stylesheet" href="styles/vendor.25d883da.css">
-    <link rel="stylesheet" href="styles/main.37753b05.css">
+    <link rel="stylesheet" href="styles/main.e874c79a.css">
     <link rel="stylesheet" href="bower_components/angular-tree-control/css/tree-control-attribute.css" />
   </head>
   <body ng-app="sopheAuthorApp">
@@ -15,25 +15,7 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <!-- Add your site or application content here -->
-    <div class="container">
-      <!--
-      <div class="header">
-        <ul class="nav nav-pills pull-right">
-          <li class="btn-highlight"><a ng-href="#/phenotype/new">Create Phenotype</a></li>
-          <li>
-            <a ng-href="#/phenotype" data-toggle="dropdown" class="dropdown-toggle">Phenotypes</a>
-          </li>
-          <li><a ng-href="#/valuesets">Value Sets</a></li>
-          <li><a ng-href="#">Search</a></li>
-          <li><a ng-href="#">Help</a></li>
-          <li><a ng-href="#">Login</a></li>
-        </ul>
-        <a ng-href="#">
-          <h3 class="app-name">Phenotype Authoring Tool</h3>
-        </a>
-      </div>-->
-
+    <div class="container col-lg-12">
       <div class="navbar-header header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#app-navbar-collapse">
           <span class="sr-only">Toggle navigation</span>
@@ -70,13 +52,13 @@
         </div>
       </div>
 
-      <div class="container container-big" ng-view=""></div>
+      <div class="container container-big col-lg-12" id="view-container" ng-view=""></div>
 
-      <div class="footer">
-        <div class="col-md-9">
+      <div class="footer col-lg-12">
+        <div class="col-lg-9">
           This work has been funded by NIGMS grant R01GM105688.
         </div>
-        <div class="col-md-3">
+        <div class="col-lg-3">
           <ul>
             <li>Publications</li>
             <li>Contact Us</li>
@@ -91,6 +73,6 @@
 
     <script src="scripts/vendor.63b2e931.js"></script>
 
-    <script src="scripts/main.df5396c7.js"></script>
+    <script src="scripts/main.90e4e729.js"></script>
 </body>
 </html>

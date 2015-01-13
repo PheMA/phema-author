@@ -9,20 +9,13 @@
       restrict: 'A',
       scope: {
         canvasDetails: '=',
-        connectionStatus: '=',
-        rightAlignTo: '@'
+        connectionStatus: '='
       },
       link: function(scope, element, attrs) {
         kineticStageFactory.create(scope, attrs);
 
-        //scope.minimumHeight = scope.minimumHeight || 0;
-        //scope.minimumWidth = scope.minimumWidth || 0;
-
-        // Derived from http://stackoverflow.com/questions/23044338/window-resize-directive
-        // scope.initialElementWidth = $(element).width();
-        // scope.initialElementHeight = $(element).height();
-        // scope.initialWindowWidth = $window.innerWidth;
-        // scope.initialWindowHeight = $window.innerHeight;
+        scope.initialElementHeight = $(element).height();
+        scope.initialWindowHeight = $window.innerHeight;
 
         // Our KineticJS canvas has containing DIV elements and so we use this recursive function
         // to size everything to the same dimensions.
@@ -41,16 +34,15 @@
         };
 
         scope.onResize = function() {
-          element.windowHeight = scope.initialElementHeight + ($window.innerHeight - scope.initialWindowHeight) - 5;
-          //element.windowWidth = scope.initialElementWidth + ($window.innerWidth - scope.initialWindowWidth) - 5;
-          element.windowWidth = $('#' + scope.rightAlignTo).width() - $(element).offset().left + $('#' + scope.rightAlignTo).offset().left;
-          //element.windowHeight = Math.max(element.windowHeight, scope.minimumHeight);
-          //element.windowWidth = Math.max(element.windowWidth, scope.minimumWidth);
-          $(element).height(element.windowHeight);
-          $(element).width(element.windowWidth);
+          element.windowHeight = scope.initialElementHeight + ($window.innerHeight - scope.initialWindowHeight) + 5;
+          element.windowWidth = $window.innerWidth - $(element).offset().left - 20;
           resizeElementAndChildren(element, element.windowWidth, element.windowHeight);
-          // Fully redraw everything after sizing is done.  A simple draw() won't cut it.
+
+          // Fully redraw everything after sizing is done.  A simple draw() won't cut it.  Note that
+          // we have to update the stage size, otherwise it will retain its original size.
           if (scope.canvasDetails.kineticStageObj) {
+            scope.canvasDetails.kineticStageObj.setWidth(element.windowWidth);
+            scope.canvasDetails.kineticStageObj.setHeight(element.windowHeight);
             scope.canvasDetails.kineticStageObj.drawScene();
           }
         };
