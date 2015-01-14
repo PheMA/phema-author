@@ -12,6 +12,7 @@ KineticCanvas
 
 Circle : Connector  (considered a special type of Kinetic.Circle)  {
   connections []      All Kinetic.Line objects connected here
+  originalStrokeWidth
 }
 
 

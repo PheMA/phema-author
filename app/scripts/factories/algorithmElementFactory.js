@@ -67,7 +67,7 @@ angular.module('sophe.factories.algorithmElement', [])
       var highlightedDrop = null;
 
       var dragItem = kineticObj;
-      if ('Group' !== kineticObj.nodeType) {
+      if ('Group' !== kineticObj.nodeType && 'PhemaElement' !== kineticObj.nodeType) {
         dragItem = kineticObj.getParent();
       }
 
@@ -146,10 +146,17 @@ angular.module('sophe.factories.algorithmElement', [])
       return kineticObj;
     }
 
-    function createCircle(options, group) {
-      var kineticObj = new Kinetic.Circle(options);
+    // function createCircle(options, group) {
+    //   var kineticObj = new Kinetic.Circle(options);
+    //   group.add(kineticObj);
+    //   kineticObj.originalStrokeWidth = options.strokeWidth;
+    //   return kineticObj;
+    // }
+
+    function createConnector(options, group) {
+      var kineticObj = new Kinetic.PhemaConnector(options);
       group.add(kineticObj);
-      kineticObj.originalStrokeWidth = options.strokeWidth;
+      kineticObj.originalStrokeWidth(options.strokeWidth);
       return kineticObj;
     }
 
@@ -162,10 +169,10 @@ angular.module('sophe.factories.algorithmElement', [])
         fill: 'white', name: 'leftConnector',
         stroke: 'black', strokeWidth: 1
       };
-      var leftObj = createCircle(leftConnectOptions, group);
+      var leftObj = createConnector(leftConnectOptions, group);
       addOutlineStyles(leftObj);
       addConnectionHandler(leftObj, scope);
-      leftObj.connections = [];
+      leftObj.connections([]);
 
       var rightConnectOptions = {
         x: mainRect.getX() + mainRect.getWidth(), y: (mainRect.getHeight() / 2),
@@ -173,10 +180,10 @@ angular.module('sophe.factories.algorithmElement', [])
         fill: 'white', name: 'rightConnector',
         stroke: 'black', strokeWidth: 1
       };
-      var rightObj = createCircle(rightConnectOptions, group);
+      var rightObj = createConnector(rightConnectOptions, group);
       addOutlineStyles(rightObj);
       addConnectionHandler(rightObj, scope);
-      rightObj.connections = [];
+      rightObj.connections([]);
 
       if (trackDrag) {
         group.on('dragmove', function(e) {
@@ -204,7 +211,7 @@ angular.module('sophe.factories.algorithmElement', [])
           stroke: 'black', strokeWidth: 1
       };
 
-      var group = new Kinetic.Group({
+      var group = new Kinetic.PhemaGroup({
         draggable: true,
         x: ((config && config.x) ? config.x : 50),
         y: ((config && config.y) ? config.y : 50)});
@@ -266,7 +273,7 @@ angular.module('sophe.factories.algorithmElement', [])
     }
 
     function createQDMTemporalOperator(config, scope) {
-      var group = new Kinetic.Group({
+      var group = new Kinetic.PhemaGroup({
         draggable: true,
         x: ((config && config.x) ? config.x : 50),
         y: ((config && config.y) ? config.y : 50)});
@@ -346,7 +353,7 @@ angular.module('sophe.factories.algorithmElement', [])
           stroke: 'gray', strokeWidth: 1
       };
 
-      var group = new Kinetic.Group({
+      var group = new Kinetic.PhemaGroup({
         draggable: true,
         x: ((config && config.x) ? config.x : 50),
         y: ((config && config.y) ? config.y : 50),
@@ -384,7 +391,7 @@ angular.module('sophe.factories.algorithmElement', [])
           stroke: 'black', strokeWidth: 1
       };
 
-      var group = new Kinetic.Group({
+      var group = new Kinetic.PhemaGroup({
         draggable: true,
         x: ((config && config.x) ? config.x : 50),
         y: ((config && config.y) ? config.y : 50)});
@@ -428,8 +435,9 @@ angular.module('sophe.factories.algorithmElement', [])
       }
 
       var index = 0;
+      var element = dragElement.element();
       for (index = 0; index < dropElement.droppableElementTypes.length; index++) {
-        if (dropElement.droppableElementTypes[index] === dragElement.element.type) {
+        if (dropElement.droppableElementTypes[index] === element.type) {
           return true;
         }
       }
@@ -443,12 +451,14 @@ angular.module('sophe.factories.algorithmElement', [])
       // In the group, find all connectors
       var connectors = group.find('.leftConnector, .rightConnector');
       connectors.each(function(connector) {
-        var length = connector.connections.length;
+        var connections = connector.connections();
+        var length = connections.length;
         for (var index = length-1; index >=0 ; index--) {
-          connector.connections[index].label.destroy();
-          connector.connections[index].destroy();
-          delete connector.connections[index];
+          connections[index].label.destroy();
+          connections[index].destroy();
+          delete connections[index];
         }
+        connector.connections([]);
       });
       group.destroy();
     }
@@ -484,10 +494,29 @@ angular.module('sophe.factories.algorithmElement', [])
       }
 
       if (workflowObject) {
-        workflowObject.element = config.element;
+        //workflowObject.element = config.element;
+        //workflowObject._setAttr('sophe-element', config.element);
+        workflowObject.element(config.element);
       }
 
       return workflowObject;
+    };
+
+    factory.loadFromDefinition = function(scope, definition) {
+      // If there is no canvas to remove from, we are done here
+      if('undefined' === typeof scope.canvasDetails) {
+          return null;
+      }
+
+      var stage = scope.canvasDetails.kineticStageObj;
+      var layer = stage.find('#mainLayer')[0];
+      layer = Kinetic.Node.create(definition);
+      stage.add(layer);
+      stage.mainLayer = layer;
+
+      stage.mainLayer.get('Group').each(function(group) {
+        console.log(group.element().type);
+      });
     };
 
     factory.deleteSelectedObjects = function(scope) {

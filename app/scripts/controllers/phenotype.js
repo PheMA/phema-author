@@ -84,11 +84,17 @@ angular.module('sopheAuthorApp')
     };
 
     $scope.save = function() {
-      console.log($scope.canvasDetails.kineticStageObj.toJSON());
+      console.log($scope.canvasDetails.kineticStageObj.find('#mainLayer')[0].toJSON());
+    };
+
+    $scope.load = function() {
+      algorithmElementFactory.loadFromDefinition($scope,
+        '{"attrs":{"id":"mainLayer"},"className":"Layer","children":[{"attrs":{"draggable":true,"x":258,"y":100,"width":175,"height":194,"element":{"id":"EXP","name":"Care Experience","uri":"http://rdf.healthit.gov/qdm/element#EXP","type":"Category","children":[{"id":"PatientCareExperience","name":"Patient Care Experience","uri":"http://rdf.healthit.gov/qdm/element#PatientCareExperience","type":"DataElement"},{"id":"ProviderCareExperience","name":"Provider Care Experience","uri":"http://rdf.healthit.gov/qdm/element#ProviderCareExperience","type":"DataElement"}]}},"className":"PhemaGroup","children":[{"attrs":{"width":175,"height":194,"fill":"#dbeef4","name":"mainRect","stroke":"black","strokeWidth":1},"className":"Rect"},{"attrs":{"width":175,"fontFamily":"Calibri","fontSize":14,"fill":"black","text":"Care Experience","align":"center","padding":5,"height":"auto"},"className":"Text"},{"attrs":{"x":10,"y":29,"width":155,"height":75,"fill":"#EEEEEE","stroke":"#CCCCCC","strokeWidth":1},"className":"Rect"},{"attrs":{"x":10,"y":29,"width":155,"height":75,"fontFamily":"Calibri","fontSize":14,"fill":"gray","text":"Drag and drop clinical terms or value sets here, or search for terms","align":"center","padding":5},"className":"Text"},{"attrs":{"x":10,"y":109,"width":155,"height":75,"fill":"#EEEEEE","stroke":"#CCCCCC","strokeWidth":1},"className":"Rect"},{"attrs":{"y":97,"radius":7.5,"fill":"white","name":"leftConnector","stroke":"black","strokeWidth":1,"connections":[]},"className":"Circle"},{"attrs":{"x":175,"y":97,"radius":7.5,"fill":"white","name":"rightConnector","stroke":"black","strokeWidth":1,"connections":[]},"className":"Circle"}]}]}');
     };
 
     $scope.buttons = [
       {text: 'Save', iconClass:'fa fa-save', event: $scope.save},
+      {text: 'Load', iconClass:'fa fa-arrow-circle-up', event: $scope.load},
       {text: 'Export', iconClass:'fa fa-arrow-circle-down'},
       {spacer: true},
       {text: 'Copy', iconClass:'fa fa-copy', event: $scope.copy},
@@ -97,16 +103,17 @@ angular.module('sopheAuthorApp')
       {text: 'Redo', iconClass:'fa fa-repeat'}
     ];
 
-    $scope.canShowProperties = function(element) {
-      var selectedElement = element || algorithmElementFactory.getFirstSelectedItem($scope);
+    $scope.canShowProperties = function(item) {
+      var selectedElement = item || algorithmElementFactory.getFirstSelectedItem($scope);
       if (!selectedElement || !selectedElement.element) {
         return false;
       }
 
-      return (selectedElement.element.type === 'TemporalOperator' ||
-        selectedElement.element.type === 'LogicalOperator' ||
-        selectedElement.element.type === 'Category' ||
-        selectedElement.element.type === 'DataElement');
+      var element = selectedElement.element();
+      return (element.type === 'TemporalOperator' ||
+        element.type === 'LogicalOperator' ||
+        element.type === 'Category' ||
+        element.type === 'DataElement');
     };
 
     $scope.showProperties = function() {
@@ -116,14 +123,15 @@ angular.module('sopheAuthorApp')
       }
 
       var modalInstance = null;
-      if (selectedElement.element.type === 'TemporalOperator') {
+      var element = selectedElement.element();
+      if (element.type === 'TemporalOperator') {
         modalInstance = $modal.open({
           templateUrl: 'views/properties/relationship.html',
           controller: 'RelationshipPropertiesController',
           size: 'lg',
           resolve: {
             element: function () {
-              return angular.copy(selectedElement.element);
+              return angular.copy(element);
             },
             temporalOperators: function() {
               return $scope.temporalOperators;
@@ -133,25 +141,24 @@ angular.module('sopheAuthorApp')
 
         modalInstance.result.then(function (result) {
           var uri = ((result.relationship.modifier) ? result.relationship.modifier.id : result.relationship.base.uri);
-          selectedElement.element.uri = uri;
-          selectedElement.element.name = ArrayUtil.findInArrayOrChildren($scope.temporalOperators, 'uri', uri).name;
-          //selectedElement.element.name = ArrayUtil.findInArray($scope.temporalOperators, 'uri', uri).name;
-          selectedElement.element.timeRange = result.timeRange;
+          element.uri = uri;
+          element.name = ArrayUtil.findInArrayOrChildren($scope.temporalOperators, 'uri', uri).name;
+          element.timeRange = result.timeRange;
           if (result.timeRange.comparison) {
-            selectedElement.element.timeRange.comparison = result.timeRange.comparison.name;
+            element.timeRange.comparison = result.timeRange.comparison.name;
           }
-          selectedElement.label.setText(selectedElement.element.name);
+          selectedElement.label.setText(element.name);
           selectedElement.label.getStage().draw();
         });
       }
-      else if (selectedElement.element.type === 'LogicalOperator') {
+      else if (element.type === 'LogicalOperator') {
         modalInstance = $modal.open({
           templateUrl: 'views/properties/logicalOperator.html',
           controller: 'LogicalOperatorPropertiesController',
           size: 'lg',
           resolve: {
             element: function () {
-              return angular.copy(selectedElement.element);
+              return angular.copy(element);
             },
             containedElements: function () {
               return selectedElement.containedElements;
@@ -163,25 +170,25 @@ angular.module('sopheAuthorApp')
         });
 
         modalInstance.result.then(function (result) {
-          selectedElement.element = result;
-          findParentElementByName(selectedElement, 'header').setText(selectedElement.element.name);
+          element = result;
+          findParentElementByName(selectedElement, 'header').setText(element.name);
           selectedElement.getStage().draw();
         });
       }
-      else if (selectedElement.element.type === 'Category' || selectedElement.element.type === 'DataElement') {
+      else if (element.type === 'Category' || element.type === 'DataElement') {
         modalInstance = $modal.open({
           templateUrl: 'views/properties/qdmElement.html',
           controller: 'QDMElementPropertiesController',
           size: 'lg',
           resolve: {
             element: function () {
-              return angular.copy(selectedElement.element);
+              return angular.copy(element);
             }
           }
         });
 
         modalInstance.result.then(function (result) {
-          selectedElement.element.attributes = result;
+          element.attributes = result;
         });
       }
     };

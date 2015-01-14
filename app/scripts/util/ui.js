@@ -1,5 +1,5 @@
 /* globals Kinetic */
-/* exported startConnector, endConnector, updateActiveLineLocation, getIntersectingShape,
+/* exported startConnector, endConnector, updateActiveLineLocation, getIntersectingShape, Kinetic,
   addElementToContainer, removeElementFromContainer, updateConnectedLines, changeConnectorEndpoints */
 
 'use strict';
@@ -7,7 +7,16 @@
 var BORDER = 20;
 
 function updateStrokeWidth(kineticObj, normal) {
-  var strokeWidth = kineticObj.originalStrokeWidth || 1;
+  var strokeWidth = 1;
+  if (kineticObj.originalStrokeWidth) {
+    if (Kinetic.Util._isFunction(kineticObj.originalStrokeWidth)) {
+      strokeWidth = kineticObj.originalStrokeWidth();
+    }
+    else {
+      strokeWidth = kineticObj.originalStrokeWidth;
+    }
+  }
+
   if (!normal) {
     strokeWidth = strokeWidth + 2;
   }
@@ -118,8 +127,9 @@ function changeConnectorEndpoints(stage, line, startPos, endPos) {
 
 function updateConnectedLines(connector, stage) {
   var i = 0;
-  for (i = connector.connections.length - 1; i >= 0; i--) {
-    var line = connector.connections[i];
+  var connections = connector.connections();
+  for (i = connections.length - 1; i >= 0; i--) {
+    var line = connections[i];
     var startPos = {};
     var endPos = {};
     if (line.connectors.start === connector) {
@@ -157,8 +167,8 @@ function _replaceTemporalElement(isEventA, containerParent, container, element, 
   var connectorIndex = isEventA ? 0 : (connectorCollection.length === 1 ? 0 : 1);
   connectorCollection[connectorIndex].destroy();
   var oldConnector = containerParent.find((isEventA ? '.rightConnector' : '.leftConnector'))[connectorIndex];
-  var line = oldConnector.connections[0];
-  oldConnector.connections = [];
+  var line = oldConnector.connections()[0];
+  oldConnector.connections([]);
   oldConnector.destroy();
   container.destroy();
 
@@ -169,7 +179,9 @@ function _replaceTemporalElement(isEventA, containerParent, container, element, 
   else {
     line.connectors.end = connector;
   }
-  connector.connections.push(line);
+  var connections = connector.connections();
+  connections.push(line);
+  connector.connections(connections);
   updateConnectedLines(connector, stage);
 }
 
@@ -177,7 +189,8 @@ function _replaceTemporalElement(isEventA, containerParent, container, element, 
 function addElementToContainer(stage, container, element) {
   var group = (container.nodeType === 'Group' ? container : container.parent);
   if (group) {
-    if (group.element.type === 'TemporalOperator') {
+    var elementDefinition = group.element();
+    if (elementDefinition.type === 'TemporalOperator') {
       // Replace container with element
       var containerParent = container.getParent();
       if (container === containerParent.find('.eventA')[0]) {
@@ -187,10 +200,10 @@ function addElementToContainer(stage, container, element) {
         _replaceTemporalElement(false, containerParent, container, element, stage);
       }
     }
-    else if (group.element.type === 'DataElement' || group.element.type === 'Category') {
+    else if (elementDefinition.type === 'DataElement' || elementDefinition.type === 'Category') {
       console.log('QDM element');
     }
-    else if (group.element.type === 'LogicalOperator') {
+    else if (elementDefinition.type === 'LogicalOperator') {
       // Add the item (if it's not already in the array)
       if (group.containedElements.indexOf(element) === -1) {
         group.containedElements.push(element);
@@ -319,8 +332,13 @@ function endConnector(stage, connectorObj, scope) {
     else {
       line = stage.connector.line;
       line.connectors.end = connectorObj;
-      connectorObj.connections.push(line);
-      line.connectors.start.connections.push(line);
+      var connections = connectorObj.connections();
+      connections.push(line);
+      connectorObj.connections(connections);
+
+      connections = line.connectors.start.connections();
+      connections.push(line);
+      line.connectors.start.connections(connections);
       line.on('mouseup', function(e) {
         clearSelections(stage);
         selectObject(stage, e.target, scope);
