@@ -42,7 +42,7 @@ angular.module('sophe.factories.algorithmElement', [])
       setDraggable(kineticObj, scope);
     }
 
-    function addCursorStyles(kineticObj, scope) {
+    function addCursorEventHandlers(kineticObj, scope) {
       // add cursor styling
       kineticObj.on('mouseover', function () {
           document.body.style.cursor = 'pointer';
@@ -171,7 +171,7 @@ angular.module('sophe.factories.algorithmElement', [])
       };
       var leftObj = createConnector(leftConnectOptions, group);
       addOutlineStyles(leftObj);
-      addConnectionHandler(leftObj, scope);
+      //addConnectionHandler(leftObj, scope);
       leftObj.connections([]);
 
       var rightConnectOptions = {
@@ -182,7 +182,7 @@ angular.module('sophe.factories.algorithmElement', [])
       };
       var rightObj = createConnector(rightConnectOptions, group);
       addOutlineStyles(rightObj);
-      addConnectionHandler(rightObj, scope);
+      //addConnectionHandler(rightObj, scope);
       rightObj.connections([]);
 
       if (trackDrag) {
@@ -204,6 +204,18 @@ angular.module('sophe.factories.algorithmElement', [])
       return [leftObj, rightObj];
     }
 
+
+    // Connects the appropriate QDM data element shapes to event handlers.
+    // Used when constructing a new element, or when loading from a definition.
+    function connectQDMDataElementEvents(group, scope) {
+      addStandardEventHandlers(group, scope);
+      addCursorEventHandlers(group, scope);
+      var termObj = group.find('.termDrop')[0];
+      setDroppable(termObj, ['ValueSet', 'Term']);
+      addConnectionHandler(group.find('.leftConnector')[0], scope);
+      addConnectionHandler(group.find('.rightConnector')[0], scope);
+    }
+
     function createQDMDataElement(config, scope) {
       var options = {
           x: 0, y: 0, width: 175, height: 200,
@@ -215,8 +227,8 @@ angular.module('sophe.factories.algorithmElement', [])
         draggable: true,
         x: ((config && config.x) ? config.x : 50),
         y: ((config && config.y) ? config.y : 50)});
-      addStandardEventHandlers(group, scope);
-      addCursorStyles(group, scope);
+      //addStandardEventHandlers(group, scope);
+      //addCursorEventHandlers(group, scope);
 
       var workflowObj = createRectangle(options, group);
 
@@ -232,11 +244,11 @@ angular.module('sophe.factories.algorithmElement', [])
       var termDropOptions = {
         x: options.x + 10, y: headerObj.height() + headerOptions.y + 5,
         width: options.width - 20, height: 75,
-        fill: '#EEEEEE',
+        fill: '#EEEEEE', name: 'termDrop',
         stroke: '#CCCCCC', strokeWidth: 1
       };
       var termObj = createRectangle(termDropOptions, group);
-      setDroppable(termObj, ['ValueSet', 'Term']);
+      //setDroppable(termObj, ['ValueSet', 'Term']);
 
       var termTextOptions = {
         x: termDropOptions.x, y: termDropOptions.y,
@@ -261,6 +273,8 @@ angular.module('sophe.factories.algorithmElement', [])
 
       addConnectors(scope, workflowObj, group);
 
+      connectQDMDataElementEvents(group, scope);
+
       // Now that the shape is built, define the bounds of the group
       group.setWidth(workflowObj.getWidth());
       group.setHeight(workflowObj.getHeight());
@@ -272,14 +286,28 @@ angular.module('sophe.factories.algorithmElement', [])
       return group;
     }
 
+    // Connects the appropriate QDM temporal operator shapes to event handlers.
+    // Used when constructing a new element, or when loading from a definition.
+    function connectQDMTemporalOperatorEvents(group, scope) {
+      var allowedTemporalDropTypes = ['Category', 'DataElement', 'LogicalOperator', 'Phenotype'];
+      addStandardEventHandlers(group, scope);
+      addCursorEventHandlers(group, scope);
+      setDroppable(group.find('.eventA')[0], allowedTemporalDropTypes);
+      setDroppable(group.find('.eventB')[0], allowedTemporalDropTypes);
+      addConnectionHandler(group.find('.leftConnector')[0], scope);
+      addConnectionHandler(group.find('.rightConnector')[0], scope);
+      addConnectionHandler(group.find('.leftConnector')[1], scope);
+      addConnectionHandler(group.find('.rightConnector')[1], scope);
+    }
+
     function createQDMTemporalOperator(config, scope) {
       var group = new Kinetic.PhemaGroup({
         draggable: true,
         x: ((config && config.x) ? config.x : 50),
         y: ((config && config.y) ? config.y : 50)});
       var spacing = 75;
-      addStandardEventHandlers(group, scope);
-      addCursorStyles(group, scope);
+      // addStandardEventHandlers(group, scope);
+      // addCursorEventHandlers(group, scope);
 
       var options = {
           x: 0, y: 0, width: 175, height: 175,
@@ -289,7 +317,7 @@ angular.module('sophe.factories.algorithmElement', [])
       var eventA = createRectangle(options, group);
       eventA.dash([10, 5]);
       eventA.dashEnabled(true);
-      setDroppable(eventA, ['Category', 'DataElement', 'LogicalOperator', 'Phenotype']);
+      //setDroppable(eventA, ['Category', 'DataElement', 'LogicalOperator', 'Phenotype']);
       var eventAConnectors = addConnectors(scope, eventA, group);
 
       var headerOptions = {
@@ -312,7 +340,7 @@ angular.module('sophe.factories.algorithmElement', [])
       var eventB = createRectangle(options, group);
       eventB.dash([10, 5]);
       eventB.dashEnabled(true);
-      setDroppable(eventB, ['Category', 'DataElement', 'LogicalOperator', 'Phenotype']);
+      //setDroppable(eventB, ['Category', 'DataElement', 'LogicalOperator', 'Phenotype']);
       var eventBConnectors = addConnectors(scope, eventB, group);
 
       headerOptions.x = options.x;
@@ -336,6 +364,8 @@ angular.module('sophe.factories.algorithmElement', [])
         line.element = config.element;
       }
 
+      connectQDMTemporalOperatorEvents(group, scope);
+
       // Now that the shape is built, define the bounds of the group
       group.setWidth(eventB.getX() + eventB.getWidth() - eventA.getX());
       group.setHeight(eventA.getHeight());
@@ -344,6 +374,16 @@ angular.module('sophe.factories.algorithmElement', [])
       mainLayer.add(group);
       mainLayer.draw();
       return group;
+    }
+
+    // Connects the appropriate QDM logical operator shapes to event handlers.
+    // Used when constructing a new element, or when loading from a definition.
+    function connectQDMLogicalOperatorEvents(group, scope) {
+      addStandardEventHandlers(group, scope);
+      addCursorEventHandlers(group, scope);
+      setDroppable(group.find('.mainRect')[0], ['Category', 'DataElement', 'LogicalOperator']);
+      addConnectionHandler(group.find('.leftConnector')[0], scope);
+      addConnectionHandler(group.find('.rightConnector')[0], scope);
     }
 
     function createQDMLogicalOperator(config, scope) {
@@ -358,13 +398,13 @@ angular.module('sophe.factories.algorithmElement', [])
         x: ((config && config.x) ? config.x : 50),
         y: ((config && config.y) ? config.y : 50),
         width: options.width, height: options.height });
-      addStandardEventHandlers(group, scope);
-      addCursorStyles(group, scope);
+      // addStandardEventHandlers(group, scope);
+      // addCursorEventHandlers(group, scope);
 
       var workflowObj = createRectangle(options, group);
       workflowObj.dash([10, 5]);
       workflowObj.dashEnabled(true);
-      setDroppable(workflowObj, ['Category', 'DataElement', 'LogicalOperator']);
+      //setDroppable(workflowObj, ['Category', 'DataElement', 'LogicalOperator']);
 
       var headerOptions = {
           x: options.x, y: options.y,
@@ -377,11 +417,22 @@ angular.module('sophe.factories.algorithmElement', [])
 
       addConnectors(scope, workflowObj, group);
 
+      connectQDMLogicalOperatorEvents(group, scope);
+
       group.containedElements = [];
       var mainLayer = scope.canvasDetails.kineticStageObj.find('#mainLayer');
       mainLayer.add(group);
       mainLayer.draw();
       return group;
+    }
+
+    // Connects the appropriate generic element shapes to event handlers.
+    // Used when constructing a new element, or when loading from a definition.
+    function connectGenericElementEvents(group, scope) {
+      addStandardEventHandlers(group, scope);
+      addCursorEventHandlers(group, scope);
+      addConnectionHandler(group.find('.leftConnector')[0], scope);
+      addConnectionHandler(group.find('.rightConnector')[0], scope);
     }
 
     function createGenericElement(config, scope) {
@@ -395,8 +446,8 @@ angular.module('sophe.factories.algorithmElement', [])
         draggable: true,
         x: ((config && config.x) ? config.x : 50),
         y: ((config && config.y) ? config.y : 50)});
-      addStandardEventHandlers(group, scope);
-      addCursorStyles(group, scope);
+      // addStandardEventHandlers(group, scope);
+      // addCursorEventHandlers(group, scope);
       var workflowObj = createRectangle(options, group);
 
       var headerOptions = {
@@ -415,6 +466,8 @@ angular.module('sophe.factories.algorithmElement', [])
       group.setHeight(workflowObj.getHeight());
 
       addConnectors(scope, workflowObj, group);
+
+      connectQDMLogicalOperatorEvents(group, scope);
 
       var mainLayer = scope.canvasDetails.kineticStageObj.find('#mainLayer');
       mainLayer.add(group);
@@ -515,7 +568,22 @@ angular.module('sophe.factories.algorithmElement', [])
       stage.mainLayer = layer;
 
       stage.mainLayer.get('Group').each(function(group) {
-        console.log(group.element().type);
+        var element = group.element();
+        if (element.type === 'TemporalOperator') {
+          connectQDMTemporalOperatorEvents(group, scope);
+        }
+        else if (element.type === 'DataElement' || element.type === 'Category') {
+          connectQDMDataElementEvents(group, scope);
+        }
+        else if (element.type === 'LogicalOperator') {
+          connectQDMLogicalOperatorEvents(group, scope);
+        }
+        else if (element.type === 'Phenotype') {
+          connectGenericElementEvents(group, scope);
+        }
+        else {
+          connectGenericElementEvents(group, scope);
+        }
       });
     };
 
