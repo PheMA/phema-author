@@ -132,23 +132,25 @@ function updateConnectedLines(connector, stage) {
     var line = connections[i];
     var startPos = {};
     var endPos = {};
-    if (line.connectors.start === connector) {
+    var lineConnectors = line.connectors();
+    if (lineConnectors.start === connector) {
       line.setAbsolutePosition(connector.getAbsolutePosition());
     }
 
     startPos = {x: line.getPoints()[0], y: line.getPoints()[1]};
     endPos = {
-      x: line.connectors.end.getAbsolutePosition().x - line.connectors.start.getAbsolutePosition().x,
-      y: line.connectors.end.getAbsolutePosition().y - line.connectors.start.getAbsolutePosition().y,
+      x: lineConnectors.end.getAbsolutePosition().x - lineConnectors.start.getAbsolutePosition().x,
+      y: lineConnectors.end.getAbsolutePosition().y - lineConnectors.start.getAbsolutePosition().y,
     };
     changeConnectorEndpoints(stage, line, startPos, endPos);
-    var label = line.label;
+    var label = line.label();
     if (label !== null && typeof(label) !== 'undefined') {
-      label.x(line.connectors.start.getAbsolutePosition().x);
-      label.y(line.connectors.start.getAbsolutePosition().y + 5);
+      label.x(lineConnectors.start.getAbsolutePosition().x);
+      label.y(lineConnectors.start.getAbsolutePosition().y + 5);
       label.width(endPos.x - startPos.x);
       var slope = (endPos.y - startPos.y) / (endPos.x - startPos.x);
       label.rotation(Math.atan(slope));
+      line.label(label);
     }
   }
 }
@@ -173,12 +175,15 @@ function _replaceTemporalElement(isEventA, containerParent, container, element, 
   container.destroy();
 
   // Update our tracking collections for how things are connected
+  var lineConnectors = line.connectors();
   if (isEventA) {
-    line.connectors.start = connector;
+    lineConnectors.start = connector;
   }
   else {
-    line.connectors.end = connector;
+    lineConnectors.end = connector;
   }
+  line.connectors(lineConnectors);
+
   var connections = connector.connections();
   connections.push(line);
   connector.connections(connections);
@@ -295,18 +300,17 @@ function updateActiveLineLocation(stage, evt) {
 // Start a connector line, anchored at a connector object
 function startConnector(stage, connectorObj) {
   var connectorParent = connectorObj.getParent();
-  var line = new Kinetic.Line({
-    //x: stage.getPointerPosition().x,
-    //y: stage.getPointerPosition().y,
+  var line = new Kinetic.PhemaConnection({
     x: connectorParent.getX() + connectorObj.getX(),
     y: connectorParent.getY() + connectorObj.getY(),
     points: [0, 0],
     stroke: 'black', strokeWidth: 2
   });
-  line.connectors = {};
-  line.connectors.start = connectorObj;
-  line.originalStrokeWidth = 2;
+  var lineConnectors = {};
+  lineConnectors.start = connectorObj;
+  line.originalStrokeWidth(2);
   addOutlineStyles(line, 2);
+  line.connectors(lineConnectors);
 
   stage.find('#mainLayer').add(line);
   line.setZIndex(999);  // Should be on top
@@ -331,18 +335,20 @@ function endConnector(stage, connectorObj, scope) {
     // are related.
     else {
       line = stage.connector.line;
-      line.connectors.end = connectorObj;
+      var lineConnectors = line.connectors();
+      lineConnectors.end = connectorObj;
       var connections = connectorObj.connections();
       connections.push(line);
       connectorObj.connections(connections);
 
-      connections = line.connectors.start.connections();
+      connections = lineConnectors.start.connections();
       connections.push(line);
-      line.connectors.start.connections(connections);
+      lineConnectors.start.connections(connections);
       line.on('mouseup', function(e) {
         clearSelections(stage);
         selectObject(stage, e.target, scope);
       });
+      line.connectors(lineConnectors);
 
       var labelTextOptions = {
         x: line.x(), y: line.y(),
@@ -353,8 +359,8 @@ function endConnector(stage, connectorObj, scope) {
       };
       var labelObj = new Kinetic.Text(labelTextOptions);
       stage.find('#mainLayer').add(labelObj);
-      line.label = labelObj;
-      line.element = {name: labelTextOptions.text, uri: '', type: 'TemporalOperator'};
+      line.label(labelObj);
+      line.element({name: labelTextOptions.text, uri: '', type: 'TemporalOperator'});
     }
   }
 

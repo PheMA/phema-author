@@ -146,13 +146,6 @@ angular.module('sophe.factories.algorithmElement', [])
       return kineticObj;
     }
 
-    // function createCircle(options, group) {
-    //   var kineticObj = new Kinetic.Circle(options);
-    //   group.add(kineticObj);
-    //   kineticObj.originalStrokeWidth = options.strokeWidth;
-    //   return kineticObj;
-    // }
-
     function createConnector(options, group) {
       var kineticObj = new Kinetic.PhemaConnector(options);
       group.add(kineticObj);
@@ -171,7 +164,6 @@ angular.module('sophe.factories.algorithmElement', [])
       };
       var leftObj = createConnector(leftConnectOptions, group);
       addOutlineStyles(leftObj);
-      //addConnectionHandler(leftObj, scope);
       leftObj.connections([]);
 
       var rightConnectOptions = {
@@ -182,7 +174,6 @@ angular.module('sophe.factories.algorithmElement', [])
       };
       var rightObj = createConnector(rightConnectOptions, group);
       addOutlineStyles(rightObj);
-      //addConnectionHandler(rightObj, scope);
       rightObj.connections([]);
 
       if (trackDrag) {
@@ -227,8 +218,6 @@ angular.module('sophe.factories.algorithmElement', [])
         draggable: true,
         x: ((config && config.x) ? config.x : 50),
         y: ((config && config.y) ? config.y : 50)});
-      //addStandardEventHandlers(group, scope);
-      //addCursorEventHandlers(group, scope);
 
       var workflowObj = createRectangle(options, group);
 
@@ -248,7 +237,6 @@ angular.module('sophe.factories.algorithmElement', [])
         stroke: '#CCCCCC', strokeWidth: 1
       };
       var termObj = createRectangle(termDropOptions, group);
-      //setDroppable(termObj, ['ValueSet', 'Term']);
 
       var termTextOptions = {
         x: termDropOptions.x, y: termDropOptions.y,
@@ -306,8 +294,6 @@ angular.module('sophe.factories.algorithmElement', [])
         x: ((config && config.x) ? config.x : 50),
         y: ((config && config.y) ? config.y : 50)});
       var spacing = 75;
-      // addStandardEventHandlers(group, scope);
-      // addCursorEventHandlers(group, scope);
 
       var options = {
           x: 0, y: 0, width: 175, height: 175,
@@ -317,7 +303,7 @@ angular.module('sophe.factories.algorithmElement', [])
       var eventA = createRectangle(options, group);
       eventA.dash([10, 5]);
       eventA.dashEnabled(true);
-      //setDroppable(eventA, ['Category', 'DataElement', 'LogicalOperator', 'Phenotype']);
+
       var eventAConnectors = addConnectors(scope, eventA, group);
 
       var headerOptions = {
@@ -340,7 +326,7 @@ angular.module('sophe.factories.algorithmElement', [])
       var eventB = createRectangle(options, group);
       eventB.dash([10, 5]);
       eventB.dashEnabled(true);
-      //setDroppable(eventB, ['Category', 'DataElement', 'LogicalOperator', 'Phenotype']);
+
       var eventBConnectors = addConnectors(scope, eventB, group);
 
       headerOptions.x = options.x;
@@ -360,8 +346,8 @@ angular.module('sophe.factories.algorithmElement', [])
       var line = endConnector(stage, eventBConnectors[0], scope);
       updateConnectedLines(eventAConnectors[1], stage);
       if (line !== null) {
-        line.label.setText(config.element.name);
-        line.element = config.element;
+        line.label().setText(config.element.name);
+        line.element(config.element);
       }
 
       connectQDMTemporalOperatorEvents(group, scope);
@@ -398,13 +384,10 @@ angular.module('sophe.factories.algorithmElement', [])
         x: ((config && config.x) ? config.x : 50),
         y: ((config && config.y) ? config.y : 50),
         width: options.width, height: options.height });
-      // addStandardEventHandlers(group, scope);
-      // addCursorEventHandlers(group, scope);
 
       var workflowObj = createRectangle(options, group);
       workflowObj.dash([10, 5]);
       workflowObj.dashEnabled(true);
-      //setDroppable(workflowObj, ['Category', 'DataElement', 'LogicalOperator']);
 
       var headerOptions = {
           x: options.x, y: options.y,
@@ -446,8 +429,6 @@ angular.module('sophe.factories.algorithmElement', [])
         draggable: true,
         x: ((config && config.x) ? config.x : 50),
         y: ((config && config.y) ? config.y : 50)});
-      // addStandardEventHandlers(group, scope);
-      // addCursorEventHandlers(group, scope);
       var workflowObj = createRectangle(options, group);
 
       var headerOptions = {

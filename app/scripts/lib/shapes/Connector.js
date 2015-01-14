@@ -5,9 +5,9 @@
 
     Kinetic.PhemaConnector.prototype = {
         _initElement: function(config) {
-            this.className = 'PhemaConnector';
             // call super constructor
             Kinetic.Circle.call(this, config);
+            this.className = 'PhemaConnector';
         }
     };
     Kinetic.Util.extend(Kinetic.PhemaConnector, Kinetic.Circle);
