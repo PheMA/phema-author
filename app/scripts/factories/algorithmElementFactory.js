@@ -1,7 +1,5 @@
 'use strict';
-/* globals endConnector, updateActiveLineLocation, startConnector, clearSelections, selectObject,
-  addOutlineStyles, updateStrokeWidth, Kinetic, getIntersectingShape,
-  addElementToContainer, removeElementFromContainer, updateConnectedLines */
+/* globals Kinetic, DataElement, GenericElement, LogicalOperator, TemporalOperator */
 
 angular.module('sophe.factories.algorithmElement', [])
   .factory('algorithmElementFactory', function() {
@@ -200,180 +198,186 @@ angular.module('sophe.factories.algorithmElement', [])
     // }
 
 
-    // Connects the appropriate QDM data element shapes to event handlers.
-    // Used when constructing a new element, or when loading from a definition.
-    function connectQDMDataElementEvents(group, scope) {
-      addStandardEventHandlers(group, scope);
-      addCursorEventHandlers(group, scope);
-      var termObj = group.find('.termDrop')[0];
-      setDroppable(termObj, ['ValueSet', 'Term']);
-      addConnectionHandler(group.find('.leftConnector')[0], scope);
-      addConnectionHandler(group.find('.rightConnector')[0], scope);
-      connectConnectorEvents(group);
+    // // Connects the appropriate QDM data element shapes to event handlers.
+    // // Used when constructing a new element, or when loading from a definition.
+    // function connectQDMDataElementEvents(group, scope) {
+    //   addStandardEventHandlers(group, scope);
+    //   addCursorEventHandlers(group, scope);
+    //   var termObj = group.find('.termDrop')[0];
+    //   setDroppable(termObj, ['ValueSet', 'Term']);
+    //   addConnectionHandler(group.find('.leftConnector')[0], scope);
+    //   addConnectionHandler(group.find('.rightConnector')[0], scope);
+    //   connectConnectorEvents(group);
+    // }
+
+    // function associateQDMDataElementReferences(group, scope) {
+    //   associateGenericElementReferences(group, scope);
+    // }
+
+     function createQDMDataElement(config, scope) {
+    //   var options = {
+    //       x: 0, y: 0, width: 175, height: 200,
+    //       fill: '#dbeef4', name: 'mainRect',
+    //       stroke: 'black', strokeWidth: 1
+    //   };
+
+    //   var group = new Kinetic.PhemaGroup({
+    //     draggable: true,
+    //     x: ((config && config.x) ? config.x : 50),
+    //     y: ((config && config.y) ? config.y : 50)});
+
+    //   var workflowObj = createRectangle(options, group);
+
+    //   var headerOptions = {
+    //       x: options.x, y: options.y,
+    //       width: options.width, // Leave out height so it auto-sizes
+    //       fontFamily: 'Calibri', fontSize: 14, fill: 'black',
+    //       text: config.element.name,
+    //       align: 'center', padding: 5
+    //   };
+    //   var headerObj = createText(headerOptions, group);
+
+    //   var termDropOptions = {
+    //     x: options.x + 10, y: headerObj.height() + headerOptions.y + 5,
+    //     width: options.width - 20, height: 75,
+    //     fill: '#EEEEEE', name: 'termDrop',
+    //     stroke: '#CCCCCC', strokeWidth: 1
+    //   };
+    //   var termObj = createRectangle(termDropOptions, group);
+
+    //   var termTextOptions = {
+    //     x: termDropOptions.x, y: termDropOptions.y,
+    //     width: termObj.width(), height: termObj.height(),
+    //     fontFamily: 'Calibri', fontSize: 14, fill: 'gray',
+    //     text: 'Drag and drop clinical terms or value sets here, or search for terms',
+    //     align: 'center', padding: 5
+    //   };
+    //   createText(termTextOptions, group);
+
+    //   var configOptions = {
+    //     x: termDropOptions.x, y: termObj.height() + termDropOptions.y + 5,
+    //     width: termDropOptions.width, height: termDropOptions.height,
+    //     fill: '#EEEEEE',
+    //     stroke: '#CCCCCC', strokeWidth: 1
+    //   };
+    //   var configObj = createRectangle(configOptions, group);
+
+    //   // Resize the main container to ensure consistent spacing regardless of the
+    //   // height of internal components.
+    //   workflowObj.setHeight(configObj.getY() + configObj.getHeight() - options.y + 10);
+
+    //   addConnectors(scope, workflowObj, group);
+
+    //   connectQDMDataElementEvents(group, scope);
+
+    //   // Now that the shape is built, define the bounds of the group
+    //   group.setWidth(workflowObj.getWidth());
+    //   group.setHeight(workflowObj.getHeight());
+
+    //   var mainLayer = scope.canvasDetails.kineticStageObj.find('#mainLayer');
+    //   mainLayer.add(group);
+    //   mainLayer.draw();
+
+    //   return group;
+      var element = new DataElement();
+      element.create(config, scope);
+      return element.container();
     }
 
-    function associateQDMDataElementReferences(group, scope) {
-      associateGenericElementReferences(group, scope);
-    }
+    // // Connects the appropriate QDM temporal operator shapes to event handlers.
+    // // Used when constructing a new element, or when loading from a definition.
+    // function connectQDMTemporalOperatorEvents(group, scope) {
+    //   var allowedTemporalDropTypes = ['Category', 'DataElement', 'LogicalOperator', 'Phenotype'];
+    //   addStandardEventHandlers(group, scope);
+    //   addCursorEventHandlers(group, scope);
+    //   setDroppable(group.find('.eventA')[0], allowedTemporalDropTypes);
+    //   setDroppable(group.find('.eventB')[0], allowedTemporalDropTypes);
+    //   addConnectionHandler(group.find('.leftConnector')[0], scope);
+    //   addConnectionHandler(group.find('.rightConnector')[0], scope);
+    //   addConnectionHandler(group.find('.leftConnector')[1], scope);
+    //   addConnectionHandler(group.find('.rightConnector')[1], scope);
+    //   connectConnectorEvents(group);
+    // }
 
-    function createQDMDataElement(config, scope) {
-      var options = {
-          x: 0, y: 0, width: 175, height: 200,
-          fill: '#dbeef4', name: 'mainRect',
-          stroke: 'black', strokeWidth: 1
-      };
-
-      var group = new Kinetic.PhemaGroup({
-        draggable: true,
-        x: ((config && config.x) ? config.x : 50),
-        y: ((config && config.y) ? config.y : 50)});
-
-      var workflowObj = createRectangle(options, group);
-
-      var headerOptions = {
-          x: options.x, y: options.y,
-          width: options.width, // Leave out height so it auto-sizes
-          fontFamily: 'Calibri', fontSize: 14, fill: 'black',
-          text: config.element.name,
-          align: 'center', padding: 5
-      };
-      var headerObj = createText(headerOptions, group);
-
-      var termDropOptions = {
-        x: options.x + 10, y: headerObj.height() + headerOptions.y + 5,
-        width: options.width - 20, height: 75,
-        fill: '#EEEEEE', name: 'termDrop',
-        stroke: '#CCCCCC', strokeWidth: 1
-      };
-      var termObj = createRectangle(termDropOptions, group);
-
-      var termTextOptions = {
-        x: termDropOptions.x, y: termDropOptions.y,
-        width: termObj.width(), height: termObj.height(),
-        fontFamily: 'Calibri', fontSize: 14, fill: 'gray',
-        text: 'Drag and drop clinical terms or value sets here, or search for terms',
-        align: 'center', padding: 5
-      };
-      createText(termTextOptions, group);
-
-      var configOptions = {
-        x: termDropOptions.x, y: termObj.height() + termDropOptions.y + 5,
-        width: termDropOptions.width, height: termDropOptions.height,
-        fill: '#EEEEEE',
-        stroke: '#CCCCCC', strokeWidth: 1
-      };
-      var configObj = createRectangle(configOptions, group);
-
-      // Resize the main container to ensure consistent spacing regardless of the
-      // height of internal components.
-      workflowObj.setHeight(configObj.getY() + configObj.getHeight() - options.y + 10);
-
-      addConnectors(scope, workflowObj, group);
-
-      connectQDMDataElementEvents(group, scope);
-
-      // Now that the shape is built, define the bounds of the group
-      group.setWidth(workflowObj.getWidth());
-      group.setHeight(workflowObj.getHeight());
-
-      var mainLayer = scope.canvasDetails.kineticStageObj.find('#mainLayer');
-      mainLayer.add(group);
-      mainLayer.draw();
-
-      return group;
-    }
-
-    // Connects the appropriate QDM temporal operator shapes to event handlers.
-    // Used when constructing a new element, or when loading from a definition.
-    function connectQDMTemporalOperatorEvents(group, scope) {
-      var allowedTemporalDropTypes = ['Category', 'DataElement', 'LogicalOperator', 'Phenotype'];
-      addStandardEventHandlers(group, scope);
-      addCursorEventHandlers(group, scope);
-      setDroppable(group.find('.eventA')[0], allowedTemporalDropTypes);
-      setDroppable(group.find('.eventB')[0], allowedTemporalDropTypes);
-      addConnectionHandler(group.find('.leftConnector')[0], scope);
-      addConnectionHandler(group.find('.rightConnector')[0], scope);
-      addConnectionHandler(group.find('.leftConnector')[1], scope);
-      addConnectionHandler(group.find('.rightConnector')[1], scope);
-      connectConnectorEvents(group);
-    }
-
-    function associateQDMTemporalOperatorReferences(group, scope) {
-      associateGenericElementReferences(group, scope);
-    }
+    // function associateQDMTemporalOperatorReferences(group, scope) {
+    //   associateGenericElementReferences(group, scope);
+    // }
 
     function createQDMTemporalOperator(config, scope) {
-      var group = new Kinetic.PhemaGroup({
-        draggable: true,
-        x: ((config && config.x) ? config.x : 50),
-        y: ((config && config.y) ? config.y : 50)});
-      var spacing = 75;
+      // var group = new Kinetic.PhemaGroup({
+      //   draggable: true,
+      //   x: ((config && config.x) ? config.x : 50),
+      //   y: ((config && config.y) ? config.y : 50)});
+      // var spacing = 75;
 
-      var options = {
-          x: 0, y: 0, width: 175, height: 175,
-          fill: 'white', name: 'eventA',
-          stroke: 'gray', strokeWidth: 1
-      };
-      var eventA = createRectangle(options, group);
-      eventA.dash([10, 5]);
-      eventA.dashEnabled(true);
+      // var options = {
+      //     x: 0, y: 0, width: 175, height: 175,
+      //     fill: 'white', name: 'eventA',
+      //     stroke: 'gray', strokeWidth: 1
+      // };
+      // var eventA = createRectangle(options, group);
+      // eventA.dash([10, 5]);
+      // eventA.dashEnabled(true);
 
-      var eventAConnectors = addConnectors(scope, eventA, group);
+      // var eventAConnectors = addConnectors(scope, eventA, group);
 
-      var headerOptions = {
-          x: options.x, y: options.y,
-          width: options.width, // Leave out height so it auto-sizes
-          fontFamily: 'Calibri', fontSize: 18, fill: 'black',
-          text: 'Event A', name: 'eventALabel',
-          align: 'center', padding: 5
-      };
-      var eventAText = createText(headerOptions, group);
-      createText({
-        x: eventAText.getX(), y: eventAText.getY() + eventAText.getHeight() + 25,
-        width: options.width, // Leave out height so it auto-sizes
-        fontFamily: 'Calibri', fontSize: 14, fill: 'black', name: 'eventAText',
-        text: '(Drag and drop a data element here to define the event)',
-        align: 'center', padding: 5}, group);
+      // var headerOptions = {
+      //     x: options.x, y: options.y,
+      //     width: options.width, // Leave out height so it auto-sizes
+      //     fontFamily: 'Calibri', fontSize: 18, fill: 'black',
+      //     text: 'Event A', name: 'eventALabel',
+      //     align: 'center', padding: 5
+      // };
+      // var eventAText = createText(headerOptions, group);
+      // createText({
+      //   x: eventAText.getX(), y: eventAText.getY() + eventAText.getHeight() + 25,
+      //   width: options.width, // Leave out height so it auto-sizes
+      //   fontFamily: 'Calibri', fontSize: 14, fill: 'black', name: 'eventAText',
+      //   text: '(Drag and drop a data element here to define the event)',
+      //   align: 'center', padding: 5}, group);
 
-      options.x = options.x + options.width + spacing;
-      options.name = 'eventB';
-      var eventB = createRectangle(options, group);
-      eventB.dash([10, 5]);
-      eventB.dashEnabled(true);
+      // options.x = options.x + options.width + spacing;
+      // options.name = 'eventB';
+      // var eventB = createRectangle(options, group);
+      // eventB.dash([10, 5]);
+      // eventB.dashEnabled(true);
 
-      var eventBConnectors = addConnectors(scope, eventB, group);
+      // var eventBConnectors = addConnectors(scope, eventB, group);
 
-      headerOptions.x = options.x;
-      headerOptions.y = options.y;
-      headerOptions.text = 'Event B';
-      headerOptions.name = 'eventBLabel';
-      var eventBText = createText(headerOptions, group);
-      createText({
-        x: eventBText.getX(), y: eventBText.getY() + eventBText.getHeight() + 25,
-        width: options.width, // Leave out height so it auto-sizes
-        fontFamily: 'Calibri', fontSize: 14, fill: 'black', name: 'eventBText',
-        text: '(Drag and drop a data element here to define the event)',
-        align: 'center', padding: 5}, group);
+      // headerOptions.x = options.x;
+      // headerOptions.y = options.y;
+      // headerOptions.text = 'Event B';
+      // headerOptions.name = 'eventBLabel';
+      // var eventBText = createText(headerOptions, group);
+      // createText({
+      //   x: eventBText.getX(), y: eventBText.getY() + eventBText.getHeight() + 25,
+      //   width: options.width, // Leave out height so it auto-sizes
+      //   fontFamily: 'Calibri', fontSize: 14, fill: 'black', name: 'eventBText',
+      //   text: '(Drag and drop a data element here to define the event)',
+      //   align: 'center', padding: 5}, group);
 
-      var stage = scope.canvasDetails.kineticStageObj;
-      startConnector(stage, eventAConnectors[1]);
-      var line = endConnector(stage, eventBConnectors[0], scope);
-      updateConnectedLines(eventAConnectors[1], stage);
-      if (line !== null) {
-        line.label().setText(config.element.name);
-        line.element(config.element);
-      }
+      // var stage = scope.canvasDetails.kineticStageObj;
+      // startConnector(stage, eventAConnectors[1]);
+      // var line = endConnector(stage, eventBConnectors[0], scope);
+      // updateConnectedLines(eventAConnectors[1], stage);
+      // if (line !== null) {
+      //   line.label().setText(config.element.name);
+      //   line.element(config.element);
+      // }
 
-      connectQDMTemporalOperatorEvents(group, scope);
+      // connectQDMTemporalOperatorEvents(group, scope);
 
-      // Now that the shape is built, define the bounds of the group
-      group.setWidth(eventB.getX() + eventB.getWidth() - eventA.getX());
-      group.setHeight(eventA.getHeight());
+      // // Now that the shape is built, define the bounds of the group
+      // group.setWidth(eventB.getX() + eventB.getWidth() - eventA.getX());
+      // group.setHeight(eventA.getHeight());
 
-      var mainLayer = stage.find('#mainLayer');
-      mainLayer.add(group);
-      mainLayer.draw();
-      return group;
+      // var mainLayer = stage.find('#mainLayer');
+      // mainLayer.add(group);
+      // mainLayer.draw();
+      // return group;
+      var element = new TemporalOperator();
+      element.create(config, scope);
+      return element.container();
     }
 
     // // Connects the appropriate QDM logical operator shapes to event handlers.
@@ -431,15 +435,15 @@ angular.module('sophe.factories.algorithmElement', [])
       return element.container();
     }
 
-    // Connects the appropriate generic element shapes to event handlers.
-    // Used when constructing a new element, or when loading from a definition.
-    function connectGenericElementEvents(group, scope) {
-      addStandardEventHandlers(group, scope);
-      addCursorEventHandlers(group, scope);
-      addConnectionHandler(group.find('.leftConnector')[0], scope);
-      addConnectionHandler(group.find('.rightConnector')[0], scope);
-      connectConnectorEvents(group);
-    }
+    // // Connects the appropriate generic element shapes to event handlers.
+    // // Used when constructing a new element, or when loading from a definition.
+    // function connectGenericElementEvents(group, scope) {
+    //   addStandardEventHandlers(group, scope);
+    //   addCursorEventHandlers(group, scope);
+    //   addConnectionHandler(group.find('.leftConnector')[0], scope);
+    //   addConnectionHandler(group.find('.rightConnector')[0], scope);
+    //   connectConnectorEvents(group);
+    // }
 
     // // When we load a saved phenotype definition, we have references to other elements.  This
     // // method goes through and associates those references back to actual elements.
@@ -488,64 +492,45 @@ angular.module('sophe.factories.algorithmElement', [])
     // }
 
     function createGenericElement(config, scope) {
-      var options = {
-          x: 0, y: 0, width: 175, height: 100,
-          fill: '#dbeef4', name: 'mainRect',
-          stroke: 'black', strokeWidth: 1
-      };
+      // var options = {
+      //     x: 0, y: 0, width: 175, height: 100,
+      //     fill: '#dbeef4', name: 'mainRect',
+      //     stroke: 'black', strokeWidth: 1
+      // };
 
-      var group = new Kinetic.PhemaGroup({
-        draggable: true,
-        x: ((config && config.x) ? config.x : 50),
-        y: ((config && config.y) ? config.y : 50)});
-      var workflowObj = createRectangle(options, group);
+      // var group = new Kinetic.PhemaGroup({
+      //   draggable: true,
+      //   x: ((config && config.x) ? config.x : 50),
+      //   y: ((config && config.y) ? config.y : 50)});
+      // var workflowObj = createRectangle(options, group);
 
-      var headerOptions = {
-          x: options.x, y: options.y,
-          width: options.width, // Leave out height so it auto-sizes
-          fontFamily: 'Calibri', fontSize: 14, fill: 'black',
-          text: config.element.name,
-          align: 'center', padding: 5
-      };
-      var headerObj = createText(headerOptions, group);
+      // var headerOptions = {
+      //     x: options.x, y: options.y,
+      //     width: options.width, // Leave out height so it auto-sizes
+      //     fontFamily: 'Calibri', fontSize: 14, fill: 'black',
+      //     text: config.element.name,
+      //     align: 'center', padding: 5
+      // };
+      // var headerObj = createText(headerOptions, group);
 
-      workflowObj.setHeight(headerObj.getHeight() + 30);
+      // workflowObj.setHeight(headerObj.getHeight() + 30);
 
-      // Now that the shape is built, define the bounds of the group
-      group.setWidth(workflowObj.getWidth());
-      group.setHeight(workflowObj.getHeight());
+      // // Now that the shape is built, define the bounds of the group
+      // group.setWidth(workflowObj.getWidth());
+      // group.setHeight(workflowObj.getHeight());
 
-      addConnectors(scope, workflowObj, group);
+      // addConnectors(scope, workflowObj, group);
 
-      connectQDMLogicalOperatorEvents(group, scope);
+      // connectQDMLogicalOperatorEvents(group, scope);
 
-      var mainLayer = scope.canvasDetails.kineticStageObj.find('#mainLayer');
-      mainLayer.add(group);
-      mainLayer.draw();
-      return group;
-    }
+      // var mainLayer = scope.canvasDetails.kineticStageObj.find('#mainLayer');
+      // mainLayer.add(group);
+      // mainLayer.draw();
+      // return group;
 
-    // Determines if an element being dragged can be dropped onto another element
-    function allowsDrop(dragElement, dropElement) {
-      if (!dragElement || !dropElement) {
-        console.error('No drag or drop element was specified');
-        return false;
-      }
-
-      if (!dropElement.droppable || (!dropElement.droppableElementTypes) || dropElement.droppableElementTypes.length === 0) {
-        console.error('This element is not configured to accept drops');
-        return false;
-      }
-
-      var index = 0;
-      var element = dragElement.element();
-      for (index = 0; index < dropElement.droppableElementTypes.length; index++) {
-        if (dropElement.droppableElementTypes[index] === element.type) {
-          return true;
-        }
-      }
-
-      return false;
+      var element = new GenericElement();
+      element.create(config, scope);
+      return element.container();
     }
 
     // Manages cleaning up all editor elements that may be associated with a group, such
@@ -620,12 +605,16 @@ angular.module('sophe.factories.algorithmElement', [])
       stage.mainLayer.get('Group').each(function(group) {
         var element = group.element();
         if (element.type === 'TemporalOperator') {
-          connectQDMTemporalOperatorEvents(group, scope);
-          associateQDMTemporalOperatorReferences(group, scope);
+          var temporalOperator = new TemporalOperator();
+          temporalOperator.load(group, scope);
+          //connectQDMTemporalOperatorEvents(group, scope);
+          //associateQDMTemporalOperatorReferences(group, scope);
         }
         else if (element.type === 'DataElement' || element.type === 'Category') {
-          connectQDMDataElementEvents(group, scope);
-          associateQDMDataElementReferences(group, scope);
+          var dataElement = new DataElement();
+          dataElement.load(group, scope);
+          //connectQDMDataElementEvents(group, scope);
+          //associateQDMDataElementReferences(group, scope);
         }
         else if (element.type === 'LogicalOperator') {
           var logicalOperator = new LogicalOperator();
@@ -634,12 +623,16 @@ angular.module('sophe.factories.algorithmElement', [])
           //associateQDMLogicalOperatorReferences(group, scope);
         }
         else if (element.type === 'Phenotype') {
-          connectGenericElementEvents(group, scope);
-          associateGenericElementReferences(group, scope);
+          var phenotype = new GenericElement();
+          phenotype.load(group, scope);
+          // connectGenericElementEvents(group, scope);
+          // associateGenericElementReferences(group, scope);
         }
         else {
-          connectGenericElementEvents(group, scope);
-          associateGenericElementReferences(group, scope);
+          var genericElement = new GenericElement();
+          genericElement.load(group, scope);
+          // connectGenericElementEvents(group, scope);
+          // associateGenericElementReferences(group, scope);
         }
       });
     };
@@ -676,7 +669,7 @@ angular.module('sophe.factories.algorithmElement', [])
       return null;
     };
 
-    factory.allowsDrop = allowsDrop;
+    //factory.allowsDrop = allowsDrop;
 
     return factory;
 });

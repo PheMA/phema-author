@@ -1,6 +1,7 @@
 /* globals Kinetic */
 /* exported startConnector, endConnector, updateActiveLineLocation, getIntersectingShape, Kinetic,
-  addElementToContainer, removeElementFromContainer, updateConnectedLines, changeConnectorEndpoints */
+  addElementToContainer, removeElementFromContainer, updateConnectedLines, changeConnectorEndpoints,
+  allowsDrop */
 
 'use strict';
 
@@ -62,7 +63,7 @@ function layoutElementsInContainer(group) {
   var header = group.getChildren(function(node) { return node.getClassName() === 'Text'; })[0];
   var rect = group.getChildren(function(node) { return node.getClassName() === 'Rect'; })[0];
 
-  var containedElements = group.containedElements();
+  var containedElements = group.phemaObject().containedElements();
   if (containedElements.length === 0) {
     updateSizeOfMainRect(rect, group, 200, 200);
     header.setWidth(rect.getWidth());
@@ -211,10 +212,10 @@ function addElementToContainer(stage, container, element) {
     }
     else if (elementDefinition.type === 'LogicalOperator') {
       // Add the item (if it's not already in the array)
-      var containedElements = group.containedElements();
+      var containedElements = group.phemaObject().containedElements();
       if (containedElements.indexOf(element) === -1) {
         containedElements.push(element);
-        group.containedElements(containedElements);
+        group.phemaObject().containedElements(containedElements);
         element.container = group;
       }
       layoutElementsInContainer(group);
@@ -223,17 +224,41 @@ function addElementToContainer(stage, container, element) {
   }
 }
 
+// Determines if an element being dragged can be dropped onto another element
+function allowsDrop(dragElement, dropElement) {
+  if (!dragElement || !dropElement) {
+    console.error('No drag or drop element was specified');
+    return false;
+  }
+
+  if (!dropElement.droppable || (!dropElement.droppableElementTypes) || dropElement.droppableElementTypes.length === 0) {
+    console.error('This element is not configured to accept drops');
+    return false;
+  }
+
+  var index = 0;
+  var element = dragElement.element();
+  for (index = 0; index < dropElement.droppableElementTypes.length; index++) {
+    if (dropElement.droppableElementTypes[index] === element.type) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+
 function removeElementFromContainer(stage, element) {
   if (element && element.container) {
     var group = (element.container.nodeType === 'Group' ? element.container : element.container.parent);
-    var containedElements = group.containedElements();
+    var containedElements = group.phemaObject().containedElements();
     var foundIndex = containedElements.indexOf(element);
     if (foundIndex < 0) {
       console.error('Unable to find element to remove from container');
       return;
     }
     containedElements.splice(foundIndex, 1);
-    group.containedElements(containedElements);
+    group.phemaObject().containedElements(containedElements);
     element.container = null;
     layoutElementsInContainer(group);
     stage.mainLayer.draw();
