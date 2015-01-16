@@ -11,12 +11,10 @@
     },
 
     toObject: function() {
-      console.log('Connector');
-
       var type = Kinetic.Util,
-      obj = {},
-      attrs = this.getAttrs(),
-      key, val, getter, defaultValue;
+        obj = {},
+        attrs = this.getAttrs(),
+        key, val, getter, defaultValue;
 
       obj.attrs = {};
 

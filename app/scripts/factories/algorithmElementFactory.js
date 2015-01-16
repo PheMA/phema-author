@@ -5,199 +5,199 @@
 
 angular.module('sophe.factories.algorithmElement', [])
   .factory('algorithmElementFactory', function() {
-    function addConnectionHandler(kineticObj, scope) {
-      var stage = scope.canvasDetails.kineticStageObj;
-      kineticObj.on('mouseup', function (e) {
-        endConnector(stage, e.target, scope);
-      });
-      kineticObj.on('mousemove', function(evt) {
-        updateActiveLineLocation(stage, evt);
-      });
-      kineticObj.on('mousedown', function (e) {
-        endConnector(stage, undefined, scope);  // Make sure it's not carrying over from before
-        startConnector(stage, e.target);
-      });
-    }
+    // function addConnectionHandler(kineticObj, scope) {
+    //   var stage = scope.canvasDetails.kineticStageObj;
+    //   kineticObj.on('mouseup', function (e) {
+    //     endConnector(stage, e.target, scope);
+    //   });
+    //   kineticObj.on('mousemove', function(evt) {
+    //     updateActiveLineLocation(stage, evt);
+    //   });
+    //   kineticObj.on('mousedown', function (e) {
+    //     endConnector(stage, undefined, scope);  // Make sure it's not carrying over from before
+    //     startConnector(stage, e.target);
+    //   });
+    // }
 
-    function addStandardEventHandlers(kineticObj, scope) {
-      var stage = scope.canvasDetails.kineticStageObj;
-      kineticObj.on('mousemove', function(evt) {
-        updateActiveLineLocation(stage, evt);
-      });
-      kineticObj.on('mouseup', function() {
-        endConnector(stage, undefined, scope);
-        clearSelections(stage);
-        selectObject(stage, kineticObj, scope);
-      });
+    // function addStandardEventHandlers(kineticObj, scope) {
+    //   var stage = scope.canvasDetails.kineticStageObj;
+    //   kineticObj.on('mousemove', function(evt) {
+    //     updateActiveLineLocation(stage, evt);
+    //   });
+    //   kineticObj.on('mouseup', function() {
+    //     endConnector(stage, undefined, scope);
+    //     clearSelections(stage);
+    //     selectObject(stage, kineticObj, scope);
+    //   });
 
-      // When we are dragging, move the drag object to be the top element, clear all
-      // other selections, and then visually select the dragging element.
-      kineticObj.on('dragstart', function() {
-        kineticObj.setZIndex(999);
-        clearSelections(stage);
-        selectObject(stage, kineticObj, scope);
-        kineticObj.draw();
-      });
+    //   // When we are dragging, move the drag object to be the top element, clear all
+    //   // other selections, and then visually select the dragging element.
+    //   kineticObj.on('dragstart', function() {
+    //     kineticObj.setZIndex(999);
+    //     clearSelections(stage);
+    //     selectObject(stage, kineticObj, scope);
+    //     kineticObj.draw();
+    //   });
 
-      setDraggable(kineticObj, scope);
-    }
+    //   setDraggable(kineticObj, scope);
+    // }
 
-    function addCursorEventHandlers(kineticObj, scope) {
-      // add cursor styling
-      kineticObj.on('mouseover', function () {
-          document.body.style.cursor = 'pointer';
-      });
-      kineticObj.on('mouseout', function () {
-          document.body.style.cursor = 'default';
-          scope.$emit('CANVAS-MOUSEOUT');
-      });
-    }
+    // function addCursorEventHandlers(kineticObj, scope) {
+    //   // add cursor styling
+    //   kineticObj.on('mouseover', function () {
+    //       document.body.style.cursor = 'pointer';
+    //   });
+    //   kineticObj.on('mouseout', function () {
+    //       document.body.style.cursor = 'default';
+    //       scope.$emit('CANVAS-MOUSEOUT');
+    //   });
+    // }
 
-    // Sets up a Kinetic shape to be a droppable target that accepts an array of types that
-    // can be dropped on it.
-    function setDroppable(kineticObj, allowedDropTypes) {
-      kineticObj.droppable = true;
-      kineticObj.droppableElementTypes = allowedDropTypes;
-    }
+    // // Sets up a Kinetic shape to be a droppable target that accepts an array of types that
+    // // can be dropped on it.
+    // function setDroppable(kineticObj, allowedDropTypes) {
+    //   kineticObj.droppable = true;
+    //   kineticObj.droppableElementTypes = allowedDropTypes;
+    // }
 
-    // Adds appropriate event handlers to a draggable object.
-    // Idea for temp layer so we can use getIntersection courtesy of: http://jsbin.com/pecor/3/edit?html,js,output
-    function setDraggable(kineticObj, scope) {
-      var stage = scope.canvasDetails.kineticStageObj;
-      var highlightedDrop = null;
+    // // Adds appropriate event handlers to a draggable object.
+    // // Idea for temp layer so we can use getIntersection courtesy of: http://jsbin.com/pecor/3/edit?html,js,output
+    // function setDraggable(kineticObj, scope) {
+    //   var stage = scope.canvasDetails.kineticStageObj;
+    //   var highlightedDrop = null;
 
-      var dragItem = kineticObj;
-      if ('Group' !== kineticObj.nodeType) {
-        dragItem = kineticObj.getParent();
-      }
+    //   var dragItem = kineticObj;
+    //   if ('Group' !== kineticObj.nodeType) {
+    //     dragItem = kineticObj.getParent();
+    //   }
 
-      dragItem.on('dragstart',function(){
-        dragItem.moveTo(stage.tempLayer);
-        Kinetic.DD.isDragging = false;
-        stage.mainLayer.draw();
-        Kinetic.DD.isDragging = true;
-        var dd = Kinetic.DD;
-        dd.anim.stop();
-        dd.anim.setLayers(stage.tempLayer);
-        dd.anim.start();
-      });
+    //   dragItem.on('dragstart',function(){
+    //     dragItem.moveTo(stage.tempLayer);
+    //     Kinetic.DD.isDragging = false;
+    //     stage.mainLayer.draw();
+    //     Kinetic.DD.isDragging = true;
+    //     var dd = Kinetic.DD;
+    //     dd.anim.stop();
+    //     dd.anim.setLayers(stage.tempLayer);
+    //     dd.anim.start();
+    //   });
 
-      dragItem.on('dragmove',function(e){
-        var pos = stage.getPointerPosition();
-        // We can't use the KineticJS getIntersection because when we are moving the mouse we
-        // need to redraw the different layers to account for connector arrows moving.  Because
-        // we do the redraw, it invalidates the underlying image that getIntersections relies on.
-        var shape = getIntersectingShape(stage.mainLayer, pos);
-        if (!shape) {
-          // If we don't have a spot to drop, but we did before, clean up the old shape so it's not
-          // still highlighted as an active drop target.
-          if (highlightedDrop) {
-            updateStrokeWidth(highlightedDrop, true);
-            highlightedDrop.getParent().draw();
-            highlightedDrop = null;
-          }
-          document.body.style.cursor = 'default';
-          return;
-        }
+    //   dragItem.on('dragmove',function(e){
+    //     var pos = stage.getPointerPosition();
+    //     // We can't use the KineticJS getIntersection because when we are moving the mouse we
+    //     // need to redraw the different layers to account for connector arrows moving.  Because
+    //     // we do the redraw, it invalidates the underlying image that getIntersections relies on.
+    //     var shape = getIntersectingShape(stage.mainLayer, pos);
+    //     if (!shape) {
+    //       // If we don't have a spot to drop, but we did before, clean up the old shape so it's not
+    //       // still highlighted as an active drop target.
+    //       if (highlightedDrop) {
+    //         updateStrokeWidth(highlightedDrop, true);
+    //         highlightedDrop.getParent().draw();
+    //         highlightedDrop = null;
+    //       }
+    //       document.body.style.cursor = 'default';
+    //       return;
+    //     }
 
-        if (shape.droppable && shape !== highlightedDrop) {
-          if (!allowsDrop(e.target, shape)) {
-            document.body.style.cursor = 'no-drop';
-          }
+    //     if (shape.droppable && shape !== highlightedDrop) {
+    //       if (!allowsDrop(e.target, shape)) {
+    //         document.body.style.cursor = 'no-drop';
+    //       }
 
-          if (highlightedDrop) {
-            updateStrokeWidth(highlightedDrop, true);
-          }
-          highlightedDrop = shape;
-          updateStrokeWidth(shape, false);
-          highlightedDrop.getParent().draw();
-        }
-      });
+    //       if (highlightedDrop) {
+    //         updateStrokeWidth(highlightedDrop, true);
+    //       }
+    //       highlightedDrop = shape;
+    //       updateStrokeWidth(shape, false);
+    //       highlightedDrop.getParent().draw();
+    //     }
+    //   });
 
-      dragItem.on('dragend',function(){
-        dragItem.moveTo(stage.mainLayer); // Must do this before remove element
-        removeElementFromContainer(stage, dragItem);  // Clear from a container, if it was in one before
-        document.body.style.cursor = 'default';
-        if (highlightedDrop) {
-          if (allowsDrop(dragItem, highlightedDrop)) {
-            addElementToContainer(stage, highlightedDrop, dragItem);
-          }
-          updateStrokeWidth(highlightedDrop, true);
-          highlightedDrop = null;
-          stage.mainLayer.draw();
-        }
-      });
-    }
+    //   dragItem.on('dragend',function(){
+    //     dragItem.moveTo(stage.mainLayer); // Must do this before remove element
+    //     removeElementFromContainer(stage, dragItem);  // Clear from a container, if it was in one before
+    //     document.body.style.cursor = 'default';
+    //     if (highlightedDrop) {
+    //       if (allowsDrop(dragItem, highlightedDrop)) {
+    //         addElementToContainer(stage, highlightedDrop, dragItem);
+    //       }
+    //       updateStrokeWidth(highlightedDrop, true);
+    //       highlightedDrop = null;
+    //       stage.mainLayer.draw();
+    //     }
+    //   });
+    // }
 
-    function createText(options, group) {
-      if ('undefined' === typeof options.text || '' === options.text) {
-        options.text = 'New Item';
-      }
+    // function createText(options, group) {
+    //   if ('undefined' === typeof options.text || '' === options.text) {
+    //     options.text = 'New Item';
+    //   }
 
-      var kineticObj = new Kinetic.Text(options);
-      group.add(kineticObj);
-      return kineticObj;
-    }
+    //   var kineticObj = new Kinetic.Text(options);
+    //   group.add(kineticObj);
+    //   return kineticObj;
+    // }
 
-    function createRectangle(options, group) {
-      var kineticObj = new Kinetic.Rect(options);
-      group.add(kineticObj);
-      kineticObj.originalStrokeWidth = options.strokeWidth;
-      return kineticObj;
-    }
+    // function createRectangle(options, group) {
+    //   var kineticObj = new Kinetic.Rect(options);
+    //   group.add(kineticObj);
+    //   kineticObj.originalStrokeWidth = options.strokeWidth;
+    //   return kineticObj;
+    // }
 
-    function createConnector(options, group) {
-      var kineticObj = new Kinetic.PhemaConnector(options);
-      group.add(kineticObj);
-      kineticObj.originalStrokeWidth(options.strokeWidth);
-      return kineticObj;
-    }
+    // function createConnector(options, group) {
+    //   var kineticObj = new Kinetic.PhemaConnector(options);
+    //   group.add(kineticObj);
+    //   kineticObj.originalStrokeWidth(options.strokeWidth);
+    //   return kineticObj;
+    // }
 
-    function connectConnectorEvents(group) {
-      group.on('dragmove', function(e) {
-        // e.target is assumed to be a Group
-        if (e.target.nodeType !== 'Group') {
-          console.error('Unsupported object' + e.target);
-          return;
-        }
+    // function connectConnectorEvents(group) {
+    //   group.on('dragmove', function(e) {
+    //     // e.target is assumed to be a Group
+    //     if (e.target.nodeType !== 'Group') {
+    //       console.error('Unsupported object' + e.target);
+    //       return;
+    //     }
 
-        // For the element we are moving, redraw all connection lines
-        var stage = group.getStage();
-        updateConnectedLines(e.target.find('.rightConnector')[0], stage);
-        updateConnectedLines(e.target.find('.leftConnector')[0], stage);
-        stage.find('#mainLayer').draw();
-      });
-    }
+    //     // For the element we are moving, redraw all connection lines
+    //     var stage = group.getStage();
+    //     updateConnectedLines(e.target.find('.rightConnector')[0], stage);
+    //     updateConnectedLines(e.target.find('.leftConnector')[0], stage);
+    //     stage.find('#mainLayer').draw();
+    //   });
+    // }
 
-    function addConnectors(scope, mainRect, group, trackDrag) {
-      trackDrag = (typeof trackDrag !== 'undefined') ? trackDrag : true;
+    // function addConnectors(scope, mainRect, group, trackDrag) {
+    //   trackDrag = (typeof trackDrag !== 'undefined') ? trackDrag : true;
 
-      var leftConnectOptions = {
-        x: mainRect.getX(), y: (mainRect.getHeight() / 2),
-        width: 15, height: 15,
-        fill: 'white', name: 'leftConnector',
-        stroke: 'black', strokeWidth: 1
-      };
-      var leftObj = createConnector(leftConnectOptions, group);
-      addOutlineStyles(leftObj);
-      leftObj.connections([]);
+    //   var leftConnectOptions = {
+    //     x: mainRect.getX(), y: (mainRect.getHeight() / 2),
+    //     width: 15, height: 15,
+    //     fill: 'white', name: 'leftConnector',
+    //     stroke: 'black', strokeWidth: 1
+    //   };
+    //   var leftObj = createConnector(leftConnectOptions, group);
+    //   addOutlineStyles(leftObj);
+    //   leftObj.connections([]);
 
-      var rightConnectOptions = {
-        x: mainRect.getX() + mainRect.getWidth(), y: (mainRect.getHeight() / 2),
-        width: 15, height: 15,
-        fill: 'white', name: 'rightConnector',
-        stroke: 'black', strokeWidth: 1
-      };
-      var rightObj = createConnector(rightConnectOptions, group);
-      addOutlineStyles(rightObj);
-      rightObj.connections([]);
+    //   var rightConnectOptions = {
+    //     x: mainRect.getX() + mainRect.getWidth(), y: (mainRect.getHeight() / 2),
+    //     width: 15, height: 15,
+    //     fill: 'white', name: 'rightConnector',
+    //     stroke: 'black', strokeWidth: 1
+    //   };
+    //   var rightObj = createConnector(rightConnectOptions, group);
+    //   addOutlineStyles(rightObj);
+    //   rightObj.connections([]);
 
-      if (trackDrag) {
-        connectConnectorEvents(group);
-      }
+    //   if (trackDrag) {
+    //     connectConnectorEvents(group);
+    //   }
 
-      return [leftObj, rightObj];
-    }
+    //   return [leftObj, rightObj];
+    // }
 
 
     // Connects the appropriate QDM data element shapes to event handlers.
@@ -213,9 +213,7 @@ angular.module('sophe.factories.algorithmElement', [])
     }
 
     function associateQDMDataElementReferences(group, scope) {
-      group.find('.leftConnector').each(function(connector) {
-        console.log(connector);
-      });
+      associateGenericElementReferences(group, scope);
     }
 
     function createQDMDataElement(config, scope) {
@@ -301,9 +299,7 @@ angular.module('sophe.factories.algorithmElement', [])
     }
 
     function associateQDMTemporalOperatorReferences(group, scope) {
-      group.find('.leftConnector').each(function(connector) {
-        console.log(connector);
-      });
+      associateGenericElementReferences(group, scope);
     }
 
     function createQDMTemporalOperator(config, scope) {
@@ -380,58 +376,59 @@ angular.module('sophe.factories.algorithmElement', [])
       return group;
     }
 
-    // Connects the appropriate QDM logical operator shapes to event handlers.
-    // Used when constructing a new element, or when loading from a definition.
-    function connectQDMLogicalOperatorEvents(group, scope) {
-      addStandardEventHandlers(group, scope);
-      addCursorEventHandlers(group, scope);
-      setDroppable(group.find('.mainRect')[0], ['Category', 'DataElement', 'LogicalOperator']);
-      addConnectionHandler(group.find('.leftConnector')[0], scope);
-      addConnectionHandler(group.find('.rightConnector')[0], scope);
-      connectConnectorEvents(group);
-    }
+    // // Connects the appropriate QDM logical operator shapes to event handlers.
+    // // Used when constructing a new element, or when loading from a definition.
+    // function connectQDMLogicalOperatorEvents(group, scope) {
+    //   addStandardEventHandlers(group, scope);
+    //   addCursorEventHandlers(group, scope);
+    //   setDroppable(group.find('.mainRect')[0], ['Category', 'DataElement', 'LogicalOperator']);
+    //   addConnectionHandler(group.find('.leftConnector')[0], scope);
+    //   addConnectionHandler(group.find('.rightConnector')[0], scope);
+    //   connectConnectorEvents(group);
+    // }
 
-    function associateQDMLogicalOperatorReferences(group, scope) {
-      group.find('.leftConnector').each(function(connector) {
-        console.log(connector);
-      });
-    }
+    // function associateQDMLogicalOperatorReferences(group, scope) {
+    //   associateGenericElementReferences(group, scope);
+    // }
 
     function createQDMLogicalOperator(config, scope) {
-      var options = {
-          x: 0, y: 0, width: 200, height: 200,
-          fill: '#eeeeee', name: 'mainRect',
-          stroke: 'gray', strokeWidth: 1
-      };
+      // var options = {
+      //     x: 0, y: 0, width: 200, height: 200,
+      //     fill: '#eeeeee', name: 'mainRect',
+      //     stroke: 'gray', strokeWidth: 1
+      // };
 
-      var group = new Kinetic.PhemaGroup({
-        draggable: true,
-        x: ((config && config.x) ? config.x : 50),
-        y: ((config && config.y) ? config.y : 50),
-        width: options.width, height: options.height });
+      // var group = new Kinetic.PhemaGroup({
+      //   draggable: true,
+      //   x: ((config && config.x) ? config.x : 50),
+      //   y: ((config && config.y) ? config.y : 50),
+      //   width: options.width, height: options.height });
 
-      var workflowObj = createRectangle(options, group);
-      workflowObj.dash([10, 5]);
-      workflowObj.dashEnabled(true);
+      // var workflowObj = createRectangle(options, group);
+      // workflowObj.dash([10, 5]);
+      // workflowObj.dashEnabled(true);
 
-      var headerOptions = {
-          x: options.x, y: options.y,
-          width: options.width, // Leave out height so it auto-sizes
-          fontFamily: 'Calibri', fontSize: 14, fill: 'black',
-          text: config.element.name, name: 'header',
-          align: 'center', padding: 5
-      };
-      createText(headerOptions, group);
+      // var headerOptions = {
+      //     x: options.x, y: options.y,
+      //     width: options.width, // Leave out height so it auto-sizes
+      //     fontFamily: 'Calibri', fontSize: 14, fill: 'black',
+      //     text: config.element.name, name: 'header',
+      //     align: 'center', padding: 5
+      // };
+      // createText(headerOptions, group);
 
-      addConnectors(scope, workflowObj, group);
+      // addConnectors(scope, workflowObj, group);
 
-      connectQDMLogicalOperatorEvents(group, scope);
+      // connectQDMLogicalOperatorEvents(group, scope);
 
-      group.containedElements = [];
-      var mainLayer = scope.canvasDetails.kineticStageObj.find('#mainLayer');
-      mainLayer.add(group);
-      mainLayer.draw();
-      return group;
+      // group.containedElements([]);
+      // var mainLayer = scope.canvasDetails.kineticStageObj.find('#mainLayer');
+      // mainLayer.add(group);
+      // mainLayer.draw();
+      // return group;
+      var element = new LogicalOperator();
+      element.create(config, scope);
+      return element.container();
     }
 
     // Connects the appropriate generic element shapes to event handlers.
@@ -444,69 +441,51 @@ angular.module('sophe.factories.algorithmElement', [])
       connectConnectorEvents(group);
     }
 
-    function associateGenericElementReferences(group, scope) {
-      var connections = scope.canvasDetails.kineticStageObj.mainLayer.find('PhemaConnection');
-      group.find('PhemaConnector').each(function(connector) {
-        var connectionRefs = connector.connections();
-        var newConnections = [];
-        for (var refIndex = 0; refIndex < connectionRefs.length; refIndex++) {
-          for (var index = 0; index < connections.length; index++) {
-            if (connections[index]._id === connectionRefs[refIndex].id) {
-              newConnections.push(connections[index]);
+    // // When we load a saved phenotype definition, we have references to other elements.  This
+    // // method goes through and associates those references back to actual elements.
+    // function associateGenericElementReferences(group, scope) {
+    //   var connections = scope.canvasDetails.kineticStageObj.mainLayer.find('PhemaConnection');
+    //   group.find('PhemaConnector').each(function(connector) {
+    //     var connectionRefs = connector.connections();
+    //     var newConnections = [];
+    //     for (var refIndex = 0; refIndex < connectionRefs.length; refIndex++) {
+    //       for (var index = 0; index < connections.length; index++) {
+    //         if (connections[index]._id === connectionRefs[refIndex].id) {
+    //           newConnections.push(connections[index]);
 
-              // We have a bi-directional reference between connectors and connections, so we
-              // weill update the connector references here since we have estabilshed a connection.
-              // Determine if I'm the start or the end of the connection
-              var connectorRef = connections[index].connectors();
-              if (connector._id === connectorRef.start.id) {
-                connectorRef.start = connector;
-              }
-              else if (connector._id === connectorRef.end.id) {
-                connectorRef.end = connector;
-              }
-              else {
-                console.log('Invalid connection was found');
-              }
-              connections[index].connectors(connectorRef);
-              break;
-            }
-          }
-        }
-        connector.connections(newConnections);
-      });
+    //           // We have a bi-directional reference between connectors and connections, so we
+    //           // weill update the connector references here since we have estabilshed a connection.
+    //           // Determine if I'm the start or the end of the connection
+    //           var connectorRef = connections[index].connectors();
+    //           if (connector._id === connectorRef.start.id) {
+    //             connectorRef.start = connector;
+    //           }
+    //           else if (connector._id === connectorRef.end.id) {
+    //             connectorRef.end = connector;
+    //           }
+    //           else {
+    //             console.log('Invalid connection was found');
+    //           }
+    //           connections[index].connectors(connectorRef);
+    //           break;
+    //         }
+    //       }
+    //     }
+    //     connector.connections(newConnections);
+    //   });
 
-      // Now, loop through all of the Connections and associate the appropriate Label with them
-      var labels = scope.canvasDetails.kineticStageObj.mainLayer.find('Text');
-      connections.each(function(connection) {
-        var labelRef = connection.label();
-        for (var labelIndex = 0; labelIndex < labels.length; labelIndex++) {
-          if (labels[labelIndex]._id === labelRef.id) {
-            connection.label(labels[labelIndex]);
-            break;
-          }
-        }
-      });
-      // var connectors = scope.canvasDetails.kineticStageObj.mainLayer.find('PhemaConnector');
-      // group.find('PhemaConnection').each(function(connection) {
-      //   var connectorRef = connection.connectors();
-      //   var newConnectors = {start: null, end: null};
-      //   for (var index = 0; index < connectors.length; index++) {
-      //     if (connectors[index]._id === connectorRef.start.id) {
-      //       newConnectors.start = connectors[index];
-      //     }
-      //     else if (connectors[index]._id === connectorRef.end.id) {
-      //       newConnectors.end = connectors[index];
-      //     }
-
-      //     // Break out of the loop as soon as both are associated.
-      //     if (newConnectors.start && newConnectors.end) {
-      //       console.log('connected');
-      //       break;
-      //     }
-      //   }
-      //   connection.connectors(newConnectors);
-      // });
-    }
+    //   // Now, loop through all of the Connections and associate the appropriate Label with them
+    //   var labels = scope.canvasDetails.kineticStageObj.mainLayer.find('Text');
+    //   connections.each(function(connection) {
+    //     var labelRef = connection.label();
+    //     for (var labelIndex = 0; labelIndex < labels.length; labelIndex++) {
+    //       if (labels[labelIndex]._id === labelRef.id) {
+    //         connection.label(labels[labelIndex]);
+    //         break;
+    //       }
+    //     }
+    //   });
+    // }
 
     function createGenericElement(config, scope) {
       var options = {
@@ -649,8 +628,10 @@ angular.module('sophe.factories.algorithmElement', [])
           associateQDMDataElementReferences(group, scope);
         }
         else if (element.type === 'LogicalOperator') {
-          connectQDMLogicalOperatorEvents(group, scope);
-          associateQDMLogicalOperatorReferences(group, scope);
+          var logicalOperator = new LogicalOperator();
+          logicalOperator.load(group, scope);
+          //connectQDMLogicalOperatorEvents(group, scope);
+          //associateQDMLogicalOperatorReferences(group, scope);
         }
         else if (element.type === 'Phenotype') {
           connectGenericElementEvents(group, scope);

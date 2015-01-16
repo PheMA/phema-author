@@ -62,7 +62,8 @@ function layoutElementsInContainer(group) {
   var header = group.getChildren(function(node) { return node.getClassName() === 'Text'; })[0];
   var rect = group.getChildren(function(node) { return node.getClassName() === 'Rect'; })[0];
 
-  if (group.containedElements.length === 0) {
+  var containedElements = group.containedElements();
+  if (containedElements.length === 0) {
     updateSizeOfMainRect(rect, group, 200, 200);
     header.setWidth(rect.getWidth());
     return;
@@ -72,8 +73,8 @@ function layoutElementsInContainer(group) {
   var currentY = header.getHeight() + BORDER;
   var maxHeight = 0;
   var element = null;
-  for (var index = 0; index < group.containedElements.length; index ++) {
-    element = group.containedElements[index];
+  for (var index = 0; index < containedElements.length; index ++) {
+    element = containedElements[index];
     element.moveTo(group);
     element.setX(currentX);
     element.setY(currentY);
@@ -210,8 +211,10 @@ function addElementToContainer(stage, container, element) {
     }
     else if (elementDefinition.type === 'LogicalOperator') {
       // Add the item (if it's not already in the array)
-      if (group.containedElements.indexOf(element) === -1) {
-        group.containedElements.push(element);
+      var containedElements = group.containedElements();
+      if (containedElements.indexOf(element) === -1) {
+        containedElements.push(element);
+        group.containedElements(containedElements);
         element.container = group;
       }
       layoutElementsInContainer(group);
@@ -223,12 +226,14 @@ function addElementToContainer(stage, container, element) {
 function removeElementFromContainer(stage, element) {
   if (element && element.container) {
     var group = (element.container.nodeType === 'Group' ? element.container : element.container.parent);
-    var foundIndex = group.containedElements.indexOf(element);
+    var containedElements = group.containedElements();
+    var foundIndex = containedElements.indexOf(element);
     if (foundIndex < 0) {
       console.error('Unable to find element to remove from container');
       return;
     }
-    group.containedElements.splice(foundIndex, 1);
+    containedElements.splice(foundIndex, 1);
+    group.containedElements(containedElements);
     element.container = null;
     layoutElementsInContainer(group);
     stage.mainLayer.draw();

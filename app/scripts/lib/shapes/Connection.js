@@ -11,7 +11,6 @@
     },
 
     toObject: function() {
-      console.log('Connection');
       var type = Kinetic.Util,
         obj = {},
         attrs = this.getAttrs(),
