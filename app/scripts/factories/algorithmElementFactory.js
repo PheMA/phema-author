@@ -67,7 +67,7 @@ angular.module('sophe.factories.algorithmElement', [])
       var highlightedDrop = null;
 
       var dragItem = kineticObj;
-      if ('Group' !== kineticObj.nodeType && 'PhemaElement' !== kineticObj.nodeType) {
+      if ('Group' !== kineticObj.nodeType) {
         dragItem = kineticObj.getParent();
       }
 
@@ -153,6 +153,22 @@ angular.module('sophe.factories.algorithmElement', [])
       return kineticObj;
     }
 
+    function connectConnectorEvents(group) {
+      group.on('dragmove', function(e) {
+        // e.target is assumed to be a Group
+        if (e.target.nodeType !== 'Group') {
+          console.error('Unsupported object' + e.target);
+          return;
+        }
+
+        // For the element we are moving, redraw all connection lines
+        var stage = group.getStage();
+        updateConnectedLines(e.target.find('.rightConnector')[0], stage);
+        updateConnectedLines(e.target.find('.leftConnector')[0], stage);
+        stage.find('#mainLayer').draw();
+      });
+    }
+
     function addConnectors(scope, mainRect, group, trackDrag) {
       trackDrag = (typeof trackDrag !== 'undefined') ? trackDrag : true;
 
@@ -177,19 +193,7 @@ angular.module('sophe.factories.algorithmElement', [])
       rightObj.connections([]);
 
       if (trackDrag) {
-        group.on('dragmove', function(e) {
-          // e.target is assumed to be a Group
-          if (e.target.nodeType !== 'Group') {
-            console.error('Unsupported object' + e.target);
-            return;
-          }
-
-          // For the element we are moving, redraw all connection lines
-          var stage = group.getStage();
-          updateConnectedLines(e.target.find('.rightConnector')[0], stage);
-          updateConnectedLines(e.target.find('.leftConnector')[0], stage);
-          stage.find('#mainLayer').draw();
-        });
+        connectConnectorEvents(group);
       }
 
       return [leftObj, rightObj];
@@ -205,6 +209,13 @@ angular.module('sophe.factories.algorithmElement', [])
       setDroppable(termObj, ['ValueSet', 'Term']);
       addConnectionHandler(group.find('.leftConnector')[0], scope);
       addConnectionHandler(group.find('.rightConnector')[0], scope);
+      connectConnectorEvents(group);
+    }
+
+    function associateQDMDataElementReferences(group, scope) {
+      group.find('.leftConnector').each(function(connector) {
+        console.log(connector);
+      });
     }
 
     function createQDMDataElement(config, scope) {
@@ -286,6 +297,13 @@ angular.module('sophe.factories.algorithmElement', [])
       addConnectionHandler(group.find('.rightConnector')[0], scope);
       addConnectionHandler(group.find('.leftConnector')[1], scope);
       addConnectionHandler(group.find('.rightConnector')[1], scope);
+      connectConnectorEvents(group);
+    }
+
+    function associateQDMTemporalOperatorReferences(group, scope) {
+      group.find('.leftConnector').each(function(connector) {
+        console.log(connector);
+      });
     }
 
     function createQDMTemporalOperator(config, scope) {
@@ -370,6 +388,13 @@ angular.module('sophe.factories.algorithmElement', [])
       setDroppable(group.find('.mainRect')[0], ['Category', 'DataElement', 'LogicalOperator']);
       addConnectionHandler(group.find('.leftConnector')[0], scope);
       addConnectionHandler(group.find('.rightConnector')[0], scope);
+      connectConnectorEvents(group);
+    }
+
+    function associateQDMLogicalOperatorReferences(group, scope) {
+      group.find('.leftConnector').each(function(connector) {
+        console.log(connector);
+      });
     }
 
     function createQDMLogicalOperator(config, scope) {
@@ -416,6 +441,71 @@ angular.module('sophe.factories.algorithmElement', [])
       addCursorEventHandlers(group, scope);
       addConnectionHandler(group.find('.leftConnector')[0], scope);
       addConnectionHandler(group.find('.rightConnector')[0], scope);
+      connectConnectorEvents(group);
+    }
+
+    function associateGenericElementReferences(group, scope) {
+      var connections = scope.canvasDetails.kineticStageObj.mainLayer.find('PhemaConnection');
+      group.find('PhemaConnector').each(function(connector) {
+        var connectionRefs = connector.connections();
+        var newConnections = [];
+        for (var refIndex = 0; refIndex < connectionRefs.length; refIndex++) {
+          for (var index = 0; index < connections.length; index++) {
+            if (connections[index]._id === connectionRefs[refIndex].id) {
+              newConnections.push(connections[index]);
+
+              // We have a bi-directional reference between connectors and connections, so we
+              // weill update the connector references here since we have estabilshed a connection.
+              // Determine if I'm the start or the end of the connection
+              var connectorRef = connections[index].connectors();
+              if (connector._id === connectorRef.start.id) {
+                connectorRef.start = connector;
+              }
+              else if (connector._id === connectorRef.end.id) {
+                connectorRef.end = connector;
+              }
+              else {
+                console.log('Invalid connection was found');
+              }
+              connections[index].connectors(connectorRef);
+              break;
+            }
+          }
+        }
+        connector.connections(newConnections);
+      });
+
+      // Now, loop through all of the Connections and associate the appropriate Label with them
+      var labels = scope.canvasDetails.kineticStageObj.mainLayer.find('Text');
+      connections.each(function(connection) {
+        var labelRef = connection.label();
+        for (var labelIndex = 0; labelIndex < labels.length; labelIndex++) {
+          if (labels[labelIndex]._id === labelRef.id) {
+            connection.label(labels[labelIndex]);
+            break;
+          }
+        }
+      });
+      // var connectors = scope.canvasDetails.kineticStageObj.mainLayer.find('PhemaConnector');
+      // group.find('PhemaConnection').each(function(connection) {
+      //   var connectorRef = connection.connectors();
+      //   var newConnectors = {start: null, end: null};
+      //   for (var index = 0; index < connectors.length; index++) {
+      //     if (connectors[index]._id === connectorRef.start.id) {
+      //       newConnectors.start = connectors[index];
+      //     }
+      //     else if (connectors[index]._id === connectorRef.end.id) {
+      //       newConnectors.end = connectors[index];
+      //     }
+
+      //     // Break out of the loop as soon as both are associated.
+      //     if (newConnectors.start && newConnectors.end) {
+      //       console.log('connected');
+      //       break;
+      //     }
+      //   }
+      //   connection.connectors(newConnectors);
+      // });
     }
 
     function createGenericElement(config, scope) {
@@ -552,18 +642,23 @@ angular.module('sophe.factories.algorithmElement', [])
         var element = group.element();
         if (element.type === 'TemporalOperator') {
           connectQDMTemporalOperatorEvents(group, scope);
+          associateQDMTemporalOperatorReferences(group, scope);
         }
         else if (element.type === 'DataElement' || element.type === 'Category') {
           connectQDMDataElementEvents(group, scope);
+          associateQDMDataElementReferences(group, scope);
         }
         else if (element.type === 'LogicalOperator') {
           connectQDMLogicalOperatorEvents(group, scope);
+          associateQDMLogicalOperatorReferences(group, scope);
         }
         else if (element.type === 'Phenotype') {
           connectGenericElementEvents(group, scope);
+          associateGenericElementReferences(group, scope);
         }
         else {
           connectGenericElementEvents(group, scope);
+          associateGenericElementReferences(group, scope);
         }
       });
     };

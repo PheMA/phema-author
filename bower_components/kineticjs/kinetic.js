@@ -3260,7 +3260,7 @@ var Kinetic = {};
                     }
                 }
             }
-
+            obj.id = this._id;
             obj.className = this.getClassName();
             return obj;
         },
@@ -3788,6 +3788,12 @@ var Kinetic = {};
             for(n = 0; n < len; n++) {
                 no.add(this._createNode(children[n]));
             }
+        }
+
+        // If we are loading a definition that contains an id, use that id to preserve
+        // any of our references.
+        if(obj.id) {
+            no._id = obj.id;
         }
 
         return no;
