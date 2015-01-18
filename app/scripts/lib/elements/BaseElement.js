@@ -1,7 +1,7 @@
-var ElementBase = function() {
+var BaseElement = function() {
 };
 
-ElementBase.prototype = {
+BaseElement.prototype = {
   _init: function() {
   },
 

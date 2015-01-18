@@ -1,7 +1,7 @@
 'use strict';
 
 var DataElement = function() {}
-DataElement.prototype = new ElementBase;
+DataElement.prototype = new BaseElement;
 
 // Connects the appropriate QDM logical operator shapes to event handlers.
 // Used when constructing a new element, or when loading from a definition.

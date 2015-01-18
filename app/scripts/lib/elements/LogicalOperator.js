@@ -1,7 +1,7 @@
 'use strict';
 
 var LogicalOperator = function() {}
-LogicalOperator.prototype = new ElementBase;
+LogicalOperator.prototype = new BaseElement;
 
 // Connects the appropriate QDM logical operator shapes to event handlers.
 // Used when constructing a new element, or when loading from a definition.

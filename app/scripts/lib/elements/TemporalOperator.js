@@ -1,7 +1,7 @@
 'use strict';
 
 var TemporalOperator = function() {}
-TemporalOperator.prototype = new ElementBase;
+TemporalOperator.prototype = new BaseElement;
 
 // Connects the appropriate QDM logical operator shapes to event handlers.
 // Used when constructing a new element, or when loading from a definition.
