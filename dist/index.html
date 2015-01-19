@@ -6,8 +6,14 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <link rel="stylesheet" href="styles/vendor.25d883da.css">
-    <link rel="stylesheet" href="styles/main.e874c79a.css">
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
     <link rel="stylesheet" href="bower_components/angular-tree-control/css/tree-control-attribute.css" />
   </head>
   <body ng-app="sopheAuthorApp">
@@ -23,7 +29,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <img class="navbar-brand" src="images/phema.57b14243.png"></img>
+        <img class="navbar-brand" src="images/phema.png"></img>
         <a class="navbar-brand" href="#">Phenotype Authoring Tool</a>
       </div>
       <!-- Collect the nav links, forms, and other content for toggling -->
@@ -67,12 +73,93 @@
       </div>
     </div>
 
+    <!-- build:js(.) scripts/oldieshim.js -->
     <!--[if lt IE 9]>
-    <script src="scripts/oldieshim.ff90b0fb.js"></script>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
+    <!-- endbuild -->
 
-    <script src="scripts/vendor.2bbb53eb.js"></script>
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+    <script src="bower_components/json3/lib/json3.js"></script>
+    <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/affix.js"></script>
+    <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/alert.js"></script>
+    <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/button.js"></script>
+    <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/carousel.js"></script>
+    <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/collapse.js"></script>
+    <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/dropdown.js"></script>
+    <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/tab.js"></script>
+    <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/transition.js"></script>
+    <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/scrollspy.js"></script>
+    <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/modal.js"></script>
+    <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/tooltip.js"></script>
+    <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/popover.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-resource.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-cookies.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-sanitize.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-animate.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-touch.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route.min.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/kineticjs/kinetic.js"></script>
+    <script src="bower_components/angular-tree-control/angular-tree-control.js"></script>
+    <script src="bower_components/ng-context-menu/dist/ng-context-menu.js"></script>
+    <script src="bower_components/angular-history/history.js"></script>
+    <script src="bower_components/angular-dynforms/dynamic-forms.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
 
-    <script src="scripts/main.aff621bb.js"></script>
+    <!-- build:js(app) scripts/main.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/sophe.js"></script>
+    <script src="scripts/config.js"></script>
+    <script src="scripts/lib/elements/BaseElement.js"></script>
+    <script src="scripts/lib/elements/DataElement.js"></script>
+    <script src="scripts/lib/elements/GenericElement.js"></script>
+    <script src="scripts/lib/elements/LogicalOperator.js"></script>
+    <script src="scripts/lib/elements/TemporalOperator.js"></script>
+    <script src="scripts/lib/shapes/Connection.js"></script>
+    <script src="scripts/lib/shapes/Connector.js"></script>
+    <script src="scripts/lib/shapes/Group.js"></script>
+    <script src="scripts/util/array.js"></script>
+    <script src="scripts/util/ui.js"></script>
+    <script src="scripts/services/library.js"></script>
+    <script src="scripts/services/logicalOperator.js"></script>
+    <script src="scripts/services/qdmAttribute.js"></script>
+    <script src="scripts/services/qdmElement.js"></script>
+    <script src="scripts/services/temporalOperator.js"></script>
+    <script src="scripts/services/url.js"></script>
+    <script src="scripts/directives/draggable.js"></script>
+    <script src="scripts/directives/droppable.js"></script>
+    <script src="scripts/directives/onlyDigits.js"></script>
+    <script src="scripts/directives/kineticCanvas.js"></script>
+    <script src="scripts/directives/elements/phenotype.js"></script>
+    <script src="scripts/directives/elements/qdm/dataElements.js"></script>
+    <script src="scripts/directives/elements/qdm/logicalOperators.js"></script>
+    <script src="scripts/directives/elements/qdm/temporalOperators.js"></script>
+    <script src="scripts/factories/algorithmElementFactory.js"></script>
+    <script src="scripts/factories/kineticStageFactory.js"></script>
+    <script src="scripts/controllers/main.js"></script>
+    <script src="scripts/controllers/about.js"></script>
+    <script src="scripts/controllers/phenotype.js"></script>
+    <script src="scripts/controllers/login.js"></script>
+    <script src="scripts/controllers/dashboard.js"></script>
+    <script src="scripts/controllers/loadPhenotype.js"></script>
+    <script src="scripts/controllers/savePhenotype.js"></script>
+    <script src="scripts/controllers/properties/relationships.js"></script>
+    <script src="scripts/controllers/properties/logicalOperators.js"></script>
+    <script src="scripts/controllers/properties/qdmElements.js"></script>
+
+    <script src="scripts/services/security/index.js"></script>
+    <script src="scripts/services/security/interceptor.js"></script>
+    <script src="scripts/services/security/retryQueue.js"></script>
+    <script src="scripts/services/security/security.js"></script>
+    <script src="scripts/services/security/authorization.js"></script>
+    <script src="scripts/directives/security/login.js"></script>
+    <script src="scripts/directives/security/toolbar.js"></script>
+    <!-- endbuild -->
 </body>
 </html>

@@ -42,10 +42,15 @@ var LibraryItem = new Schema({
   }
 })
 
+function formatItemForReturn(item) {
+  return { id: item._id, name: item.name, description: item.description, definition: item.definition };
+}
+
 var LibraryRepository = mongoose.model('LibraryItem', LibraryItem);
 
 // MongoDB configuration
-mongoose.connect('mongodb://localhost/phema-library', function(err, res) {
+//mongoose.connect('mongodb://localhost/phema-library', function(err, res) {
+mongoose.connect('mongodb://phema:phema@ds031711.mongolab.com:31711/sophe-mongo', function(err, res) {
   if(err) {
     console.log('error connecting to MongoDB Database. ' + err);
   } else {
@@ -58,7 +63,7 @@ exports.index = function(req, res){
     if (!err) {
       var formattedList = [];
       for (var index = 0; index < items.length; index++) {
-        formattedList.push({ id: items[index]._id, name: items[index].name, description: items[index].description });
+        formattedList.push(formatItemForReturn(items[index]));
       }
       return res.send(formattedList);
     } else {
@@ -86,9 +91,8 @@ exports.details = function(req, res){
 
     if (!err) {
       console.log('Found');;
-      console.log(item);
       res.statusCode = 200;
-      return res.send({ id: item._id, name: item.name, description: item.description, definition: item.definition });
+      return res.send(formatItemForReturn(item));
     }
     else {
       res.statusCode = 500;
@@ -106,8 +110,6 @@ exports.details = function(req, res){
 exports.add = function(req, res) {
   console.log('POST - /library');
 
-  console.log(req.body);
-
   var item = new LibraryRepository({
     name: req.body.name,
     description: req.body.description,
@@ -122,7 +124,7 @@ exports.add = function(req, res) {
     }
     else {
       console.log("Library item created");
-      return res.send({ status: 'OK', item:item });
+      return res.send(formatItemForReturn(item));
     }
   });
 };
@@ -154,7 +156,7 @@ exports.update = function(req, res) {
     return item.save(function(err) {
       if(!err) {
         console.log('Updated');
-        return res.send({ status: 'OK', item:item });
+        return res.send(formatItemForReturn(item));
       } else {
         if(err.name == 'ValidationError') {
           res.statusCode = 400;
