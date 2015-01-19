@@ -405,6 +405,34 @@ module.exports = function (grunt) {
           dest: '<%= yeoman.dist %>'
         }]
       },
+      nomin: {
+        files: [{
+          expand: true,
+          dot: true,
+          cwd: '<%= yeoman.app %>',
+          dest: '<%= yeoman.dist %>',
+          src: [
+            '*.{ico,png,txt}',
+            '.htaccess',
+            '*.html',
+            'views/**/*.html',
+            'images/{,*/}*.{webp}',
+            'fonts/*',
+            'data/*',
+            'scripts/**',
+          ]
+        }, {
+          expand: true,
+          cwd: '.tmp/images',
+          dest: '<%= yeoman.dist %>/images',
+          src: ['generated/*']
+        }, {
+          expand: true,
+          cwd: '.',
+          src: 'bower_components/**',
+          dest: '<%= yeoman.dist %>'
+        }]
+      },
       styles: {
         expand: true,
         cwd: '<%= yeoman.app %>/styles',
@@ -448,6 +476,10 @@ module.exports = function (grunt) {
             {
               match: 'dataServiceBaseUrl',
               replacement: settings.dataServiceBaseUrl
+            },
+            {
+              match: 'libraryBaseUrl',
+              replacement: settings.libraryBaseUrl
             }
           ]
         },
@@ -526,6 +558,19 @@ module.exports = function (grunt) {
     'filerev',
     'usemin',
     //'htmlmin'  -- Don't use htmlmin, it's inappropriately throwing errors for custom directives
+    'replace:dist',  // Assumes it's being done at the end of the process
+  ]);
+
+  // Not our ideal build, but gives us a workaround when minify gives us trouble
+  grunt.registerTask('build-nomin', [
+    'clean:dist',
+    'wiredep',
+    'useminPrepare',
+    'concurrent:dist',
+    'autoprefixer',
+    'copy:nomin',
+    'cdnify',
+    'cssmin',
     'replace:dist',  // Assumes it's being done at the end of the process
   ]);
 
