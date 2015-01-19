@@ -1,13 +1,23 @@
 /* globals Kinetic */
 /* exported startConnector, endConnector, updateActiveLineLocation, getIntersectingShape,
-  addElementToContainer, removeElementFromContainer, updateConnectedLines, changeConnectorEndpoints */
+  addElementToContainer, removeElementFromContainer, updateConnectedLines, changeConnectorEndpoints,
+  allowsDrop */
 
 'use strict';
 
 var BORDER = 20;
 
 function updateStrokeWidth(kineticObj, normal) {
-  var strokeWidth = kineticObj.originalStrokeWidth || 1;
+  var strokeWidth = 1;
+  if (kineticObj.originalStrokeWidth) {
+    if (Kinetic.Util._isFunction(kineticObj.originalStrokeWidth)) {
+      strokeWidth = kineticObj.originalStrokeWidth();
+    }
+    else {
+      strokeWidth = kineticObj.originalStrokeWidth;
+    }
+  }
+
   if (!normal) {
     strokeWidth = strokeWidth + 2;
   }
@@ -53,7 +63,8 @@ function layoutElementsInContainer(group) {
   var header = group.getChildren(function(node) { return node.getClassName() === 'Text'; })[0];
   var rect = group.getChildren(function(node) { return node.getClassName() === 'Rect'; })[0];
 
-  if (group.containedElements.length === 0) {
+  var containedElements = group.phemaObject().containedElements();
+  if (containedElements.length === 0) {
     updateSizeOfMainRect(rect, group, 200, 200);
     header.setWidth(rect.getWidth());
     return;
@@ -63,8 +74,8 @@ function layoutElementsInContainer(group) {
   var currentY = header.getHeight() + BORDER;
   var maxHeight = 0;
   var element = null;
-  for (var index = 0; index < group.containedElements.length; index ++) {
-    element = group.containedElements[index];
+  for (var index = 0; index < containedElements.length; index ++) {
+    element = containedElements[index];
     element.moveTo(group);
     element.setX(currentX);
     element.setY(currentY);
@@ -118,27 +129,30 @@ function changeConnectorEndpoints(stage, line, startPos, endPos) {
 
 function updateConnectedLines(connector, stage) {
   var i = 0;
-  for (i = connector.connections.length - 1; i >= 0; i--) {
-    var line = connector.connections[i];
+  var connections = connector.connections();
+  for (i = connections.length - 1; i >= 0; i--) {
+    var line = connections[i];
     var startPos = {};
     var endPos = {};
-    if (line.connectors.start === connector) {
+    var lineConnectors = line.connectors();
+    if (lineConnectors.start === connector) {
       line.setAbsolutePosition(connector.getAbsolutePosition());
     }
 
     startPos = {x: line.getPoints()[0], y: line.getPoints()[1]};
     endPos = {
-      x: line.connectors.end.getAbsolutePosition().x - line.connectors.start.getAbsolutePosition().x,
-      y: line.connectors.end.getAbsolutePosition().y - line.connectors.start.getAbsolutePosition().y,
+      x: lineConnectors.end.getAbsolutePosition().x - lineConnectors.start.getAbsolutePosition().x,
+      y: lineConnectors.end.getAbsolutePosition().y - lineConnectors.start.getAbsolutePosition().y,
     };
     changeConnectorEndpoints(stage, line, startPos, endPos);
-    var label = line.label;
+    var label = line.label();
     if (label !== null && typeof(label) !== 'undefined') {
-      label.x(line.connectors.start.getAbsolutePosition().x);
-      label.y(line.connectors.start.getAbsolutePosition().y + 5);
+      label.x(lineConnectors.start.getAbsolutePosition().x);
+      label.y(lineConnectors.start.getAbsolutePosition().y + 5);
       label.width(endPos.x - startPos.x);
       var slope = (endPos.y - startPos.y) / (endPos.x - startPos.x);
       label.rotation(Math.atan(slope));
+      line.label(label);
     }
   }
 }
@@ -157,19 +171,24 @@ function _replaceTemporalElement(isEventA, containerParent, container, element, 
   var connectorIndex = isEventA ? 0 : (connectorCollection.length === 1 ? 0 : 1);
   connectorCollection[connectorIndex].destroy();
   var oldConnector = containerParent.find((isEventA ? '.rightConnector' : '.leftConnector'))[connectorIndex];
-  var line = oldConnector.connections[0];
-  oldConnector.connections = [];
+  var line = oldConnector.connections()[0];
+  oldConnector.connections([]);
   oldConnector.destroy();
   container.destroy();
 
   // Update our tracking collections for how things are connected
+  var lineConnectors = line.connectors();
   if (isEventA) {
-    line.connectors.start = connector;
+    lineConnectors.start = connector;
   }
   else {
-    line.connectors.end = connector;
+    lineConnectors.end = connector;
   }
-  connector.connections.push(line);
+  line.connectors(lineConnectors);
+
+  var connections = connector.connections();
+  connections.push(line);
+  connector.connections(connections);
   updateConnectedLines(connector, stage);
 }
 
@@ -177,7 +196,8 @@ function _replaceTemporalElement(isEventA, containerParent, container, element, 
 function addElementToContainer(stage, container, element) {
   var group = (container.nodeType === 'Group' ? container : container.parent);
   if (group) {
-    if (group.element.type === 'TemporalOperator') {
+    var elementDefinition = group.element();
+    if (elementDefinition.type === 'TemporalOperator') {
       // Replace container with element
       var containerParent = container.getParent();
       if (container === containerParent.find('.eventA')[0]) {
@@ -187,13 +207,15 @@ function addElementToContainer(stage, container, element) {
         _replaceTemporalElement(false, containerParent, container, element, stage);
       }
     }
-    else if (group.element.type === 'DataElement' || group.element.type === 'Category') {
+    else if (elementDefinition.type === 'DataElement' || elementDefinition.type === 'Category') {
       console.log('QDM element');
     }
-    else if (group.element.type === 'LogicalOperator') {
+    else if (elementDefinition.type === 'LogicalOperator') {
       // Add the item (if it's not already in the array)
-      if (group.containedElements.indexOf(element) === -1) {
-        group.containedElements.push(element);
+      var containedElements = group.phemaObject().containedElements();
+      if (containedElements.indexOf(element) === -1) {
+        containedElements.push(element);
+        group.phemaObject().containedElements(containedElements);
         element.container = group;
       }
       layoutElementsInContainer(group);
@@ -202,15 +224,41 @@ function addElementToContainer(stage, container, element) {
   }
 }
 
+// Determines if an element being dragged can be dropped onto another element
+function allowsDrop(dragElement, dropElement) {
+  if (!dragElement || !dropElement) {
+    console.error('No drag or drop element was specified');
+    return false;
+  }
+
+  if (!dropElement.droppable || (!dropElement.droppableElementTypes) || dropElement.droppableElementTypes.length === 0) {
+    console.error('This element is not configured to accept drops');
+    return false;
+  }
+
+  var index = 0;
+  var element = dragElement.element();
+  for (index = 0; index < dropElement.droppableElementTypes.length; index++) {
+    if (dropElement.droppableElementTypes[index] === element.type) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+
 function removeElementFromContainer(stage, element) {
   if (element && element.container) {
     var group = (element.container.nodeType === 'Group' ? element.container : element.container.parent);
-    var foundIndex = group.containedElements.indexOf(element);
+    var containedElements = group.phemaObject().containedElements();
+    var foundIndex = containedElements.indexOf(element);
     if (foundIndex < 0) {
       console.error('Unable to find element to remove from container');
       return;
     }
-    group.containedElements.splice(foundIndex, 1);
+    containedElements.splice(foundIndex, 1);
+    group.phemaObject().containedElements(containedElements);
     element.container = null;
     layoutElementsInContainer(group);
     stage.mainLayer.draw();
@@ -282,18 +330,17 @@ function updateActiveLineLocation(stage, evt) {
 // Start a connector line, anchored at a connector object
 function startConnector(stage, connectorObj) {
   var connectorParent = connectorObj.getParent();
-  var line = new Kinetic.Line({
-    //x: stage.getPointerPosition().x,
-    //y: stage.getPointerPosition().y,
+  var line = new Kinetic.PhemaConnection({
     x: connectorParent.getX() + connectorObj.getX(),
     y: connectorParent.getY() + connectorObj.getY(),
     points: [0, 0],
     stroke: 'black', strokeWidth: 2
   });
-  line.connectors = {};
-  line.connectors.start = connectorObj;
-  line.originalStrokeWidth = 2;
+  var lineConnectors = {};
+  lineConnectors.start = connectorObj;
+  line.originalStrokeWidth(2);
   addOutlineStyles(line, 2);
+  line.connectors(lineConnectors);
 
   stage.find('#mainLayer').add(line);
   line.setZIndex(999);  // Should be on top
@@ -318,13 +365,20 @@ function endConnector(stage, connectorObj, scope) {
     // are related.
     else {
       line = stage.connector.line;
-      line.connectors.end = connectorObj;
-      connectorObj.connections.push(line);
-      line.connectors.start.connections.push(line);
+      var lineConnectors = line.connectors();
+      lineConnectors.end = connectorObj;
+      var connections = connectorObj.connections();
+      connections.push(line);
+      connectorObj.connections(connections);
+
+      connections = lineConnectors.start.connections();
+      connections.push(line);
+      lineConnectors.start.connections(connections);
       line.on('mouseup', function(e) {
         clearSelections(stage);
         selectObject(stage, e.target, scope);
       });
+      line.connectors(lineConnectors);
 
       var labelTextOptions = {
         x: line.x(), y: line.y(),
@@ -335,8 +389,8 @@ function endConnector(stage, connectorObj, scope) {
       };
       var labelObj = new Kinetic.Text(labelTextOptions);
       stage.find('#mainLayer').add(labelObj);
-      line.label = labelObj;
-      line.element = {name: labelTextOptions.text, uri: '', type: 'TemporalOperator'};
+      line.label(labelObj);
+      line.element({name: labelTextOptions.text, uri: '', type: 'TemporalOperator'});
     }
   }
 

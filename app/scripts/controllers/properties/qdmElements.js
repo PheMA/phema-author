@@ -8,7 +8,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('QDMElementPropertiesController', function ($scope, $modalInstance, QDMElementService, QDMAttributeService, element) {
+  .controller('QDMElementPropertiesController', ['$scope', '$modalInstance', 'QDMElementService', 'QDMAttributeService', 'element', function ($scope, $modalInstance, QDMElementService, QDMAttributeService, element) {
     $scope.element = element;
     $scope.formData = element.attributes || {};
 
@@ -30,4 +30,4 @@ angular.module('sopheAuthorApp')
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
     };
-  });
+  }]);

@@ -12,6 +12,7 @@ KineticCanvas
 
 Circle : Connector  (considered a special type of Kinetic.Circle)  {
   connections []      All Kinetic.Line objects connected here
+  originalStrokeWidth
 }
 
 
@@ -27,6 +28,7 @@ Line : Connection   (considered a special type of Kinetic.Line) {
 Group : Element    (considered a special type of Kinetic.Group) {
   selected            bool  (is the object currently selected)
   element             object  (the original element that was used to create the Kinetic element)
+  phemaObject         objects (a reference to an element under lib/elements)
 }
 
 Group : LogicalOperator  (considered a special type of Kinetic.Group and Element) {

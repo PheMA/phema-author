@@ -22,6 +22,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
   grunt.loadNpmTasks('grunt-jasmine-node');
 
+  // Generate documentation
+  grunt.loadNpmTasks('grunt-ngdocs');
+
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
@@ -467,7 +470,11 @@ module.exports = function (grunt) {
           specNameMatcher: 'spec',
         },
         all: ['services/test/']
-      }
+    },
+
+    ngdocs: {
+      all: ['app/**/*.js']
+    }
   });
 
 

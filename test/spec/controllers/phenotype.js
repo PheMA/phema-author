@@ -1,6 +1,18 @@
 'use strict';
 
 describe('Controller: PhenotypeController', function () {
+  var Element = function(element) {
+    this.elementDef = element;
+  };
+  Element.prototype.element = function() {
+    if (typeof element === 'undefined') {
+      return this.elementDef;
+    }
+    else {
+      this.elementDef = element;
+    }
+  };
+
 
   // load the controller's module
   beforeEach(module('ui.bootstrap'));
@@ -93,27 +105,27 @@ describe('Controller: PhenotypeController', function () {
     }));
 
     it('allows properties for temporal operators', inject(function () {
-      spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn({ element: { type: 'TemporalOperator'} });
+      spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn(new Element({ type: 'TemporalOperator'}));
       expect(this.scope.canShowProperties(null)).toEqual(true);
     }));
 
     it('allows properties for logical operators', inject(function() {
-      spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn({ element: { type: 'LogicalOperator'} });
+      spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn(new Element({ type: 'LogicalOperator'}));
       expect(this.scope.canShowProperties(null)).toEqual(true);
     }));
 
     it('allows properties for categories', inject(function() {
-      spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn({ element: { type: 'Category'} });
+      spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn(new Element({ type: 'Category'}));
       expect(this.scope.canShowProperties(null)).toEqual(true);
     }));
 
     it('allows properties for data elements', inject(function() {
-      spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn({ element: { type: 'DataElement'} });
+      spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn(new Element({ type: 'DataElement'}));
       expect(this.scope.canShowProperties(null)).toEqual(true);
     }));
 
     it('does not allow properties for unknown items', inject(function() {
-      spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn({ element: { type: 'UnknownOperator'} });
+      spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn(new Element({ type: 'UnknownOperator'}));
       expect(this.scope.canShowProperties(null)).toEqual(false);
     }));
   });
@@ -130,7 +142,7 @@ describe('Controller: PhenotypeController', function () {
     }));
 
     it('enables delete', inject(function() {
-      spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn({ element: { type: 'LogicalOperator'} });
+      spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn(new Element({ type: 'LogicalOperator'}));
       this.scope.$root.$broadcast('sophe-element-selected');
       expect(this.scope.isDeleteDisabled).toEqual(false);
     }));
@@ -142,7 +154,7 @@ describe('Controller: PhenotypeController', function () {
     }));
 
     it('enables properties', inject(function() {
-      spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn({ element: { type: 'LogicalOperator'} });
+      spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn(new Element({ type: 'LogicalOperator'}));
       this.scope.$root.$broadcast('sophe-element-selected');
       expect(this.scope.isDeleteDisabled).toEqual(false);
     }));

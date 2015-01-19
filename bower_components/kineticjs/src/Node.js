@@ -1051,6 +1051,7 @@
                 }
             }
 
+            obj.id = this._id;
             obj.className = this.getClassName();
             return obj;
         },
