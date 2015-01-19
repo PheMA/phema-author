@@ -8,7 +8,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('DashboardController', function ($scope) {
+  .controller('DashboardController', ['$scope', function ($scope) {
     $scope.newsItems = [];
     $scope.phenotypes = [];
-  });
+  }]);

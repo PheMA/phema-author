@@ -1,5 +1,6 @@
-var BaseElement = function() {
-};
+'use strict';
+
+var BaseElement = function() {};
 
 BaseElement.prototype = {
   _init: function() {

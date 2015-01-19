@@ -1,5 +1,5 @@
 /* globals Kinetic */
-/* exported startConnector, endConnector, updateActiveLineLocation, getIntersectingShape, Kinetic,
+/* exported startConnector, endConnector, updateActiveLineLocation, getIntersectingShape,
   addElementToContainer, removeElementFromContainer, updateConnectedLines, changeConnectorEndpoints,
   allowsDrop */
 

@@ -3,8 +3,7 @@
 (function() {
   'use strict';
   angular.module('sophe.kinetic', [])
-  .directive('kineticCanvas', ['$window', 'kineticStageFactory',
-  function canvasDirective ($window, kineticStageFactory) {
+  .directive('kineticCanvas', ['$window', 'kineticStageFactory', function ($window, kineticStageFactory) {
     return {
       restrict: 'A',
       scope: {

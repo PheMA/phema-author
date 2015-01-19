@@ -1,5 +1,4 @@
 'use strict';
-
 var TemporalOperator = function() {}
 TemporalOperator.prototype = new BaseElement;
 

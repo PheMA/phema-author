@@ -8,7 +8,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('LogicalOperatorPropertiesController', function ($scope, $modalInstance, LogicalOperatorService, element, containedElements, logicalOperators) {
+  .controller('LogicalOperatorPropertiesController', ['$scope', '$modalInstance', 'LogicalOperatorService', 'element', 'containedElements', 'logicalOperators', function ($scope, $modalInstance, LogicalOperatorService, element, containedElements, logicalOperators) {
     $scope.logicalOperators = logicalOperators;
     LogicalOperatorService.addDescriptionForProperties($scope.logicalOperators);
     $scope.logicalOperator = ArrayUtil.findInArray($scope.logicalOperators, 'name', element.name);
@@ -21,4 +21,4 @@ angular.module('sopheAuthorApp')
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
     };
-  });
+  }]);
