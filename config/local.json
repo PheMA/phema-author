@@ -1,4 +1,5 @@
 {
   "environment":"local",
-  "dataServiceBaseUrl":"data/"
+  "dataServiceBaseUrl":"data/",
+  "libraryBaseUrl":"data/"
 }

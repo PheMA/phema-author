@@ -1,0 +1,15 @@
+<div class="modal-header">
+  <h3 class="modal-title">Select the Phenotype to Load</h3>
+</div>
+<div class="modal-body" id="open-phenotype">
+  <ul>
+    <li ng-repeat="phenotype in phenotypes">
+      <a ng-href="/#/phenotype/{{phenotype.id}}" ng-click="ok()">
+        {{phenotype.name}}
+      </a>
+    </li>
+  </ul>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

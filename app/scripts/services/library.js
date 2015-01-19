@@ -19,6 +19,7 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
     var transformedData = [];
     for (var index = 0; index < data.length; index++) {
       transformedData.push({
+        id: data[index].id,
         name: data[index].name,
         type: 'Phenotype'
       });
@@ -27,4 +28,14 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
     phenotypes = transformedData.sort(ArrayUtil.sortByName);
     return phenotypes;
   };
+
+  this.loadDetails = function(id) {
+    var deferred = $q.defer();
+    $resource(URLService.getLibraryURL(true), {id:'@id'}).get({id: id}, function(data) {
+      deferred.resolve(data);
+    }, function(data, status) {
+      deferred.reject('There was an error: ' + status);
+    });
+    return deferred.promise;
+  }
 }]);

@@ -83,9 +83,17 @@ angular.module('sophe.factories.algorithmElement', [])
     };
 
     factory.loadFromDefinition = function(scope, definition) {
-      // If there is no canvas to remove from, we are done here
-      if('undefined' === typeof scope.canvasDetails) {
+      // If there is no canvas to remove from, we are done here.
+      // Likewise, if the definition isn't defined, don't continue.
+      if('undefined' === typeof scope.canvasDetails ||
+        'undefined' === typeof definition) {
           return null;
+      }
+
+      // Kinetic expects a string.  If we passed in a JSON object, we need to first convert it
+      // to a string before it can be used
+      if ('object' === typeof definition) {
+        definition = JSON.stringify(definition);
       }
 
       var stage = scope.canvasDetails.kineticStageObj;

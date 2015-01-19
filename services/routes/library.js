@@ -26,7 +26,7 @@ var LibraryItem = new Schema({
     type: String
   },
   definition: {
-    type: String
+    type: Schema.Types.Mixed
   },
   created: {
     type: Date,
@@ -77,15 +77,18 @@ exports.index = function(req, res){
 exports.details = function(req, res){
   //res.status(404).send({message: 'The API does not support this operation'});
   console.log("GET - /library/:id");
-  return LibraryRepository.find({_id: req.params.id, deleted: false }, function(err, item) {
+  return LibraryRepository.findOne({_id: req.params.id, deleted: false }, function(err, item) {
     if(!item) {
+      console.log('Not found');
       res.statusCode = 404;
       return res.send({ error: 'Not found' });
     }
 
     if (!err) {
+      console.log('Found');;
+      console.log(item);
       res.statusCode = 200;
-      return res.send({ id: item._id, name: item.name, description: item.description });
+      return res.send({ id: item._id, name: item.name, description: item.description, definition: item.definition });
     }
     else {
       res.statusCode = 500;
@@ -106,9 +109,9 @@ exports.add = function(req, res) {
   console.log(req.body);
 
   var item = new LibraryRepository({
-    name:    req.body.name,
-    description:    req.body.description,
-    definition:    req.body.definition,
+    name: req.body.name,
+    description: req.body.description,
+    definition: req.body.definition,
   });
 
   item.save(function(err) {

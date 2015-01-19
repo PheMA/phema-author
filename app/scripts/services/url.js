@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sophe.services.url', ['sophe.config'])
-.service('URLService', ['environment', 'dataServiceBaseUrl', function(environment, dataServiceBaseUrl) {
+.service('URLService', ['environment', 'dataServiceBaseUrl', 'libraryBaseUrl', function(environment, dataServiceBaseUrl, libraryBaseUrl) {
   this.getDataServiceURL = function(resource) {
     if (environment === 'local' || environment.substring(0, 2) === '@@') {
       // For our local setup, we sometimes stub things in.  This isn't code we plan to
@@ -16,12 +16,20 @@ angular.module('sophe.services.url', ['sophe.config'])
     return url;
   };
 
-  this.getLibraryURL = function(resource) {
-    if (environment === 'local' || environment === '@@environment') {
-      return 'data/phenotypes.json';
+  this.getLibraryURL = function(details) {
+    if (environment === 'local' || environment.substring(0, 2) === '@@') {
+      if (details) {
+        return 'data/phenotype.json';
+      }
+      else {
+        return 'data/phenotypes.json';
+      }
     }
 
-    var url = dataServiceBaseUrl + resource;
+    var url = libraryBaseUrl;
+    if (details) {
+      url = url + ':id';
+    }
     return url;
   };
 }]);

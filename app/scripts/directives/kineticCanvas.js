@@ -50,6 +50,8 @@
         angular.element($window).bind('resize', function() {
           scope.onResize();
         });
+
+        scope.$root.$broadcast('sophe-canvas-loaded', null);
       }
     };
   }]);
