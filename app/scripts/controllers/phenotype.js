@@ -86,13 +86,14 @@ angular.module('sopheAuthorApp')
 
     $scope.save = function() {
       var modalInstance = $modal.open({
-        templateUrl: 'views/phenotypes/save.html',
-        controller: 'SavePhenotypeController',
+        templateUrl: 'views/properties/phenotype.html',
+        controller: 'PhenotypePropertiesController',
         size: 'lg',
         resolve: {
-          definition: function() {
-            return $scope.canvasDetails.kineticStageObj.find('#mainLayer')[0].toJSON();
-          }
+          phenotype: function() {
+            return {definition: $scope.canvasDetails.kineticStageObj.find('#mainLayer')[0].toJSON() };
+          },
+          isReference: function() { return false; }
         }
       });
 
@@ -138,6 +139,7 @@ angular.module('sopheAuthorApp')
       return (element.type === 'TemporalOperator' ||
         element.type === 'LogicalOperator' ||
         element.type === 'Category' ||
+        element.type === 'Phenotype' ||
         element.type === 'DataElement');
     };
 
@@ -215,6 +217,32 @@ angular.module('sopheAuthorApp')
 
         modalInstance.result.then(function (result) {
           element.attributes = result;
+        });
+      }
+      else if (element.type === 'Phenotype') {
+        modalInstance = $modal.open({
+          templateUrl: 'views/properties/phenotype.html',
+          controller: 'PhenotypePropertiesController',
+          size: 'lg',
+          resolve: {
+            phenotype: function () {
+              return angular.copy(element);
+            },
+            isReference: function() { return true; }
+          }
+        });
+
+        modalInstance.result.then(function (result) {
+          element.name = result.name;
+          element.description = result.description;
+          findParentElementByName(selectedElement, 'header').setText(element.name);
+          selectedElement.getStage().draw();
+          // LibraryService.saveDetails(result)
+          //   .then(function() {
+          //     LibraryService.load()
+          //       .then(LibraryService.processValues)
+          //       .then(function(elements) { $scope.phenotypes = elements; });
+          //   });
         });
       }
     };
