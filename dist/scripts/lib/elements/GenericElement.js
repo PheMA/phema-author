@@ -42,7 +42,7 @@ GenericElement.prototype.create = function(config, scope) {
     x: options.x, y: options.y,
     width: options.width, // Leave out height so it auto-sizes
     fontFamily: 'Calibri', fontSize: 14, fill: 'black',
-    text: config.element.name,
+    text: config.element.name, name: 'header',
     align: 'center', padding: 5
   };
   var headerObj = this.createText(headerOptions, group);

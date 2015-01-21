@@ -21,6 +21,7 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
       transformedData.push({
         id: data[index].id,
         name: data[index].name,
+        description: data[index].description,
         type: 'Phenotype'
       });
     }
@@ -41,11 +42,21 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
 
   this.saveDetails = function(details) {
     var deferred = $q.defer();
-    var LibraryItem = $resource(URLService.getLibraryURL(true), {id:'@id'});
+    var LibraryItem = $resource(URLService.getLibraryURL(true), {id:'@id'},
+      {
+          'update': { method:'PUT' }
+      });
     var item = new LibraryItem(details);
-    item.$save(null, function(data) {
-      deferred.resolve(data);
-    });
+    if (details.id && details.id !== '') {
+      item.$update({ id: details.id }, function(data) {
+        deferred.resolve(data);
+      });
+    }
+    else {
+      item.$save(null, function(data) {
+        deferred.resolve(data);
+      });
+    }
     return deferred.promise;
   };
 }]);
