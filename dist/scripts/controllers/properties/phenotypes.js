@@ -2,14 +2,15 @@
 
 /**
  * @ngdoc function
- * @name sopheAuthorApp.controller:SavePhenotypeController
+ * @name sopheAuthorApp.controller:PhenotypePropertiesController
  * @description
- * # SavePhenotypeController
+ * # PhenotypePropertiesController
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('SavePhenotypeController', ['$scope', '$modalInstance', 'definition', function ($scope, $modalInstance, definition) {
-    console.log(definition);
+  .controller('PhenotypePropertiesController', ['$scope', '$modalInstance', 'LibraryService', 'phenotype', 'isReference', function ($scope, $modalInstance, LibraryService, phenotype, isReference) {
+    $scope.formData = phenotype;
+    $scope.displayReferenceNote = isReference;
     $scope.formTemplate = [
       {
         'type': 'text',
@@ -27,7 +28,6 @@ angular.module('sopheAuthorApp')
         'model': 'definition'
       },
     ];
-    $scope.formData = {definition: definition};
 
     $scope.ok = function () {
       $modalInstance.close($scope.formData);

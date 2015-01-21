@@ -8,8 +8,9 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PhenotypePropertiesController', ['$scope', '$modalInstance', 'LibraryService', 'phenotype', function ($scope, $modalInstance, LibraryService, phenotype) {
+  .controller('PhenotypePropertiesController', ['$scope', '$modalInstance', 'LibraryService', 'phenotype', 'isReference', function ($scope, $modalInstance, LibraryService, phenotype, isReference) {
     $scope.formData = phenotype;
+    $scope.displayReferenceNote = isReference;
     $scope.formTemplate = [
       {
         'type': 'text',
