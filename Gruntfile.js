@@ -480,6 +480,10 @@ module.exports = function (grunt) {
             {
               match: 'libraryBaseUrl',
               replacement: settings.libraryBaseUrl
+            },
+            {
+              match: 'valueSetServiceBaseUrl',
+              replacement: settings.valueSetServiceBaseUrl
             }
           ]
         },
