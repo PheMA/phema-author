@@ -15,4 +15,5 @@ angular.module('sophe', [
   'sophe.services.qdmElement',
   'sophe.services.library',
   'sophe.services.logicalOperator',
-  'sophe.services.url']);
+  'sophe.services.url',
+  'sophe.services.valueSet']);
