@@ -117,12 +117,10 @@ angular.module('sopheAuthorApp')
         }
       });
 
+      // If the user selects a phenotype to load, redirect to that phenotype's ID which
+      // will cause it to load properly.
       modalInstance.result.then(function (id) {
-        $scope.phenotype = id;
-        LibraryService.loadDetails($scope.phenotype)
-          .then(function(phenotype) {
-            algorithmElementFactory.loadFromDefinition($scope, phenotype.definition);
-          });
+        $location.path('/phenotype/' + id);
       });
     };
 
