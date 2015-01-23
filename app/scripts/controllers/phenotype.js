@@ -106,7 +106,7 @@ angular.module('sopheAuthorApp')
     };
 
     $scope.load = function() {
-      $modal.open({
+      var modalInstance = $modal.open({
         templateUrl: 'views/phenotypes/load.html',
         controller: 'LoadPhenotypeController',
         size: 'lg',
@@ -115,6 +115,14 @@ angular.module('sopheAuthorApp')
             return $scope.phenotypes;
           }
         }
+      });
+
+      modalInstance.result.then(function (id) {
+        $scope.phenotype = id;
+        LibraryService.loadDetails($scope.phenotype)
+          .then(function(phenotype) {
+            algorithmElementFactory.loadFromDefinition($scope, phenotype.definition);
+          });
       });
     };
 

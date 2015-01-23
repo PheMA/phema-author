@@ -48,7 +48,7 @@ angular.module('sophe.services.url', ['sophe.config'])
       url = url + params.id + '?format=json';
     }
     else if (action === 'search') {
-      url = url + '?matchvalue=\'' + params.term + '\'&format=json'
+      url = url + '?matchvalue=\'' + params.term + '\'&format=json';
     }
 
     return url + '?format=json';

@@ -36,12 +36,20 @@ angular.module('sophe.factories.algorithmElement', [])
         var connections = connector.connections();
         var length = connections.length;
         for (var index = length-1; index >=0 ; index--) {
-          connections[index].label.destroy();
+          var label = connections[index].label();
+          if (label) {
+            connections[index].label().destroy();
+            connections[index].label(null);
+          }
           connections[index].destroy();
           delete connections[index];
         }
         connector.connections([]);
       });
+
+      if (group.deleteReferences) {
+        group.deleteReferences();
+      }
       group.destroy();
     }
 
@@ -97,7 +105,11 @@ angular.module('sophe.factories.algorithmElement', [])
       }
 
       var stage = scope.canvasDetails.kineticStageObj;
-      var layer = stage.find('#mainLayer')[0];
+      var layer = stage.mainLayer;
+      layer.get('Group').each(function(group) {
+        _destroyGroup(group);
+      });
+      layer.destroy();
       layer = Kinetic.Node.create(definition);
       stage.add(layer);
       stage.mainLayer = layer;
