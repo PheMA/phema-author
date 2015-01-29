@@ -3,7 +3,14 @@
 angular.module('sophe.elements.valueSets', [])
   .directive('valueSets', ['$rootScope', function($rootScope) {
   var directive = {
-    templateUrl: 'views/elements/valueSets.html',
+    templateUrl: function(element, attrs) {
+      if (attrs.allowSelect && attrs.allowSelect === 'single') {
+        return 'views/elements/valueSet.html';
+      }
+      else {
+        return 'views/elements/valueSets.html';
+      }
+    },
     restrict: 'E',
     controller: 'ValueSetsController',
     replace: true,

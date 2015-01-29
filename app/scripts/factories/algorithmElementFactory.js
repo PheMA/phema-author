@@ -21,6 +21,12 @@ angular.module('sophe.factories.algorithmElement', [])
       return element.container();
     }
 
+    function createValueSet(config, scope) {
+      var element = new ValueSet();
+      element.create(config, scope);
+      return element.container();
+    }
+
     function createGenericElement(config, scope) {
       var element = new GenericElement();
       element.create(config, scope);
@@ -79,6 +85,9 @@ angular.module('sophe.factories.algorithmElement', [])
       else if (config.element.type === 'Phenotype') {
         workflowObject = createGenericElement(config, scope);
       }
+      else if (config.element.type === 'ValueSet') {
+        workflowObject = createValueSet(config, scope);
+      }
       else {
         workflowObject = createGenericElement(config, scope);
       }
@@ -131,6 +140,10 @@ angular.module('sophe.factories.algorithmElement', [])
         else if (element.type === 'Phenotype') {
           var phenotype = new GenericElement();
           phenotype.load(group, scope);
+        }
+        else if (element.type === 'ValueSet') {
+          var valueSet = new ValueSet();
+          valueSet.load(group, scope);
         }
         else {
           var genericElement = new GenericElement();

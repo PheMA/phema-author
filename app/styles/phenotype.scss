@@ -128,10 +128,12 @@
   }
 }
 
-.value-sets-container {
+$value-sets-background-color: #eee;
+
+.value-sets-container, .value-set-container {
   padding: 10px 0px;
   margin: 10px 0px;
-  background-color: #eee;
+  background-color: $value-sets-background-color;
   border: solid 1px black;
   .note, .note-sm {
     font-size: 0.9em;
@@ -143,6 +145,8 @@
   .search-panel {
     padding-bottom: 15px;
   }
+  max-height: 300px;
+  overflow: scroll;
 }
 
 .value-set-results {
@@ -159,5 +163,14 @@
   td {
     padding-right: 5px;
     padding-bottom: 5px;
+  }
+
+  tr:hover {
+    background-color: lighten($value-sets-background-color, 75%);
+    cursor: default;
+  }
+
+  .selected {
+    background-color: darken($value-sets-background-color, 15%);
   }
 }

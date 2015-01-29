@@ -29,12 +29,6 @@ angular.module('sopheAuthorApp')
           $scope.searchResults = valueSets;
           $scope.isSearching = false;
         });
-      //'https://informatics.mayo.edu/vsmc/cts2/valuesets?matchvalue=' + $scope.searchTerm + '&format=json'
-      // $http.get(URLService.getValueSetServiceURL('search', {term: $scope.searchTerm})
-      // ).then(function(response){
-      //   console.log(response);
-      //   $scope.isSearching = false;
-      // });
     }
   };
 
@@ -42,7 +36,7 @@ angular.module('sopheAuthorApp')
     $scope.$apply(function(){filterAction($scope);});
   };
 
-  var filterThrottled = _.debounce(filterDelayed, 1000);
+  var filterThrottled = _.debounce(filterDelayed, 750);
   $scope.$watch('searchTerm', function(){filterThrottled($scope);});
 
   $scope.addToList = function(valueSet) {
@@ -55,5 +49,10 @@ angular.module('sopheAuthorApp')
     $scope.selectedValueSets = _.filter($scope.selectedValueSets, function(item) {
       return item.id !== valueSet.id;
     });
+  };
+
+  // Used for single-selection mode
+  $scope.setSelected = function(valueSet) {
+    $scope.selectedValueSets[0] = valueSet;
   };
 }]);
