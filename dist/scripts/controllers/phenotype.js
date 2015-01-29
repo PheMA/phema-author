@@ -106,7 +106,7 @@ angular.module('sopheAuthorApp')
     };
 
     $scope.load = function() {
-      $modal.open({
+      var modalInstance = $modal.open({
         templateUrl: 'views/phenotypes/load.html',
         controller: 'LoadPhenotypeController',
         size: 'lg',
@@ -115,6 +115,12 @@ angular.module('sopheAuthorApp')
             return $scope.phenotypes;
           }
         }
+      });
+
+      // If the user selects a phenotype to load, redirect to that phenotype's ID which
+      // will cause it to load properly.
+      modalInstance.result.then(function (id) {
+        $location.path('/phenotype/' + id);
       });
     };
 

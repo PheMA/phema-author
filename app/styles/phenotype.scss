@@ -127,3 +127,37 @@
     }
   }
 }
+
+.value-sets-container {
+  padding: 10px 0px;
+  margin: 10px 0px;
+  background-color: #eee;
+  border: solid 1px black;
+  .note, .note-sm {
+    font-size: 0.9em;
+    font-style: italic;
+  }
+  .note-sm {
+    font-size: 0.7em;
+  }
+  .search-panel {
+    padding-bottom: 15px;
+  }
+}
+
+.value-set-results {
+  .divider-right {
+    border-right: solid 1px black;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+  }
+
+  thead {
+    border-bottom: solid 1px black;
+  }
+
+  td {
+    padding-right: 5px;
+    padding-bottom: 5px;
+  }
+}

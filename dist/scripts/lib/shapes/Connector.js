@@ -10,6 +10,14 @@
       this.className = 'PhemaConnector';
     },
 
+    deleteReferences: function() {
+      var connections = this.connections();
+      for (var index = 0; index < connections.length; index++) {
+        delete connections[index];
+      }
+      this.connections(null);
+    },
+
     toObject: function() {
       var type = Kinetic.Util,
         obj = {},

@@ -10,9 +10,11 @@ angular.module('sophe', [
   'sophe.elements.qdm.logicalOperators',
   'sophe.elements.qdm.temporalOperators',
   'sophe.elements.phenotype',
+  'sophe.elements.valueSets',
   'sophe.services.qdmAttribute',
   'sophe.services.temporalOperator',
   'sophe.services.qdmElement',
   'sophe.services.library',
   'sophe.services.logicalOperator',
-  'sophe.services.url']);
+  'sophe.services.url',
+  'sophe.services.valueSet']);

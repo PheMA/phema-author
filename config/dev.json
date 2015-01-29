@@ -2,5 +2,5 @@
   "environment":"dev",
   "dataServiceBaseUrl":"api/qdm/",
   "libraryBaseUrl":"api/library/",
-  "valueSetBaseUrl":"api/valueset/"
+  "valueSetServiceBaseUrl":"api/valueset/"
 }

@@ -179,6 +179,10 @@ table.phenotype-list {
 
 .modal-body .note {
   font-size: 0.9em;
-  text-decoration: italic;
+  font-style: italic;
   padding-top: 10px;
+}
+
+label * {
+  font-weight: normal;
 }

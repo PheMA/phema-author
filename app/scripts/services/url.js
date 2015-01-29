@@ -45,12 +45,12 @@ angular.module('sophe.services.url', ['sophe.config'])
 
     var url = valueSetServiceBaseUrl;
     if (action === 'details') {
-      url = url + params.id + '?format=json';
+      url = url + params.id;
     }
     else if (action === 'search') {
-      url = url + '?matchvalue=\'' + params.term + '\'&format=json';
+      url = url + 'search=' + params.term;
     }
 
-    return url + '?format=json';
+    return url;
   };
 }]);

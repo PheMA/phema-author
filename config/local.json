@@ -2,5 +2,5 @@
   "environment":"local",
   "dataServiceBaseUrl":"data/",
   "libraryBaseUrl":"data/",
-  "valueSetBaseUrl":"data/"
+  "valueSetServiceBaseUrl":"data/"
 }
