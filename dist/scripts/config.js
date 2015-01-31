@@ -3,4 +3,6 @@ angular.module('sophe.config', [])
 .constant('dataServiceBaseUrl', 'api/qdm/')
 .constant('fhirServiceBaseUrl', 'api/fhir/')
 .constant('libraryBaseUrl', 'api/library/')
-.constant('valueSetServiceBaseUrl', 'api/valueset/');
+.constant('valueSetServiceBaseUrl', 'api/valueset/')
+.constant('codeSystemServiceBaseUrl', 'api/codesystem/')
+;

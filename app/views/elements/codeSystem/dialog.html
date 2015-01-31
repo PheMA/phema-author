@@ -1,0 +1,43 @@
+<div class="modal-header">
+  <h3 class="modal-title">Select your term(s)</h3>
+</div>
+<div class="modal-body" id="codesystem-properties">
+  <div class="value-set-container">
+    <div class="row search-panel">
+      <div class="col-lg-4 divider-right">
+        <label>
+          Search for terms:
+          <input type="text" style="width: 100%;" ng-model="searchTerm"></input>
+        </label>
+      </div>
+      <div class="col-lg-8 value-set-results">
+        <label>Terms matching your search criteria:</label>
+        <div us-spinner="{radius:8, width:4, length: 8, top: '50%', left: '25%'}" class="note" ng-show="isSearching">
+          Please wait
+        </div>
+        <div class="note" ng-show="searchResults.length === 0 && !isSearching">
+          (No terms were found that met your criteria)
+        </div>
+        <table>
+          <thead>
+            <th>Name</th>
+            <th>ID</th>
+          </thead>
+          <tr ng-repeat="term in searchResults" draggable ng-click="setSelected(term)" ng-class="{selected: term === selectedTerms[0]}">
+            <td>
+              {{term.name}}
+            </td>
+            <td>
+              {{term.id}}
+            </td>
+            <input type="hidden" value="{{term}}"></input>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="ok()">OK</button>
+  <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

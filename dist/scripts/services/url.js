@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sophe.services.url', ['sophe.config'])
-.service('URLService', ['environment', 'dataServiceBaseUrl', 'fhirServiceBaseUrl', 'libraryBaseUrl', 'valueSetServiceBaseUrl', function(environment, dataServiceBaseUrl, fhirServiceBaseUrl, libraryBaseUrl, valueSetServiceBaseUrl) {
+.service('URLService', ['environment', 'dataServiceBaseUrl', 'fhirServiceBaseUrl', 'libraryBaseUrl', 'valueSetServiceBaseUrl', 'codeSystemServiceBaseUrl', function(environment, dataServiceBaseUrl, fhirServiceBaseUrl, libraryBaseUrl, valueSetServiceBaseUrl, codeSystemServiceBaseUrl) {
   this.getDataServiceURL = function(resource) {
     if (environment === 'local' || environment.substring(0, 2) === '@@') {
       // For our local setup, we sometimes stub things in.  This isn't code we plan to
@@ -68,6 +68,15 @@ angular.module('sophe.services.url', ['sophe.config'])
       url = url + 'search=' + params.term;
     }
 
+    return url;
+  };
+
+  this.getCodeSystemServiceURL = function(codeSystem, version, search) {
+    if (environment === 'local' || environment.substring(0, 2) === '@@') {
+      return 'data/codeSystem-search.json';
+    }
+
+    var url = codeSystemServiceBaseUrl + codeSystem + '/version/' + version + '/search=' + search;
     return url;
   };
 }]);

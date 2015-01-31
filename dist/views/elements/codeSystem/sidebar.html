@@ -1,0 +1,26 @@
+<div class="search-panel">
+  <div>
+    <label>
+      Search for terms:
+      <input type="text" style="width: 100%;" ng-model="searchTerm"></input>
+    </label>
+  </div>
+  <div>
+    <div us-spinner="{radius:8, width:4, length: 8, top: '50%', left: '25%'}" class="note" ng-show="isSearching">
+      Please wait
+    </div>
+    <div class="note" ng-show="searchResults.length === 0 && !isSearching">
+      (No terms were found that met your criteria)
+    </div>
+    <div treecontrol class="tree-classic"
+     tree-model="searchResults"
+     options="treeOptions"
+     tooltip="Search for a term, then drag and drop it onto the canvas" tooltip-placement="right">
+     <span draggable>
+      {{node.id}}
+      <span class="note" ng-show="node.type !== 'CodeSystem'">{{node.name}}</span>
+      <input type="hidden" value="{{node}}"></input>
+     </span>
+    </div>
+  </div>
+</div>

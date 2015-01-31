@@ -12,6 +12,8 @@ angular.module('sophe', [
   'sophe.elements.qdm.temporalOperators',
   'sophe.elements.phenotype',
   'sophe.elements.valueSets',
+  'sophe.elements.codeSystems',
+  'sophe.services.codeSystem',
   'sophe.services.qdmAttribute',
   'sophe.services.temporalOperator',
   'sophe.services.qdmElement',
