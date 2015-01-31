@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var site = require('./services/routes/site');
 var elements = require('./services/routes/dataElements');
+var fhir = require('./services/routes/fhirElements');
 var library = require('./services/routes/library');
 var valueSets = require('./services/routes/valueSets');
 
@@ -21,6 +22,8 @@ app.get('/', site.index);
 
 app.get('/api/qdm/:type', elements.index);
 app.get('/api/qdm/:type/:item/attributes', elements.attributes);
+
+app.get('/api/fhir/:type', fhir.index);
 
 app.get('/api/library', library.index);
 app.get('/api/library/:id', library.details);

@@ -478,6 +478,10 @@ module.exports = function (grunt) {
               replacement: settings.dataServiceBaseUrl
             },
             {
+              match: 'fhirServiceBaseUrl',
+              replacement: settings.fhirServiceBaseUrl
+            },
+            {
               match: 'libraryBaseUrl',
               replacement: settings.libraryBaseUrl
             },

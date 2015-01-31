@@ -1,6 +1,7 @@
 {
   "environment":"local",
   "dataServiceBaseUrl":"data/",
+  "fhirServiceBaseUrl":"data/",
   "libraryBaseUrl":"data/",
   "valueSetServiceBaseUrl":"data/"
 }
