@@ -40,6 +40,18 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
     return deferred.promise;
   };
 
+  this.loadMembers = function(id) {
+    var deferred = $q.defer();
+    $http.get(URLService.getValueSetServiceURL('members', {id: id}))
+      .success(function(data) {
+        deferred.resolve(data);
+      })
+      .error(function(data, status) {
+        deferred.reject('There was an error: ' + status);
+      });
+    return deferred.promise;
+  };
+
   this.processValues = function(data) {
     var valueSets = [];
     if (data && data.valueSetCatalogEntryDirectory && data.valueSetCatalogEntryDirectory.entryList) {
@@ -69,5 +81,21 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
       };
     }
     return valueSet;
+  };
+
+  this.processMembers = function(data) {
+    var members = [];
+    if (data && data.iteratableResolvedValueSet && data.iteratableResolvedValueSet.entryList) {
+      var originalData = data.iteratableResolvedValueSet.entryList;
+      for (var index = 0; index < originalData.length; index++) {
+        members.push({
+          codeset: originalData[index].namespace,
+          code: originalData[index].name,
+          name: originalData[index].designation,
+          uri: originalData[index].uri,
+          type: 'Term'} );
+      }
+    }
+    return members;
   };
 }]);

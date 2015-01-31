@@ -49,6 +49,9 @@ angular.module('sophe.services.url', ['sophe.config'])
       if (action === 'details') {
         return 'data/valueSet.json';
       }
+      else if (action === 'members') {
+        return 'data/valueSet-members.json';
+      }
       else {
         return 'data/valueSets.json';
       }
@@ -57,6 +60,9 @@ angular.module('sophe.services.url', ['sophe.config'])
     var url = valueSetServiceBaseUrl;
     if (action === 'details') {
       url = url + params.id;
+    }
+    else if (action === 'members') {
+      url = url + params.id + '/members';
     }
     else if (action === 'search') {
       url = url + 'search=' + params.term;

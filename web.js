@@ -34,6 +34,7 @@ app.del('/api/library/:id', library.delete);
 app.get('/api/valueset', valueSets.index);
 app.get('/api/valueset/search=:search', valueSets.search);
 app.get('/api/valueset/:id', valueSets.details);
+app.get('/api/valueset/:id/members', valueSets.members);
 
 
 app.listen(process.env.PORT || 5000);

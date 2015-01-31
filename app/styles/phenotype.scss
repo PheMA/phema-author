@@ -112,13 +112,28 @@
   }
 }
 
-#data-element-properties {
+#data-element-properties, #value-set-properties {
   label {
     width: 48%;
     padding-right: 25px;
     input {
       font-weight: normal;
       float: right;
+    }
+  }
+}
+
+#value-set-properties {
+  table {
+    thead {
+      border-bottom: solid 1px black;
+    }
+    td {
+      padding-right: 10px;
+      vertical-align: top;
+    }
+    th {
+      padding-right: 10px;
     }
   }
 }

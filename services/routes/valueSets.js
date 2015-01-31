@@ -43,3 +43,16 @@ exports.details = function(req, res){
     }
   });
 };
+
+exports.members = function(req, res){
+  console.log("GET - /api/valueSet/:id/members");
+  repository.getValueSetMembers(req.params.id, function(error, data) {
+    if (error) {
+      res.status(400).send(error);
+    }
+    else {
+      res.set('Content-Type', 'application/json');
+      res.status(200).send(data);
+    }
+  });
+};

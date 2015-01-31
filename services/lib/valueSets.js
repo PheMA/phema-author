@@ -47,4 +47,16 @@ ValueSetRepository.prototype.getValueSet = function(id, callback) {
   });
 }
 
+ValueSetRepository.prototype.getValueSetMembers = function(id, callback) {
+  request(this.baseURL + 'valueset/' + id + '/resolution?format=json', function(error, response, body) {
+    if (!error && response.statusCode === 200) {
+      callback(null, body);
+    }
+    else {
+      console.log(error);
+      callback({message: 'Unable to retrieve the value set members'});
+    }
+  });
+}
+
 exports.ValueSetRepository = ValueSetRepository;
