@@ -233,9 +233,12 @@ angular.module('sopheAuthorApp')
         });
       }
       else if (element.type === 'Category' || element.type === 'DataElement') {
+        console.log(element);
+        // We define the element properties based on the URI (if it's QDM or FHIR)
+        var isFHIR = (element.uri.indexOf('fhir') >= 0);
         modalInstance = $modal.open({
-          templateUrl: 'views/properties/qdmElement.html',
-          controller: 'QDMElementPropertiesController',
+          templateUrl: (isFHIR ? 'views/properties/fhirElement.html' : 'views/properties/qdmElement.html'),
+          controller: (isFHIR ? 'FHIRElementPropertiesController' : 'QDMElementPropertiesController'),
           size: 'lg',
           resolve: {
             element: function () {

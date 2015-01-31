@@ -1,0 +1,9 @@
+<div treecontrol class="tree-classic"
+   tree-model="fhirElements"
+   options="treeOptions"
+   tooltip="Drag and drop a data element onto the canvas" tooltip-placement="right">
+   <span draggable>
+    {{node.name}}
+    <input type="hidden" value="{{node}}"></input>
+   </span>
+</div>
