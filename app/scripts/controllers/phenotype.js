@@ -9,9 +9,9 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', '$location', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'QDMElementService', 'LibraryService', function ($scope, $http, $routeParams, $modal, $location, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, QDMElementService, LibraryService) {
+  .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', '$location', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'QDMElementService', 'FHIRElementService', 'LibraryService', function ($scope, $http, $routeParams, $modal, $location, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, QDMElementService, FHIRElementService, LibraryService) {
     $scope.phenotype = $routeParams.id;
-    $scope.status = { open: [true, false, false, false, false]};
+    $scope.status = { open: [true, false, false, false, false, false]};
     $scope.isDeleteDisabled = true;
     $scope.isPropertiesDisabled = true;
     var advancedRegEx = new RegExp('[a-z]+\\sConcurrent With', 'i');
@@ -24,6 +24,10 @@ angular.module('sopheAuthorApp')
     LibraryService.load()
       .then(LibraryService.processValues)
       .then(function(elements) { $scope.phenotypes = elements; });
+
+    FHIRElementService.load()
+      .then(FHIRElementService.processValues)
+      .then(function(elements) { $scope.fhirElements = elements; });
 
     QDMElementService.load()
       .then(QDMElementService.processValues)

@@ -34,13 +34,19 @@
       </accordion-group>
       <accordion-group id="data-elements-list" class="phenotype-element-list" is-open="status.open[3]">
         <accordion-heading>
-          Data Elements <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[3], 'glyphicon-chevron-right': !status.open[3]}"></i>
+          QDM Data Elements <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[3], 'glyphicon-chevron-right': !status.open[3]}"></i>
         </accordion-heading>
         <div qdm-data-elements></div>
       </accordion-group>
-      <accordion-group id="value-sets-list" class="phenotype-element-list" is-open="status.open[4]">
+      <accordion-group id="fhir-elements-list" class="phenotype-element-list" is-open="status.open[4]">
         <accordion-heading>
-          Value Sets <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[4], 'glyphicon-chevron-right': !status.open[4]}"></i>
+          FHIR Data Elements <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[4], 'glyphicon-chevron-right': !status.open[4]}"></i>
+        </accordion-heading>
+        <div fhir-data-elements></div>
+      </accordion-group>
+      <accordion-group id="value-sets-list" class="phenotype-element-list" is-open="status.open[5]">
+        <accordion-heading>
+          Value Sets <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[5], 'glyphicon-chevron-right': !status.open[5]}"></i>
         </accordion-heading>
         <div value-sets location="sidebar"></div>
       </accordion-group>

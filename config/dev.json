@@ -1,6 +1,7 @@
 {
   "environment":"dev",
   "dataServiceBaseUrl":"api/qdm/",
+  "fhirServiceBaseUrl":"api/fhir/",
   "libraryBaseUrl":"api/library/",
   "valueSetServiceBaseUrl":"api/valueset/"
 }

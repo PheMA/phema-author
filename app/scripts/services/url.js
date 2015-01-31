@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sophe.services.url', ['sophe.config'])
-.service('URLService', ['environment', 'dataServiceBaseUrl', 'libraryBaseUrl', 'valueSetServiceBaseUrl', function(environment, dataServiceBaseUrl, libraryBaseUrl, valueSetServiceBaseUrl) {
+.service('URLService', ['environment', 'dataServiceBaseUrl', 'fhirServiceBaseUrl', 'libraryBaseUrl', 'valueSetServiceBaseUrl', function(environment, dataServiceBaseUrl, fhirServiceBaseUrl, libraryBaseUrl, valueSetServiceBaseUrl) {
   this.getDataServiceURL = function(resource) {
     if (environment === 'local' || environment.substring(0, 2) === '@@') {
       // For our local setup, we sometimes stub things in.  This isn't code we plan to
@@ -13,6 +13,17 @@ angular.module('sophe.services.url', ['sophe.config'])
     }
 
     var url = dataServiceBaseUrl + resource;
+    return url;
+  };
+
+  this.getFHIRServiceURL = function(resource) {
+    if (environment === 'local' || environment.substring(0, 2) === '@@') {
+      // For our local setup, we sometimes stub things in.  This isn't code we plan to
+      // use in production, so it's okay if it's a little messy.
+      return 'data/fhir-' + resource + '.json';
+    }
+
+    var url = fhirServiceBaseUrl + resource;
     return url;
   };
 
