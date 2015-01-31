@@ -36,7 +36,7 @@ ValueSetRepository.prototype.searchValueSets = function(search, callback) {
 }
 
 ValueSetRepository.prototype.getValueSet = function(id, callback) {
-  request(this.baseURL + 'valueset/' + id + '?format=json', function(error, response, body) {
+  request({rejectUnauthorized: false, url: this.baseURL + 'valueset/' + id + '?format=json'}, function(error, response, body) {
     if (!error && response.statusCode === 200) {
       callback(null, body);
     }
@@ -48,7 +48,7 @@ ValueSetRepository.prototype.getValueSet = function(id, callback) {
 }
 
 ValueSetRepository.prototype.getValueSetMembers = function(id, callback) {
-  request(this.baseURL + 'valueset/' + id + '/resolution?format=json', function(error, response, body) {
+  request({rejectUnauthorized: false, url: this.baseURL + 'valueset/' + id + '/resolution?format=json'}, function(error, response, body) {
     if (!error && response.statusCode === 200) {
       callback(null, body);
     }

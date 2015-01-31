@@ -169,7 +169,8 @@ angular.module('sopheAuthorApp')
         element.type === 'LogicalOperator' ||
         element.type === 'Category' ||
         element.type === 'Phenotype' ||
-        element.type === 'DataElement');
+        element.type === 'DataElement' ||
+        element.type === 'ValueSet');
     };
 
     $scope.showProperties = function() {
@@ -269,6 +270,19 @@ angular.module('sopheAuthorApp')
           element.description = result.description;
           findParentElementByName(selectedElement, 'header').setText(element.name);
           selectedElement.getStage().draw();
+        });
+      }
+      else if (element.type === 'ValueSet') {
+        modalInstance = $modal.open({
+          templateUrl: 'views/properties/valueSet.html',
+          controller: 'ValueSetPropertiesController',
+          size: 'lg',
+          resolve: {
+            valueSet: function () {
+              return angular.copy(element);
+            },
+            isReference: function() { return true; }
+          }
         });
       }
     };

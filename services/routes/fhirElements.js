@@ -4,7 +4,7 @@ var FHIRRepository = require('../lib/dataService/fhirRepository.js').FHIRReposit
 var repository = new FHIRRepository('http://23.22.63.122:8080/QDM2RDF/rest/fhir');
 
 exports.index = function(req, res){
-  if (req.params.type === 'datatypes') {
+  if (req.params.type === 'elements' || req.params.type === 'datatypes') {
     repository.getDataElements(function(error, data) {
       if (error) {
         res.status(400).send(error);
