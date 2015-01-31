@@ -20,7 +20,8 @@ var app = angular.module('sopheAuthorApp', [
     'sophe',
     'security',
     'ng-context-menu',
-    'dynform'
+    'dynform',
+    'angularSpinner'
   ]);
 
 app.config(function ($routeProvider) {

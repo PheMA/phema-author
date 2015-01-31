@@ -40,6 +40,13 @@
   }
 }
 
+#value-sets-list {
+  .note {
+    font-size: 0.9em;
+    font-style: italic;
+  }
+}
+
 .phenotype-element-list{
   border: solid 1px black;
   border-radius: 2px;
@@ -124,6 +131,72 @@
       width: 80%;
       font-weight: normal;
       float: right;
+    }
+  }
+}
+
+$value-sets-background-color: #eee;
+
+.value-sets-container, .value-set-container {
+  padding: 10px 0px;
+  margin: 10px 0px;
+  background-color: $value-sets-background-color;
+  border: solid 1px black;
+  .note, .note-sm {
+    font-size: 0.9em;
+    font-style: italic;
+  }
+  .note-sm {
+    font-size: 0.7em;
+  }
+  .search-panel {
+    padding-bottom: 15px;
+  }
+  max-height: 300px;
+  overflow: scroll;
+}
+
+.value-set-results {
+  .divider-right {
+    border-right: solid 1px black;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+  }
+
+  thead {
+    border-bottom: solid 1px black;
+  }
+
+  td {
+    padding-right: 5px;
+    padding-bottom: 5px;
+  }
+
+  tr:hover {
+    background-color: lighten($value-sets-background-color, 75%);
+    cursor: default;
+  }
+
+  .selected {
+    background-color: darken($value-sets-background-color, 15%);
+  }
+}
+
+.modal-content {
+  .value-sets-container, .value-set-container {
+    padding: 10px;
+    margin: 10px;
+    background-color: white;
+    border: none;
+  }
+
+  .value-set-results {
+    tr:hover {
+      background-color: darken($value-sets-background-color, 25%);
+    }
+
+    .selected {
+      background-color: darken($value-sets-background-color, 15%);
     }
   }
 }

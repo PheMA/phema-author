@@ -33,7 +33,7 @@ TemporalOperator.prototype.containedElements = function(elements) {
   else {
     this._containedElements = elements;
   }
-}
+};
 
 TemporalOperator.prototype.create = function(config, scope) {
   var group = new Kinetic.PhemaGroup({
@@ -110,14 +110,10 @@ TemporalOperator.prototype.create = function(config, scope) {
   mainLayer.draw();
 };
 
-TemporalOperator.prototype.container = function() {
-  return this._container;
-};
-
 TemporalOperator.prototype.toObject = function() {
   var obj = {className: 'TemporalOperator'};
   return obj;
-}
+};
 
 TemporalOperator.prototype.load = function(group, scope) {
   var obj = group.phemaObject();
@@ -125,4 +121,4 @@ TemporalOperator.prototype.load = function(group, scope) {
   group.phemaObject(this);
   this.connectEvents(group, scope);
   this.associateReferences(group, scope);
-}
+};

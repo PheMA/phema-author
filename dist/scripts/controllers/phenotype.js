@@ -11,7 +11,7 @@
 angular.module('sopheAuthorApp')
   .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', '$location', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'QDMElementService', 'LibraryService', function ($scope, $http, $routeParams, $modal, $location, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, QDMElementService, LibraryService) {
     $scope.phenotype = $routeParams.id;
-    $scope.status = { open: [true, false, false, false]};
+    $scope.status = { open: [true, false, false, false, false]};
     $scope.isDeleteDisabled = true;
     $scope.isPropertiesDisabled = true;
     var advancedRegEx = new RegExp('[a-z]+\\sConcurrent With', 'i');
@@ -40,6 +40,22 @@ angular.module('sopheAuthorApp')
     $scope.treeOptions = {
       dirSelectable: false
     };
+
+    $scope.$on('sophe-search-valuesets', function(evt, dataElement) {
+      var modalInstance = $modal.open({
+        templateUrl: 'views/elements/valueSet/dialog.html',
+        controller: 'ValueSetsDialogController',
+        size: 'lg'
+      });
+
+      modalInstance.result.then(function (result) {
+        if (result && result.length && result.length > 0) {
+          var valueSet = $scope.addWorkflowObject({x: 0, y: 0, element: result[0]});
+          dataElement.phemaObject().valueSet(valueSet);
+          dataElement.getStage().draw();
+        }
+      });
+    });
 
     $scope.$on('sophe-element-selected', function(evt, args) {
       $scope.$apply(function() {
@@ -98,6 +114,7 @@ angular.module('sopheAuthorApp')
       });
 
       modalInstance.result.then(function (result) {
+        console.log(result);
         LibraryService.saveDetails(result)
           .then(function(data) {
             $location.path('/phenotype/' + data.id);
@@ -106,7 +123,7 @@ angular.module('sopheAuthorApp')
     };
 
     $scope.load = function() {
-      $modal.open({
+      var modalInstance = $modal.open({
         templateUrl: 'views/phenotypes/load.html',
         controller: 'LoadPhenotypeController',
         size: 'lg',
@@ -115,6 +132,12 @@ angular.module('sopheAuthorApp')
             return $scope.phenotypes;
           }
         }
+      });
+
+      // If the user selects a phenotype to load, redirect to that phenotype's ID which
+      // will cause it to load properly.
+      modalInstance.result.then(function (id) {
+        $location.path('/phenotype/' + id);
       });
     };
 
@@ -126,7 +149,9 @@ angular.module('sopheAuthorApp')
       {text: 'Copy', iconClass:'fa fa-copy', event: $scope.copy},
       {text: 'Paste', iconClass:'fa fa-paste', event: $scope.paste},
       {text: 'Undo', iconClass:'fa fa-undo'},
-      {text: 'Redo', iconClass:'fa fa-repeat'}
+      {text: 'Redo', iconClass:'fa fa-repeat'},
+      {spacer: true},
+      {text: 'Delete', iconClass:'fa fa-remove', event: $scope.delete},
     ];
 
     $scope.canShowProperties = function(item) {
@@ -237,12 +262,6 @@ angular.module('sopheAuthorApp')
           element.description = result.description;
           findParentElementByName(selectedElement, 'header').setText(element.name);
           selectedElement.getStage().draw();
-          // LibraryService.saveDetails(result)
-          //   .then(function() {
-          //     LibraryService.load()
-          //       .then(LibraryService.processValues)
-          //       .then(function(elements) { $scope.phenotypes = elements; });
-          //   });
         });
       }
     };

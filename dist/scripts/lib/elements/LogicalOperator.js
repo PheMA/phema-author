@@ -21,7 +21,7 @@ LogicalOperator.prototype.containedElements = function(elements) {
   else {
     this._containedElements = elements;
   }
-}
+};
 
 LogicalOperator.prototype.create = function(config, scope) {
   var options = {
@@ -61,10 +61,6 @@ LogicalOperator.prototype.create = function(config, scope) {
   mainLayer.draw();
 };
 
-LogicalOperator.prototype.container = function() {
-  return this._container;
-};
-
 LogicalOperator.prototype.toObject = function() {
   var obj = {};
 
@@ -74,7 +70,7 @@ LogicalOperator.prototype.toObject = function() {
   }
   obj.className = 'LogicalOperator';
   return obj;
-}
+};
 
 LogicalOperator.prototype.load = function(group, scope) {
   var obj = group.phemaObject();
@@ -83,4 +79,4 @@ LogicalOperator.prototype.load = function(group, scope) {
   group.phemaObject(this);
   this.connectEvents(group, scope);
   this.associateReferences(group, scope);
-}
+};
