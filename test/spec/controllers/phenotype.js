@@ -34,6 +34,8 @@ describe('Controller: PhenotypeController', function () {
     this.temporalOperatorsGet.respond({});
     this.phenotypeGet = this.$httpBackend.when('GET', 'data/phenotypes.json');
     this.phenotypeGet.respond([]);
+    this.fhirElementsGet = this.$httpBackend.when('GET', 'data/fhir-elements.json');
+    this.fhirElementsGet.respond({});
 
     this.setupDirective = function($compile, $controller) {
       angular.element(document.body).append('<div data-kinetic-canvas data-canvas-details="canvasDetails" id="canvas">&nbsp;</div>');
@@ -126,6 +128,11 @@ describe('Controller: PhenotypeController', function () {
 
     it('allows properties for phenotypes', inject(function() {
       spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn(new Element({ type: 'Phenotype'}));
+      expect(this.scope.canShowProperties(null)).toEqual(true);
+    }));
+
+    it('allows properties for value sets', inject(function() {
+      spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn(new Element({ type: 'ValueSet'}));
       expect(this.scope.canShowProperties(null)).toEqual(true);
     }));
 

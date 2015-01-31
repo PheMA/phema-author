@@ -108,5 +108,16 @@ describe('Factory: AlgorithmElementFactory', function () {
       expect(response.element().type).toEqual(config.element.type);
       expect(response.element().name).toEqual(config.element.name);
     }));
+
+    it('creates a value set', inject(function() {
+      var config = {element: {type: 'ValueSet', name: 'Value set'}};
+      var response = algorithmElementFactory.addWorkflowObject(config, scope);
+      expect(response.nodeType).toEqual('Group');
+      expect(scope.canvasDetails.kineticStageObj.find('#mainLayer').getChildren().length).toEqual(1);
+      expect(response.find('.leftConnector').length).toEqual(0);
+      expect(response.find('.rightConnector').length).toEqual(0);
+      expect(response.element().type).toEqual(config.element.type);
+      expect(response.element().name).toEqual(config.element.name);
+    }));
   });
 });

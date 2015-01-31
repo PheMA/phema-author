@@ -8,11 +8,11 @@ describe('Directive: valueSets', function () {
     this.element = linkingFn(scope);
   }));
 
-  it('has some properties', function() {
-    expect(element.someMethod()).toBe(XXX);
-  });
+//   it('has some properties', function() {
+//     expect(element.someMethod()).toBe(XXX);
+//   });
 
-  it('does something to the scope', function() {
-    expect(scope.someField).toBe(XXX);
-￼￼});
+//   it('does something to the scope', function() {
+//     expect(scope.someField).toBe('XXX');
+// ￼￼});
 });

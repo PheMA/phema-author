@@ -32,6 +32,7 @@ module.exports = function(config) {
       'bower_components/angular-tree-control/angular-tree-control.js',
       'bower_components/ng-context-menu/dist/ng-context-menu.js',
       'bower_components/angular-dynforms/dynamic-forms.js',
+      'bower_components/angular-spinner/angular-spinner.js',
       'app/scripts/**/*.js',
       'test/spec/**/*.js'
     ],
