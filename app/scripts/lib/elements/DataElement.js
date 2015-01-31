@@ -15,14 +15,56 @@ DataElement.prototype.connectEvents = function(group, scope) {
   this.connectConnectorEvents(group);
 };
 
+DataElement.prototype._layoutElementsAfterTermDrop = function(valueSet) {
+  var termDrop = this._container.find('.termDrop')[0];
+  this._container.add(valueSet);
+
+  // Position the value set at the term drop location
+  valueSet.x(termDrop.x());
+  valueSet.y(termDrop.y());
+
+  // Now resize all of the elements in the object appropriately
+  termDrop.width(valueSet.width());
+  termDrop.height(valueSet.height());
+
+  var termDropText = this._container.find('.termDropText')[0];
+  termDropText.width(termDrop.width());
+  termDropText.height(termDrop.height());
+
+  var configRect = this._container.find('.config')[0];
+  configRect.width(termDrop.width());
+  configRect.y(termDrop.y() + termDrop.height() + 5);
+
+  var mainRect = findObjectInPhemaGroupType('mainRect', this._container, ['Category', 'DataElement']);
+  updateSizeOfMainRect(mainRect, this._container,
+    (termDrop.width() + 20), (configRect.getY() + configRect.getHeight() + 10));
+
+  var headerRect = findObjectInPhemaGroupType('header', this._container, ['Category', 'DataElement']);
+  headerRect.width(mainRect.width());
+};
+
+// We keep the containedElements collection because some of our more general algorithms are
+// able to leverage it.  The valueSet property is typically what we want to be using.
 DataElement.prototype.containedElements = function(elements) {
   if ('undefined' === typeof elements) {
     return this._containedElements;
   }
   else {
     this._containedElements = elements;
+    this._valueSet = (elements.length && elements.length > 0) ? elements[0] : null;
   }
-}
+};
+
+DataElement.prototype.valueSet = function(valueSet) {
+  if ('undefined' === typeof valueSet) {
+    return this._valueSet;
+  }
+  else {
+    this._valueSet = valueSet;
+    this.containedElements([valueSet]);
+    this._layoutElementsAfterTermDrop(valueSet);
+  }
+};
 
 DataElement.prototype.create = function(config, scope) {
   var options = {
@@ -44,7 +86,7 @@ DataElement.prototype.create = function(config, scope) {
       x: options.x, y: options.y,
       width: options.width, // Leave out height so it auto-sizes
       fontFamily: 'Calibri', fontSize: 14, fill: 'black',
-      text: config.element.name,
+      text: config.element.name, name: 'header',
       align: 'center', padding: 5
   };
   var headerObj = this.createText(headerOptions, group);
@@ -62,14 +104,14 @@ DataElement.prototype.create = function(config, scope) {
     width: termObj.width(), height: termObj.height(),
     fontFamily: 'Calibri', fontSize: 14, fill: 'gray',
     text: 'Drag and drop clinical terms or value sets here, or search for terms',
-    align: 'center', padding: 5
+    align: 'center', padding: 5, name: 'termDropText',
   };
   this.createText(termTextOptions, group);
 
   var configOptions = {
     x: termDropOptions.x, y: termObj.height() + termDropOptions.y + 5,
     width: termDropOptions.width, height: termDropOptions.height,
-    fill: '#EEEEEE',
+    fill: '#EEEEEE', name: 'config',
     stroke: '#CCCCCC', strokeWidth: 1
   };
   var configObj = this.createRectangle(configOptions, group);
@@ -91,12 +133,19 @@ DataElement.prototype.create = function(config, scope) {
   mainLayer.draw();
 };
 
-DataElement.prototype.container = function() {
-  return this._container;
-};
+// DataElement.prototype.container = function(container) {
+//   if ('undefined' === typeof container) {
+//     return this._container;
+//   }
+//   else {
+//     this._container = container;
+//   }
+// };
 
 DataElement.prototype.toObject = function() {
-  var obj = {className: 'DataElement'};
+  var obj = {};
+  obj.valueSet = {id: this._valueSet._id};
+  obj.className = 'DataElement';
   return obj;
 }
 
@@ -105,5 +154,20 @@ DataElement.prototype.load = function(group, scope) {
   this.container(group);
   group.phemaObject(this);
   this.connectEvents(group, scope);
+
+  // In addition to the base method for re-associating references, we also need to
+  // associate our value set (if it was defined);
   this.associateReferences(group, scope);
+  if (obj.valueSet && obj.valueSet.id) {
+    var groups = scope.canvasDetails.kineticStageObj.mainLayer.find('Group');
+    for (var index = 0; index < groups.length; index++) {
+      if (groups[index]._id === obj.valueSet.id) {
+        this.valueSet(groups[index]);
+        break;
+      }
+    }
+  }
+  else {
+    this.valueSet(null);
+  }
 }

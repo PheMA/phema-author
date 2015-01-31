@@ -110,9 +110,14 @@ TemporalOperator.prototype.create = function(config, scope) {
   mainLayer.draw();
 };
 
-TemporalOperator.prototype.container = function() {
-  return this._container;
-};
+// TemporalOperator.prototype.container = function(container) {
+//   if ('undefined' === typeof container) {
+//     return this._container;
+//   }
+//   else {
+//     this._container = container;
+//   }
+// };
 
 TemporalOperator.prototype.toObject = function() {
   var obj = {className: 'TemporalOperator'};

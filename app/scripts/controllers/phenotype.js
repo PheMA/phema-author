@@ -98,6 +98,7 @@ angular.module('sopheAuthorApp')
       });
 
       modalInstance.result.then(function (result) {
+        console.log(result);
         LibraryService.saveDetails(result)
           .then(function(data) {
             $location.path('/phenotype/' + data.id);

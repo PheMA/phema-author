@@ -62,9 +62,14 @@ GenericElement.prototype.create = function(config, scope) {
   mainLayer.draw();
 };
 
-GenericElement.prototype.container = function() {
-  return this._container;
-};
+// GenericElement.prototype.container = function(container) {
+//   if ('undefined' === typeof container) {
+//     return this._container;
+//   }
+//   else {
+//     this._container = container;
+//   }
+// };
 
 GenericElement.prototype.toObject = function() {
   var obj = {className: 'GenericElement'};

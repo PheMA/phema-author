@@ -170,6 +170,15 @@ BaseElement.prototype = {
     });
   },
 
+  container: function(container) {
+    if ('undefined' === typeof container) {
+      return this._container;
+    }
+    else {
+      this._container = container;
+    }
+  },
+
   addConnectors: function (scope, mainRect, group, trackDrag) {
     trackDrag = (typeof trackDrag !== 'undefined') ? trackDrag : true;
 

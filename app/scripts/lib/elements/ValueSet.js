@@ -57,8 +57,13 @@ ValueSet.prototype.create = function(config, scope) {
   mainLayer.draw();
 };
 
-ValueSet.prototype.container = function() {
-  return this._container;
+ValueSet.prototype.container = function(container) {
+  if ('undefined' === typeof container) {
+    return this._container;
+  }
+  else {
+    this._container = container;
+  }
 };
 
 ValueSet.prototype.toObject = function() {

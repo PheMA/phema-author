@@ -61,9 +61,14 @@ LogicalOperator.prototype.create = function(config, scope) {
   mainLayer.draw();
 };
 
-LogicalOperator.prototype.container = function() {
-  return this._container;
-};
+// LogicalOperator.prototype.container = function(container) {
+//   if ('undefined' === typeof container) {
+//     return this._container;
+//   }
+//   else {
+//     this._container = container;
+//   }
+// };
 
 LogicalOperator.prototype.toObject = function() {
   var obj = {};
