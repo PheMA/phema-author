@@ -1,31 +1,19 @@
 'use strict';
 
-var GenericElement = function() {}
-GenericElement.prototype = new BaseElement;
+var ValueSet = function() {}
+ValueSet.prototype = new BaseElement;
 
 // Connects the appropriate QDM logical operator shapes to event handlers.
 // Used when constructing a new element, or when loading from a definition.
-GenericElement.prototype.connectEvents = function(group, scope) {
+ValueSet.prototype.connectEvents = function(group, scope) {
   this.addStandardEventHandlers(group, scope);
   this.addCursorEventHandlers(group, scope);
-  this.addConnectionHandler(group.find('.leftConnector')[0], scope);
-  this.addConnectionHandler(group.find('.rightConnector')[0], scope);
-  this.connectConnectorEvents(group);
 };
 
-GenericElement.prototype.containedElements = function(elements) {
-  if ('undefined' === typeof elements) {
-    return this._containedElements;
-  }
-  else {
-    this._containedElements = elements;
-  }
-};
-
-GenericElement.prototype.create = function(config, scope) {
+ValueSet.prototype.create = function(config, scope) {
   var options = {
     x: 0, y: 0, width: 175, height: 100,
-    fill: '#dbeef4', name: 'mainRect',
+    fill: '#eedbf4', name: 'mainRect',
     stroke: 'black', strokeWidth: 1
   };
 
@@ -47,13 +35,20 @@ GenericElement.prototype.create = function(config, scope) {
   };
   var headerObj = this.createText(headerOptions, group);
 
-  workflowObj.setHeight(headerObj.getHeight() + 30);
+  var idOptions = {
+    x: options.x, y: options.y + headerObj.getHeight() + 5,
+    width: options.width, // Leave out height so it auto-sizes
+    fontFamily: 'Calibri', fontSize: 11, fill: 'black',
+    text: 'OID: ' + config.element.id, name: 'oid',
+    align: 'center', padding: 5
+  };
+  var idObj = this.createText(idOptions, group);
+
+  workflowObj.setHeight(headerObj.getHeight() + idObj.getHeight() + 10);
 
   // Now that the shape is built, define the bounds of the group
   group.setWidth(workflowObj.getWidth());
   group.setHeight(workflowObj.getHeight());
-
-  this.addConnectors(scope, workflowObj, group);
 
   this.connectEvents(group, scope);
 
@@ -62,15 +57,24 @@ GenericElement.prototype.create = function(config, scope) {
   mainLayer.draw();
 };
 
-GenericElement.prototype.toObject = function() {
-  var obj = {className: 'GenericElement'};
-  return obj;
+ValueSet.prototype.container = function(container) {
+  if ('undefined' === typeof container) {
+    return this._container;
+  }
+  else {
+    this._container = container;
+  }
 };
 
-GenericElement.prototype.load = function(group, scope) {
+ValueSet.prototype.toObject = function() {
+  var obj = {className: 'ValueSet'};
+  return obj;
+}
+
+ValueSet.prototype.load = function(group, scope) {
   var obj = group.phemaObject();
   this.container(group);
   group.phemaObject(this);
   this.connectEvents(group, scope);
   this.associateReferences(group, scope);
-};
+}

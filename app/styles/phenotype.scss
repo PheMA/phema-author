@@ -181,3 +181,22 @@ $value-sets-background-color: #eee;
     background-color: darken($value-sets-background-color, 15%);
   }
 }
+
+.modal-content {
+  .value-sets-container, .value-set-container {
+    padding: 10px;
+    margin: 10px;
+    background-color: white;
+    border: none;
+  }
+
+  .value-set-results {
+    tr:hover {
+      background-color: darken($value-sets-background-color, 25%);
+    }
+
+    .selected {
+      background-color: darken($value-sets-background-color, 15%);
+    }
+  }
+}

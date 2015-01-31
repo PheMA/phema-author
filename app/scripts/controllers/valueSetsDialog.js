@@ -10,7 +10,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-.controller('ValueSetsController', ['$scope', '$http', 'ValueSetService', function ($scope, $http, ValueSetService) {
+.controller('ValueSetsDialogController', ['$scope', '$http', '$modalInstance', 'ValueSetService', function ($scope, $http, $modalInstance, ValueSetService) {
   $scope.searchTerm = '';
   $scope.isSearching = false;
   $scope.searchResults = [];
@@ -55,5 +55,14 @@ angular.module('sopheAuthorApp')
   // Used for single-selection mode
   $scope.setSelected = function(valueSet) {
     $scope.selectedValueSets[0] = valueSet;
+  };
+
+  // Used for modal dialog mode
+  $scope.ok = function () {
+    $modalInstance.close($scope.selectedValueSets);
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
   };
 }]);

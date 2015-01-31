@@ -1,7 +1,7 @@
 /* globals Kinetic */
 /* exported startConnector, endConnector, updateActiveLineLocation, getIntersectingShape,
   addElementToContainer, removeElementFromContainer, updateConnectedLines, changeConnectorEndpoints,
-  allowsDrop */
+  allowsDrop, findObjectInPhemaGroupType */
 
 'use strict';
 
@@ -57,9 +57,32 @@ function updateSizeOfMainRect(rect, group, width, height) {
   setConnectorLocation(rect, group, 'leftConnector', 0, y);
 }
 
+function findObjectInPhemaGroupType(objectName, container, allowedTypes) {
+  var allItems = container.find('.' + objectName);
+  for (var index = 0; index < allItems.length; index++) {
+    if (!allowedTypes.length) {
+      var type = allowedTypes;
+      allowedTypes = [type];
+    }
+
+    for (var typeIndex = 0; typeIndex < allowedTypes.length; typeIndex++) {
+      if (allItems[index].parent.element().type === allowedTypes[typeIndex]) {
+        return allItems[index];
+      }
+    }
+  }
+
+  return null;
+}
+
 // For a container (represented by group), lay out all contained elements within the
 // main rectangle.
 function layoutElementsInContainer(group) {
+  // Only do this right now for logical operators
+  if (group.element().type !== 'LogicalOperator') {
+    return;
+  }
+
   var header = group.getChildren(function(node) { return node.getClassName() === 'Text'; })[0];
   var rect = group.getChildren(function(node) { return node.getClassName() === 'Rect'; })[0];
 
@@ -208,7 +231,10 @@ function addElementToContainer(stage, container, element) {
       }
     }
     else if (elementDefinition.type === 'DataElement' || elementDefinition.type === 'Category') {
-      console.log('QDM element');
+      var phemaObject = group.phemaObject();
+      phemaObject.valueSet(element);
+      element.container = group;
+      stage.draw();
     }
     else if (elementDefinition.type === 'LogicalOperator') {
       // Add the item (if it's not already in the array)

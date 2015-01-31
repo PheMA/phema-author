@@ -38,14 +38,19 @@
         </accordion-heading>
         <div qdm-data-elements></div>
       </accordion-group>
+      <accordion-group id="value-sets-list" class="phenotype-element-list" is-open="status.open[4]">
+        <accordion-heading>
+          Value Sets <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[4], 'glyphicon-chevron-right': !status.open[4]}"></i>
+        </accordion-heading>
+        <div value-sets location="sidebar"></div>
+      </accordion-group>
     </accordion>
   </div>
-  <div droppable drop="addWorkflowObject(config)" class="col-lg-9">
-    <div class="row">
-      <value-sets></value-sets>
-    </div>
-    <div context-menu="onRightClick(message)" context-menu-close="onClose(closeMessage)" data-target="phenotypeMenu">
-      <div data-kinetic-canvas data-canvas-details="canvasDetails" data-right-align-to="phenotypeToolbar" style="border: solid grey 1px; width: 800px; height: 600px;" id="canvas">&nbsp;</div>
+  <div class="col-lg-9">
+    <div droppable drop="addWorkflowObject(config)" class="row">
+      <div context-menu="onRightClick(message)" context-menu-close="onClose(closeMessage)" data-target="phenotypeMenu">
+        <div data-kinetic-canvas data-canvas-details="canvasDetails" data-right-align-to="phenotypeToolbar" style="border: solid grey 1px; width: 800px; height: 600px;" id="canvas">&nbsp;</div>
+      </div>
     </div>
   </div>
 

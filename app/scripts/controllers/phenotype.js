@@ -41,6 +41,22 @@ angular.module('sopheAuthorApp')
       dirSelectable: false
     };
 
+    $scope.$on('sophe-search-valuesets', function(evt, dataElement) {
+      var modalInstance = $modal.open({
+        templateUrl: 'views/elements/valueSet/dialog.html',
+        controller: 'ValueSetsDialogController',
+        size: 'lg'
+      });
+
+      modalInstance.result.then(function (result) {
+        if (result && result.length && result.length > 0) {
+          var valueSet = $scope.addWorkflowObject({x: 0, y: 0, element: result[0]});
+          dataElement.phemaObject().valueSet(valueSet);
+          dataElement.getStage().draw();
+        }
+      });
+    });
+
     $scope.$on('sophe-element-selected', function(evt, args) {
       $scope.$apply(function() {
         $scope.isPropertiesDisabled = !$scope.canShowProperties(args);

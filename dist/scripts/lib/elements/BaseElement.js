@@ -164,11 +164,19 @@ BaseElement.prototype = {
 
       // For the element we are moving, redraw all connection lines
       var stage = group.getStage();
-      console.log(e.target.find('.rightConnector'));
       updateConnectedLines(e.target.find('.rightConnector')[0], stage);
       updateConnectedLines(e.target.find('.leftConnector')[0], stage);
       stage.find('#mainLayer').draw();
     });
+  },
+
+  container: function(container) {
+    if ('undefined' === typeof container) {
+      return this._container;
+    }
+    else {
+      this._container = container;
+    }
   },
 
   addConnectors: function (scope, mainRect, group, trackDrag) {

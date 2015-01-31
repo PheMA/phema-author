@@ -13,6 +13,10 @@ DataElement.prototype.connectEvents = function(group, scope) {
   this.addConnectionHandler(group.find('.leftConnector')[0], scope);
   this.addConnectionHandler(group.find('.rightConnector')[0], scope);
   this.connectConnectorEvents(group);
+
+  group.find('.termDropText')[0].on('click', function(e) {
+    scope.$root.$broadcast('sophe-search-valuesets', e.target.parent);
+  });
 };
 
 DataElement.prototype._layoutElementsAfterTermDrop = function(valueSet) {
@@ -103,7 +107,7 @@ DataElement.prototype.create = function(config, scope) {
     x: termDropOptions.x, y: termDropOptions.y,
     width: termObj.width(), height: termObj.height(),
     fontFamily: 'Calibri', fontSize: 14, fill: 'gray',
-    text: 'Drag and drop clinical terms or value sets here, or search for terms',
+    text: 'Drag and drop clinical terms or value sets here, or click to search',
     align: 'center', padding: 5, name: 'termDropText',
   };
   this.createText(termTextOptions, group);
@@ -128,26 +132,17 @@ DataElement.prototype.create = function(config, scope) {
   group.setWidth(mainRect.getWidth());
   group.setHeight(mainRect.getHeight());
 
-  var mainLayer = scope.canvasDetails.kineticStageObj.find('#mainLayer');
+  var mainLayer = scope.canvasDetails.kineticStageObj.mainLayer;
   mainLayer.add(group);
   mainLayer.draw();
 };
-
-// DataElement.prototype.container = function(container) {
-//   if ('undefined' === typeof container) {
-//     return this._container;
-//   }
-//   else {
-//     this._container = container;
-//   }
-// };
 
 DataElement.prototype.toObject = function() {
   var obj = {};
   obj.valueSet = {id: this._valueSet._id};
   obj.className = 'DataElement';
   return obj;
-}
+};
 
 DataElement.prototype.load = function(group, scope) {
   var obj = group.phemaObject();
@@ -170,4 +165,4 @@ DataElement.prototype.load = function(group, scope) {
   else {
     this.valueSet(null);
   }
-}
+};
