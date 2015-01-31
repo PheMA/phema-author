@@ -17,8 +17,8 @@
      options="treeOptions"
      tooltip="Search for a term, then drag and drop it onto the canvas" tooltip-placement="right">
      <span draggable>
-      {{node.id}}
-      <span class="note" ng-show="node.type !== 'CodeSystem'">{{node.name}}</span>
+      {{node.name}}
+      <span class="note" ng-show="node.type !== 'CodeSystem'"> ({{node.id}})</span>
       <input type="hidden" value="{{node}}"></input>
      </span>
     </div>

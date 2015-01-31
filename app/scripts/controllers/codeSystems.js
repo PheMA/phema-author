@@ -29,8 +29,8 @@ angular.module('sopheAuthorApp')
         .then(CodeSystemService.processValues)
         .then(function(terms) {
           codeSystems.push({
-            id: 'ICD-9-CM (' + terms.length + ' terms)',
-            name: 'ICD-9-CM',
+            name: 'ICD-9-CM (' + terms.length + ' terms)',
+            id: 'ICD-9-CM',
             type: 'CodeSystem',
             children: terms});
           $scope.searchResults = codeSystems;
@@ -40,8 +40,8 @@ angular.module('sopheAuthorApp')
         .then(CodeSystemService.processValues)
         .then(function(terms) {
           codeSystems.push({
-            id: 'ICD-10 (' + terms.length + ' terms)',
-            name: 'ICD-10',
+            name: 'ICD-10 (' + terms.length + ' terms)',
+            id: 'ICD-10',
             type: 'CodeSystem',
             children: terms});
           $scope.searchResults = codeSystems;
@@ -51,8 +51,8 @@ angular.module('sopheAuthorApp')
         .then(CodeSystemService.processValues)
         .then(function(terms) {
           codeSystems.push({
-            id: 'LOINC (' + terms.length + ' terms)',
-            name: 'LOINC',
+            name: 'LOINC (' + terms.length + ' terms)',
+            id: 'LOINC',
             type: 'CodeSystem',
             children: terms});
           $scope.searchResults = codeSystems;

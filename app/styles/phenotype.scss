@@ -40,13 +40,6 @@
   }
 }
 
-#value-sets-list {
-  .note {
-    font-size: 0.9em;
-    font-style: italic;
-  }
-}
-
 .phenotype-element-list{
   border: solid 1px black;
   border-radius: 2px;
@@ -152,18 +145,11 @@
 
 $value-sets-background-color: #eee;
 
-.value-sets-container, .value-set-container {
+.value-sets-container, .value-set-container, .code-systems-container, .code-system-container {
   padding: 10px 0px;
   margin: 10px 0px;
   background-color: $value-sets-background-color;
   border: solid 1px black;
-  .note, .note-sm {
-    font-size: 0.9em;
-    font-style: italic;
-  }
-  .note-sm {
-    font-size: 0.7em;
-  }
   .search-panel {
     padding-bottom: 15px;
   }
@@ -197,8 +183,15 @@ $value-sets-background-color: #eee;
   }
 }
 
+.code-systems-results {
+  td {
+    padding-right: 5px;
+    padding-bottom: 5px;
+  }
+}
+
 .modal-content {
-  .value-sets-container, .value-set-container {
+  .value-sets-container, .value-set-container, .code-systems-container, .code-system-container {
     padding: 10px;
     margin: 10px;
     background-color: white;
@@ -214,4 +207,26 @@ $value-sets-background-color: #eee;
       background-color: darken($value-sets-background-color, 15%);
     }
   }
+}
+
+.codeSystemList {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+  li {
+    margin-right: 3px;
+    ul {
+      list-style-type: none;
+      padding: 0px;
+      margin: 0px;
+      li {
+        font-weight: normal;
+        margin-left: 10px;
+      }
+    }
+  }
+}
+
+.codeSystemList > li {
+  font-weight: bold;
 }
