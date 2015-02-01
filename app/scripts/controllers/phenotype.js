@@ -1,5 +1,5 @@
 'use strict';
-/* globals ArrayUtil, findParentElementByName, ValueSet */
+/* globals ArrayUtil, findParentElementByName, ValueSet, _ */
 
 /**
  * @ngdoc function
@@ -12,7 +12,6 @@ angular.module('sopheAuthorApp')
   .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', '$location', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'QDMElementService', 'FHIRElementService', 'LibraryService', function ($scope, $http, $routeParams, $modal, $location, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, QDMElementService, FHIRElementService, LibraryService) {
     $scope.phenotype = $routeParams.id;
     $scope.status = { open: [true, false, false, false, false, false, false]};
-    $scope.isDeleteDisabled = true;
     $scope.isPropertiesDisabled = true;
     var advancedRegEx = new RegExp('[a-z]+\\sConcurrent With', 'i');
     $scope.temporalFilter = function(item) {
@@ -71,7 +70,7 @@ angular.module('sopheAuthorApp')
     $scope.$on('sophe-element-selected', function(evt, args) {
       $scope.$apply(function() {
         $scope.isPropertiesDisabled = !$scope.canShowProperties(args);
-        $scope.isDeleteDisabled = !$scope.canDelete();
+        _.findWhere($scope.buttons, {text: 'Delete'}).disabled = !$scope.canDelete();
       });
     });
 
@@ -152,16 +151,16 @@ angular.module('sopheAuthorApp')
     };
 
     $scope.buttons = [
-      {text: 'Save', iconClass:'fa fa-save', event: $scope.save},
-      {text: 'Load', iconClass:'fa fa-folder-open', event: $scope.load},
-      {text: 'Export', iconClass:'fa fa-arrow-circle-down'},
+      {text: 'Save', iconClass:'fa fa-save', event: $scope.save, disabled: false},
+      {text: 'Load', iconClass:'fa fa-folder-open', event: $scope.load, disabled: false},
+      {text: 'Export', iconClass:'fa fa-arrow-circle-down', disabled: true},
       {spacer: true},
-      {text: 'Copy', iconClass:'fa fa-copy', event: $scope.copy},
-      {text: 'Paste', iconClass:'fa fa-paste', event: $scope.paste},
-      {text: 'Undo', iconClass:'fa fa-undo'},
-      {text: 'Redo', iconClass:'fa fa-repeat'},
+      {text: 'Copy', iconClass:'fa fa-copy', event: $scope.copy, disabled: true},
+      {text: 'Paste', iconClass:'fa fa-paste', event: $scope.paste, disabled: true},
+      {text: 'Undo', iconClass:'fa fa-undo', disabled: true},
+      {text: 'Redo', iconClass:'fa fa-repeat', disabled: true},
       {spacer: true},
-      {text: 'Delete', iconClass:'fa fa-remove', event: $scope.delete},
+      {text: 'Delete', iconClass:'fa fa-remove', event: $scope.delete, disabled: true},
     ];
 
     $scope.canShowProperties = function(item) {

@@ -3,7 +3,7 @@
   <div class="phenotype-toolbar" id="phenotypeToolbar">
     <ul>
       <li ng-repeat="btn in buttons">
-        <button ng-hide="{{btn.spacer}}" type="button" class="btn phenotype-toolbar-button" ng-click="btn.event()">
+        <button ng-hide="{{btn.spacer}}" type="button" class="btn phenotype-toolbar-button" ng-click="btn.event()" ng-class="{'disabled': btn.disabled}">
           <span class="{{btn.iconClass}}"></span> {{btn.text}}
         </button>
         <div ng-show="{{btn.spacer}}" class="spacer" />
@@ -76,7 +76,7 @@
       </li>
       <li class="divider">&nbsp;</li>
       <li>
-        <a class="pointer ng-binding" role="menuitem" tabindex="3" ng-class="{ 'disabled': isDeleteDisabled }" ng-click="delete()">Delete</a>
+        <a class="pointer ng-binding" role="menuitem" tabindex="3" ng-class="{ 'disabled': _.findWhere(buttons, {text: 'Delete'}).disabled }" ng-click="delete()">Delete</a>
       </li>
       <li class="divider">&nbsp;</li>
       <li>

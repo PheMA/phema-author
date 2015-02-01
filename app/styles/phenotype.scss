@@ -7,6 +7,15 @@
   padding: 7px 5px;
   margin-bottom: 3px;
 
+  .btn:hover, .btn:focus {
+    color: white;
+  }
+
+  .btn .disabled {
+    background-color: lighten($dashboard-header-background-color, 30%);
+    color: gray;
+  }
+
   ul {
     list-style-type: none;
     padding: 0px;
