@@ -29,14 +29,14 @@
 #data-elements-list, #fhir-elements-list, #value-sets-list, #code-systems-list {
   .tree-classic {
     height: 400px;
-    overflow-x: scroll;
+    overflow-y: scroll;
   }
 }
 
 #temporal-operators-list {
   .tree-classic {
     height: 300px;
-    overflow-x: scroll;
+    overflow-y: scroll;
   }
 }
 
@@ -154,7 +154,7 @@ $value-sets-background-color: #eee;
     padding-bottom: 15px;
   }
   max-height: 300px;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .value-set-results {
