@@ -32,9 +32,29 @@ angular.module('sophe.factories.algorithmElement', [])
       element.create(config, scope);
       return element.container();
     }
-
-    // Manages cleaning up all editor elements that may be associated with a group, such
-    // as connector lines, references to connector lines, connector labels, etc.
+    
+    function _destroyConnection(connection) {
+      var connectors = connection.connectors();
+      
+      // Remove references to the connectors this line is connected with
+      var connectionsReference = connectors.start.connections();
+      var updatedConnections = connectionsReference.filter(function(obj) { return connection._id !== obj._id; });
+      connectors.start.connections(updatedConnections);
+      connectionsReference = connectors.end.connections();
+      updatedConnections = connectionsReference.filter(function(obj) { return connection._id !== obj._id; });
+      connectors.end.connections(updatedConnections);
+      
+      // Next, remove our references to the connectors
+      connection.connectors({start: null, end: null});
+      
+      // Remove the label associated with this connection
+      connection.label().destroy();
+      connection.label(null);
+      
+      // Finally, destroy this connection
+      connection.destroy();
+    }
+    
     function _destroyGroup(group) {
       // In the group, find all connectors
       var connectors = group.find('.leftConnector, .rightConnector');
@@ -57,28 +77,6 @@ angular.module('sophe.factories.algorithmElement', [])
         group.deleteReferences();
       }
       group.destroy();
-    }
-    
-    function _destroyConnection(connection) {
-      var connectors = connection.connectors();
-      
-      // Remove references to the connectors this line is connected with
-      var connectionsReference = connectors.start.connections();
-      var updatedConnections = connectionsReference.filter(function(obj) { return connection._id !== obj._id; });
-      connectors.start.connections(updatedConnections);
-      connectionsReference = connectors.end.connections();
-      updatedConnections = connectionsReference.filter(function(obj) { return connection._id !== obj._id; });
-      connectors.end.connections(updatedConnections);
-      
-      // Next, remove our references to the connectors
-      connection.connectors({start: null, end: null});
-      
-      // Remove the label associated with this connection
-      connection.label().destroy();
-      connection.label(null);
-      
-      // Finally, destroy this connection
-      connection.destroy();
     }
 
     var factory = {};
@@ -119,6 +117,16 @@ angular.module('sophe.factories.algorithmElement', [])
       }
 
       return workflowObject;
+    };
+    
+    // Manages cleaning up all editor elements that may be associated with a group, such
+    // as connector lines, references to connector lines, connector labels, etc.
+    factory.destroyGroup = function(group) {
+      _destroyGroup(group);
+    };
+    
+    factory.destroyConnection = function(connection) {
+      _destroyConnection(connection);
     };
 
     factory.loadFromDefinition = function(scope, definition) {

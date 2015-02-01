@@ -31,7 +31,7 @@ angular.module('sopheAuthorApp')
     }
 
     $scope.ok = function () {
-      $modalInstance.close($scope.formData);
+      $modalInstance.close({attributes: $scope.formData, valueSet: $scope.valueSet});
     };
 
     $scope.cancel = function () {

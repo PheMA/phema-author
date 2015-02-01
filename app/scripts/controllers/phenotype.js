@@ -1,5 +1,5 @@
 'use strict';
-/* globals ArrayUtil, findParentElementByName */
+/* globals ArrayUtil, findParentElementByName, ValueSet */
 
 /**
  * @ngdoc function
@@ -56,7 +56,15 @@ angular.module('sopheAuthorApp')
         if (result) {
           // If we just have a value set, we will create that and place it in the object
           var valueSet;
-          if (result.valueSets.length > 0 && result.terms.length === 0) {
+          var element = ValueSet.createElementFromData(result);
+          valueSet = $scope.addWorkflowObject({x: 0, y: 0, element: element});
+          dataElement.phemaObject().valueSet(valueSet);
+          if (element.customList) {
+            valueSet.phemaObject().customList(result);
+            delete element.customList;
+          }
+          dataElement.getStage().draw();
+          /* if (result.valueSets.length > 0 && result.terms.length === 0) {
             valueSet = $scope.addWorkflowObject({x: 0, y: 0, element: result.valueSets[0]});
             dataElement.phemaObject().valueSet(valueSet);
             dataElement.getStage().draw();
@@ -75,7 +83,7 @@ angular.module('sopheAuthorApp')
             dataElement.phemaObject().valueSet(valueSet);
             valueSet.phemaObject().customList(result);
             dataElement.getStage().draw();
-          }
+          } */
         }
       });
     });
@@ -274,7 +282,39 @@ angular.module('sopheAuthorApp')
         });
 
         modalInstance.result.then(function (result) {
-          element.attributes = result;
+          element.attributes = result.attributes;
+          
+          var createNewVS = false;
+          var removeOldVS = false;
+          var existingValueSet = null;
+          if (selectedElement.phemaObject() &&
+              selectedElement.phemaObject().valueSet() &&
+              selectedElement.phemaObject().valueSet().element()) {
+            existingValueSet = selectedElement.phemaObject().valueSet();
+            if (existingValueSet.element().id !== result.valueSet.id) {
+              createNewVS = true;
+              removeOldVS = true;
+            }
+          }
+          else if (result.valueSet.id) {
+            createNewVS = true;
+          }
+          
+          if (removeOldVS) {
+            // Remove the old element from the UI
+            algorithmElementFactory.destroyGroup(existingValueSet);
+            selectedElement.phemaObject().valueSet(null);
+          }
+
+          if (createNewVS) {
+            var newValueSet = $scope.addWorkflowObject({x: 0, y: 0, element: result.valueSet});
+            selectedElement.phemaObject().valueSet(newValueSet);
+            if (result.valueSet.customList) {
+              newValueSet.phemaObject().customList(result.valueSet.customList);
+              delete result.valueSet.customList;
+            }
+            selectedElement.getStage().draw();            
+          }
         });
       }
       else if (element.type === 'Phenotype') {

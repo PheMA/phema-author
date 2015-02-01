@@ -67,8 +67,13 @@ DataElement.prototype.valueSet = function(valueSet) {
   }
   else {
     this._valueSet = valueSet;
-    this.containedElements([valueSet]);
-    this._layoutElementsAfterTermDrop(valueSet);
+    if (valueSet) {
+      this.containedElements([valueSet]);
+      this._layoutElementsAfterTermDrop(valueSet);
+    }
+    else {
+      this.containedElements([]);
+    }
   }
 };
 
