@@ -2,7 +2,7 @@
    tree-model="fhirElements"
    options="treeOptions"
    tooltip="Drag and drop a data element onto the canvas" tooltip-placement="right">
-   <span draggable>
+   <span draggable double-clickable dblclick-event="addWorkflowObject(config)">
     {{node.name}}
     <input type="hidden" value="{{node}}"></input>
    </span>

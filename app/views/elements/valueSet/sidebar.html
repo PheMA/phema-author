@@ -16,7 +16,7 @@
      tree-model="searchResults"
      options="treeOptions"
      tooltip="Search for a value set, then drag and drop it onto the canvas" tooltip-placement="right">
-     <span draggable>
+     <span draggable double-clickable dblclick-event="addWorkflowObject(config)">
       {{node.name}}
       <span class="note">{{node.id}}</span>
       <input type="hidden" value="{{node}}"></input>

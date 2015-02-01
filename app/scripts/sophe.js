@@ -3,6 +3,7 @@ angular.module('sophe', [
   'sophe.kinetic',
   'sophe.draggable',
   'sophe.droppable',
+  'sophe.doubleClickable',
   'sophe.onlyDigits',
   'sophe.factories.algorithmElement',
   'sophe.factories.kineticStage',
