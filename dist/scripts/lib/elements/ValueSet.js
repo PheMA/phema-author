@@ -66,14 +66,27 @@ ValueSet.prototype.container = function(container) {
   }
 };
 
+ValueSet.prototype.customList = function(items) {
+  if ('undefined' === typeof items) {
+    return this._customList;
+  }
+  else {
+    this._customList = items;
+  }
+};
+
 ValueSet.prototype.toObject = function() {
   var obj = {className: 'ValueSet'};
+  if (this._customList) {
+    obj.customList = this._customList;
+  }
   return obj;
 }
 
 ValueSet.prototype.load = function(group, scope) {
   var obj = group.phemaObject();
   this.container(group);
+  this.customList(obj.customList);
   group.phemaObject(this);
   this.connectEvents(group, scope);
   this.associateReferences(group, scope);

@@ -11,7 +11,7 @@
 angular.module('sopheAuthorApp')
   .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', '$location', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'QDMElementService', 'FHIRElementService', 'LibraryService', function ($scope, $http, $routeParams, $modal, $location, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, QDMElementService, FHIRElementService, LibraryService) {
     $scope.phenotype = $routeParams.id;
-    $scope.status = { open: [true, false, false, false, false, false]};
+    $scope.status = { open: [true, false, false, false, false, false, false]};
     $scope.isDeleteDisabled = true;
     $scope.isPropertiesDisabled = true;
     var advancedRegEx = new RegExp('[a-z]+\\sConcurrent With', 'i');
@@ -47,16 +47,37 @@ angular.module('sopheAuthorApp')
 
     $scope.$on('sophe-search-valuesets', function(evt, dataElement) {
       var modalInstance = $modal.open({
-        templateUrl: 'views/elements/valueSet/dialog.html',
-        controller: 'ValueSetsDialogController',
+        templateUrl: 'views/elements/valueSetsTermsDialog.html',
+        controller: 'ValueSetsTermsDialogController',
         size: 'lg'
       });
 
       modalInstance.result.then(function (result) {
-        if (result && result.length && result.length > 0) {
-          var valueSet = $scope.addWorkflowObject({x: 0, y: 0, element: result[0]});
-          dataElement.phemaObject().valueSet(valueSet);
-          dataElement.getStage().draw();
+        if (result) {
+          // If we just have a value set, we will create that and place it in the object
+          var valueSet;
+          if (result.valueSets.length > 0 && result.terms.length === 0) {
+            valueSet = $scope.addWorkflowObject({x: 0, y: 0, element: result.valueSets[0]});
+            dataElement.phemaObject().valueSet(valueSet);
+            dataElement.getStage().draw();
+          }
+          // Otherwise we are going to build a temporary value set based on this collection
+          else {
+            valueSet = $scope.addWorkflowObject({
+              x: 0,
+              y: 0,
+              element: {
+                id: '',
+                name: 'Custom Value Set',
+                type: 'ValueSet'
+              }
+            });
+            dataElement.phemaObject().valueSet(valueSet);
+            valueSet.phemaObject().customList(result);
+            dataElement.getStage().draw();
+          }
+
+          console.log(valueSet);
         }
       });
     });

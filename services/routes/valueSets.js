@@ -1,6 +1,6 @@
 var request = require('request');
 var ValueSetRepository = require('../lib/valueSets').ValueSetRepository;
-var repository = new ValueSetRepository('https://informatics.mayo.edu/vsmc/cts2/');
+var repository = new ValueSetRepository(process.env.VALUE_SET_SERVICE_URL);
 
 exports.index = function(req, res){
   repository.getValueSets(function(error, data) {

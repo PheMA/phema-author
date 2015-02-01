@@ -3,5 +3,6 @@
   "dataServiceBaseUrl":"api/qdm/",
   "fhirServiceBaseUrl":"api/fhir/",
   "libraryBaseUrl":"api/library/",
-  "valueSetServiceBaseUrl":"api/valueset/"
+  "valueSetServiceBaseUrl":"api/valueset/",
+  "codeSystemServiceBaseUrl":"api/codesystem/"
 }
