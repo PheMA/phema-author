@@ -64,26 +64,6 @@ angular.module('sopheAuthorApp')
             delete element.customList;
           }
           dataElement.getStage().draw();
-          /* if (result.valueSets.length > 0 && result.terms.length === 0) {
-            valueSet = $scope.addWorkflowObject({x: 0, y: 0, element: result.valueSets[0]});
-            dataElement.phemaObject().valueSet(valueSet);
-            dataElement.getStage().draw();
-          }
-          // Otherwise we are going to build a temporary value set based on this collection
-          else {
-            valueSet = $scope.addWorkflowObject({
-              x: 0,
-              y: 0,
-              element: {
-                id: '',
-                name: 'Custom Value Set',
-                type: 'ValueSet'
-              }
-            });
-            dataElement.phemaObject().valueSet(valueSet);
-            valueSet.phemaObject().customList(result);
-            dataElement.getStage().draw();
-          } */
         }
       });
     });
@@ -283,7 +263,7 @@ angular.module('sopheAuthorApp')
 
         modalInstance.result.then(function (result) {
           element.attributes = result.attributes;
-          
+
           var createNewVS = false;
           var removeOldVS = false;
           var existingValueSet = null;
@@ -299,7 +279,7 @@ angular.module('sopheAuthorApp')
           else if (result.valueSet.id) {
             createNewVS = true;
           }
-          
+
           if (removeOldVS) {
             // Remove the old element from the UI
             algorithmElementFactory.destroyGroup(existingValueSet);
@@ -313,7 +293,7 @@ angular.module('sopheAuthorApp')
               newValueSet.phemaObject().customList(result.valueSet.customList);
               delete result.valueSet.customList;
             }
-            selectedElement.getStage().draw();            
+            selectedElement.getStage().draw();
           }
         });
       }
@@ -351,8 +331,7 @@ angular.module('sopheAuthorApp')
         });
       }
     };
-    
-    
+
     $scope.$on('sophe-empty-temporal-operator-created', function() {
       $scope.$apply(function() {
         $scope.showProperties();
