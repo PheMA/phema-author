@@ -3,3 +3,4 @@ node_modules
 .sass-cache
 .DS_*
 *.sublime-*
+*.docx
