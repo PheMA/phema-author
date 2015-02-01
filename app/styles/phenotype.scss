@@ -26,7 +26,7 @@
   }
 }
 
-#data-elements-list {
+#data-elements-list, #fhir-elements-list, #value-sets-list, #code-systems-list {
   .tree-classic {
     height: 400px;
     overflow-x: scroll;

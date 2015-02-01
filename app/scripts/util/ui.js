@@ -400,10 +400,6 @@ function endConnector(stage, connectorObj, scope) {
       connections = lineConnectors.start.connections();
       connections.push(line);
       lineConnectors.start.connections(connections);
-      line.on('mouseup', function(e) {
-        clearSelections(stage);
-        selectObject(stage, e.target, scope);
-      });
       line.connectors(lineConnectors);
 
       var labelTextOptions = {
@@ -417,6 +413,13 @@ function endConnector(stage, connectorObj, scope) {
       stage.find('#mainLayer').add(labelObj);
       line.label(labelObj);
       line.element({name: labelTextOptions.text, uri: '', type: 'TemporalOperator'});
+      
+      var mouseUpHandler = function(e) {
+        clearSelections(stage);
+        selectObject(stage, line, scope);
+      };
+      line.on('mouseup', mouseUpHandler);
+      labelObj.on('click', mouseUpHandler);
     }
   }
 
