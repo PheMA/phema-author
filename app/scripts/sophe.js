@@ -5,6 +5,7 @@ angular.module('sophe', [
   'sophe.droppable',
   'sophe.doubleClickable',
   'sophe.onlyDigits',
+  'sophe.valueSetsTerms',
   'sophe.factories.algorithmElement',
   'sophe.factories.kineticStage',
   'sophe.elements.fhir.dataElements',

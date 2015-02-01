@@ -81,7 +81,7 @@ ValueSet.prototype.toObject = function() {
     obj.customList = this._customList;
   }
   return obj;
-}
+};
 
 ValueSet.prototype.load = function(group, scope) {
   var obj = group.phemaObject();
@@ -90,4 +90,26 @@ ValueSet.prototype.load = function(group, scope) {
   group.phemaObject(this);
   this.connectEvents(group, scope);
   this.associateReferences(group, scope);
+};
+
+// Global utility function to create an element configuration object, given a set of
+// value sets and terms.
+ValueSet.createElementFromData = function(result) {
+  var element = {};
+  if (result) {
+    // If we just have a value set, we will create that and place it in the object
+    if (result.valueSets.length > 0 && result.terms.length === 0) {
+      element = result.valueSets[0];
+    }
+    // Otherwise we are going to build a temporary value set based on this collection
+    else {
+      element = {
+          id: '',
+          name: 'Custom Value Set',
+          type: 'ValueSet'
+      };
+      element.customList = result;
+    }
+  }
+  return element;
 }

@@ -261,6 +261,14 @@ angular.module('sopheAuthorApp')
           resolve: {
             element: function () {
               return angular.copy(element);
+            },
+            valueSet: function() {
+              if (selectedElement.phemaObject() && selectedElement.phemaObject().valueSet()) {
+                return angular.copy(selectedElement.phemaObject().valueSet().element());
+              }
+              else {
+                return null;
+              }
             }
           }
         });

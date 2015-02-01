@@ -2,6 +2,28 @@
   <h3 class="modal-title">Define the {{element.name}}</h3>
 </div>
 <div class="modal-body" id="data-element-properties">
+  <div class="value-set">
+    <label style="width: 100%">
+      Value set:
+      <span ng-show="valueSet.name">
+        {{valueSet.name}}
+        <span class="note" style="margin-right: 15px;">
+          ID: ({{valueSet.id}})
+        </span>
+      </span>
+      <span class="clickable" ng-click="chooseValueSet()">
+        Select
+      </span>
+    </label>
+  </div>
+  <div ng-show="isSearchingValueSets" class="value-set-search-panel">
+    <value-sets-terms
+      selected-value-sets="selectedValueSets"
+      selected-terms="selectedTerms"
+      ></value-sets-terms>
+    <button class="btn btn-primary btn-xs vs-btn" ng-click="saveValueSet()">Save Value Set</button>
+    <button class="btn btn-primary btn-xs vs-btn" ng-click="cancelValueSet()">Cancel Value Set</button>
+  </div>
   <dynamic-form template-promise="formTemplate"
     ng-model="formData">
   </dynamic-form>

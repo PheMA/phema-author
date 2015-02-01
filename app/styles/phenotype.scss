@@ -116,6 +116,40 @@
   }
 }
 
+#data-element-properties .value-set {
+  label {
+    width: 100%;
+    display: inline;
+  }
+  padding-bottom: 20px;
+  
+  .btn-default {
+    padding: 3px;
+    background: #eeeeee;
+    border: solid 1px #bbbbbb;
+    color: black;
+  }
+  
+  .btn-default:hover {
+    background: #bbbbbb;
+    color: black;
+  }
+  
+  .note {
+    color: lighten(#000, 55%);
+  }
+  
+  .clickable {
+    text-decoration: underline;
+    font-style: italic;
+  }
+  
+  .clickable:hover {
+    background-color: darken(#FFF, 20%);
+    cursor: pointer;
+  }
+}
+
 #value-set-properties {
   table {
     thead {
@@ -155,6 +189,9 @@ $value-sets-background-color: #eee;
   }
   max-height: 300px;
   overflow-y: scroll;
+  #value-set-search, #term-search {
+    width: 100%;
+  }
 }
 
 .value-set-results {
@@ -229,4 +266,12 @@ $value-sets-background-color: #eee;
 
 .codeSystemList > li {
   font-weight: bold;
+}
+
+.value-set-search-panel {
+  margin-bottom: 20px;
+  border-bottom: solid 1px gray;
+  .vs-btn {
+    margin-bottom: 10px;
+  }
 }
