@@ -414,7 +414,7 @@ function endConnector(stage, connectorObj, scope) {
       line.label(labelObj);
       line.element({name: labelTextOptions.text, uri: '', type: 'TemporalOperator'});
       
-      var mouseUpHandler = function(e) {
+      var mouseUpHandler = function() {
         clearSelections(stage);
         selectObject(stage, line, scope);
       };
@@ -429,6 +429,12 @@ function endConnector(stage, connectorObj, scope) {
 
   stage.connector = {};
   stage.drawScene();
+  
+  if (line) {
+    selectObject(stage, line, scope);
+    scope.$root.$broadcast('sophe-empty-temporal-operator-created', line);
+  }
+  
   return line;
 }
 

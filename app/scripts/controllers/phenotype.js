@@ -76,8 +76,6 @@ angular.module('sopheAuthorApp')
             valueSet.phemaObject().customList(result);
             dataElement.getStage().draw();
           }
-
-          console.log(valueSet);
         }
       });
     });
@@ -139,7 +137,6 @@ angular.module('sopheAuthorApp')
       });
 
       modalInstance.result.then(function (result) {
-        console.log(result);
         LibraryService.saveDetails(result)
           .then(function(data) {
             $location.path('/phenotype/' + data.id);
@@ -255,7 +252,6 @@ angular.module('sopheAuthorApp')
         });
       }
       else if (element.type === 'Category' || element.type === 'DataElement') {
-        console.log(element);
         // We define the element properties based on the URI (if it's QDM or FHIR)
         var isFHIR = (element.uri.indexOf('fhir') >= 0);
         modalInstance = $modal.open({
@@ -307,4 +303,11 @@ angular.module('sopheAuthorApp')
         });
       }
     };
+    
+    
+    $scope.$on('sophe-empty-temporal-operator-created', function() {
+      $scope.$apply(function() {
+        $scope.showProperties();
+      });
+    });
   }]);

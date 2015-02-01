@@ -58,6 +58,28 @@ angular.module('sophe.factories.algorithmElement', [])
       }
       group.destroy();
     }
+    
+    function _destroyConnection(connection) {
+      var connectors = connection.connectors();
+      
+      // Remove references to the connectors this line is connected with
+      var connectionsReference = connectors.start.connections();
+      var updatedConnections = connectionsReference.filter(function(obj) { return connection._id !== obj._id; });
+      connectors.start.connections(updatedConnections);
+      connectionsReference = connectors.end.connections();
+      updatedConnections = connectionsReference.filter(function(obj) { return connection._id !== obj._id; });
+      connectors.end.connections(updatedConnections);
+      
+      // Next, remove our references to the connectors
+      connection.connectors({start: null, end: null});
+      
+      // Remove the label associated with this connection
+      connection.label().destroy();
+      connection.label(null);
+      
+      // Finally, destroy this connection
+      connection.destroy();
+    }
 
     var factory = {};
     factory.addWorkflowObject = function (config, scope) {
@@ -162,6 +184,11 @@ angular.module('sophe.factories.algorithmElement', [])
       stage.mainLayer.get('Group').each(function(group) {
         if (group.selected === true) {
           _destroyGroup(group);
+        }
+      });
+      stage.mainLayer.find('PhemaConnection').each(function(connection) {
+        if (connection.selected === true) {
+          _destroyConnection(connection);
         }
       });
       stage.draw();

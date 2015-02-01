@@ -26,9 +26,12 @@ BaseElement.prototype = {
       updateActiveLineLocation(stage, evt);
     });
     kineticObj.on('mouseup', function() {
-      endConnector(stage, undefined, scope);
+      var line = endConnector(stage, undefined, scope);
       clearSelections(stage);
-      selectObject(stage, kineticObj, scope);
+      // If a line is created, we don't want to select the other object.
+      if (!line) {
+        selectObject(stage, kineticObj, scope);
+      }
     });
 
     // When we are dragging, move the drag object to be the top element, clear all
