@@ -119,5 +119,31 @@ describe('Factory: AlgorithmElementFactory', function () {
       expect(response.element().type).toEqual(config.element.type);
       expect(response.element().name).toEqual(config.element.name);
     }));
+
+    it('creates a term', inject(function() {
+      var config = {element: {type: 'Term', name: 'Term'}};
+      var response = algorithmElementFactory.addWorkflowObject(config, scope);
+      expect(response.nodeType).toEqual('Group');
+      expect(scope.canvasDetails.kineticStageObj.mainLayer.getChildren().length).toEqual(1);
+      expect(response.find('.leftConnector').length).toEqual(0);
+      expect(response.find('.rightConnector').length).toEqual(0);
+      expect(response.element().type).toEqual(config.element.type);
+      expect(response.element().name).toEqual(config.element.name);
+    }));
+  });
+
+  describe('deleteSelectedObjects', function() {
+    beforeEach(inject(function (_algorithmElementFactory_, kineticStageFactory, $rootScope, $compile) {
+      angular.element(document.body).append('<div data-kinetic-canvas data-canvas-details="canvasDetails" id="canvas">&nbsp;</div>');
+      var linkingFn = $compile('<div data-kinetic-canvas data-canvas-details="canvasDetails" id="canvas">&nbsp;</div>');
+      linkingFn(scope);
+      kineticStageFactory.create(scope, {id: 'canvas'});
+    }));
+
+    it('does not throw an error if there is no canvas', inject(function() {
+      scope = {};
+      algorithmElementFactory.deleteSelectedObjects(scope);
+      expect(console.error).toHaveBeenCalledWith('No canvas is defined');
+    }));
   });
 });

@@ -150,13 +150,13 @@ describe('Controller: PhenotypeController', function () {
     it('disables delete', inject(function() {
       spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn(null);
       this.scope.$root.$broadcast('sophe-element-selected');
-      expect(this.scope.isDeleteDisabled).toEqual(true);
+      expect(_.findWhere(this.scope.buttons, {text: 'Delete'}).disabled).toEqual(true);
     }));
 
     it('enables delete', inject(function() {
       spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn(new Element({ type: 'LogicalOperator'}));
       this.scope.$root.$broadcast('sophe-element-selected');
-      expect(this.scope.isDeleteDisabled).toEqual(false);
+      expect(_.findWhere(this.scope.buttons, {text: 'Delete'}).disabled).toEqual(false);
     }));
 
     it('disables properties', inject(function() {
@@ -168,7 +168,7 @@ describe('Controller: PhenotypeController', function () {
     it('enables properties', inject(function() {
       spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn(new Element({ type: 'LogicalOperator'}));
       this.scope.$root.$broadcast('sophe-element-selected');
-      expect(this.scope.isDeleteDisabled).toEqual(false);
+      expect(this.scope.isPropertiesDisabled).toEqual(false);
     }));
   });
 });

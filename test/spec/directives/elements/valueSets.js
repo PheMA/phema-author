@@ -2,17 +2,31 @@
 
 describe('Directive: valueSets', function () {
   beforeEach(module('sophe.elements.valueSets'));
-  beforeEach(inject(function ($compile, $rootScope) {
-    var linkingFn = $compile('<value-sets></value-sets>');
-    this.scope = $rootScope;
-    this.element = linkingFn(scope);
+  beforeEach(module('sopheAuthorApp'));
+  beforeEach(module('templates'));
+  beforeEach(inject(function ($compile, $rootScope, $httpBackend) {
+    this.compile = $compile;
+    this.rootScope = $rootScope;
   }));
 
-//   it('has some properties', function() {
-//     expect(element.someMethod()).toBe(XXX);
-//   });
+  it('defaults to the multi-display', function() {
+    var element = angular.element('<value-sets></value-sets>');
+    this.compile(element)(this.rootScope); // Compile the directive
+    this.rootScope.$digest(); // Update the HTML
+    expect(element.attr('id')).toBe('value-set-multi');
+  });
 
-//   it('does something to the scope', function() {
-//     expect(scope.someField).toBe('XXX');
-// ￼￼});
+  it('supports single display', function() {
+    var element = angular.element('<value-sets allow-select="single"></value-sets>');
+    this.compile(element)(this.rootScope); // Compile the directive
+    this.rootScope.$digest(); // Update the HTML
+    expect(element.attr('id')).toBe('value-set-single');
+  });
+
+  it('supports sidebar display', function() {
+    var element = angular.element('<value-sets location="sidebar"></value-sets>');
+    this.compile(element)(this.rootScope);
+    this.rootScope.$digest();
+    expect(element.attr('id')).toBe('value-set-sidebar');
+  });
 });

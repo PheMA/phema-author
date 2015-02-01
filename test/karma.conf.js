@@ -32,8 +32,11 @@ module.exports = function(config) {
       'bower_components/angular-tree-control/angular-tree-control.js',
       'bower_components/ng-context-menu/dist/ng-context-menu.js',
       'bower_components/angular-dynforms/dynamic-forms.js',
+      'bower_components/spin.js/spin.js',
       'bower_components/angular-spinner/angular-spinner.js',
+      'bower_components/underscore/underscore.js',
       'app/scripts/**/*.js',
+      'app/views/**/*.html',
       'test/spec/**/*.js'
     ],
 
@@ -57,9 +60,19 @@ module.exports = function(config) {
 
     // Which plugins to enable
     plugins: [
+      'karma-jasmine',
+      'karma-ng-html2js-preprocessor',
       'karma-phantomjs-launcher',
-      'karma-jasmine'
     ],
+
+    preprocessors: {
+      'app/views/**/*.html': 'ng-html2js'
+    },
+
+    ngHtml2JsPreprocessor: {
+       stripPrefix: 'app/',
+       moduleName: 'templates'
+    },
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit

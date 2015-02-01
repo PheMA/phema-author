@@ -27,15 +27,21 @@ angular.module('sophe.factories.algorithmElement', [])
       return element.container();
     }
 
+    function createTerm(config, scope) {
+      var element = new Term();
+      element.create(config, scope);
+      return element.container();
+    }
+
     function createGenericElement(config, scope) {
       var element = new GenericElement();
       element.create(config, scope);
       return element.container();
     }
-    
+
     function _destroyConnection(connection) {
       var connectors = connection.connectors();
-      
+
       // Remove references to the connectors this line is connected with
       var connectionsReference = connectors.start.connections();
       var updatedConnections = connectionsReference.filter(function(obj) { return connection._id !== obj._id; });
@@ -43,18 +49,18 @@ angular.module('sophe.factories.algorithmElement', [])
       connectionsReference = connectors.end.connections();
       updatedConnections = connectionsReference.filter(function(obj) { return connection._id !== obj._id; });
       connectors.end.connections(updatedConnections);
-      
+
       // Next, remove our references to the connectors
       connection.connectors({start: null, end: null});
-      
+
       // Remove the label associated with this connection
       connection.label().destroy();
       connection.label(null);
-      
+
       // Finally, destroy this connection
       connection.destroy();
     }
-    
+
     function _destroyGroup(group) {
       // In the group, find all connectors
       var connectors = group.find('.leftConnector, .rightConnector');
@@ -108,6 +114,9 @@ angular.module('sophe.factories.algorithmElement', [])
       else if (config.element.type === 'ValueSet') {
         workflowObject = createValueSet(config, scope);
       }
+      else if (config.element.type === 'Term') {
+        workflowObject = createTerm(config, scope);
+      }
       else {
         workflowObject = createGenericElement(config, scope);
       }
@@ -118,13 +127,13 @@ angular.module('sophe.factories.algorithmElement', [])
 
       return workflowObject;
     };
-    
+
     // Manages cleaning up all editor elements that may be associated with a group, such
     // as connector lines, references to connector lines, connector labels, etc.
     factory.destroyGroup = function(group) {
       _destroyGroup(group);
     };
-    
+
     factory.destroyConnection = function(connection) {
       _destroyConnection(connection);
     };
@@ -185,7 +194,8 @@ angular.module('sophe.factories.algorithmElement', [])
     factory.deleteSelectedObjects = function(scope) {
       // If there is no canvas to remove from, we are done here
       if('undefined' === typeof scope.canvasDetails) {
-          return null;
+        console.error('No canvas is defined');
+        return;
       }
 
       var stage = scope.canvasDetails.kineticStageObj;
