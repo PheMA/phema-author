@@ -5,8 +5,7 @@ angular.module('sophe.elements.fhir.dataElements', [])
   var directive = {
     templateUrl: 'views/elements/fhir/dataElements.html',
     restrict: 'A',
-    replace: true,
-    scope: true
+    replace: true
   };
   return directive;
 }]);

@@ -5,8 +5,7 @@ angular.module('sophe.elements.qdm.temporalOperators', [])
   var directive = {
     templateUrl: 'views/elements/qdm/temporalOperators.html',
     restrict: 'A',
-    replace: true,
-    scope: true
+    replace: true
   };
   return directive;
 }]);

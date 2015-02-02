@@ -217,8 +217,7 @@ angular.module('sophe.factories.algorithmElement', [])
         return null;
       }
 
-      var stage = scope.canvasDetails.kineticStageObj;
-      var layer = stage.find('#mainLayer')[0];
+      var layer = scope.canvasDetails.kineticStageObj.mainLayer;
       var children = layer.getChildren();
       for (var counter = 0; counter < children.length; counter++) {
         if (children[counter].selected) {

@@ -16,8 +16,7 @@ angular.module('sophe.elements.valueSets', [])
     },
     restrict: 'EA',
     controller: 'ValueSetsController',
-    replace: true,
-    scope: true
+    replace: true
   };
   return directive;
 }]);
