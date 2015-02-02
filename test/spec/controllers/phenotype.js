@@ -20,8 +20,7 @@ describe('Controller: PhenotypeController', function () {
   beforeEach(module('sopheAuthorApp'));
 
   // Setup http mocks
-  beforeEach(inject(function (_algorithmElementFactory_, _$http_, _$httpBackend_){
-    this.$http = _$http_;
+  beforeEach(inject(function (_algorithmElementFactory_, _$httpBackend_){
     this.$httpBackend = _$httpBackend_;
     this.algorithmElementFactory = _algorithmElementFactory_;
     this.categoryGet = this.$httpBackend.when('GET', 'data/qdm-categories.json');

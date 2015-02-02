@@ -6,8 +6,7 @@ describe('Controller: CodeSystemsController', function () {
   beforeEach(module('sopheAuthorApp'));
 
   // Setup http mocks
-  beforeEach(inject(function (_$http_, _$httpBackend_){
-    this.$http = _$http_;
+  beforeEach(inject(function (_$httpBackend_){
     this.$httpBackend = _$httpBackend_;
     this.codeSystemSearch = this.$httpBackend.when('GET', 'data/codeSystem-search.json');
     this.codeSystemSearch.respond({});

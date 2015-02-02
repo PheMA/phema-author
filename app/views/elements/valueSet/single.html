@@ -3,7 +3,7 @@
     <div class="col-lg-4 divider-right">
       <label>
         Search for value sets:
-        <input type="text" style="width: 100%;" ng-model="searchTerm"></input>
+        <input type="text" style="width: 100%;" ng-model="searchTerm" ng-model-options="{ debounce: 750 }"></input>
       </label>
     </div>
     <div class="col-lg-8 value-set-results">

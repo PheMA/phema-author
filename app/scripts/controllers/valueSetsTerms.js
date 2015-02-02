@@ -19,74 +19,46 @@ angular.module('sopheAuthorApp')
   $scope.selectedTerms = [];
   $scope.selectedValueSets = [];
 
-  var filterAction = function($scope, tab) {
-    if (tab === 'valueSet') {
-      if ($scope.valueSetSearch === '') {
-        $scope.isSearching = false;
-        $scope.valueSetSearchResults = [];
-      }
-      else {
-        $scope.isSearching = true;
-        ValueSetService.search($scope.valueSetSearch)
-          .then(ValueSetService.processValues)
-          .then(function(valueSets) {
-            $scope.valueSetSearchResults = valueSets;
+  $scope.$watch('valueSetSearch', function() {
+    if ($scope.valueSetSearch === '') {
+      $scope.isSearching = false;
+      $scope.valueSetSearchResults = [];
+    }
+    else {
+      $scope.isSearching = true;
+      ValueSetService.search($scope.valueSetSearch)
+        .then(ValueSetService.processValues)
+        .then(function(valueSets) {
+          $scope.valueSetSearchResults = valueSets;
+          $scope.isSearching = false;
+        });
+    }
+  });
+
+  $scope.$watch('codeSystemSearch', function() {
+    if ($scope.codeSystemSearch === '') {
+      $scope.isSearching = false;
+      $scope.termSearchResults = [];
+    }
+    else {
+      $scope.isSearching = true;
+      var codeSystems = [];
+      for (var index = 0; index < CodeSystemService.supportedCodeSystems.length; index++) {
+        var item = CodeSystemService.supportedCodeSystems[index];
+        CodeSystemService.search(item.codeSystem, item.version, $scope.searchTerm)
+          .then(CodeSystemService.processValues)
+          .then(function(terms) {
+            codeSystems.push({
+              id: item.codeSystem,
+              name: item.codeSystem + ' (' + terms.length + ' terms)',
+              type: 'CodeSystem',
+              children: terms});
+            $scope.searchResults = codeSystems;
             $scope.isSearching = false;
           });
       }
     }
-    else if (tab === 'codeSystem') {
-      if ($scope.codeSystemSearch === '') {
-        $scope.isSearching = false;
-        $scope.termSearchResults = [];
-      }
-      else {
-        $scope.isSearching = true;
-        var codeSystems = [];
-        CodeSystemService.search('ICD-9-CM', '2013_2012_08_06', $scope.codeSystemSearch)
-          .then(CodeSystemService.processValues)
-          .then(function(terms) {
-            codeSystems.push({
-              id: 'ICD-9-CM (' + terms.length + ' terms)',
-              name: 'ICD-9-CM',
-              type: 'CodeSystem',
-              children: terms});
-            $scope.termSearchResults = codeSystems;
-            $scope.isSearching = false;
-          });
-        CodeSystemService.search('ICD-10', '2010', $scope.codeSystemSearch)
-          .then(CodeSystemService.processValues)
-          .then(function(terms) {
-            codeSystems.push({
-              id: 'ICD-10 (' + terms.length + ' terms)',
-              name: 'ICD-10',
-              type: 'CodeSystem',
-              children: terms});
-            $scope.termSearchResults = codeSystems;
-            $scope.isSearching = false;
-          });
-        CodeSystemService.search('LOINC', '246', $scope.codeSystemSearch)
-          .then(CodeSystemService.processValues)
-          .then(function(terms) {
-            codeSystems.push({
-              id: 'LOINC (' + terms.length + ' terms)',
-              name: 'LOINC',
-              type: 'CodeSystem',
-              children: terms});
-            $scope.termSearchResults = codeSystems;
-            $scope.isSearching = false;
-          });
-      }
-    }
-  };
-
-  var filterDelayed = function($scope, tab) {
-    $scope.$apply(function(){filterAction($scope, tab);});
-  };
-
-  var filterThrottled = _.debounce(filterDelayed, 750);
-  $scope.$watch('valueSetSearch', function(){ filterThrottled($scope, 'valueSet'); });
-  $scope.$watch('codeSystemSearch', function(){ filterThrottled($scope, 'codeSystem'); });
+  });
 
   // Used for multi-selection mode
   $scope.addToTermList = function(term) {

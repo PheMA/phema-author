@@ -4,6 +4,13 @@
 
 angular.module('sophe.services.codeSystem', ['sophe.services.url', 'ngResource'])
 .service('CodeSystemService', ['$http', '$q', 'URLService', function($http, $q, URLService) {
+  // The list of code systems and versions that are supported for terminology searches
+  this.supportedCodeSystems = [
+    { codeSystem: 'ICD-9-CM', version: '2013_2012_08_06' },
+    { codeSystem: 'ICD-10', version: '2010' },
+    { codeSystem: 'LOINC', version: '246' }
+  ];
+
   this.search = function(codeSystem, version, search) {
     var deferred = $q.defer();
     $http.get(URLService.getCodeSystemServiceURL(codeSystem, version, search))

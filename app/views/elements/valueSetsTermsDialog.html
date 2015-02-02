@@ -9,7 +9,7 @@
           <div class="col-lg-4 divider-right">
             <label>
               Search for value sets:
-              <input type="text" style="width: 100%;" ng-model="$parent.valueSetSearch"></input>
+              <input type="text" style="width: 100%;" ng-model="$parent.valueSetSearch" ng-model-options="{ debounce: 750 }"></input>
             </label>
           </div>
           <div class="col-lg-8 value-set-results">
@@ -45,7 +45,7 @@
           <div class="col-lg-4">
             <label>
               Search for terms/codes:
-              <input type="text" style="width: 100%;" ng-model="$parent.codeSystemSearch"></input>
+              <input type="text" style="width: 100%;" ng-model="$parent.codeSystemSearch" ng-model-options="{ debounce: 750 }"></input>
             </label>
           </div>
           <div class="col-lg-8">

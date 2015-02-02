@@ -43,39 +43,20 @@ angular.module('sopheAuthorApp')
       else {
         $scope.isSearching = true;
         var codeSystems = [];
-        CodeSystemService.search('ICD-9-CM', '2013_2012_08_06', $scope.codeSystemSearch)
-          .then(CodeSystemService.processValues)
-          .then(function(terms) {
-            codeSystems.push({
-              id: 'ICD-9-CM (' + terms.length + ' terms)',
-              name: 'ICD-9-CM',
-              type: 'CodeSystem',
-              children: terms});
-            $scope.termSearchResults = codeSystems;
-            $scope.isSearching = false;
-          });
-        CodeSystemService.search('ICD-10', '2010', $scope.codeSystemSearch)
-          .then(CodeSystemService.processValues)
-          .then(function(terms) {
-            codeSystems.push({
-              id: 'ICD-10 (' + terms.length + ' terms)',
-              name: 'ICD-10',
-              type: 'CodeSystem',
-              children: terms});
-            $scope.termSearchResults = codeSystems;
-            $scope.isSearching = false;
-          });
-        CodeSystemService.search('LOINC', '246', $scope.codeSystemSearch)
-          .then(CodeSystemService.processValues)
-          .then(function(terms) {
-            codeSystems.push({
-              id: 'LOINC (' + terms.length + ' terms)',
-              name: 'LOINC',
-              type: 'CodeSystem',
-              children: terms});
-            $scope.termSearchResults = codeSystems;
-            $scope.isSearching = false;
-          });
+        for (var index = 0; index < CodeSystemService.supportedCodeSystems.length; index++) {
+          var item = CodeSystemService.supportedCodeSystems[index];
+          CodeSystemService.search(item.codeSystem, item.version, $scope.searchTerm)
+            .then(CodeSystemService.processValues)
+            .then(function(terms) {
+              codeSystems.push({
+                id: item.codeSystem,
+                name: item.codeSystem + ' (' + terms.length + ' terms)',
+                type: 'CodeSystem',
+                children: terms});
+              $scope.searchResults = codeSystems;
+              $scope.isSearching = false;
+            });
+        }
       }
     }
   };
