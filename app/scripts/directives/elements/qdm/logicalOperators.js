@@ -5,10 +5,7 @@ angular.module('sophe.elements.qdm.logicalOperators', [])
   var directive = {
     templateUrl: 'views/elements/qdm/logicalOperators.html',
     restrict: 'A',
-    replace: true,
-    scope: true,
-    link: function($scope, $element, $attrs, $controller) {
-    }
+    replace: true
   };
   return directive;
 }]);

@@ -5,10 +5,7 @@ angular.module('sophe.elements.phenotype', [])
   var directive = {
     templateUrl: 'views/elements/phenotype.html',
     restrict: 'A',
-    replace: true,
-    scope: true,
-    link: function($scope, $element, $attrs, $controller) {
-    }
+    replace: true
   };
   return directive;
 }]);

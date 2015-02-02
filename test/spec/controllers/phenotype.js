@@ -20,8 +20,7 @@ describe('Controller: PhenotypeController', function () {
   beforeEach(module('sopheAuthorApp'));
 
   // Setup http mocks
-  beforeEach(inject(function (_algorithmElementFactory_, _$http_, _$httpBackend_){
-    this.$http = _$http_;
+  beforeEach(inject(function (_algorithmElementFactory_, _$httpBackend_){
     this.$httpBackend = _$httpBackend_;
     this.algorithmElementFactory = _algorithmElementFactory_;
     this.categoryGet = this.$httpBackend.when('GET', 'data/qdm-categories.json');
@@ -150,13 +149,13 @@ describe('Controller: PhenotypeController', function () {
     it('disables delete', inject(function() {
       spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn(null);
       this.scope.$root.$broadcast('sophe-element-selected');
-      expect(this.scope.isDeleteDisabled).toEqual(true);
+      expect(_.findWhere(this.scope.buttons, {text: 'Delete'}).disabled).toEqual(true);
     }));
 
     it('enables delete', inject(function() {
       spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn(new Element({ type: 'LogicalOperator'}));
       this.scope.$root.$broadcast('sophe-element-selected');
-      expect(this.scope.isDeleteDisabled).toEqual(false);
+      expect(_.findWhere(this.scope.buttons, {text: 'Delete'}).disabled).toEqual(false);
     }));
 
     it('disables properties', inject(function() {
@@ -168,7 +167,7 @@ describe('Controller: PhenotypeController', function () {
     it('enables properties', inject(function() {
       spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn(new Element({ type: 'LogicalOperator'}));
       this.scope.$root.$broadcast('sophe-element-selected');
-      expect(this.scope.isDeleteDisabled).toEqual(false);
+      expect(this.scope.isPropertiesDisabled).toEqual(false);
     }));
   });
 });

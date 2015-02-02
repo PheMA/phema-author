@@ -1,9 +1,9 @@
-<div class="value-sets-container">
+<div id="value-set-multi" class="value-sets-container">
   <div class="row search-panel">
     <div class="col-lg-4">
       <label>
         Search for value sets:
-        <input type="text" style="width: 100%;" ng-model="searchTerm"></input>
+        <input type="text" style="width: 100%;" ng-model="searchTerm" ng-model-options="{ debounce: 750 }"></input>
       </label>
     </div>
     <div class="col-lg-8">
