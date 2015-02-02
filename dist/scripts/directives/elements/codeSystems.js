@@ -13,10 +13,7 @@ angular.module('sophe.elements.codeSystems', [])
     },
     restrict: 'EA',
     controller: 'CodeSystemsController',
-    replace: true,
-    scope: true,
-    link: function($scope, $element, $attrs, $controller) {
-    }
+    replace: true
   };
   return directive;
 }]);

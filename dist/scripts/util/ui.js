@@ -379,7 +379,7 @@ function startConnector(stage, connectorObj) {
 
 // For a line in progress, end the line at the given connector.  If no connector is present,
 // or the connector isn't valid, remove the in progress line.
-function endConnector(stage, connectorObj, scope) {
+function endConnector(stage, connectorObj, scope, suppressCreateEvent) {
   var line = null;
   if (stage.connector.status === 'drawing') {
     // If we are dropping where we started, or there is no end connection point, the line
@@ -400,10 +400,6 @@ function endConnector(stage, connectorObj, scope) {
       connections = lineConnectors.start.connections();
       connections.push(line);
       lineConnectors.start.connections(connections);
-      line.on('mouseup', function(e) {
-        clearSelections(stage);
-        selectObject(stage, e.target, scope);
-      });
       line.connectors(lineConnectors);
 
       var labelTextOptions = {
@@ -417,6 +413,13 @@ function endConnector(stage, connectorObj, scope) {
       stage.find('#mainLayer').add(labelObj);
       line.label(labelObj);
       line.element({name: labelTextOptions.text, uri: '', type: 'TemporalOperator'});
+
+      var mouseUpHandler = function() {
+        clearSelections(stage);
+        selectObject(stage, line, scope);
+      };
+      line.on('mouseup', mouseUpHandler);
+      labelObj.on('click', mouseUpHandler);
     }
   }
 
@@ -426,6 +429,12 @@ function endConnector(stage, connectorObj, scope) {
 
   stage.connector = {};
   stage.drawScene();
+
+  if (line && !suppressCreateEvent) {
+    selectObject(stage, line, scope);
+    scope.$root.$broadcast('sophe-empty-temporal-operator-created', line);
+  }
+
   return line;
 }
 

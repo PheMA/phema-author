@@ -1,5 +1,5 @@
 'use strict';
-/* globals ArrayUtil, findParentElementByName */
+/* globals ArrayUtil, findParentElementByName, ValueSet, _ */
 
 /**
  * @ngdoc function
@@ -12,7 +12,6 @@ angular.module('sopheAuthorApp')
   .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', '$location', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'QDMElementService', 'FHIRElementService', 'LibraryService', function ($scope, $http, $routeParams, $modal, $location, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, QDMElementService, FHIRElementService, LibraryService) {
     $scope.phenotype = $routeParams.id;
     $scope.status = { open: [true, false, false, false, false, false, false]};
-    $scope.isDeleteDisabled = true;
     $scope.isPropertiesDisabled = true;
     var advancedRegEx = new RegExp('[a-z]+\\sConcurrent With', 'i');
     $scope.temporalFilter = function(item) {
@@ -56,28 +55,14 @@ angular.module('sopheAuthorApp')
         if (result) {
           // If we just have a value set, we will create that and place it in the object
           var valueSet;
-          if (result.valueSets.length > 0 && result.terms.length === 0) {
-            valueSet = $scope.addWorkflowObject({x: 0, y: 0, element: result.valueSets[0]});
-            dataElement.phemaObject().valueSet(valueSet);
-            dataElement.getStage().draw();
-          }
-          // Otherwise we are going to build a temporary value set based on this collection
-          else {
-            valueSet = $scope.addWorkflowObject({
-              x: 0,
-              y: 0,
-              element: {
-                id: '',
-                name: 'Custom Value Set',
-                type: 'ValueSet'
-              }
-            });
-            dataElement.phemaObject().valueSet(valueSet);
+          var element = ValueSet.createElementFromData(result);
+          valueSet = $scope.addWorkflowObject({x: 0, y: 0, element: element});
+          dataElement.phemaObject().valueSet(valueSet);
+          if (element.customList) {
             valueSet.phemaObject().customList(result);
-            dataElement.getStage().draw();
+            delete element.customList;
           }
-
-          console.log(valueSet);
+          dataElement.getStage().draw();
         }
       });
     });
@@ -85,7 +70,7 @@ angular.module('sopheAuthorApp')
     $scope.$on('sophe-element-selected', function(evt, args) {
       $scope.$apply(function() {
         $scope.isPropertiesDisabled = !$scope.canShowProperties(args);
-        $scope.isDeleteDisabled = !$scope.canDelete();
+        _.findWhere($scope.buttons, {text: 'Delete'}).disabled = !$scope.canDelete();
       });
     });
 
@@ -139,7 +124,6 @@ angular.module('sopheAuthorApp')
       });
 
       modalInstance.result.then(function (result) {
-        console.log(result);
         LibraryService.saveDetails(result)
           .then(function(data) {
             $location.path('/phenotype/' + data.id);
@@ -167,16 +151,16 @@ angular.module('sopheAuthorApp')
     };
 
     $scope.buttons = [
-      {text: 'Save', iconClass:'fa fa-save', event: $scope.save},
-      {text: 'Load', iconClass:'fa fa-folder-open', event: $scope.load},
-      {text: 'Export', iconClass:'fa fa-arrow-circle-down'},
+      {text: 'Save', iconClass:'fa fa-save', event: $scope.save, disabled: false},
+      {text: 'Load', iconClass:'fa fa-folder-open', event: $scope.load, disabled: false},
+      {text: 'Export', iconClass:'fa fa-arrow-circle-down', disabled: true},
       {spacer: true},
-      {text: 'Copy', iconClass:'fa fa-copy', event: $scope.copy},
-      {text: 'Paste', iconClass:'fa fa-paste', event: $scope.paste},
-      {text: 'Undo', iconClass:'fa fa-undo'},
-      {text: 'Redo', iconClass:'fa fa-repeat'},
+      {text: 'Copy', iconClass:'fa fa-copy', event: $scope.copy, disabled: true},
+      {text: 'Paste', iconClass:'fa fa-paste', event: $scope.paste, disabled: true},
+      {text: 'Undo', iconClass:'fa fa-undo', disabled: true},
+      {text: 'Redo', iconClass:'fa fa-repeat', disabled: true},
       {spacer: true},
-      {text: 'Delete', iconClass:'fa fa-remove', event: $scope.delete},
+      {text: 'Delete', iconClass:'fa fa-remove', event: $scope.delete, disabled: true},
     ];
 
     $scope.canShowProperties = function(item) {
@@ -255,7 +239,6 @@ angular.module('sopheAuthorApp')
         });
       }
       else if (element.type === 'Category' || element.type === 'DataElement') {
-        console.log(element);
         // We define the element properties based on the URI (if it's QDM or FHIR)
         var isFHIR = (element.uri.indexOf('fhir') >= 0);
         modalInstance = $modal.open({
@@ -265,12 +248,52 @@ angular.module('sopheAuthorApp')
           resolve: {
             element: function () {
               return angular.copy(element);
+            },
+            valueSet: function() {
+              if (selectedElement.phemaObject() && selectedElement.phemaObject().valueSet()) {
+                return angular.copy(selectedElement.phemaObject().valueSet().element());
+              }
+              else {
+                return null;
+              }
             }
           }
         });
 
         modalInstance.result.then(function (result) {
-          element.attributes = result;
+          element.attributes = result.attributes;
+
+          var createNewVS = false;
+          var removeOldVS = false;
+          var existingValueSet = null;
+          if (selectedElement.phemaObject() &&
+              selectedElement.phemaObject().valueSet() &&
+              selectedElement.phemaObject().valueSet().element()) {
+            existingValueSet = selectedElement.phemaObject().valueSet();
+            if (existingValueSet.element().id !== result.valueSet.id) {
+              createNewVS = true;
+              removeOldVS = true;
+            }
+          }
+          else if (result.valueSet.id) {
+            createNewVS = true;
+          }
+
+          if (removeOldVS) {
+            // Remove the old element from the UI
+            algorithmElementFactory.destroyGroup(existingValueSet);
+            selectedElement.phemaObject().valueSet(null);
+          }
+
+          if (createNewVS) {
+            var newValueSet = $scope.addWorkflowObject({x: 0, y: 0, element: result.valueSet});
+            selectedElement.phemaObject().valueSet(newValueSet);
+            if (result.valueSet.customList) {
+              newValueSet.phemaObject().customList(result.valueSet.customList);
+              delete result.valueSet.customList;
+            }
+            selectedElement.getStage().draw();
+          }
         });
       }
       else if (element.type === 'Phenotype') {
@@ -307,4 +330,10 @@ angular.module('sopheAuthorApp')
         });
       }
     };
+
+    $scope.$on('sophe-empty-temporal-operator-created', function() {
+      $scope.$apply(function() {
+        $scope.showProperties();
+      });
+    });
   }]);

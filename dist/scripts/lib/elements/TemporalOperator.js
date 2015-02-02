@@ -92,7 +92,7 @@ TemporalOperator.prototype.create = function(config, scope) {
 
   var stage = scope.canvasDetails.kineticStageObj;
   startConnector(stage, eventAConnectors[1]);
-  var line = endConnector(stage, eventBConnectors[0], scope);
+  var line = endConnector(stage, eventBConnectors[0], scope, true);
   updateConnectedLines(eventAConnectors[1], stage);
   if (line !== null) {
     line.label().setText(config.element.name);

@@ -15,7 +15,9 @@ DataElement.prototype.connectEvents = function(group, scope) {
   this.connectConnectorEvents(group);
 
   group.find('.termDropText')[0].on('click', function(e) {
-    scope.$root.$broadcast('sophe-search-valuesets', e.target.parent);
+    if (e.evt.which !== 3) {
+      scope.$root.$broadcast('sophe-search-valuesets', e.target.parent);
+    }
   });
 };
 
@@ -65,8 +67,13 @@ DataElement.prototype.valueSet = function(valueSet) {
   }
   else {
     this._valueSet = valueSet;
-    this.containedElements([valueSet]);
-    this._layoutElementsAfterTermDrop(valueSet);
+    if (valueSet) {
+      this.containedElements([valueSet]);
+      this._layoutElementsAfterTermDrop(valueSet);
+    }
+    else {
+      this.containedElements([]);
+    }
   }
 };
 
@@ -95,11 +102,13 @@ DataElement.prototype.create = function(config, scope) {
   };
   var headerObj = this.createText(headerOptions, group);
 
+  var termStrokeColor = '#CCCCCC';
+  var termStrokeWidth = 1;
   var termDropOptions = {
     x: options.x + 10, y: headerObj.height() + headerOptions.y + 5,
     width: options.width - 20, height: 75,
     fill: '#EEEEEE', name: 'termDrop',
-    stroke: '#CCCCCC', strokeWidth: 1
+    stroke: termStrokeColor, strokeWidth: termStrokeWidth
   };
   var termObj = this.createRectangle(termDropOptions, group);
 
@@ -110,7 +119,18 @@ DataElement.prototype.create = function(config, scope) {
     text: 'Drag and drop clinical terms or value sets here, or click to search',
     align: 'center', padding: 5, name: 'termDropText',
   };
-  this.createText(termTextOptions, group);
+  var termTextObj = this.createText(termTextOptions, group);
+  
+  termTextObj.on('mouseover', function (e) {
+    termObj.setStrokeWidth(3);
+    termObj.setStroke('#AAAAAA');
+    termObj.getParent().draw();
+  });
+  termTextObj.on('mouseout', function (e) {
+    termObj.setStrokeWidth(termStrokeWidth);
+    termObj.setStroke(termStrokeColor);
+    termObj.getParent().draw();
+  });
 
   var configOptions = {
     x: termDropOptions.x, y: termObj.height() + termDropOptions.y + 5,

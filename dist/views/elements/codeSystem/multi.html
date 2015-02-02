@@ -1,9 +1,9 @@
-<div class="value-sets-container">
+<div id="code-system-multi" class="code-system-container">
   <div class="row search-panel">
     <div class="col-lg-4">
       <label>
         Search for value sets:
-        <input type="text" style="width: 100%;" ng-model="searchTerm"></input>
+        <input type="text" style="width: 100%;" ng-model="search.term" ng-model-options="{ debounce: 750 }"></input>
       </label>
     </div>
     <div class="col-lg-8">
@@ -18,10 +18,10 @@
   <div class="row value-set-results">
     <div class="col-lg-6 divider-right">
       <label>Value sets matching your search criteria:</label>
-      <div us-spinner="{radius:8, width:4, length: 8, top: '50%', left: '25%'}" class="note" ng-show="isSearching">
+      <div us-spinner="{radius:8, width:4, length: 8, top: '50%', left: '25%'}" class="note" ng-show="search.isSearching">
         Please wait
       </div>
-      <div class="note" ng-show="searchResults.length === 0 && !isSearching">
+      <div class="note" ng-show="search.results.length === 0 && !search.isSearching">
         (No value sets were found that met your criteria)
       </div>
       <table>
@@ -30,7 +30,7 @@
           <th>Name</th>
           <th>ID</th>
         </thead>
-        <tr ng-repeat="valueSet in searchResults">
+        <tr ng-repeat="valueSet in search.results">
           <td>
             <input type="checkbox" ng-click="addToList(valueSet)"></input>
           </td>

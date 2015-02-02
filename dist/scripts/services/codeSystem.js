@@ -4,6 +4,13 @@
 
 angular.module('sophe.services.codeSystem', ['sophe.services.url', 'ngResource'])
 .service('CodeSystemService', ['$http', '$q', 'URLService', function($http, $q, URLService) {
+  // The list of code systems and versions that are supported for terminology searches
+  this.supportedCodeSystems = [
+    { codeSystem: 'ICD-9-CM', version: '2013_2012_08_06' },
+    { codeSystem: 'ICD-10', version: '2010' },
+    { codeSystem: 'LOINC', version: '246' }
+  ];
+
   this.search = function(codeSystem, version, search) {
     var deferred = $q.defer();
     $http.get(URLService.getCodeSystemServiceURL(codeSystem, version, search))
@@ -32,5 +39,35 @@ angular.module('sophe.services.codeSystem', ['sophe.services.url', 'ngResource']
       codeSystems = transformedData.sort(ArrayUtil.sortByName);
     }
     return codeSystems;
+  };
+
+  this._setupSearch = function(index, codeSystems, search) {
+    var item = this.supportedCodeSystems[index];
+    this.search(item.codeSystem, item.version, search.term)
+      .then(this.processValues)
+      .then(function(terms) {
+        codeSystems.push({
+          id: item.codeSystem,
+          name: item.codeSystem + ' (' + terms.length + ' terms)',
+          type: 'CodeSystem',
+          children: terms});
+        search.results = codeSystems;
+        search.isSearching = false;
+      });
+  };
+
+  this.searchHelper = function(search) {
+    if (search.term === '') {
+      search.isSearching = false;
+      search.results = [];
+    }
+    else {
+      search.isSearching = true;
+      search.results = [];
+      var codeSystems = [];
+      for (var index = 0; index < this.supportedCodeSystems.length; index++) {
+        this._setupSearch(index, codeSystems, search);
+      }
+    }
   };
 }]);

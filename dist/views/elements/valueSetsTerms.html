@@ -1,0 +1,106 @@
+<div>
+  <tabset>
+    <tab heading="Value Sets">
+      <div class="value-set-container">
+        <div class="row search-panel">
+          <div class="col-lg-4 divider-right">
+            <label id='value-set-search'>
+              Search for value sets:
+              <input type="text" style="width: 100%;" ng-model="valueSetSearch.term" ng-model-options="{ debounce: 750 }"></input>
+            </label>
+          </div>
+          <div class="col-lg-8 value-set-results">
+            <label>Value sets matching your search criteria:</label>
+            <div us-spinner="{radius:8, width:4, length: 8, top: '50%', left: '25%'}" class="note" ng-show="valueSetSearch.isSearching">
+              Please wait
+            </div>
+            <div class="note" ng-show="valueSetSearch.results.length === 0 && !valueSetSearch.isSearching">
+              (No value sets were found that met your criteria)
+            </div>
+            <table>
+              <thead>
+                <th>Name</th>
+                <th>ID</th>
+              </thead>
+              <tr ng-repeat="valueSet in valueSetSearch.results" draggable ng-click="setSelectedValueSet(valueSet)" ng-class="{selected: valueSet === selectedValueSets[0]}">
+                <td>
+                  {{valueSet.name}}
+                </td>
+                <td>
+                  {{valueSet.id}}
+                </td>
+                <input type="hidden" value="{{valueSet}}"></input>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </tab>
+    <tab heading="Terminologies / Codes">
+      <div class="code-systems-container">
+        <div class="row search-panel">
+          <div class="col-lg-4">
+            <label id='term-search'>
+              Search for terms/codes:
+              <input type="text" style="width: 100%;" ng-model="termSearch.term" ng-model-options="{ debounce: 750 }"></input>
+            </label>
+          </div>
+          <div class="col-lg-8">
+            <ol class="note-sm">
+              <li>Enter a search term for a condition, procedure or medication (e.g. 'diabetes', 'CABG', 'statin').</li>
+              <li>When you have found a value set you would like to use, click the 'Add' button</li>
+              <li>After you have selected all the value sets you want to use, click 'OK'</li>
+              <li>If you want to remove a value set from your saved list, click the 'Remove' button</li>
+            </ol>
+          </div>
+        </div>
+        <div class="row code-systems-results">
+          <div class="col-lg-6 divider-right">
+            <label>Terms matching your search criteria:</label>
+            <div us-spinner="{radius:8, width:4, length: 8, top: '50%', left: '25%'}" class="note" ng-show="termSearch.isSearching">
+              Please wait
+            </div>
+            <div class="note" ng-show="termSearch.results.length === 0 && !termSearch.isSearching">
+              (No terms were found that met your criteria)
+            </div>
+            <ul class="codeSystemList">
+              <li ng-repeat="codeSystem in termSearch.results">
+                {{codeSystem.name}}
+                <ul>
+                  <li ng-repeat="term in codeSystem.children">
+                    <input type="checkbox" ng-click="addToTermList(term)"></input>
+                    {{term.name}}
+                    ({{term.id}})
+                  </li>
+              </li>
+            </ul>
+          </div>
+          <div class="col-lg-6">
+            <label>Selected terms:</label>
+            <div class="note" ng-show="selectedTerms.length === 0">
+              (You have not selected any terms)
+            </div>
+            <table>
+              <thead>
+                <th></th>
+                <th>Name</th>
+                <th>Code</th>
+              </thead>
+              <tr ng-repeat="term in selectedTerms">
+                <td>
+                  <input type="checkbox" checked="checked" ng-click="removeFromTermList(term)"></input>
+                </td>
+                <td>
+                  {{term.name}}
+                </td>
+                <td>
+                  {{term.id}}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </tab>
+  </tabset>
+</div>

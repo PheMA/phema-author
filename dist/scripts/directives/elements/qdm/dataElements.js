@@ -5,10 +5,7 @@ angular.module('sophe.elements.qdm.dataElements', [])
   var directive = {
     templateUrl: 'views/elements/qdm/dataElements.html',
     restrict: 'A',
-    replace: true,
-    scope: true,
-    link: function($scope, $element, $attrs, $controller) {
-    }
+    replace: true
   };
   return directive;
 }]);

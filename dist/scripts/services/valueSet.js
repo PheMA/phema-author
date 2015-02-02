@@ -98,4 +98,21 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
     }
     return members;
   };
+
+  this.searchHelper = function(search) {
+    if (search.term === '') {
+      search.isSearching = false;
+      search.results = [];
+    }
+    else {
+      search.isSearching = true;
+      search.results = [];
+      this.search(search.term)
+        .then(this.processValues)
+        .then(function(valueSets) {
+          search.results = valueSets;
+          search.isSearching = false;
+        });
+    }
+  };
 }]);

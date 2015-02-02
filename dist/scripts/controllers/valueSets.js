@@ -16,7 +16,7 @@ angular.module('sopheAuthorApp')
   $scope.searchResults = [];
   $scope.selectedValueSets = [];
 
-  var filterAction = function($scope) {
+  $scope.$watch('searchTerm', function() {
     if ($scope.searchTerm === '') {
       $scope.isSearching = false;
       $scope.searchResults = [];
@@ -30,14 +30,7 @@ angular.module('sopheAuthorApp')
           $scope.isSearching = false;
         });
     }
-  };
-
-  var filterDelayed = function($scope) {
-    $scope.$apply(function(){filterAction($scope);});
-  };
-
-  var filterThrottled = _.debounce(filterDelayed, 750);
-  $scope.$watch('searchTerm', function(){filterThrottled($scope);});
+  });
 
   // Used for multi-selection mode
   $scope.addToList = function(valueSet) {
