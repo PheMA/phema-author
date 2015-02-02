@@ -67,18 +67,6 @@ angular.module('sophe.services.codeSystem', ['sophe.services.url', 'ngResource']
       var codeSystems = [];
       for (var index = 0; index < this.supportedCodeSystems.length; index++) {
         this._setupSearch(index, codeSystems, search);
-        // var item = this.supportedCodeSystems[index];
-        // this.search(item.codeSystem, item.version, search.term)
-        //   .then(this.processValues)
-        //   .then(function(terms) {
-        //     codeSystems.push({
-        //       id: item.codeSystem,
-        //       name: item.codeSystem + ' (' + terms.length + ' terms)',
-        //       type: 'CodeSystem',
-        //       children: terms});
-        //     search.results = codeSystems;
-        //     search.isSearching = false;
-        //   });
       }
     }
   };

@@ -6,15 +6,15 @@
           <div class="col-lg-4 divider-right">
             <label id='value-set-search'>
               Search for value sets:
-              <input type="text" style="width: 100%;" ng-model="$parent.valueSetSearch" ng-model-options="{ debounce: 750 }"></input>
+              <input type="text" style="width: 100%;" ng-model="valueSetSearch.term" ng-model-options="{ debounce: 750 }"></input>
             </label>
           </div>
           <div class="col-lg-8 value-set-results">
             <label>Value sets matching your search criteria:</label>
-            <div us-spinner="{radius:8, width:4, length: 8, top: '50%', left: '25%'}" class="note" ng-show="isSearching">
+            <div us-spinner="{radius:8, width:4, length: 8, top: '50%', left: '25%'}" class="note" ng-show="valueSetSearch.isSearching">
               Please wait
             </div>
-            <div class="note" ng-show="valueSetSearchResults.length === 0 && !isSearching">
+            <div class="note" ng-show="valueSetSearch.results.length === 0 && !valueSetSearch.isSearching">
               (No value sets were found that met your criteria)
             </div>
             <table>
@@ -22,7 +22,7 @@
                 <th>Name</th>
                 <th>ID</th>
               </thead>
-              <tr ng-repeat="valueSet in valueSetSearchResults" draggable ng-click="setSelectedValueSet(valueSet)" ng-class="{selected: valueSet === selectedValueSets[0]}">
+              <tr ng-repeat="valueSet in valueSetSearch.results" draggable ng-click="setSelectedValueSet(valueSet)" ng-class="{selected: valueSet === selectedValueSets[0]}">
                 <td>
                   {{valueSet.name}}
                 </td>
@@ -42,7 +42,7 @@
           <div class="col-lg-4">
             <label id='term-search'>
               Search for terms/codes:
-              <input type="text" style="width: 100%;" ng-model="$parent.termSearch.term" ng-model-options="{ debounce: 750 }"></input>
+              <input type="text" style="width: 100%;" ng-model="termSearch.term" ng-model-options="{ debounce: 750 }"></input>
             </label>
           </div>
           <div class="col-lg-8">
