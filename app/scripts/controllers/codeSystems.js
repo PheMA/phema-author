@@ -11,35 +11,11 @@
  */
 angular.module('sopheAuthorApp')
 .controller('CodeSystemsController', ['$scope', '$http', 'CodeSystemService', function ($scope, $http, CodeSystemService) {
-  $scope.searchTerm = '';
-  $scope.isSearching = false;
-  $scope.searchResults = [];
+  $scope.search = {term: '', isSearching: false, results: []};
   $scope.selectedCodeSystems = [];
 
-  $scope.$watch('searchTerm', function() {
-    if ($scope.searchTerm === '') {
-      $scope.isSearching = false;
-      $scope.searchResults = [];
-    }
-    else {
-      $scope.isSearching = true;
-      $scope.searchResults = [];
-      var codeSystems = [];
-      for (var index = 0; index < CodeSystemService.supportedCodeSystems.length; index++) {
-        var item = CodeSystemService.supportedCodeSystems[index];
-        CodeSystemService.search(item.codeSystem, item.version, $scope.searchTerm)
-          .then(CodeSystemService.processValues)
-          .then(function(terms) {
-            codeSystems.push({
-              id: item.codeSystem,
-              name: item.codeSystem + ' (' + terms.length + ' terms)',
-              type: 'CodeSystem',
-              children: terms});
-            $scope.searchResults = codeSystems;
-            $scope.isSearching = false;
-          });
-      }
-    }
+  $scope.$watch('search.term', function() {
+    CodeSystemService.searchHelper($scope.search);
   });
 
   // Used for multi-selection mode

@@ -53,11 +53,14 @@ describe('Controller: CodeSystemsController', function () {
     });
 
     var scope = this.scope;
-    scope.searchTerm = 'test';
+    scope.search.term = 'test';
     scope.$apply();
     this.$httpBackend.flush();
     $timeout.flush();
     // 1 result is returned 3 times (one for each code system)
-    expect(scope.searchResults.length).toBe(3);
+    expect(scope.search.results.length).toBe(3);
+    expect(scope.search.results[0].id).toBe('ICD-9-CM');
+    expect(scope.search.results[1].id).toBe('ICD-10');
+    expect(scope.search.results[2].id).toBe('LOINC');
   }));
 });

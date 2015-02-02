@@ -12,10 +12,11 @@
 angular.module('sopheAuthorApp')
 .controller('ValueSetsTermsDialogController', ['$scope', '$http', '$modalInstance', 'ValueSetService', 'CodeSystemService', function ($scope, $http, $modalInstance, ValueSetService, CodeSystemService) {
   $scope.valueSetSearch = '';
-  $scope.codeSystemSearch = '';
+  //$scope.codeSystemSearch = '';
   $scope.isSearching = false;
-  $scope.termSearchResults = [];
+  //$scope.termSearchResults = [];
   $scope.valueSetSearchResults = [];
+  $scope.termSearch = {term: '', isSearching: false, results: []};
   $scope.selectedTerms = [];
   $scope.selectedValueSets = [];
 
@@ -35,30 +36,30 @@ angular.module('sopheAuthorApp')
           });
       }
     }
-    else if (tab === 'codeSystem') {
-      if ($scope.codeSystemSearch === '') {
-        $scope.isSearching = false;
-        $scope.termSearchResults = [];
-      }
-      else {
-        $scope.isSearching = true;
-        var codeSystems = [];
-        for (var index = 0; index < CodeSystemService.supportedCodeSystems.length; index++) {
-          var item = CodeSystemService.supportedCodeSystems[index];
-          CodeSystemService.search(item.codeSystem, item.version, $scope.searchTerm)
-            .then(CodeSystemService.processValues)
-            .then(function(terms) {
-              codeSystems.push({
-                id: item.codeSystem,
-                name: item.codeSystem + ' (' + terms.length + ' terms)',
-                type: 'CodeSystem',
-                children: terms});
-              $scope.searchResults = codeSystems;
-              $scope.isSearching = false;
-            });
-        }
-      }
-    }
+    // else if (tab === 'codeSystem') {
+    //   if ($scope.codeSystemSearch === '') {
+    //     $scope.isSearching = false;
+    //     $scope.termSearchResults = [];
+    //   }
+    //   else {
+    //     $scope.isSearching = true;
+    //     var codeSystems = [];
+    //     for (var index = 0; index < CodeSystemService.supportedCodeSystems.length; index++) {
+    //       var item = CodeSystemService.supportedCodeSystems[index];
+    //       CodeSystemService.search(item.codeSystem, item.version, $scope.searchTerm)
+    //         .then(CodeSystemService.processValues)
+    //         .then(function(terms) {
+    //           codeSystems.push({
+    //             id: item.codeSystem,
+    //             name: item.codeSystem + ' (' + terms.length + ' terms)',
+    //             type: 'CodeSystem',
+    //             children: terms});
+    //           $scope.termSearchResults = codeSystems;
+    //           $scope.isSearching = false;
+    //         });
+    //     }
+    //   }
+    // }
   };
 
   var filterDelayed = function($scope, tab) {
@@ -67,7 +68,11 @@ angular.module('sopheAuthorApp')
 
   var filterThrottled = _.debounce(filterDelayed, 750);
   $scope.$watch('valueSetSearch', function(){ filterThrottled($scope, 'valueSet'); });
-  $scope.$watch('codeSystemSearch', function(){ filterThrottled($scope, 'codeSystem'); });
+  //$scope.$watch('codeSystemSearch', function(){ filterThrottled($scope, 'codeSystem'); });
+
+  $scope.$watch('termSearch.term', function() {
+    CodeSystemService.searchHelper($scope.termSearch);
+  });
 
   // Used for multi-selection mode
   $scope.addToTermList = function(term) {

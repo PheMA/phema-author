@@ -45,7 +45,7 @@
           <div class="col-lg-4">
             <label>
               Search for terms/codes:
-              <input type="text" style="width: 100%;" ng-model="$parent.codeSystemSearch" ng-model-options="{ debounce: 750 }"></input>
+              <input type="text" style="width: 100%;" ng-model="$parent.termSearch.term" ng-model-options="{ debounce: 750 }"></input>
             </label>
           </div>
           <div class="col-lg-8">
@@ -60,14 +60,14 @@
         <div class="row code-systems-results">
           <div class="col-lg-6 divider-right">
             <label>Terms matching your search criteria:</label>
-            <div us-spinner="{radius:8, width:4, length: 8, top: '50%', left: '25%'}" class="note" ng-show="isSearching">
+            <div us-spinner="{radius:8, width:4, length: 8, top: '50%', left: '25%'}" class="note" ng-show="termSearch.isSearching">
               Please wait
             </div>
-            <div class="note" ng-show="termSearchResults.length === 0 && !isSearching">
+            <div class="note" ng-show="termSearch.results.length === 0 && !termSearch.isSearching">
               (No terms were found that met your criteria)
             </div>
             <ul class="codeSystemList">
-              <li ng-repeat="codeSystem in termSearchResults">
+              <li ng-repeat="codeSystem in termSearch.results">
                 {{codeSystem.name}}
                 <ul>
                   <li ng-repeat="term in codeSystem.children">
