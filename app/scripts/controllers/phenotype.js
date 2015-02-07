@@ -9,7 +9,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', '$location', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'QDMElementService', 'FHIRElementService', 'LibraryService', function ($scope, $http, $routeParams, $modal, $location, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, QDMElementService, FHIRElementService, LibraryService) {
+  .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', '$location', '$window', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'QDMElementService', 'FHIRElementService', 'LibraryService', function ($scope, $http, $routeParams, $modal, $location, $window, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, QDMElementService, FHIRElementService, LibraryService) {
     $scope.phenotype = $routeParams.id;
     $scope.status = { open: [true, false, false, false, false, false, false]};
     $scope.isPropertiesDisabled = true;
@@ -150,10 +150,23 @@ angular.module('sopheAuthorApp')
       });
     };
 
+    $scope.export = function() {
+      var hiddenElement = document.createElement('a');
+      var blob = new Blob([$scope.canvasDetails.kineticStageObj.find('#mainLayer')[0].toJSON()],
+        {type: 'text/json;charset=utf-8;'});
+      var url = URL.createObjectURL(blob);
+      document.body.appendChild(hiddenElement);
+      hiddenElement.style = 'display: none';
+      hiddenElement.href = url;
+      hiddenElement.setAttribute('download', 'phenotype.json');
+      hiddenElement.click();
+      $window.URL.revokeObjectURL(url);
+    };
+
     $scope.buttons = [
       {text: 'Save', iconClass:'fa fa-save', event: $scope.save, disabled: false},
       {text: 'Load', iconClass:'fa fa-folder-open', event: $scope.load, disabled: false},
-      {text: 'Export', iconClass:'fa fa-arrow-circle-down', disabled: true},
+      {text: 'Export', iconClass:'fa fa-arrow-circle-down', event: $scope.export, disabled: false},
       {spacer: true},
       {text: 'Copy', iconClass:'fa fa-copy', event: $scope.copy, disabled: true},
       {text: 'Paste', iconClass:'fa fa-paste', event: $scope.paste, disabled: true},
