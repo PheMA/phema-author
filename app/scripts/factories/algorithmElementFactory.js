@@ -1,5 +1,6 @@
 'use strict';
-/* globals Kinetic, DataElement, GenericElement, LogicalOperator, TemporalOperator, ValueSet, Term */
+/* globals Kinetic, DataElement, GenericElement, LogicalOperator, TemporalOperator, ValueSet, Term,
+getIntersectingShape, allowsDrop, addElementToContainer */
 
 angular.module('sophe.factories.algorithmElement', [])
   .factory('algorithmElementFactory', function() {
@@ -123,6 +124,14 @@ angular.module('sophe.factories.algorithmElement', [])
 
       if (workflowObject) {
         workflowObject.element(config.element);
+      }
+
+      // If we dropped on top of a valid drop target, we are going to process the
+      // drop event.
+      var stage = scope.canvasDetails.kineticStageObj;
+      var dropShape = getIntersectingShape(stage.mainLayer, {x: config.x, y: config.y});
+      if (dropShape && allowsDrop(workflowObject, dropShape)) {
+        addElementToContainer(stage, dropShape, workflowObject);
       }
 
       return workflowObject;
