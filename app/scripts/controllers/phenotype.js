@@ -117,7 +117,7 @@ angular.module('sopheAuthorApp')
         size: 'lg',
         resolve: {
           phenotype: function() {
-            return {definition: $scope.canvasDetails.kineticStageObj.find('#mainLayer')[0].toJSON() };
+            return {definition: $scope.canvasDetails.kineticStageObj.mainLayer.toJSON() };
           },
           isReference: function() { return false; }
         }
@@ -152,7 +152,7 @@ angular.module('sopheAuthorApp')
 
     $scope.export = function() {
       var hiddenElement = document.createElement('a');
-      var blob = new Blob([$scope.canvasDetails.kineticStageObj.find('#mainLayer')[0].toJSON()],
+      var blob = new Blob([$scope.canvasDetails.kineticStageObj.mainLayer.toJSON()],
         {type: 'text/json;charset=utf-8;'});
       var url = URL.createObjectURL(blob);
       document.body.appendChild(hiddenElement);

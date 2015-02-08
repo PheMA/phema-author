@@ -162,6 +162,11 @@ angular.module('sophe.factories.algorithmElement', [])
       stage.add(layer);
       stage.mainLayer = layer;
 
+      // Reorder the layers
+      stage.backgroundLayer.setZIndex(1);
+      stage.mainLayer.setZIndex(2);
+      stage.tempLayer.setZIndex(3);
+
       stage.mainLayer.get('Group').each(function(group) {
         var element = group.element();
         if (element.type === 'TemporalOperator') {

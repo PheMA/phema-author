@@ -169,7 +169,7 @@ BaseElement.prototype = {
       var stage = group.getStage();
       updateConnectedLines(e.target.find('.rightConnector')[0], stage);
       updateConnectedLines(e.target.find('.leftConnector')[0], stage);
-      stage.find('#mainLayer').draw();
+      stage.mainLayer.draw();
     });
   },
 

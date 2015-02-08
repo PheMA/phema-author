@@ -105,7 +105,7 @@ TemporalOperator.prototype.create = function(config, scope) {
   group.setWidth(eventB.getX() + eventB.getWidth() - eventA.getX());
   group.setHeight(eventA.getHeight());
 
-  var mainLayer = stage.find('#mainLayer');
+  var mainLayer = stage.mainLayer;
   mainLayer.add(group);
   mainLayer.draw();
 };
