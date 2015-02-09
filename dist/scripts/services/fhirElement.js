@@ -24,6 +24,7 @@ angular.module('sophe.services.fhirElement', ['sophe.services.url', 'ngResource'
         transformedData.push({
           id: originalData[index].dataElementName.value,
           name: originalData[index].dataElementLabel.value,
+          description: originalData[index].definition.value,
           uri: originalData[index].id.value,
           type: 'DataElement'} );
       }

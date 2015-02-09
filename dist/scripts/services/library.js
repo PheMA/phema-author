@@ -14,6 +14,13 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
     return deferred.promise;
   };
 
+  function _formatDescription(item) {
+    var description = item.description + '\r\n\r\nLast modified: ';
+    description = description + (item.modified ? item.created : '(Unknown)') + '\r\nLast modified by: ';
+    description = description + (item.modifiedBy ? item.modifiedBy : '(Unknown)');
+    return description;
+  }
+
   this.processValues = function(data) {
     var phenotypes = [];
     var transformedData = [];
@@ -21,7 +28,7 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
       transformedData.push({
         id: data[index].id,
         name: data[index].name,
-        description: data[index].description,
+        description: _formatDescription(data[index]),
         type: 'Phenotype'
       });
     }

@@ -319,7 +319,7 @@ function _clearSelection(item) {
 }
 
 function clearSelections(stage) {
-  var layer = stage.find('#mainLayer')[0];
+  var layer = stage.mainLayer;
   _clearSelection(layer);
   stage.draw();
 }
@@ -368,7 +368,7 @@ function startConnector(stage, connectorObj) {
   addOutlineStyles(line, 2);
   line.connectors(lineConnectors);
 
-  stage.find('#mainLayer').add(line);
+  stage.mainLayer.add(line);
   line.setZIndex(999);  // Should be on top
   stage.connector.status = 'drawing';
   stage.connector.line = line;
@@ -410,7 +410,7 @@ function endConnector(stage, connectorObj, scope, suppressCreateEvent) {
         align: 'center'
       };
       var labelObj = new Kinetic.Text(labelTextOptions);
-      stage.find('#mainLayer').add(labelObj);
+      stage.mainLayer.add(labelObj);
       line.label(labelObj);
       line.element({name: labelTextOptions.text, uri: '', type: 'TemporalOperator'});
 
