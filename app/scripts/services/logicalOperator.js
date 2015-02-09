@@ -23,6 +23,7 @@ angular.module('sophe.services.logicalOperator', ['sophe.services.url', 'ngResou
         transformedData.push({
           id: originalData[index].dataElementName.value,
           name: originalData[index].logicalOperatorLabel.value,
+          description: originalData[index].definition.value,
           uri: originalData[index].id.value,
           type: 'LogicalOperator',
           children: []} );

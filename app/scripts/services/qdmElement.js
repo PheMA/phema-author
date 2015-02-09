@@ -38,6 +38,7 @@ angular.module('sophe.services.qdmElement', ['sophe.services.qdmAttribute', 'sop
         transformedData.push({
           id: originalCategoryData[index].dataElementName.value,
           name: originalCategoryData[index].categoryLabel.value,
+          description: originalCategoryData[index].definition.value,
           uri: originalCategoryData[index].id.value,
           type: 'Category',
           children: []} );
@@ -54,6 +55,7 @@ angular.module('sophe.services.qdmElement', ['sophe.services.qdmAttribute', 'sop
             dataElements[categoryIndex].children.push({
               id: originalElementData[index].dataElementName.value,
               name: originalElementData[index].dataElementLabel.value,
+              description: originalElementData[index].definition.value,
               uri: originalElementData[index].id.value,
               type: 'DataElement'
             });

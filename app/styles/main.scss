@@ -193,3 +193,14 @@ table.phenotype-list {
 label * {
   font-weight: normal;
 }
+
+.tooltip-inner, .popover-inner, .popover {
+    max-width: 350px;
+    /* If max-width does not work, try using width instead */
+    width: 350px;
+}
+
+.popover-content {
+  font-size: 0.9em;
+  white-space: pre-wrap;
+}
