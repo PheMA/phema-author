@@ -134,7 +134,7 @@ describe('Factory: AlgorithmElementFactory', function () {
       var element = this.algorithmElementFactory.addWorkflowObject(config, this.scope);
       expect(element.phemaObject().valueSet()).toEqual(null);
       config = {x: 55, y: 55, element: {type: 'Term', name: 'Term'}};
-      var term = this.algorithmElementFactory.addWorkflowObject(config, this.scope);
+      this.algorithmElementFactory.addWorkflowObject(config, this.scope);
       expect(element.phemaObject().valueSet()).toNotEqual(null);
     }));
 
@@ -143,7 +143,7 @@ describe('Factory: AlgorithmElementFactory', function () {
       var element = this.algorithmElementFactory.addWorkflowObject(config, this.scope);
       expect(element.phemaObject().valueSet()).toEqual(null);
       config = {x: 55, y: 55, element: {type: 'Phenotype', name: 'Phenotype'}};
-      var term = this.algorithmElementFactory.addWorkflowObject(config, this.scope);
+      this.algorithmElementFactory.addWorkflowObject(config, this.scope);
       expect(element.phemaObject().valueSet()).toEqual(null);
     }));
   });
@@ -157,9 +157,9 @@ describe('Factory: AlgorithmElementFactory', function () {
 
     it('deletes only selected groups', inject(function() {
       var config = {element: {type: 'Phenotype', name: 'Phenotype'}};
-      var item1 = this.algorithmElementFactory.addWorkflowObject(config, this.scope);
+      this.algorithmElementFactory.addWorkflowObject(config, this.scope);
       var item2 = this.algorithmElementFactory.addWorkflowObject(config, this.scope);
-      var item3 = this.algorithmElementFactory.addWorkflowObject(config, this.scope);
+      this.algorithmElementFactory.addWorkflowObject(config, this.scope);
       item2.selected = true;
       expect(this.scope.canvasDetails.kineticStageObj.mainLayer.getChildren().length).toEqual(3);
       this.algorithmElementFactory.deleteSelectedObjects(this.scope);
@@ -168,9 +168,9 @@ describe('Factory: AlgorithmElementFactory', function () {
 
     it('deletes only selected connections', inject(function() {
       var config = {element: {type: 'TemporalOperator', name: 'Concurrent with'}};
-      var item1 = this.algorithmElementFactory.addWorkflowObject(config, this.scope);
-      var item2 = this.algorithmElementFactory.addWorkflowObject(config, this.scope);
-      var item3 = this.algorithmElementFactory.addWorkflowObject(config, this.scope);
+      this.algorithmElementFactory.addWorkflowObject(config, this.scope);
+      this.algorithmElementFactory.addWorkflowObject(config, this.scope);
+      this.algorithmElementFactory.addWorkflowObject(config, this.scope);
       expect(this.scope.canvasDetails.kineticStageObj.mainLayer.find('PhemaConnection').length).toEqual(3);
       this.scope.canvasDetails.kineticStageObj.mainLayer.find('PhemaConnection')[0].selected = true;
       this.algorithmElementFactory.deleteSelectedObjects(this.scope);
@@ -203,9 +203,9 @@ describe('Factory: AlgorithmElementFactory', function () {
     it('returns the first if multiple are selected', inject(function() {
       expect(this.algorithmElementFactory.getFirstSelectedItem(this.scope)).toBe(null);
       var config = {element: {type: 'Phenotype', name: 'Phenotype'}};
-      var item1 = this.algorithmElementFactory.addWorkflowObject(config, this.scope);
+      this.algorithmElementFactory.addWorkflowObject(config, this.scope);
       var item2 = this.algorithmElementFactory.addWorkflowObject(config, this.scope);
-      var item3 = this.algorithmElementFactory.addWorkflowObject(config, this.scope);
+      this.algorithmElementFactory.addWorkflowObject(config, this.scope);
       item2.selected = true;
       expect(this.algorithmElementFactory.getFirstSelectedItem(this.scope)).toBe(item2);
     }));

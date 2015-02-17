@@ -34,6 +34,11 @@ describe('Factory: FHIRElementService', function () {
                   type: 'uri',
                   value: 'http://rdf.healthit.gov/fhir/element#Immunization'
               },
+              definition: {
+                  type: 'literal',
+                  value: 'Immunization description',
+                  datatype: 'http://www.w3.org/2001/XMLSchema#string'
+              },
               dataElementLabel: {
                   type: 'literal',
                   value: 'Immunization',
@@ -53,6 +58,11 @@ describe('Factory: FHIRElementService', function () {
               context: {
                   type: 'uri',
                   value: 'http://rdf.healthit.gov/fhir/element#Alert'
+              },
+              definition: {
+                  type: 'literal',
+                  value: 'Alert description',
+                  datatype: 'http://www.w3.org/2001/XMLSchema#string'
               },
               dataElementLabel: {
                   type: 'literal',
@@ -74,6 +84,7 @@ describe('Factory: FHIRElementService', function () {
       this.$httpBackend.flush();
       expect(dataElements.length).toEqual(2);
       expect(dataElements[0].name).toEqual('Alert');
+      expect(dataElements[0].description).toEqual('Alert description');
       expect(dataElements[0].id).toEqual('Alert');
     }));
   });

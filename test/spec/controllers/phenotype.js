@@ -1,4 +1,6 @@
 'use strict';
+/* globals _ */
+
 
 describe('Controller: PhenotypeController', function () {
   var Element = function(element) {

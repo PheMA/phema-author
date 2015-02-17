@@ -34,6 +34,11 @@ describe('Factory: LogicalOperatorService', function () {
                   type: 'uri',
                   value: 'http://rdf.healthit.gov/qdm/element#qdm'
               },
+              definition: {
+                  type: 'literal',
+                  value: 'Or description',
+                  datatype: 'http://www.w3.org/2001/XMLSchema#string'
+              },
               logicalOperatorLabel: {
                   type: 'literal',
                   value: 'Or',
@@ -53,6 +58,11 @@ describe('Factory: LogicalOperatorService', function () {
               context: {
                   type: 'uri',
                   value: 'http://rdf.healthit.gov/qdm/element#qdm'
+              },
+              definition: {
+                  type: 'literal',
+                  value: 'And description',
+                  datatype: 'http://www.w3.org/2001/XMLSchema#string'
               },
               logicalOperatorLabel: {
                   type: 'literal',
@@ -75,6 +85,7 @@ describe('Factory: LogicalOperatorService', function () {
       this.$httpBackend.flush();
       expect(logicalOperators.length).toEqual(2);
       expect(logicalOperators[0].name).toEqual('And');
+      expect(logicalOperators[0].description).toEqual('And description');
       expect(logicalOperators[0].id).toEqual('And');
     }));
   });

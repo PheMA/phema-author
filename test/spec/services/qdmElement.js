@@ -39,6 +39,11 @@ describe('Factory: QDMElementService', function () {
                 type: 'uri',
                 value: 'http://rdf.healthit.gov/qdm/element#qdm'
             },
+              definition: {
+                  type: 'literal',
+                  value: 'Test 2 description',
+                  datatype: 'http://www.w3.org/2001/XMLSchema#string'
+              },
             categoryLabel: {
                 type: 'literal',
                 value: 'Test 2',
@@ -59,6 +64,11 @@ describe('Factory: QDMElementService', function () {
                 type: 'uri',
                 value: 'http://rdf.healthit.gov/qdm/element#qdm'
             },
+              definition: {
+                  type: 'literal',
+                  value: 'Test description',
+                  datatype: 'http://www.w3.org/2001/XMLSchema#string'
+              },
             categoryLabel: {
                 type: 'literal',
                 value: 'Test',
@@ -83,6 +93,11 @@ describe('Factory: QDMElementService', function () {
                   type: 'uri',
                   value: 'http://rdf.healthit.gov/qdm/element#TEST'
               },
+              definition: {
+                  type: 'literal',
+                  value: 'Test description',
+                  datatype: 'http://www.w3.org/2001/XMLSchema#string'
+              },
               dataElementLabel: {
                   type: 'literal',
                   value: 'Substance, Tolerance',
@@ -102,6 +117,11 @@ describe('Factory: QDMElementService', function () {
               context: {
                   type: 'uri',
                   value: 'http://rdf.healthit.gov/qdm/element#TEST'
+              },
+              definition: {
+                  type: 'literal',
+                  value: 'Test description',
+                  datatype: 'http://www.w3.org/2001/XMLSchema#string'
               },
               dataElementLabel: {
                   type: 'literal',
@@ -126,6 +146,7 @@ describe('Factory: QDMElementService', function () {
       expect(dataElements[0].id).toEqual('TestId');
       expect(dataElements[0].children.length).toEqual(2);
       expect(dataElements[0].children[0].name).toEqual('Substance, Intolerance');
+      expect(dataElements[0].children[0].description).toEqual('Test description');
       expect(dataElements[0].children[0].id).toEqual('SubstanceIntolerance');
     }));
   });

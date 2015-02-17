@@ -1,4 +1,5 @@
 'use strict';
+/* globals allowsDrop */
 
 describe('UI Util', function () {
   var Element = function(droppable) {
@@ -60,7 +61,7 @@ describe('UI Util', function () {
     }));
 
     it('ignores inappropriate drops for configured array', inject(function () {
-      var elementObj = this.dropElement.element()
+      var elementObj = this.dropElement.element();
       elementObj.type = 'LogicalOperator';
       this.dropElement.droppableElementTypes = ['Category'];
       this.dropElement.element(elementObj);

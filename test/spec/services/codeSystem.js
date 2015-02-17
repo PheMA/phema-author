@@ -24,28 +24,28 @@ describe('Factory: CodeSystemService', function () {
   describe('processValues', function() {
     it('returns an array', inject(function() {
       this.codeSystemSearch.respond({
-        "EntityDirectory": {
-          "entry": [
+        'EntityDirectory': {
+          'entry': [
             {
-              "about": "urn:oid:2.16.840.1.113883.6.2:253.5",
-              "name": {
-                "namespace": "ICD-9-CM",
-                "name": "253.5"
+              'about': 'urn:oid:2.16.840.1.113883.6.2:253.5',
+              'name': {
+                'namespace': 'ICD-9-CM',
+                'name': '253.5'
               },
-              "knownEntityDescription": [
+              'knownEntityDescription': [
                 {
-                  "href": "http://lexevs62cts2.nci.nih.gov/lexevscts2/codesystem/ICD-9-CM/version/2013_2012_08_06/entity/253.5",
-                  "describingCodeSystemVersion": {
-                    "version": {
-                      "content": "ICD-9-CM-2013_2012_08_06",
-                      "href": "http://lexevs62cts2.nci.nih.gov/lexevscts2/codesystem/ICD-9-CM/version/2013_2012_08_06"
+                  'href': 'http://lexevs62cts2.nci.nih.gov/lexevscts2/codesystem/ICD-9-CM/version/2013_2012_08_06/entity/253.5',
+                  'describingCodeSystemVersion': {
+                    'version': {
+                      'content': 'ICD-9-CM-2013_2012_08_06',
+                      'href': 'http://lexevs62cts2.nci.nih.gov/lexevscts2/codesystem/ICD-9-CM/version/2013_2012_08_06'
                     },
-                    "codeSystem": {
-                      "content": "ICD-9-CM",
-                      "uri": "urn:oid:2.16.840.1.113883.6.2"
+                    'codeSystem': {
+                      'content': 'ICD-9-CM',
+                      'uri': 'urn:oid:2.16.840.1.113883.6.2'
                     }
                   },
-                  "designation": "Diabetes insipidus"
+                  'designation': 'Diabetes insipidus'
                 }
               ]
             }

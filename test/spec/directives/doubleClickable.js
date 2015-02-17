@@ -1,12 +1,13 @@
 'use strict';
+/* globals $ */
 
 describe('Directive: doubleClickable', function () {
   beforeEach(module('sophe.doubleClickable'));
   beforeEach(module('sopheAuthorApp'));
-  beforeEach(inject(function ($compile, $rootScope, $httpBackend) {
+  beforeEach(inject(function ($compile, $rootScope) {
     this.compile = $compile;
     this.rootScope = $rootScope;
-    this.rootScope.clickTest = function() { var test = 1; };
+    this.rootScope.clickTest = function() { };
   }));
 
   it('handles if there is no callback function', function() {
