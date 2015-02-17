@@ -146,6 +146,14 @@ angular.module('sopheAuthorApp')
       // If the user selects a phenotype to load, redirect to that phenotype's ID which
       // will cause it to load properly.
       modalInstance.result.then(function (id) {
+        // Be sure to clean everything up before we redirect, otherwise we have errant
+        // objects in memory that cause problems.
+        var stage = $scope.canvasDetails.kineticStageObj;
+        var layer = stage.mainLayer;
+        layer.get('Group').each(function(group) {
+          algorithmElementFactory.destroyGroup(group);
+        });
+
         $location.path('/phenotype/' + id);
       });
     };
