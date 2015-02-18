@@ -8,10 +8,17 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('MainController', ['$scope', function ($scope) {
+  .controller('MainController', ['$scope', 'LibraryService', function ($scope, LibraryService) {
     $scope.numberOfPhenotypes = 0;
+    $scope.errorGettingPhenotypes = false;
 
-    $scope.hasPhenotypes = function() {
-      return ($scope.numberOfPhenotypes > 0);
-    };
+    LibraryService.load()
+      .then(LibraryService.processValues)
+      .then(function(elements) {
+        $scope.numberOfPhenotypes = elements.length;
+        $scope.errorGettingPhenotypes = false;
+      }, function() {
+        $scope.numberOfPhenotypes = 0;
+        $scope.errorGettingPhenotypes = true;
+      });
   }]);
