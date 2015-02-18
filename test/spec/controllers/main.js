@@ -6,19 +6,41 @@ describe('Controller: MainController', function () {
   beforeEach(module('ui.bootstrap'));
   beforeEach(module('sopheAuthorApp'));
 
+  var returnValues = false;
+
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
+  beforeEach(inject(function ($controller, $rootScope, LibraryService, $q) {
     this.scope = $rootScope.$new();
-    this.MainController = $controller('MainController', {
-      $scope: this.scope
+    this.controller = $controller;
+    spyOn(LibraryService, 'load').andCallFake(function() {
+      var deferred = $q.defer();
+      if (returnValues) {
+        deferred.resolve([{id: 1, name: 'test'}]);
+      }
+      else {
+        deferred.resolve([]);
+      }
+      return deferred.promise;
     });
   }));
 
-  it('should know the number of phenotypes', function () {
-    expect(this.scope.numberOfPhenotypes).toBe(0);
-  });
+  describe('numberOfPhenotypes', function() {
+    it('should default to 0', function () {
+      returnValues = false;
+      this.MainController = this.controller('MainController', {
+        $scope: this.scope
+      });
+      this.scope.$root.$digest();
+      expect(this.scope.numberOfPhenotypes).toBe(0);
+    });
 
-  it('should know if there are phenotypes', function () {
-    expect(this.scope.hasPhenotypes()).toBe(false);
+    it('should get the value from the LibraryService', function () {
+      returnValues = true;
+      this.MainController = this.controller('MainController', {
+        $scope: this.scope
+      });
+      this.scope.$root.$digest();
+      expect(this.scope.numberOfPhenotypes).toBe(1);
+    });
   });
 });
