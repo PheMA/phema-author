@@ -16,7 +16,7 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
 
   function _formatDescription(item) {
     var description = item.description + '\r\n\r\nLast modified: ';
-    description = description + (item.modified ? item.created : '(Unknown)') + '\r\nLast modified by: ';
+    description = description + (item.modified ? item.modified : (item.created ? item.created : '(Unknown)')) + '\r\nLast modified by: ';
     description = description + (item.modifiedBy ? item.modifiedBy : '(Unknown)');
     return description;
   }
@@ -57,11 +57,15 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
     if (details.id && details.id !== '') {
       item.$update({ id: details.id }, function(data) {
         deferred.resolve(data);
+      }, function() {
+        deferred.reject('Unable to update the phenotype');
       });
     }
     else {
       item.$save(null, function(data) {
         deferred.resolve(data);
+      }, function() {
+        deferred.reject('Unable to save the phenotype');
       });
     }
     return deferred.promise;

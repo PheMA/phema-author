@@ -9,10 +9,12 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', '$location', '$window', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'QDMElementService', 'FHIRElementService', 'LibraryService', function ($scope, $http, $routeParams, $modal, $location, $window, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, QDMElementService, FHIRElementService, LibraryService) {
-    $scope.phenotype = $routeParams.id;
+  .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', '$location', '$window', '$timeout', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'QDMElementService', 'FHIRElementService', 'LibraryService', function ($scope, $http, $routeParams, $modal, $location, $window, $timeout, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, QDMElementService, FHIRElementService, LibraryService) {
+    $scope.phenotype = ($routeParams.id ? {id: $routeParams.id } : null );
     $scope.status = { open: [true, false, false, false, false, false, false]};
     $scope.isPropertiesDisabled = true;
+    $scope.successMessage = null;
+    $scope.errorMessage = null;
     var advancedRegEx = new RegExp('[a-z]+\\sConcurrent With', 'i');
     $scope.temporalFilter = function(item) {
       if (item) {
@@ -78,8 +80,9 @@ angular.module('sopheAuthorApp')
     if ($scope.phenotype) {
       $scope.$watch('canvasDetails', function() {
         if ($scope.canvasDetails) {
-          LibraryService.loadDetails($scope.phenotype)
+          LibraryService.loadDetails($scope.phenotype.id)
             .then(function(phenotype) {
+              $scope.phenotype = phenotype;
               algorithmElementFactory.loadFromDefinition($scope, phenotype.definition);
             });
         }
@@ -110,25 +113,56 @@ angular.module('sopheAuthorApp')
       console.log('Paste');
     };
 
-    $scope.save = function() {
-      var modalInstance = $modal.open({
-        templateUrl: 'views/properties/phenotype.html',
-        controller: 'PhenotypePropertiesController',
-        size: 'lg',
-        resolve: {
-          phenotype: function() {
-            return {definition: $scope.canvasDetails.kineticStageObj.mainLayer.toJSON() };
-          },
-          isReference: function() { return false; }
-        }
-      });
+    $scope.closeSuccessMessage = function() {
+      $scope.successMessage = null;
+    };
 
-      modalInstance.result.then(function (result) {
-        LibraryService.saveDetails(result)
-          .then(function(data) {
-            $location.path('/phenotype/' + data.id);
-          });
-      });
+    $scope.closeErrorMessage = function() {
+      $scope.errorMessage = null;
+    };
+
+    function resetMessages() {
+      $scope.closeSuccessMessage();
+      $scope.closeErrorMessage();
+    }
+
+    function handlePhenotypeSave(result) {
+      LibraryService.saveDetails(result)
+        .then(function(data) {
+          $scope.successMessage = 'Your phenotype was successfully saved';
+          $location.path('/phenotype/' + data.id);
+          $timeout(resetMessages, 5000); // Only timeout success
+        }, function() {
+          $scope.errorMessage = 'There was an error trying to save your phenotype definition';
+        });
+    }
+
+    $scope.save = function() {
+      var phenotypeDefinition = $scope.canvasDetails.kineticStageObj.mainLayer.toJSON();
+
+      // If the phenotype was already saved (because there is an ID) we don't need to display
+      // the dialog again and we can just save.
+      if ($scope.phenotype) {
+        $scope.phenotype.definition = phenotypeDefinition;
+        handlePhenotypeSave($scope.phenotype);
+      }
+      else {
+        var modalInstance = $modal.open({
+          templateUrl: 'views/properties/phenotype.html',
+          controller: 'PhenotypePropertiesController',
+          size: 'lg',
+          resolve: {
+            phenotype: function() {
+              return {definition: phenotypeDefinition };
+            },
+            isReference: function() { return false; }
+          }
+        });
+
+        modalInstance.result.then(function (result) {
+          handlePhenotypeSave(result);
+        });
+      }
     };
 
     $scope.load = function() {
