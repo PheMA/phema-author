@@ -165,6 +165,18 @@ angular.module('sopheAuthorApp')
       }
     };
 
+    $scope.new = function() {
+      // Be sure to clean everything up before we redirect, otherwise we have errant
+      // objects in memory that cause problems.
+      var stage = $scope.canvasDetails.kineticStageObj;
+      var layer = stage.mainLayer;
+      layer.get('Group').each(function(group) {
+        algorithmElementFactory.destroyGroup(group);
+      });
+
+      $location.path('/phenotype/');
+    };
+
     $scope.load = function() {
       var modalInstance = $modal.open({
         templateUrl: 'views/phenotypes/load.html',
@@ -206,16 +218,18 @@ angular.module('sopheAuthorApp')
     };
 
     $scope.buttons = [
-      {text: 'Save', iconClass:'fa fa-save', event: $scope.save, disabled: false},
-      {text: 'Load', iconClass:'fa fa-folder-open', event: $scope.load, disabled: false},
-      {text: 'Export', iconClass:'fa fa-arrow-circle-down', event: $scope.export, disabled: false},
+      {text: 'New', iconClass:'fa fa-plus', event: $scope.new, disabled: false, tooltip: 'Create a new phenotype'},
+      {text: 'Open', iconClass:'fa fa-folder-open', event: $scope.load, disabled: false, tooltip: 'Open and edit one of your existing phenotypes'},
+      {spacer: true},
+      {text: 'Save', iconClass:'fa fa-save', event: $scope.save, disabled: false, tooltip: 'Save changes to your phenotype'},
+      {text: 'Export', iconClass:'fa fa-arrow-circle-down', event: $scope.export, disabled: false, tooltip: 'Export the phenotype for use in an external application'},
       {spacer: true},
       {text: 'Copy', iconClass:'fa fa-copy', event: $scope.copy, disabled: true},
       {text: 'Paste', iconClass:'fa fa-paste', event: $scope.paste, disabled: true},
       {text: 'Undo', iconClass:'fa fa-undo', disabled: true},
       {text: 'Redo', iconClass:'fa fa-repeat', disabled: true},
       {spacer: true},
-      {text: 'Delete', iconClass:'fa fa-remove', event: $scope.delete, disabled: true},
+      {text: 'Delete', iconClass:'fa fa-remove', event: $scope.delete, disabled: true, tooltip: 'Delete the highlighted element(s) in the canvas'},
     ];
 
     $scope.canShowProperties = function(item) {

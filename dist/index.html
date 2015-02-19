@@ -22,11 +22,11 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <div class="container col-lg-12">
+    <div class="container col-md-12">
       <div class="navbar-header header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#app-navbar-collapse">
           <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
+          <span class="icon-bar"> </span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
@@ -40,32 +40,39 @@
             <li><a href="#/dashboard">Dashboard</a>
             <li><a class="btn btn-highlight btn-primary" ng-href="#/phenotype">Create Phenotype</a></li>
             <li class="dropdown">
-              <a href="#/phenotype/new" data-toggle="dropdown" class="dropdown-toggle">Phenotypes <b class="caret"></b></a>
+              <a href="#/phenotype/new" class="dropdown-toggle">Phenotypes <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li><a href="#/phenotype/new">Create</a></li>
                 <li><a href="#/phenotype/search">Search</a></li>
               </ul>
             </li>
             <li class="dropdown">
-              <a href="#" data-toggle="dropdown" class="dropdown-toggle">Value Sets <b class="caret"></b></a>
+              <a href="#" class="dropdown-toggle">Value Sets <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li><a href="#/valueset/new">Create</a></li>
                 <li><a href="#/valueset-search">Search</a></li>
               </ul>
             </li>
-            <li><a href="#/help">Help</a>
+            <li class="dropdown">
+              <a href="#/help" class="dropdown-toggle">Help <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#/help">User Guide</a></li>
+                <li><a href="#/help/quick-start">Quick Start Guide</a></li>
+                <li><a href="#/help/tutorial">Tutorial</a></li>
+              </ul>
+            </li>
           </ul>
           <login-toolbar />
         </div>
       </div>
 
-      <div class="container container-big col-lg-12" id="view-container" ng-view=""></div>
+      <div class="container container-big col-md-12" id="view-container" ng-view=""></div>
 
-      <div class="footer col-lg-12">
-        <div class="col-lg-9">
+      <div class="footer col-md-12">
+        <div class="col-md-9">
           This work has been funded by NIGMS grant R01GM105688.
         </div>
-        <div class="col-lg-3">
+        <div class="col-md-3">
           <ul>
             <li>Publications</li>
             <li>Contact Us</li>
@@ -156,6 +163,7 @@
     <script src="scripts/directives/elements/qdm/temporalOperators.js"></script>
     <script src="scripts/factories/algorithmElementFactory.js"></script>
     <script src="scripts/factories/kineticStageFactory.js"></script>
+    <script src="scripts/controllers/help.js"></script>
     <script src="scripts/controllers/main.js"></script>
     <script src="scripts/controllers/about.js"></script>
     <script src="scripts/controllers/phenotype.js"></script>

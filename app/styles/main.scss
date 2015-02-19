@@ -55,6 +55,14 @@ body {
     padding-left: 5px;
     font-size: 20px;
   }
+
+  .navbar-toggle .icon-bar {
+    background-color: #FFF;
+  }
+
+  .navbar-nav .open .dropdown-menu {
+    background-color: #FFF;
+  }
 }
 
 /* Custom page footer */
@@ -172,7 +180,7 @@ table.phenotype-list {
 #view-container {
   padding-left: 10px;
   padding-right: 10px;
-  .col-lg-3, .col-lg-9 {
+  .col-lg-3, .col-lg-9, .col-md-3, .col-md-9 {
     padding-left: 0px;
   }
 }

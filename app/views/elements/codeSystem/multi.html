@@ -1,12 +1,12 @@
 <div id="code-system-multi" class="code-system-container">
   <div class="row search-panel">
-    <div class="col-lg-4">
+    <div class="col-md-4">
       <label>
         Search for value sets:
         <input type="text" style="width: 100%;" ng-model="search.term" ng-model-options="{ debounce: 750 }"></input>
       </label>
     </div>
-    <div class="col-lg-8">
+    <div class="col-md-8">
       <ol class="note-sm">
         <li>Enter a search term for a condition, procedure or medication (e.g. 'diabetes', 'CABG', 'statin').</li>
         <li>When you have found a value set you would like to use, click the 'Add' button</li>
@@ -16,7 +16,7 @@
     </div>
   </div>
   <div class="row value-set-results">
-    <div class="col-lg-6 divider-right">
+    <div class="col-md-6 divider-right">
       <label>Value sets matching your search criteria:</label>
       <div us-spinner="{radius:8, width:4, length: 8, top: '50%', left: '25%'}" class="note" ng-show="search.isSearching">
         Please wait
@@ -43,7 +43,7 @@
         </tr>
       </table>
     </div>
-    <div class="col-lg-6">
+    <div class="col-md-6">
       <label>Selected value sets:</label>
       <div class="note" ng-show="selectedValueSets.length === 0">
         (You have not selected any value sets)

@@ -1,6 +1,6 @@
 <ul class="nav navbar-nav">
   <li class="dropdown" ng-show="isAuthenticated()">
-    <a href="#" data-toggle="dropdown" class="dropdown-toggle">{{currentUser.firstName}} {{currentUser.lastName}} <b class="caret"></b></a>
+    <a href="#" class="dropdown-toggle">{{currentUser.firstName}} {{currentUser.lastName}} <b class="caret"></b></a>
     <ul class="dropdown-menu">
       <li><a href="#/user/{{currentUser.id}}">Profile</a></li>
       <li>
