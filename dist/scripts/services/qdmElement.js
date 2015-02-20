@@ -2,8 +2,8 @@
 
 /* globals ArrayUtil */
 
-angular.module('sophe.services.qdmElement', ['sophe.services.qdmAttribute', 'sophe.services.url', 'ngResource'])
-.service('QDMElementService', ['$resource', '$q', 'QDMAttributeService', 'URLService', function($resource, $q, QDMAttributeService, URLService) {
+angular.module('sophe.services.qdmElement', ['sophe.services.attribute', 'sophe.services.url', 'ngResource'])
+.service('QDMElementService', ['$resource', '$q', 'AttributeService', 'URLService', function($resource, $q, AttributeService, URLService) {
   this.loadCategories = function() {
     var deferred = $q.defer();
     $resource(URLService.getDataServiceURL('categories')).get(function(data) {
@@ -74,12 +74,12 @@ angular.module('sophe.services.qdmElement', ['sophe.services.qdmAttribute', 'sop
   this.getAttributes = function(element) {
     var promise = null;
     if (element.type === 'Category') {
-      promise = QDMAttributeService.loadCategory(element.id)
-        .then(QDMAttributeService.processValues);
+      promise = AttributeService.loadCategory(element.id)
+        .then(AttributeService.processValues);
     }
     else if (element.type === 'DataElement') {
-      promise = QDMAttributeService.loadElement(element.id)
-        .then(QDMAttributeService.processValues);
+      promise = AttributeService.loadElement(element.id)
+        .then(AttributeService.processValues);
     }
 
     return promise;
