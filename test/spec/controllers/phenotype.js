@@ -110,7 +110,7 @@ describe('Controller: PhenotypeController', function () {
         },
         dismiss: function( type ) {
           //The user clicked cancel on the modal dialog, call the stored cancel callback
-          if (this.result.cancelCallback) { this.result.cancelCallback( type ); };
+          if (this.result.cancelCallback) { this.result.cancelCallback( type ); }
         }
       };
       spyOn($modal, 'open').andReturn(this.modalInstance);

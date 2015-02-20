@@ -8,7 +8,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('QDMElementPropertiesController', ['$scope', '$modalInstance', 'QDMElementService', 'QDMAttributeService', 'element', 'valueSet', function ($scope, $modalInstance, QDMElementService, QDMAttributeService, element, valueSet) {
+  .controller('QDMElementPropertiesController', ['$scope', '$modalInstance', 'QDMElementService', 'AttributeService', 'element', 'valueSet', function ($scope, $modalInstance, QDMElementService, AttributeService, element, valueSet) {
     $scope.element = element;    // Element is a JSON value, and is a copy of the original
     $scope.valueSet = valueSet;  // Value set is a JSON value, and is a copy of the original
     $scope.formData = element.attributes || {};
@@ -21,7 +21,7 @@ angular.module('sopheAuthorApp')
     $scope.formTemplate = { promise: QDMElementService.getAttributes(element).then(function(attributes) {
       var template = [];
       for (var index = 0; index < attributes.length; index++) {
-        template.push(QDMAttributeService.translateQDMToForm(attributes[index]));
+        template.push(AttributeService.translateQDMToForm(attributes[index]));
       }
       return template;
     })};
