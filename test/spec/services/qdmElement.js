@@ -2,12 +2,12 @@
 
 describe('Factory: QDMElementService', function () {
 
-  beforeEach(module('sophe.services.qdmElement', 'sophe.services.qdmAttribute'));
+  beforeEach(module('sophe.services.qdmElement', 'sophe.services.attribute'));
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function (_QDMElementService_, _QDMAttributeService_, _$http_, _$httpBackend_) {
+  beforeEach(inject(function (_QDMElementService_, _AttributeService_, _$http_, _$httpBackend_) {
     this.QDMElementService = _QDMElementService_;
-    this.QDMAttributeService = _QDMAttributeService_;
+    this.AttributeService = _AttributeService_;
     this.$http = _$http_;
     this.$httpBackend = _$httpBackend_;
     this.categoryGet = this.$httpBackend.when('GET', 'data/qdm-categories.json');

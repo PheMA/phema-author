@@ -58,11 +58,21 @@ module.exports = function(config) {
       'PhantomJS'
     ],
 
+    reporters: [
+        'progress',
+        'junit',
+    ],
+    junitReporter: {
+        outputFile: 'test/out/unit.xml',
+        suite: 'unit'
+    },
+
     // Which plugins to enable
     plugins: [
       'karma-jasmine',
       'karma-ng-html2js-preprocessor',
       'karma-phantomjs-launcher',
+      'karma-junit-reporter',
     ],
 
     preprocessors: {
@@ -79,6 +89,8 @@ module.exports = function(config) {
     singleRun: false,
 
     colors: true,
+
+    reportSlowerThan: 500,
 
     // level of logging
     // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG

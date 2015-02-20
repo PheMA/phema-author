@@ -20,6 +20,9 @@ angular.module('sophe.services.url', ['sophe.config'])
     if (environment === 'local' || environment.substring(0, 2) === '@@') {
       // For our local setup, we sometimes stub things in.  This isn't code we plan to
       // use in production, so it's okay if it's a little messy.
+      if (/attributes/.test(resource)) {
+        return 'data/fhir-attributes.json';
+      }
       return 'data/fhir-' + resource + '.json';
     }
 

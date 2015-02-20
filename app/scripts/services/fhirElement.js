@@ -2,8 +2,8 @@
 
 /* globals ArrayUtil */
 
-angular.module('sophe.services.fhirElement', ['sophe.services.url', 'ngResource'])
-.service('FHIRElementService', ['$resource', '$q', 'URLService', function($resource, $q, URLService) {
+angular.module('sophe.services.fhirElement', ['sophe.services.attribute', 'sophe.services.url', 'ngResource'])
+.service('FHIRElementService', ['$resource', '$q', 'URLService', 'AttributeService', function($resource, $q, URLService, AttributeService) {
   this.load = function() {
     var deferred = $q.defer();
     $resource(URLService.getFHIRServiceURL('elements')).get(function(data) {
@@ -32,5 +32,19 @@ angular.module('sophe.services.fhirElement', ['sophe.services.url', 'ngResource'
     }
 
     return dataElements;
+  };
+
+  this.getAttributes = function(element) {
+    var promise = null;
+    if (element.type === 'Category') {
+      promise = AttributeService.loadCategory(element.id, 'fhir')
+        .then(AttributeService.processValues);
+    }
+    else if (element.type === 'DataElement') {
+      promise = AttributeService.loadElement(element.id, 'fhir')
+        .then(AttributeService.processValues);
+    }
+
+    return promise;
   };
 }]);
