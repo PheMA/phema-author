@@ -74,10 +74,12 @@
 
   .phenotype-element {
     padding: 5px 7px;
+    width: 95%;
   }
 
   .phenotype-element:hover {
     background-color: darken(white, 10%);
+    cursor: pointer;
   }
 
   [treecontrol] {
@@ -131,28 +133,28 @@
     display: inline;
   }
   padding-bottom: 20px;
-  
+
   .btn-default {
     padding: 3px;
     background: #eeeeee;
     border: solid 1px #bbbbbb;
     color: black;
   }
-  
+
   .btn-default:hover {
     background: #bbbbbb;
     color: black;
   }
-  
+
   .note {
     color: lighten(#000, 55%);
   }
-  
+
   .clickable {
     text-decoration: underline;
     font-style: italic;
   }
-  
+
   .clickable:hover {
     background-color: darken(#FFF, 20%);
     cursor: pointer;
@@ -290,4 +292,23 @@ $value-sets-background-color: #eee;
   top: 0;
   width: 100%;
   z-index: 999;
+}
+
+[treecontrol].tree-classic li .tree-selected {
+  background-color: $list-item-hover-background-color !important;
+}
+
+.tree-classic {
+  span {
+    display: inline-block;
+    width: 90%;
+    span {
+      width: 100%;
+      margin: 2px;
+    }
+  }
+
+  span:hover {
+    background-color: $list-item-hover-background-color;
+  }
 }
