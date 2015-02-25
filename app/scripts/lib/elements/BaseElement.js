@@ -49,11 +49,47 @@ BaseElement.prototype = {
   addCursorEventHandlers: function(kineticObj, scope) {
     // add cursor styling
     kineticObj.on('mouseover', function () {
-        document.body.style.cursor = 'pointer';
+      document.body.style.cursor = 'pointer';
     });
     kineticObj.on('mouseout', function () {
-        document.body.style.cursor = 'default';
-        scope.$emit('CANVAS-MOUSEOUT');
+      document.body.style.cursor = 'default';
+    });
+  },
+
+  addSizerEventHandlers: function(kineticObj, scope) {
+    var group = kineticObj.getParent();
+    kineticObj.on('mouseover', function (e) {
+      document.body.style.cursor = 'nwse-resize';
+      e.cancelBubble = true;      // Needed for issue with KineticJS not looking at inner event
+      e.evt.cancelBubble = true;
+    });
+    kineticObj.on('mouseout', function () {
+      document.body.style.cursor = 'default';
+    });
+    kineticObj.on('mousedown', function() {
+      group.setDraggable(false);
+      kineticObj.setDraggable(true);
+    });
+    kineticObj.on('mouseup', function() {
+      group.setDraggable(true);
+      kineticObj.setDraggable(false);
+    });
+    kineticObj.on('dragmove', function(e) {
+      var targetAbsPos = e.target.getAbsolutePosition();
+      var newWidth = targetAbsPos.x - group.x() + LOGICAL_OPERATOR_SIZER_SIZE;
+      var newHeight = targetAbsPos.y - group.y() + LOGICAL_OPERATOR_SIZER_SIZE;
+      newWidth = Math.max(newWidth, LOGICAL_OPERATOR_MIN_SIZE);
+      newHeight = Math.max(newHeight, LOGICAL_OPERATOR_MIN_SIZE);
+      if (newWidth === LOGICAL_OPERATOR_MIN_SIZE) {
+        kineticObj.setX(LOGICAL_OPERATOR_MIN_SIZE - LOGICAL_OPERATOR_SIZER_SIZE);
+      }
+      if (newHeight === LOGICAL_OPERATOR_MIN_SIZE) {
+        kineticObj.setY(LOGICAL_OPERATOR_MIN_SIZE - LOGICAL_OPERATOR_SIZER_SIZE);
+      }
+      group.setWidth(newWidth);
+      group.setHeight(newHeight);
+      group.phemaObject().resizeShapeToGroup(group, scope);
+      group.draw();
     });
   },
 
@@ -160,15 +196,23 @@ BaseElement.prototype = {
   connectConnectorEvents: function (group) {
     group.on('dragmove', function(e) {
       // e.target is assumed to be a Group
-      if (e.target.nodeType !== 'Group') {
+      if (e.target.nodeType !== 'Group'
+        && e.target.className !== 'PhemaSizeBar') {
         console.error('Unsupported object' + e.target);
         return;
       }
 
+      // Typically only groups can be dragged, with the exception of sizer bars.
+      // We need to make sure the target group is explicitly set in that case.
+      var targetGroup = e.target;
+      if (e.target.className === 'PhemaSizeBar') {
+        targetGroup = group;
+      }
+
       // For the element we are moving, redraw all connection lines
       var stage = group.getStage();
-      updateConnectedLines(e.target.find('.rightConnector')[0], stage);
-      updateConnectedLines(e.target.find('.leftConnector')[0], stage);
+      updateConnectedLines(targetGroup.find('.rightConnector')[0], stage);
+      updateConnectedLines(targetGroup.find('.leftConnector')[0], stage);
       stage.mainLayer.draw();
     });
   },

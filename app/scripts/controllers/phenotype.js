@@ -230,6 +230,8 @@ angular.module('sopheAuthorApp')
       {text: 'Redo', iconClass:'fa fa-repeat', disabled: true},
       {spacer: true},
       {text: 'Delete', iconClass:'fa fa-remove', event: $scope.delete, disabled: true, tooltip: 'Delete the highlighted element(s) in the canvas'},
+      {spacer: true},
+      {text: 'Feedback', iconClass:'fa fa-comment', event: $scope.delete, disabled: true, tooltip: 'Suggestions or comments'},
     ];
 
     $scope.canShowProperties = function(item) {
