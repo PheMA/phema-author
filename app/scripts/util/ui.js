@@ -1,7 +1,7 @@
 /* globals Kinetic */
 /* exported startConnector, endConnector, updateActiveLineLocation, getIntersectingShape,
   addElementToContainer, removeElementFromContainer, updateConnectedLines, changeConnectorEndpoints,
-  allowsDrop, findObjectInPhemaGroupType */
+  allowsDrop, findObjectInPhemaGroupType, BORDER, updateSizeOfMainRect */
 
 'use strict';
 
@@ -73,41 +73,6 @@ function findObjectInPhemaGroupType(objectName, container, allowedTypes) {
   }
 
   return null;
-}
-
-// For a container (represented by group), lay out all contained elements within the
-// main rectangle.
-function layoutElementsInContainer(group) {
-  // Only do this right now for logical operators
-  if (group.element().type !== 'LogicalOperator') {
-    return;
-  }
-
-  var header = group.getChildren(function(node) { return node.getClassName() === 'Text'; })[0];
-  var rect = group.getChildren(function(node) { return node.getClassName() === 'Rect'; })[0];
-
-  var containedElements = group.phemaObject().containedElements();
-  if (containedElements.length === 0) {
-    updateSizeOfMainRect(rect, group, 200, 200);
-    header.setWidth(rect.getWidth());
-    return;
-  }
-
-  var currentX = BORDER;
-  var currentY = header.getHeight() + BORDER;
-  var maxHeight = 0;
-  var element = null;
-  for (var index = 0; index < containedElements.length; index ++) {
-    element = containedElements[index];
-    element.moveTo(group);
-    element.setX(currentX);
-    element.setY(currentY);
-    currentX = currentX + element.getWidth() + BORDER;
-    maxHeight = Math.max(maxHeight, currentY + element.getHeight() + BORDER);
-  }
-
-  updateSizeOfMainRect(rect, group, currentX, maxHeight);
-  header.setWidth(rect.getWidth());
 }
 
 function findParentElementByName(parent, elementName) {
@@ -220,6 +185,7 @@ function addElementToContainer(stage, container, element) {
   var group = (container.nodeType === 'Group' ? container : container.parent);
   if (group) {
     var elementDefinition = group.element();
+    var phemaObject = group.phemaObject();
     if (elementDefinition.type === 'TemporalOperator') {
       // Replace container with element
       var containerParent = container.getParent();
@@ -231,20 +197,20 @@ function addElementToContainer(stage, container, element) {
       }
     }
     else if (elementDefinition.type === 'DataElement' || elementDefinition.type === 'Category') {
-      var phemaObject = group.phemaObject();
       phemaObject.valueSet(element);
       element.container = group;
       stage.draw();
     }
     else if (elementDefinition.type === 'LogicalOperator') {
       // Add the item (if it's not already in the array)
-      var containedElements = group.phemaObject().containedElements();
+      var containedElements = phemaObject.containedElements();
       if (containedElements.indexOf(element) === -1) {
         containedElements.push(element);
-        group.phemaObject().containedElements(containedElements);
+        phemaObject.containedElements(containedElements);
         element.container = group;
       }
-      layoutElementsInContainer(group);
+
+      phemaObject.layoutElementsInContainer(group);
       stage.draw();
     }
   }
@@ -277,7 +243,8 @@ function allowsDrop(dragElement, dropElement) {
 function removeElementFromContainer(stage, element) {
   if (element && element.container) {
     var group = (element.container.nodeType === 'Group' ? element.container : element.container.parent);
-    var containedElements = group.phemaObject().containedElements();
+    var phemaObject = group.phemaObject();
+    var containedElements = phemaObject.containedElements();
     var foundIndex = containedElements.indexOf(element);
     if (foundIndex < 0) {
       console.error('Unable to find element to remove from container');
@@ -286,7 +253,9 @@ function removeElementFromContainer(stage, element) {
     containedElements.splice(foundIndex, 1);
     group.phemaObject().containedElements(containedElements);
     element.container = null;
-    layoutElementsInContainer(group);
+    if (phemaObject.layoutElementsInContainer) {
+      phemaObject.layoutElementsInContainer(group);
+    }
     stage.mainLayer.draw();
   }
 }
