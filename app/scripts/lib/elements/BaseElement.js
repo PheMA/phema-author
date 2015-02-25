@@ -78,18 +78,24 @@ BaseElement.prototype = {
       var targetAbsPos = e.target.getAbsolutePosition();
       var newWidth = targetAbsPos.x - group.x() + LOGICAL_OPERATOR_SIZER_SIZE;
       var newHeight = targetAbsPos.y - group.y() + LOGICAL_OPERATOR_SIZER_SIZE;
-      newWidth = Math.max(newWidth, LOGICAL_OPERATOR_MIN_SIZE);
-      newHeight = Math.max(newHeight, LOGICAL_OPERATOR_MIN_SIZE);
-      if (newWidth === LOGICAL_OPERATOR_MIN_SIZE) {
-        kineticObj.setX(LOGICAL_OPERATOR_MIN_SIZE - LOGICAL_OPERATOR_SIZER_SIZE);
+      var minSize = group.phemaObject()._minimumSize;
+      newWidth = Math.max(newWidth, minSize.width);
+      newHeight = Math.max(newHeight, minSize.height);
+      if (newWidth === minSize.width) {
+        kineticObj.setX(minSize.width - LOGICAL_OPERATOR_SIZER_SIZE);
       }
-      if (newHeight === LOGICAL_OPERATOR_MIN_SIZE) {
-        kineticObj.setY(LOGICAL_OPERATOR_MIN_SIZE - LOGICAL_OPERATOR_SIZER_SIZE);
+      if (newHeight === minSize.height) {
+        kineticObj.setY(minSize.height - LOGICAL_OPERATOR_SIZER_SIZE);
       }
       group.setWidth(newWidth);
       group.setHeight(newHeight);
       group.phemaObject().resizeShapeToGroup(group, scope);
       group.draw();
+    });
+
+    kineticObj.on('dragend', function(e) {
+      group.setDraggable(true);
+      kineticObj.setDraggable(false);
     });
   },
 

@@ -17,6 +17,57 @@ LogicalOperator.prototype.resizeShapeToGroup = function(group, scope) {
   updateSizeOfMainRect(mainRect, group, group.getWidth(), group.getHeight());
 };
 
+LogicalOperator.prototype.calculateMinimumSize = function(group) {
+  var farthestX = LOGICAL_OPERATOR_MIN_SIZE;
+  var farthestY = LOGICAL_OPERATOR_MIN_SIZE;
+  for (var index = 0; index < this._containedElements.length; index++) {
+    var element = this._containedElements[index];
+    farthestX = Math.max(element.getX() + element.getWidth(), farthestX);
+    farthestY = Math.max(element.getY() + element.getHeight(), farthestY);
+  }
+
+  this._minimumSize = { width: farthestX + BORDER, height: farthestY + BORDER };
+}
+
+LogicalOperator.prototype.reconcileMinimumSize = function(group) {
+  this.calculateMinimumSize(group);
+  var sizeBar = group.find('.sizer');
+  sizeBar.setX(group.width() - LOGICAL_OPERATOR_SIZER_SIZE);
+  sizeBar.setY(group.height() - LOGICAL_OPERATOR_SIZER_SIZE);
+}
+
+// For a container (represented by group), lay out all contained elements within the
+// main rectangle.
+LogicalOperator.prototype.layoutElementsInContainer = function() {
+  var group = this._container;
+  var header = group.getChildren(function(node) { return node.getClassName() === 'Text'; })[0];
+  var rect = group.getChildren(function(node) { return node.getClassName() === 'Rect'; })[0];
+
+  if (this._containedElements.length === 0) {
+    updateSizeOfMainRect(rect, group, 200, 200);
+    header.setWidth(rect.getWidth());
+    this.reconcileMinimumSize(group);
+    return;
+  }
+
+  var currentX = BORDER;
+  var currentY = header.getHeight() + BORDER;
+  var maxHeight = 0;
+  var element = null;
+  for (var index = 0; index < this._containedElements.length; index ++) {
+    element = this._containedElements[index];
+    element.moveTo(group);
+    element.setX(currentX);
+    element.setY(currentY);
+    currentX = currentX + element.getWidth() + BORDER;
+    maxHeight = Math.max(maxHeight, currentY + element.getHeight() + BORDER);
+  }
+
+  updateSizeOfMainRect(rect, group, currentX, maxHeight);
+  header.setWidth(rect.getWidth());
+  this.reconcileMinimumSize(group);
+};
+
 // Connects the appropriate QDM logical operator shapes to event handlers.
 // Used when constructing a new element, or when loading from a definition.
 LogicalOperator.prototype.connectEvents = function(group, scope) {
@@ -28,39 +79,6 @@ LogicalOperator.prototype.connectEvents = function(group, scope) {
   this.connectConnectorEvents(group);
   var sizer = group.find('.sizer')[0];
   this.addSizerEventHandlers(sizer, scope);
-  // sizer.on('mouseover', function (e) {
-  //   document.body.style.cursor = 'nwse-resize';
-  //   e.cancelBubble = true;      // Needed for issue with KineticJS not looking at inner event
-  //   e.evt.cancelBubble = true;
-  // });
-  // sizer.on('mouseout', function () {
-  //   document.body.style.cursor = 'default';
-  // });
-  // sizer.on('mousedown', function() {
-  //   group.setDraggable(false);
-  //   sizer.setDraggable(true);
-  // });
-  // sizer.on('mouseup', function() {
-  //   group.setDraggable(true);
-  //   sizer.setDraggable(false);
-  // });
-  // sizer.on('dragmove', function(e) {
-  //   var targetAbsPos = e.target.getAbsolutePosition();
-  //   var newWidth = targetAbsPos.x - group.x() + LOGICAL_OPERATOR_SIZER_SIZE;
-  //   var newHeight = targetAbsPos.y - group.y() + LOGICAL_OPERATOR_SIZER_SIZE;
-  //   newWidth = Math.max(newWidth, LOGICAL_OPERATOR_MIN_SIZE);
-  //   newHeight = Math.max(newHeight, LOGICAL_OPERATOR_MIN_SIZE);
-  //   if (newWidth === LOGICAL_OPERATOR_MIN_SIZE) {
-  //     sizer.setX(LOGICAL_OPERATOR_MIN_SIZE - LOGICAL_OPERATOR_SIZER_SIZE);
-  //   }
-  //   if (newHeight === LOGICAL_OPERATOR_MIN_SIZE) {
-  //     sizer.setY(LOGICAL_OPERATOR_MIN_SIZE - LOGICAL_OPERATOR_SIZER_SIZE);
-  //   }
-  //   group.setWidth(newWidth);
-  //   group.setHeight(newHeight);
-  //   group.phemaObject().resizeShapeToGroup(group, scope);
-  //   group.draw();
-  // });
 };
 
 LogicalOperator.prototype.containedElements = function(elements) {
@@ -69,6 +87,7 @@ LogicalOperator.prototype.containedElements = function(elements) {
   }
   else {
     this._containedElements = elements;
+    this.calculateMinimumSize(this._container);
   }
 };
 
@@ -111,15 +130,6 @@ LogicalOperator.prototype.create = function(config, scope) {
 
   this.connectEvents(group, scope);
 
-  // var tri = new Kinetic.Polygon({
-  //   stroke: 'black', strokeWidth: 3,
-  //   points: [60, 100, 90, 100, 90, 140]
-  // });
-  // var tri = new Kinetic.RegularPolygon({
-  //   sides: 3, stroke: 'black', strokeWidth: 1, fill: 'black',
-  //   x: mainRect.width() - 5, y: mainRect.height() - 5, radius: 5
-  // });
-
   this.containedElements([]);
   var mainLayer = scope.canvasDetails.kineticStageObj.mainLayer;
   mainLayer.add(group);
@@ -144,4 +154,5 @@ LogicalOperator.prototype.load = function(group, scope) {
   group.phemaObject(this);
   this.connectEvents(group, scope);
   this.associateReferences(group, scope);
+  this.calculateMinimumSize(group);
 };
