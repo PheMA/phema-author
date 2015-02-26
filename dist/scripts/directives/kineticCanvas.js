@@ -39,10 +39,17 @@
 
           // Fully redraw everything after sizing is done.  A simple draw() won't cut it.  Note that
           // we have to update the stage size, otherwise it will retain its original size.
-          if (scope.canvasDetails.kineticStageObj) {
-            scope.canvasDetails.kineticStageObj.setWidth(element.windowWidth);
-            scope.canvasDetails.kineticStageObj.setHeight(element.windowHeight);
-            scope.canvasDetails.kineticStageObj.drawScene();
+          var stage = scope.canvasDetails.kineticStageObj;
+          if (stage) {
+            stage.setWidth(element.windowWidth);
+            stage.setHeight(element.windowHeight);
+            // We need to explicitly draw the background layer, otherwise the KineticJS internal cache
+            // holds the wrong size for the shape in the layer, and mouse events won't work.
+            stage.backgroundLayer.children[0].setWidth(stage.getWidth());
+            stage.backgroundLayer.children[0].setHeight(stage.getHeight());
+            stage.backgroundLayer.draw();
+
+            stage.drawScene();
           }
         };
         scope.onResize();
@@ -50,8 +57,6 @@
         angular.element($window).bind('resize', function() {
           scope.onResize();
         });
-
-        scope.$root.$broadcast('sophe-canvas-loaded', null);
       }
     };
   }]);
