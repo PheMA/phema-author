@@ -1,7 +1,8 @@
 var request = require('request');
 var http = require('http');
 var FHIRRepository = require('../lib/dataService/fhirRepository.js').FHIRRepository;
-var repository = new FHIRRepository('http://23.22.63.122:8080/QDM2RDF/rest/fhir');
+//var repository = new FHIRRepository('http://23.22.63.122:8080/QDM2RDF/rest/fhir');
+var repository = new FHIRRepository('http://www.projectphema.org:8080/QDM2RDF/rest/fhir');
 
 exports.index = function(req, res){
   if (req.params.type === 'elements' || req.params.type === 'datatypes') {
