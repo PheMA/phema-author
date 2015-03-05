@@ -312,3 +312,13 @@ $value-sets-background-color: #eee;
     background-color: $list-item-hover-background-color;
   }
 }
+
+.phenotype-elements {
+  .col-md-3 {
+    min-width: 240px;
+  }
+
+  .col-xs-9 {
+    width: 50%;
+  }
+}

@@ -1,10 +1,10 @@
 <div id="phenotype-messages" class="row" ng-show="successMessage || errorMessage">
-  <div class="col-md-3"></div>
-  <div class="col-md-6">
+  <div class="col-sm-3 col-xs-3"></div>
+  <div class="col-sm-6 col-xs-6">
     <alert type="success" ng-show="successMessage" close="closeSuccessMessage(successMessage)">{{successMessage}}</alert>
     <alert type="danger" ng-show="errorMessage" close="closeErrorMessage(errorMessage)">{{errorMessage}}</alert>
   </div>
-  <div class="col-md-3"></div>
+  <div class="col-sm-3 col-xs-3"></div>
 </div>
 
 <h1>Define Phenotype</h1>
@@ -20,15 +20,8 @@
     </ul>
   </div>
 </div>
-<div class="row">
-  <div class="col-md-9 col-md-push-3">
-    <div droppable drop="addWorkflowObject(config)" class="row">
-      <div context-menu="onRightClick(message)" context-menu-close="onClose(closeMessage)" data-target="phenotypeMenu">
-        <div data-kinetic-canvas data-canvas-details="canvasDetails" data-right-align-to="phenotypeToolbar" style="border: solid grey 1px; width: 800px; height: 600px;" id="canvas">&nbsp;</div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3 col-md-pull-9">
+<div class="row phenotype-elements">
+  <div class="col-sm-3 col-xs-3">
     <accordion close-others="oneAtATime">
       <accordion-group id="data-elements-list" class="phenotype-element-list" is-open="status.open[0]">
         <accordion-heading>
@@ -73,6 +66,13 @@
         <div fhir-data-elements></div>
       </accordion-group>
     </accordion>
+  </div>
+  <div class="col-sm-9 col-xs-9">
+    <div droppable drop="addWorkflowObject(config)" class="row">
+      <div context-menu="onRightClick(message)" context-menu-close="onClose(closeMessage)" data-target="phenotypeMenu">
+        <div data-kinetic-canvas data-canvas-details="canvasDetails" data-right-align-to="phenotypeToolbar" style="border: solid grey 1px; width: 800px; height: 600px;" id="canvas">&nbsp;</div>
+      </div>
+    </div>
   </div>
 
   <div class="dropdown position-fixed context-menu" id="phenotypeMenu">
