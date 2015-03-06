@@ -16,12 +16,26 @@ angular.module('sopheAuthorApp')
     $scope.successMessage = null;
     $scope.errorMessage = null;
     $scope.checkForUnsavedChanges = true;
-    var advancedRegEx = new RegExp('[a-z]+\\sConcurrent With', 'i');
-    $scope.temporalFilter = function(item) {
-      if (item) {
-        return (item.name.search(advancedRegEx) === -1);
-      }
+    $scope.treeOptions = {
+      dirSelectable: false
     };
+    $scope.buttons = [
+      {text: 'New', iconClass:'fa fa-plus', event: $scope.new, disabled: false, tooltip: 'Create a new phenotype'},
+      {text: 'Open', iconClass:'fa fa-folder-open', event: $scope.load, disabled: false, tooltip: 'Open and edit one of your existing phenotypes'},
+      {spacer: true},
+      {text: 'Save', iconClass:'fa fa-save', event: $scope.save, disabled: false, tooltip: 'Save changes to your phenotype'},
+      {text: 'Export', iconClass:'fa fa-arrow-circle-down', event: $scope.export, disabled: false, tooltip: 'Export the phenotype for use in an external application'},
+      {spacer: true},
+      {text: 'Copy', iconClass:'fa fa-copy', event: $scope.copy, disabled: true},
+      {text: 'Paste', iconClass:'fa fa-paste', event: $scope.paste, disabled: true},
+      {text: 'Undo', iconClass:'fa fa-undo', disabled: true},
+      {text: 'Redo', iconClass:'fa fa-repeat', disabled: true},
+      {spacer: true},
+      {text: 'Delete', iconClass:'fa fa-remove', event: $scope.delete, disabled: true, tooltip: 'Delete the highlighted element(s) in the canvas'},
+      {spacer: true},
+      {text: 'Feedback', iconClass:'fa fa-comment', event: $scope.delete, disabled: true, tooltip: 'Suggestions or comments'},
+    ];
+
 
     LibraryService.load()
       .then(LibraryService.processValues)
@@ -42,10 +56,6 @@ angular.module('sopheAuthorApp')
     TemporalOperatorService.load()
       .then(TemporalOperatorService.processValues)
       .then(function(operators) { $scope.temporalOperators = operators; });
-
-    $scope.treeOptions = {
-      dirSelectable: false
-    };
 
     // If a specific phenotype was specified, load it now
     if ($scope.phenotype) {
@@ -190,6 +200,14 @@ angular.module('sopheAuthorApp')
       });
     }
 
+    // Used in the tree control to filter out certain temporal operators
+    var temporalFilterRegex = new RegExp('[a-z]+\\sConcurrent With', 'i');
+    $scope.temporalFilter = function(item) {
+      if (item) {
+        return (item.name.search(temporalFilterRegex) === -1);
+      }
+    };
+
     // config object:
     //   x
     //   y
@@ -280,23 +298,6 @@ angular.module('sopheAuthorApp')
       hiddenElement.click();
       $window.URL.revokeObjectURL(url);
     };
-
-    $scope.buttons = [
-      {text: 'New', iconClass:'fa fa-plus', event: $scope.new, disabled: false, tooltip: 'Create a new phenotype'},
-      {text: 'Open', iconClass:'fa fa-folder-open', event: $scope.load, disabled: false, tooltip: 'Open and edit one of your existing phenotypes'},
-      {spacer: true},
-      {text: 'Save', iconClass:'fa fa-save', event: $scope.save, disabled: false, tooltip: 'Save changes to your phenotype'},
-      {text: 'Export', iconClass:'fa fa-arrow-circle-down', event: $scope.export, disabled: false, tooltip: 'Export the phenotype for use in an external application'},
-      {spacer: true},
-      {text: 'Copy', iconClass:'fa fa-copy', event: $scope.copy, disabled: true},
-      {text: 'Paste', iconClass:'fa fa-paste', event: $scope.paste, disabled: true},
-      {text: 'Undo', iconClass:'fa fa-undo', disabled: true},
-      {text: 'Redo', iconClass:'fa fa-repeat', disabled: true},
-      {spacer: true},
-      {text: 'Delete', iconClass:'fa fa-remove', event: $scope.delete, disabled: true, tooltip: 'Delete the highlighted element(s) in the canvas'},
-      {spacer: true},
-      {text: 'Feedback', iconClass:'fa fa-comment', event: $scope.delete, disabled: true, tooltip: 'Suggestions or comments'},
-    ];
 
     $scope.canShowProperties = function(item) {
       var selectedElement = item || algorithmElementFactory.getFirstSelectedItem($scope);
