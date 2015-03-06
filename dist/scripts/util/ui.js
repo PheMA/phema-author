@@ -324,6 +324,7 @@ function updateActiveLineLocation(stage, evt) {
 
 // Start a connector line, anchored at a connector object
 function startConnector(stage, connectorObj) {
+  clearSelections(stage);
   var connectorParent = connectorObj.getParent();
   var line = new Kinetic.PhemaConnection({
     x: connectorParent.getX() + connectorObj.getX(),

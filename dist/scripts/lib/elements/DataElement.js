@@ -159,7 +159,9 @@ DataElement.prototype.create = function(config, scope) {
 
 DataElement.prototype.toObject = function() {
   var obj = {};
-  obj.valueSet = {id: this._valueSet._id};
+  if (this._valueSet) {
+    obj.valueSet = {id: this._valueSet._id};
+  }
   obj.className = 'DataElement';
   return obj;
 };

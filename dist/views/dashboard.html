@@ -12,20 +12,10 @@
           <th>Last Updated</th>
         </thead>
         <tbody>
-          <tr>
-            <td><a href="#/phenotype/0">eMERGE Type 2 Diabetes - Cases</a></td>
+          <tr ng-repeat="phenotype in phenotypes">
+            <td><a href="#/phenotype/{{phenotype.id}}">{{phenotype.name}}</a></td>
             <td>Draft</td>
-            <td>08/19/14 9:39am</td>
-          </tr>
-          <tr>
-            <td><a href="#/phenotype/0">eMERGE Type 2 Diabetes - Controls</a></td>
-            <td>Draft</td>
-            <td>08/17/14 1:11pm</td>
-          </tr>
-          <tr>
-            <td><a href="#/phenotype/0">Resistant Hypertension w/o Meds</a></td>
-            <td>Published</td>
-            <td>07/03/14 5:15pm</td>
+            <td>{{phenotype.lastModified}}</td>
           </tr>
         </tbody>
       </table>
@@ -38,7 +28,15 @@
       Recent Activity
     </div>
     <div class="dashboard-body">
-      <ul>
+      <span style="font-style: italic; font-size: 0.85em;">
+      This feature is not yet available.  In the future it will show you:
+        <ul style="list-style-type: disc; padding: 25px; margin: 5px;">
+          <li>Recent edits to your phenotypes</li>
+          <li>Changes to phenotypes you are watching</li>
+          <li>Changes made by others in groups you are a member of</li>
+        </ul>
+      </span>
+<!--       <ul>
         <li>
           <div class="activity-text">
             <a href="#/people/0">You</a> updated the <a href="#/phenotype/0">eMERGE Type 2 Diabetes - Cases</a> phenotype in your <a href="#/phenotype/list/private">private list</a>
@@ -55,7 +53,7 @@
             </div>
           </div>
         </li>
-      </ul>
+      </ul> -->
     </div>
   </div>
 </div>

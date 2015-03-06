@@ -14,9 +14,13 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
     return deferred.promise;
   };
 
+  function _formatLastModified(item) {
+    return (item.modified ? item.modified : (item.created ? item.created : '(Unknown)'));
+  }
+
   function _formatDescription(item) {
     var description = item.description + '\r\n\r\nLast modified: ';
-    description = description + (item.modified ? item.modified : (item.created ? item.created : '(Unknown)')) + '\r\nLast modified by: ';
+    description = description + _formatLastModified(item) + '\r\nLast modified by: ';
     description = description + (item.modifiedBy ? item.modifiedBy : '(Unknown)');
     return description;
   }
@@ -29,7 +33,8 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
         id: data[index].id,
         name: data[index].name,
         description: _formatDescription(data[index]),
-        type: 'Phenotype'
+        type: 'Phenotype',
+        lastModified: _formatLastModified(data[index])
       });
     }
 
