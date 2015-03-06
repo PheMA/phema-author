@@ -15,6 +15,7 @@ angular.module('sopheAuthorApp')
     $scope.isPropertiesDisabled = true;
     $scope.successMessage = null;
     $scope.errorMessage = null;
+    $scope.checkForUnsavedChanges = true;
     var advancedRegEx = new RegExp('[a-z]+\\sConcurrent With', 'i');
     $scope.temporalFilter = function(item) {
       if (item) {
@@ -46,38 +47,10 @@ angular.module('sopheAuthorApp')
       dirSelectable: false
     };
 
-    $scope.$on('sophe-search-valuesets', function(evt, dataElement) {
-      var modalInstance = $modal.open({
-        templateUrl: 'views/elements/valueSetsTermsDialog.html',
-        controller: 'ValueSetsTermsDialogController',
-        size: 'lg'
-      });
-
-      modalInstance.result.then(function (result) {
-        if (result) {
-          // If we just have a value set, we will create that and place it in the object
-          var valueSet;
-          var element = ValueSet.createElementFromData(result);
-          valueSet = $scope.addWorkflowObject({x: 0, y: 0, element: element});
-          dataElement.phemaObject().valueSet(valueSet);
-          if (element.customList) {
-            valueSet.phemaObject().customList(result);
-            delete element.customList;
-          }
-          dataElement.getStage().draw();
-        }
-      });
-    });
-
-    $scope.$on('sophe-element-selected', function(evt, args) {
-      $scope.$apply(function() {
-        $scope.isPropertiesDisabled = !$scope.canShowProperties(args);
-        _.findWhere($scope.buttons, {text: 'Delete'}).disabled = !$scope.canDelete();
-      });
-    });
-
     // If a specific phenotype was specified, load it now
     if ($scope.phenotype) {
+      // We can't load the phenotype until the canvas has been built, so we will watch
+      // to see when that takes place before proceeding.
       $scope.$watch('canvasDetails', function() {
         if ($scope.canvasDetails) {
           LibraryService.loadDetails($scope.phenotype.id)
@@ -86,6 +59,134 @@ angular.module('sopheAuthorApp')
               algorithmElementFactory.loadFromDefinition($scope, phenotype.definition);
             });
         }
+      });
+    }
+
+    // Helper function to determine if a phenotype has been changed, either as a new
+    // phenotype or an existing one loaded for editing.
+    function _hasPhenotypeChanged() {
+      // Make sure the canvas has been initialized, otherwise we know there is
+      // nothing to save.
+      if (!$scope.canvasDetails || !$scope.canvasDetails.kineticStageObj || !$scope.canvasDetails.kineticStageObj.mainLayer) {
+        return false;
+      }
+
+      // Get the phenotype definition from the KineticJS stage.  We expect there to be
+      // at least some information about the main layer, so if it is undefined this is
+      // an unexpected condition.
+      var phenotypeDefinition = $scope.canvasDetails.kineticStageObj.mainLayer.toJSON();
+      if (!phenotypeDefinition) {
+        console.error('The phenotype definition was blank, which is unexpected');
+        return false;
+      }
+
+      // We need to parse the JSON so we can look for defined children elements in the
+      // main layer.  This tells us if there is anything in the canvas.
+      var phenotypeObject = JSON.parse(phenotypeDefinition);
+      if ($scope.phenotype) {
+        if ($scope.phenotype.definition !== phenotypeDefinition) {
+          return true;
+        }
+      }
+      else if (phenotypeObject.children && phenotypeObject.children.length > 0) {
+        return true;
+      }
+
+      return false;
+    }
+
+    // Clear out the success and error message boxes that may be showing.
+    function _resetMessages() {
+      $scope.closeSuccessMessage();
+      $scope.closeErrorMessage();
+    }
+
+    // Performs the actual save action - bringing up the save dialog.  This is
+    // broken into a function so it can be passed and called in different places.
+    function _handlePhenotypeSave(result) {
+      LibraryService.saveDetails(result)
+        .then(function(data) {
+          $scope.successMessage = 'Your phenotype was successfully saved';
+          $location.path('/phenotype/' + data.id);
+          $timeout(_resetMessages, 5000); // Only timeout success
+        }, function() {
+          $scope.errorMessage = 'There was an error trying to save your phenotype definition';
+        });
+    }
+
+    // Helper to ensure that the path can be changed without a potentially blocking
+    // check to see if changes need to be saved.  Should be used only when we know we
+    // can discard changes.
+    function _forceNavigate(url) {
+      $scope.checkForUnsavedChanges = false;
+      $location.path(url);
+    }
+
+    // Performs the actual create new action - resetting the canvas.  This is
+    // broken into a function so it can be passed and called in different places.
+    function _handleNew() {
+      // Be sure to clean everything up before we redirect, otherwise we have errant
+      // objects in memory that cause problems.
+      var stage = $scope.canvasDetails.kineticStageObj;
+      var layer = stage.mainLayer;
+      layer.get('Group').each(function(group) {
+        algorithmElementFactory.destroyGroup(group);
+      });
+
+      _forceNavigate('/phenotype/');
+    }
+
+    // Displays a prompt if the user wants to save changes.  If so, it initiates the
+    // save operation.  If not, it calls a function (fnAction with optional params)
+    // to perform whatever action it had halted.
+    function _handleAskToSave(fnAction, params) {
+      var modalInstance = $modal.open({
+        templateUrl: 'views/phenotypes/prompt.html',
+        controller: 'PromptController',
+        size: 'lg',
+        resolve: {
+          title: function() { return 'Save phenotype?'; },
+          message: function() { return 'You have changes that haven\'t been saved.  Would you like to save your changes now?'; },
+          buttons: function() { return ['Yes', 'No', 'Cancel']; }
+        }
+      });
+
+      modalInstance.result.then(function (id) {
+        if (id === 'Yes') {
+          $scope.save();
+        }
+        else if (id === 'No') {
+          fnAction(params);
+        }
+      });
+    }
+
+    // Performs the actual edit/losd action - opening the load dialog.  This is
+    // broken into a function so it can be passed and called in different places.
+    function _handleLoad() {
+      var modalInstance = $modal.open({
+        templateUrl: 'views/phenotypes/load.html',
+        controller: 'LoadPhenotypeController',
+        size: 'lg',
+        resolve: {
+          phenotypes: function() {
+            return $scope.phenotypes;
+          }
+        }
+      });
+
+      // If the user selects a phenotype to load, redirect to that phenotype's ID which
+      // will cause it to load properly.
+      modalInstance.result.then(function (id) {
+        // Be sure to clean everything up before we redirect, otherwise we have errant
+        // objects in memory that cause problems.
+        var stage = $scope.canvasDetails.kineticStageObj;
+        var layer = stage.mainLayer;
+        layer.get('Group').each(function(group) {
+          algorithmElementFactory.destroyGroup(group);
+        });
+
+        $location.path('/phenotype/' + id);
       });
     }
 
@@ -121,22 +222,6 @@ angular.module('sopheAuthorApp')
       $scope.errorMessage = null;
     };
 
-    function resetMessages() {
-      $scope.closeSuccessMessage();
-      $scope.closeErrorMessage();
-    }
-
-    function handlePhenotypeSave(result) {
-      LibraryService.saveDetails(result)
-        .then(function(data) {
-          $scope.successMessage = 'Your phenotype was successfully saved';
-          $location.path('/phenotype/' + data.id);
-          $timeout(resetMessages, 5000); // Only timeout success
-        }, function() {
-          $scope.errorMessage = 'There was an error trying to save your phenotype definition';
-        });
-    }
-
     $scope.save = function() {
       var phenotypeDefinition = $scope.canvasDetails.kineticStageObj.mainLayer.toJSON();
 
@@ -144,7 +229,7 @@ angular.module('sopheAuthorApp')
       // the dialog again and we can just save.
       if ($scope.phenotype) {
         $scope.phenotype.definition = phenotypeDefinition;
-        handlePhenotypeSave($scope.phenotype);
+        _handlePhenotypeSave($scope.phenotype);
       }
       else {
         var modalInstance = $modal.open({
@@ -160,48 +245,27 @@ angular.module('sopheAuthorApp')
         });
 
         modalInstance.result.then(function (result) {
-          handlePhenotypeSave(result);
+          _handlePhenotypeSave(result);
         });
       }
     };
 
     $scope.new = function() {
-      // Be sure to clean everything up before we redirect, otherwise we have errant
-      // objects in memory that cause problems.
-      var stage = $scope.canvasDetails.kineticStageObj;
-      var layer = stage.mainLayer;
-      layer.get('Group').each(function(group) {
-        algorithmElementFactory.destroyGroup(group);
-      });
-
-      $location.path('/phenotype/');
+      if (_hasPhenotypeChanged()) {
+        _handleAskToSave(_handleNew);
+      }
+      else {
+        _handleNew();
+      }
     };
 
     $scope.load = function() {
-      var modalInstance = $modal.open({
-        templateUrl: 'views/phenotypes/load.html',
-        controller: 'LoadPhenotypeController',
-        size: 'lg',
-        resolve: {
-          phenotypes: function() {
-            return $scope.phenotypes;
-          }
-        }
-      });
-
-      // If the user selects a phenotype to load, redirect to that phenotype's ID which
-      // will cause it to load properly.
-      modalInstance.result.then(function (id) {
-        // Be sure to clean everything up before we redirect, otherwise we have errant
-        // objects in memory that cause problems.
-        var stage = $scope.canvasDetails.kineticStageObj;
-        var layer = stage.mainLayer;
-        layer.get('Group').each(function(group) {
-          algorithmElementFactory.destroyGroup(group);
-        });
-
-        $location.path('/phenotype/' + id);
-      });
+      if (_hasPhenotypeChanged()) {
+        _handleAskToSave(_handleLoad);
+      }
+      else {
+        _handleLoad();
+      }
     };
 
     $scope.export = function() {
@@ -402,9 +466,55 @@ angular.module('sopheAuthorApp')
       }
     };
 
+
+    $scope.$on('sophe-search-valuesets', function(evt, dataElement) {
+      var modalInstance = $modal.open({
+        templateUrl: 'views/elements/valueSetsTermsDialog.html',
+        controller: 'ValueSetsTermsDialogController',
+        size: 'lg'
+      });
+
+      modalInstance.result.then(function (result) {
+        if (result) {
+          // If we just have a value set, we will create that and place it in the object
+          var valueSet;
+          var element = ValueSet.createElementFromData(result);
+          valueSet = $scope.addWorkflowObject({x: 0, y: 0, element: element});
+          dataElement.phemaObject().valueSet(valueSet);
+          if (element.customList) {
+            valueSet.phemaObject().customList(result);
+            delete element.customList;
+          }
+          dataElement.getStage().draw();
+        }
+      });
+    });
+
+    // Special event handler such that whenever an element is selected, we are notified
+    // and can enable/disable menu items for deleting, viewing properties, etc.
+    $scope.$on('sophe-element-selected', function(evt, args) {
+      $scope.$apply(function() {
+        $scope.isPropertiesDisabled = !$scope.canShowProperties(args);
+        _.findWhere($scope.buttons, {text: 'Delete'}).disabled = !$scope.canDelete();
+      });
+    });
+
+    // Special event handler that's fired after a connection has been drawn between two
+    // objects.  This brings up the property dialog for the temporal operator.
     $scope.$on('sophe-empty-temporal-operator-created', function() {
       $scope.$apply(function() {
         $scope.showProperties();
       });
+    });
+
+    // When the user tries to navigate away from the current page, check to see if there
+    // are any unsaved changes.  This uses the checkForUnsavedChanges scope variable to
+    // determine if a check should be made, or if it should be ignored (like when the
+    // user confirms they don't want to save changes).
+    $scope.$on('$locationChangeStart', function(event, next) {
+      if ($scope.checkForUnsavedChanges && _hasPhenotypeChanged()) {
+        event.preventDefault();
+        _handleAskToSave(_forceNavigate, next.substr(next.indexOf('#') + 1));
+      }
     });
   }]);
