@@ -10,11 +10,32 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-.controller('ValueSetsController', ['$scope', '$http', 'ValueSetService', function ($scope, $http, ValueSetService) {
+.controller('ValueSetsController', ['$scope', '$http', '$timeout', 'ValueSetService', function ($scope, $http, $timeout, ValueSetService) {
   $scope.searchTerm = '';
   $scope.isSearching = false;
   $scope.searchResults = [];
   $scope.selectedValueSets = [];
+
+  $scope.loadValueSetDetails = function(el) {
+    $timeout(function() {
+      if(!el.node.loadDetailStatus) {
+        ValueSetService.loadDetails(el.node.id)
+          .then(ValueSetService.processDetails, function() {
+            el.node.loadDetailStatus = 'error';
+            el.node.description = ValueSetService.formatDescription(el.node);
+            }
+          )
+          .then(function(details) {
+            if (details) {
+              el.node.members = details.members;
+              el.node.codeSystems = details.codeSystems;
+              el.node.loadDetailStatus = 'success';
+              el.node.description = ValueSetService.formatDescription(el.node);
+            }
+          });
+      }
+    }, 0);
+  };
 
   $scope.$watch('searchTerm', function() {
     if ($scope.searchTerm === '') {

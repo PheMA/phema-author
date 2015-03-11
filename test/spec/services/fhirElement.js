@@ -97,17 +97,17 @@ describe('Factory: FHIRElementService', function () {
     it('returns values for category', inject(function() {
       this.attributesGet.respond({
         results: {bindings: [
-        {"id":{"type":"uri","value":"http://rdf.hl7.org/fhir/fhir-0-4-0#ImagingStudy.modalityList"},
-        "attributeLabel":{"type":"literal","value":"Modality List","datatype":"http://www.w3.org/2001/XMLSchema#string"},
-        "context":{"type":"uri","value":"http://rdf.hl7.org/fhir/fhir-0-4-0#ImagingStudy"},
-        "version":{"type":"uri","value":"http://rdf.hl7.org/fhir/fhir-0-4-0#fhir-0-4-0"},
-        "definition":{"type":"literal","value":"A list of all the Series.ImageModality values that are actual acquisition modalities, i.e. those in the DICOM Context Group 29 (value set OID 1.2.840.10008.6.1.19).","datatype":"http://www.w3.org/2001/XMLSchema#string"},
-        "dataElementDescription":{"type":"literal","value":"All series.modality if actual acquisition modalities","datatype":"http://www.w3.org/2001/XMLSchema#string"},
-        "note":{},
-        "dataElementLabel":{"type":"literal","value":"Modality List","datatype":"http://www.w3.org/2001/XMLSchema#string"},
-        "dataElementName":{"type":"literal","value":"ImagingStudy.modalityList","datatype":"http://www.w3.org/2001/XMLSchema#string"},
-        "cardinality":{"type":"literal","value":"0..*","datatype":"http://www.w3.org/2001/XMLSchema#string"},
-        "cluster":{}},
+        {'id':{'type':'uri','value':'http://rdf.hl7.org/fhir/fhir-0-4-0#ImagingStudy.modalityList'},
+        'attributeLabel':{'type':'literal','value':'Modality List','datatype':'http://www.w3.org/2001/XMLSchema#string'},
+        'context':{'type':'uri','value':'http://rdf.hl7.org/fhir/fhir-0-4-0#ImagingStudy'},
+        'version':{'type':'uri','value':'http://rdf.hl7.org/fhir/fhir-0-4-0#fhir-0-4-0'},
+        'definition':{'type':'literal','value':'A list of all the Series.ImageModality values that are actual acquisition modalities, i.e. those in the DICOM Context Group 29 (value set OID 1.2.840.10008.6.1.19).','datatype':'http://www.w3.org/2001/XMLSchema#string'},
+        'dataElementDescription':{'type':'literal','value':'All series.modality if actual acquisition modalities','datatype':'http://www.w3.org/2001/XMLSchema#string'},
+        'note':{},
+        'dataElementLabel':{'type':'literal','value':'Modality List','datatype':'http://www.w3.org/2001/XMLSchema#string'},
+        'dataElementName':{'type':'literal','value':'ImagingStudy.modalityList','datatype':'http://www.w3.org/2001/XMLSchema#string'},
+        'cardinality':{'type':'literal','value':'0..*','datatype':'http://www.w3.org/2001/XMLSchema#string'},
+        'cluster':{}},
         ] }
       });
 
@@ -123,17 +123,17 @@ describe('Factory: FHIRElementService', function () {
     it('returns values for a datatype', inject(function() {
       this.attributesGet.respond({
         results: {bindings: [
-          {"id":{"type":"uri","value":"http://rdf.hl7.org/fhir/fhir-0-4-0#ImagingStudy.modalityList"},
-          "attributeLabel":{"type":"literal","value":"Modality List","datatype":"http://www.w3.org/2001/XMLSchema#string"},
-          "context":{"type":"uri","value":"http://rdf.hl7.org/fhir/fhir-0-4-0#ImagingStudy"},
-          "version":{"type":"uri","value":"http://rdf.hl7.org/fhir/fhir-0-4-0#fhir-0-4-0"},
-          "definition":{"type":"literal","value":"A list of all the Series.ImageModality values that are actual acquisition modalities, i.e. those in the DICOM Context Group 29 (value set OID 1.2.840.10008.6.1.19).","datatype":"http://www.w3.org/2001/XMLSchema#string"},
-          "dataElementDescription":{"type":"literal","value":"All series.modality if actual acquisition modalities","datatype":"http://www.w3.org/2001/XMLSchema#string"},
-          "note":{},
-          "dataElementLabel":{"type":"literal","value":"Modality List","datatype":"http://www.w3.org/2001/XMLSchema#string"},
-          "dataElementName":{"type":"literal","value":"ImagingStudy.modalityList","datatype":"http://www.w3.org/2001/XMLSchema#string"},
-          "cardinality":{"type":"literal","value":"0..*","datatype":"http://www.w3.org/2001/XMLSchema#string"},
-          "cluster":{}},
+          {'id':{'type':'uri','value':'http://rdf.hl7.org/fhir/fhir-0-4-0#ImagingStudy.modalityList'},
+          'attributeLabel':{'type':'literal','value':'Modality List','datatype':'http://www.w3.org/2001/XMLSchema#string'},
+          'context':{'type':'uri','value':'http://rdf.hl7.org/fhir/fhir-0-4-0#ImagingStudy'},
+          'version':{'type':'uri','value':'http://rdf.hl7.org/fhir/fhir-0-4-0#fhir-0-4-0'},
+          'definition':{'type':'literal','value':'A list of all the Series.ImageModality values that are actual acquisition modalities, i.e. those in the DICOM Context Group 29 (value set OID 1.2.840.10008.6.1.19).','datatype':'http://www.w3.org/2001/XMLSchema#string'},
+          'dataElementDescription':{'type':'literal','value':'All series.modality if actual acquisition modalities','datatype':'http://www.w3.org/2001/XMLSchema#string'},
+          'note':{},
+          'dataElementLabel':{'type':'literal','value':'Modality List','datatype':'http://www.w3.org/2001/XMLSchema#string'},
+          'dataElementName':{'type':'literal','value':'ImagingStudy.modalityList','datatype':'http://www.w3.org/2001/XMLSchema#string'},
+          'cardinality':{'type':'literal','value':'0..*','datatype':'http://www.w3.org/2001/XMLSchema#string'},
+          'cluster':{}},
         ] }
       });
 

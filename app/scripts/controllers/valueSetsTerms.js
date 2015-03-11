@@ -15,6 +15,7 @@ angular.module('sopheAuthorApp')
   $scope.valueSetSearch = {term: '', isSearching: false, results: []};
   $scope.selectedTerms = [];
   $scope.selectedValueSets = [];
+  $scope.selectedValueSetMembers = [];
 
   $scope.$watch('valueSetSearch.term', function() {
     ValueSetService.searchHelper($scope.valueSetSearch);
@@ -36,8 +37,33 @@ angular.module('sopheAuthorApp')
     });
   };
 
+  $scope.loadValueSetDetails = function(valueSet) {
+    if(!valueSet.loadDetailStatus) {
+      ValueSetService.loadDetails(valueSet.id)
+        .then(ValueSetService.processDetails, function() {
+          valueSet.loadDetailStatus = 'error';
+          valueSet.description = ValueSetService.formatDescription(valueSet);
+          $scope.selectedValueSetMembers = valueSet.members;
+          }
+        )
+        .then(function(details) {
+          if (details) {
+            valueSet.members = details.members;
+            valueSet.codeSystems = details.codeSystems;
+            valueSet.loadDetailStatus = 'success';
+            valueSet.description = ValueSetService.formatDescription(valueSet);
+            $scope.selectedValueSetMembers = valueSet.members;
+          }
+        });
+    }
+    else {
+      $scope.selectedValueSetMembers = valueSet.members;
+    }
+  };
+
   // Used for single-selection mode
   $scope.setSelectedValueSet = function(valueSet) {
     $scope.selectedValueSets[0] = valueSet;
+    $scope.loadValueSetDetails(valueSet);
   };
 }]);

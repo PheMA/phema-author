@@ -34,17 +34,17 @@ ValueSet.prototype.create = function(config, scope) {
     align: 'center', padding: 5
   };
   var headerObj = this.createText(headerOptions, group);
+  workflowObj.setHeight(headerObj.getHeight() + 10);
 
-  var idOptions = {
-    x: options.x, y: options.y + headerObj.getHeight() + 5,
-    width: options.width, // Leave out height so it auto-sizes
-    fontFamily: 'Calibri', fontSize: 11, fill: 'black',
-    text: 'OID: ' + config.element.id, name: 'oid',
-    align: 'center', padding: 5
-  };
-  var idObj = this.createText(idOptions, group);
-
-  workflowObj.setHeight(headerObj.getHeight() + idObj.getHeight() + 10);
+  // var idOptions = {
+  //   x: options.x, y: options.y + headerObj.getHeight() + 5,
+  //   width: options.width, // Leave out height so it auto-sizes
+  //   fontFamily: 'Calibri', fontSize: 11, fill: 'black',
+  //   text: 'OID: ' + config.element.id, name: 'oid',
+  //   align: 'center', padding: 5
+  // };
+  // var idObj = this.createText(idOptions, group);
+  // workflowObj.setHeight(headerObj.getHeight() + idObj.getHeight() + 10);
 
   // Now that the shape is built, define the bounds of the group
   group.setWidth(workflowObj.getWidth());

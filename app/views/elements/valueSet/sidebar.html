@@ -15,13 +15,12 @@
     <div treecontrol class="tree-classic"
      tree-model="searchResults"
      options="treeOptions">
-     <span draggable double-clickable dblclick-event="addWorkflowObject(config)">
-      <span popover="{{node.description}}"
+     <span draggable double-clickable dblclick-event="addWorkflowObject(config)" ng-mouseenter="loadValueSetDetails(this)">
+      <span popover="{{node.description ? node.description : 'Loading...'}}"
         popover-trigger="mouseenter"
         popover-placement="right"
         popover-append-to-body="true">
         {{node.name}}
-        <span class="note">{{node.id}}</span>
       </span>
       <input type="hidden" value="{{node}}"></input>
      </span>

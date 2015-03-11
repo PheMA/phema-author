@@ -3,13 +3,13 @@
     <tab heading="Value Sets">
       <div class="value-set-container">
         <div class="row search-panel">
-          <div class="col-md-4 divider-right">
+          <div class="col-md-3 divider-right">
             <label id='value-set-search'>
               Search for value sets:
               <input type="text" style="width: 100%;" ng-model="valueSetSearch.term" ng-model-options="{ debounce: 750 }"></input>
             </label>
           </div>
-          <div class="col-md-8 value-set-results">
+          <div class="col-md-6 value-set-results">
             <label>Value sets matching your search criteria:</label>
             <div us-spinner="{radius:8, width:4, length: 8, top: '50%', left: '25%'}" class="note" ng-show="valueSetSearch.isSearching">
               Please wait
@@ -18,20 +18,22 @@
               (No value sets were found that met your criteria)
             </div>
             <table>
-              <thead>
-                <th>Name</th>
-                <th>ID</th>
-              </thead>
               <tr ng-repeat="valueSet in valueSetSearch.results" draggable ng-click="setSelectedValueSet(valueSet)" ng-class="{selected: valueSet === selectedValueSets[0]}">
                 <td>
                   {{valueSet.name}}
                 </td>
-                <td>
-                  {{valueSet.id}}
-                </td>
                 <input type="hidden" value="{{valueSet}}"></input>
               </tr>
             </table>
+          </div>
+          <div class="col-md-3 value-set-details">
+            <label>Details:</label>
+            <span ng-show="selectedValueSets[0] && selectedValueSets[0].loadDetailStatus === 'error'">
+              {{selectedValueSets[0].description}}
+            </span>
+            <ul>
+              <li ng-repeat="code in selectedValueSetMembers">({{code.code}}) {{code.name}}</li>
+            </ul>
           </div>
         </div>
       </div>

@@ -49,10 +49,10 @@ angular.module('sophe.services.url', ['sophe.config'])
 
   this.getValueSetServiceURL = function(action, params) {
     if (environment === 'local' || environment.substring(0, 2) === '@@') {
-      if (action === 'details') {
+      if (action === 'single') {
         return 'data/valueSet.json';
       }
-      else if (action === 'members') {
+      else if (action === 'details') {
         return 'data/valueSet-members.json';
       }
       else {
@@ -61,10 +61,10 @@ angular.module('sophe.services.url', ['sophe.config'])
     }
 
     var url = valueSetServiceBaseUrl;
-    if (action === 'details') {
+    if (action === 'single') {
       url = url + params.id;
     }
-    else if (action === 'members') {
+    else if (action === 'details') {
       url = url + params.id + '/members';
     }
     else if (action === 'search') {
