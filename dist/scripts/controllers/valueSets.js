@@ -10,9 +10,6 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-.config(['$tooltipProvider', function($tooltipProvider){
-  $tooltipProvider.setTriggers({'customEvent': 'customEvent'});
-}])
 .controller('ValueSetsController', ['$scope', '$http', '$timeout', 'ValueSetService', function ($scope, $http, $timeout, ValueSetService) {
   $scope.searchTerm = '';
   $scope.isSearching = false;
@@ -25,14 +22,16 @@ angular.module('sopheAuthorApp')
         ValueSetService.loadDetails(el.node.id)
           .then(ValueSetService.processDetails, function() {
             el.node.loadDetailStatus = 'error';
-            el.node.description = ValueSetService.formatDescription(el.node)
+            el.node.description = ValueSetService.formatDescription(el.node);
             }
           )
           .then(function(details) {
-            el.node.members = details.members;
-            el.node.codeSystems = details.codeSystems;
-            el.node.loadDetailStatus = 'success';
-            el.node.description = ValueSetService.formatDescription(el.node);
+            if (details) {
+              el.node.members = details.members;
+              el.node.codeSystems = details.codeSystems;
+              el.node.loadDetailStatus = 'success';
+              el.node.description = ValueSetService.formatDescription(el.node);
+            }
           });
       }
     }, 0);
