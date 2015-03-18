@@ -1,6 +1,6 @@
 var request = require('request');
 var LibraryRepository = require('../lib/library').LibraryRepository;
-var repository = new LibraryRepository('http://sophe-library.herokuapp.com');
+var repository = new LibraryRepository('http://localhost:8082');
 
 exports.index = function(req, res){
   repository.getItems(function(error, data) {
