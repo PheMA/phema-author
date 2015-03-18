@@ -1,6 +1,9 @@
+var VALUE_SET_SERVICE_URL = 'https://umls_user:umls_pwd@informatics.mayo.edu/vsmc/cts2/'
+
+
 var request = require('request');
 var ValueSetRepository = require('../lib/valueSets').ValueSetRepository;
-var repository = new ValueSetRepository(process.env.VALUE_SET_SERVICE_URL);
+var repository = new ValueSetRepository(VALUE_SET_SERVICE_URL);
 
 exports.index = function(req, res){
   repository.getValueSets(function(error, data) {
