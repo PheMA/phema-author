@@ -272,11 +272,8 @@ angular.module('dynform', [])
                   }
                 }
                 else if (field.type === 'valueSet') {
-                  //newElement.attr('value-sets', '');
                   newElement.attr('location', 'input');
-                  console.log(field);
                   newElement.attr('selected-value-sets', bracket(field.model, attrs.ngModel));
-                  //if (angular.isDefined(field.selectedValueSets)) { newElement.attr('selected-value-sets', field.selectedValueSets); }
                 }
 
                 //  Common attributes; radio already applied these...

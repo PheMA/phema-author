@@ -142,6 +142,16 @@
   }
 }
 
+#data-element-properties > .value-set {
+    label {
+      padding-right: 25px;
+      input {
+        float: none;
+        width: 250px;
+      }
+    }
+  }
+
 #data-element-properties .value-set {
   label {
     width: 100%;

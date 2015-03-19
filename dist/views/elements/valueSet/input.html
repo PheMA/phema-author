@@ -1,11 +1,7 @@
 <div class="value-set value-set-inline">
   <label style="width: 100%">
-    <span ng-show="selectedValueSets[0]">
-      {{selectedValueSets[0].name}}
-    </span>
-    <span class="clickable" ng-click="chooseValueSet()">
-      Select
-    </span>
+    <input type="text" value="{{selectedValueSets[0].name}}" ng-click="chooseValueSet()" readonly></input>
+    <span class="clickable fa fa-pencil" ng-click="chooseValueSet()"></span>
   </label>
   <div ng-show="isSearching" class="value-set-search-panel">
     <value-sets-terms

@@ -50,7 +50,7 @@ angular.module('sopheAuthorApp')
     };
 
     $scope.chooseValueSet = function() {
-      $scope.isSearchingValueSets = !$scope.isSearchingValueSets;
+      $scope.isSearchingValueSets = true;
     }
 
     $scope.saveValueSet = function() {

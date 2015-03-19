@@ -33,7 +33,7 @@
         <accordion-heading>
           Value Sets <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[1], 'glyphicon-chevron-right': !status.open[1]}"></i>
         </accordion-heading>
-        <div value-sets location="sidebar"></div>
+        <div value-sets selected-value-sets="selectedValueSets" location="sidebar"></div>
       </accordion-group>
       <accordion-group id="code-systems-list" class="phenotype-element-list" is-open="status.open[2]">
         <accordion-heading>
