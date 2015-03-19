@@ -14,7 +14,7 @@ angular.module('sopheAuthorApp')
   $scope.searchTerm = '';
   $scope.isSearching = false;
   $scope.searchResults = [];
-  $scope.selectedValueSets = [];
+  $scope.selectedValueSets = $scope.selectedValueSets || [];
 
   $scope.loadValueSetDetails = function(el) {
     $timeout(function() {
@@ -82,6 +82,9 @@ angular.module('sopheAuthorApp')
 
   $scope.cancelValueSet = function() {
     $scope.isSearching = false;
+  };
+
+  $scope.reset = function() {
     $scope.selectedValueSets = [];
   };
 }]);

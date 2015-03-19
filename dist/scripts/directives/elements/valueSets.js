@@ -4,7 +4,7 @@ angular.module('sophe.elements.valueSets', [])
   .directive('valueSets', ['$rootScope', function($rootScope) {
   var directive = {
     scope: {
-      valueSet: '='
+      selectedValueSets: '='
     },
     templateUrl: function(element, attrs) {
       if (attrs.allowSelect && attrs.allowSelect === 'single') {
