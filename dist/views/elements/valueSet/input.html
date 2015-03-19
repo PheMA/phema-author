@@ -1,0 +1,18 @@
+<div class="value-set value-set-inline">
+  <label style="width: 100%">
+    <span ng-show="selectedValueSets[0].name">
+      {{selectedValueSets[0].name}}
+    </span>
+    <span class="clickable" ng-click="chooseValueSet()">
+      Select
+    </span>
+  </label>
+  <div ng-show="isSearching" class="value-set-search-panel">
+    <value-sets-terms
+      selected-value-sets="selectedValueSets"
+      selected-terms="selectedTerms"
+      ></value-sets-terms>
+    <button class="btn btn-primary btn-xs vs-btn" ng-click="saveValueSet()">Save</button>
+    <button class="btn btn-primary btn-xs vs-btn" ng-click="cancelValueSet()">Close</button>
+  </div>
+</div>

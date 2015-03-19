@@ -76,6 +76,10 @@ angular.module('sophe.services.attribute', ['sophe.services.url', 'ngResource'])
       // Reasons use value sets
       item.type = 'select';
     }
+    else if (attribute.id === 'Severity' || attribute.id === 'AnatomicalLocationSite') {
+      // Reasons use value sets
+      item.type = 'valueSet';
+    }
     // We are assuming a start datetime is paired with a stop datetime
     else if (attribute.id === 'StartDatetime') {
       item.type = 'fieldset';

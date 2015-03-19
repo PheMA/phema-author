@@ -20,15 +20,26 @@ angular.module('sopheAuthorApp')
     // We are assigning a promise to the form template so that it will load when the data is loaded.
     $scope.formTemplate = { promise: QDMElementService.getAttributes(element).then(function(attributes) {
       var template = [];
+      var fieldsets = [];
       for (var index = 0; index < attributes.length; index++) {
-        template.push(AttributeService.translateQDMToForm(attributes[index]));
+        // We may get a null result back from the translation function.  That means we should suppress that field.
+        var result = AttributeService.translateQDMToForm(attributes[index]);
+        if (result) {
+          if (result.type === 'fieldset') {
+            fieldsets.push(result);
+          }
+          else {
+            template.push(result);
+          }
+        }
+      }
+
+      // We want to put all fieldsets at the end
+      for (index = 0; index < fieldsets.length; index++) {
+        template.push(fieldsets[index]);
       }
       return template;
     })};
-    
-    $scope.chooseValueSet = function() {
-      $scope.isSearchingValueSets = !$scope.isSearchingValueSets;
-    }
 
     $scope.ok = function () {
       $modalInstance.close({attributes: $scope.formData, valueSet: $scope.valueSet});
@@ -37,12 +48,16 @@ angular.module('sopheAuthorApp')
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
     };
-    
+
+    $scope.chooseValueSet = function() {
+      $scope.isSearchingValueSets = !$scope.isSearchingValueSets;
+    }
+
     $scope.saveValueSet = function() {
       $scope.valueSet = ValueSet.createElementFromData({valueSets: $scope.selectedValueSets, terms: $scope.selectedTerms});
       $scope.isSearchingValueSets = false;
     };
-    
+
     $scope.cancelValueSet = function() {
       $scope.isSearchingValueSets = false;
     };

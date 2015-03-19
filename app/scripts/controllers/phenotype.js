@@ -394,7 +394,7 @@ angular.module('sopheAuthorApp')
               removeOldVS = true;
             }
           }
-          else if (result.valueSet.id) {
+          else if (result.valueSet && result.valueSet.id) {
             createNewVS = true;
           }
 

@@ -33,17 +33,13 @@ angular.module('sopheAuthorApp')
           }
         }
       }
-      
+
       // We want to put all fieldsets at the end
       for (index = 0; index < fieldsets.length; index++) {
         template.push(fieldsets[index]);
       }
       return template;
     })};
-    
-    $scope.chooseValueSet = function() {
-      $scope.isSearchingValueSets = !$scope.isSearchingValueSets;
-    }
 
     $scope.ok = function () {
       $modalInstance.close({attributes: $scope.formData, valueSet: $scope.valueSet});
@@ -52,12 +48,16 @@ angular.module('sopheAuthorApp')
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
     };
-    
+
+    $scope.chooseValueSet = function() {
+      $scope.isSearchingValueSets = !$scope.isSearchingValueSets;
+    }
+
     $scope.saveValueSet = function() {
       $scope.valueSet = ValueSet.createElementFromData({valueSets: $scope.selectedValueSets, terms: $scope.selectedTerms});
       $scope.isSearchingValueSets = false;
     };
-    
+
     $scope.cancelValueSet = function() {
       $scope.isSearchingValueSets = false;
     };

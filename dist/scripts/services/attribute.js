@@ -76,6 +76,41 @@ angular.module('sophe.services.attribute', ['sophe.services.url', 'ngResource'])
       // Reasons use value sets
       item.type = 'select';
     }
+    else if (attribute.id === 'Severity' || attribute.id === 'AnatomicalLocationSite') {
+      // Reasons use value sets
+      item.type = 'valueSet';
+    }
+    // We are assuming a start datetime is paired with a stop datetime
+    else if (attribute.id === 'StartDatetime') {
+      item.type = 'fieldset';
+      item.label = 'Only include items that occur between';
+      item.model = 'fieldset';
+      item.fields = [
+        {
+          'type': 'text',
+          'model': 'StartDatetime',
+          'label': 'Start',
+          'placeholder': 'mm/dd/yyyy'
+        },
+        {
+          'type': 'text',
+          'model': 'StopDatetime',
+          'label': 'End',
+          'placeholder': 'mm/dd/yyyy'
+        }
+      ];
+    }
+    else if (attribute.id === 'StopDatetime') {
+      // Suppress it - we created our matched pair above
+      return null;
+    }
+    else if (attribute.id === 'Ordinality') {
+      item.placeholder = '1=primary, 2=secondary';
+      item.type = 'number';
+    }
+    else if (attribute.id === 'Date' || attribute.id === 'ActiveDatetime' || attribute.id === 'AdmissionDatetime' || attribute.id === 'DischargeDatetime') {
+      item.type = 'date';
+    }
     else if (attribute.type === 'http://www.w3.org/2001/XMLSchema#date') {
       item.type = 'date';
     }
