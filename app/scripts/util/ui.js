@@ -201,7 +201,7 @@ function addElementToContainer(stage, container, element) {
       element.container = group;
       stage.draw();
     }
-    else if (elementDefinition.type === 'LogicalOperator') {
+    else if (elementDefinition.type === 'LogicalOperator' || elementDefinition.type === 'SubsetOperator') {
       // Add the item (if it's not already in the array)
       var containedElements = phemaObject.containedElements();
       if (containedElements.indexOf(element) === -1) {

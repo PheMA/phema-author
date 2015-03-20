@@ -9,9 +9,9 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', '$location', '$window', '$timeout', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'QDMElementService', 'FHIRElementService', 'LibraryService', function ($scope, $http, $routeParams, $modal, $location, $window, $timeout, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, QDMElementService, FHIRElementService, LibraryService) {
+  .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', '$location', '$window', '$timeout', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'SubsetOperatorService', 'QDMElementService', 'FHIRElementService', 'LibraryService', function ($scope, $http, $routeParams, $modal, $location, $window, $timeout, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, SubsetOperatorService, QDMElementService, FHIRElementService, LibraryService) {
     $scope.phenotype = ($routeParams.id ? {id: $routeParams.id } : null );
-    $scope.status = { open: [false, false, false, false, false, false, false]};
+    $scope.status = { open: [false, false, false, false, false, false, false, false]};
     $scope.isPropertiesDisabled = true;
     $scope.successMessage = null;
     $scope.errorMessage = null;
@@ -39,6 +39,10 @@ angular.module('sopheAuthorApp')
     TemporalOperatorService.load()
       .then(TemporalOperatorService.processValues)
       .then(function(operators) { $scope.temporalOperators = operators; });
+
+    SubsetOperatorService.load()
+      .then(SubsetOperatorService.processValues)
+      .then(function(operators) { $scope.subsetOperators = operators; });
 
     // If a specific phenotype was specified, load it now
     if ($scope.phenotype) {
@@ -295,7 +299,8 @@ angular.module('sopheAuthorApp')
         element.type === 'Category' ||
         element.type === 'Phenotype' ||
         element.type === 'DataElement' ||
-        element.type === 'ValueSet');
+        element.type === 'ValueSet' ||
+        element.type === 'SubsetOperator');
     };
 
     $scope.showProperties = function() {
@@ -455,6 +460,30 @@ angular.module('sopheAuthorApp')
             },
             isReference: function() { return true; }
           }
+        });
+      }
+      else if (element.type === 'SubsetOperator') {
+        modalInstance = $modal.open({
+          templateUrl: 'views/properties/subsetOperator.html',
+          controller: 'SubsetOperatorPropertiesController',
+          size: 'lg',
+          resolve: {
+            element: function () {
+              return angular.copy(element);
+            },
+            containedElements: function () {
+              return selectedElement.phemaObject().containedElements();
+            },
+            subsetOperators: function() {
+              return $scope.subsetOperators;
+            }
+          }
+        });
+
+        modalInstance.result.then(function (result) {
+          element = result;
+          findParentElementByName(selectedElement, 'header').setText(element.name);
+          selectedElement.getStage().draw();
         });
       }
     };

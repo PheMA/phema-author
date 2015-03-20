@@ -40,6 +40,8 @@ describe('Controller: PhenotypeController', function () {
     this.phenotypeGet.respond({});
     this.fhirElementsGet = this.$httpBackend.when('GET', 'data/fhir-elements.json');
     this.fhirElementsGet.respond({});
+    this.subsetOperatorsGet = this.$httpBackend.when('GET', 'data/qdm-subsetOperators.json');
+    this.subsetOperatorsGet.respond({});
 
     this.setupDirective = function($compile, $controller) {
       angular.element(document.body).append('<div data-kinetic-canvas data-canvas-details="canvasDetails" id="canvas">&nbsp;</div>');
@@ -203,6 +205,11 @@ describe('Controller: PhenotypeController', function () {
 
     it('allows properties for logical operators', inject(function() {
       spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn(new Element({ type: 'LogicalOperator'}));
+      expect(this.scope.canShowProperties(null)).toEqual(true);
+    }));
+
+    it('allows properties for subset operators', inject(function() {
+      spyOn(this.algorithmElementFactory, 'getFirstSelectedItem').andReturn(new Element({ type: 'SubsetOperator'}));
       expect(this.scope.canShowProperties(null)).toEqual(true);
     }));
 
