@@ -148,7 +148,6 @@ SubsetOperator.prototype.toObject = function() {
 SubsetOperator.prototype.load = function(group, scope) {
   var obj = group.phemaObject();
   this.container(group);
-  //this.containedElements(obj.containedElements);
   // Don't call the setter, it calls calculateMinimumSize which we can't do until after
   // we have associated all of the references
   this._containedElements = obj.containedElements;
