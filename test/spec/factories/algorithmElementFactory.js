@@ -85,6 +85,17 @@ describe('Factory: AlgorithmElementFactory', function () {
       expect(response.element().name).toEqual(config.element.name);
     }));
 
+    it('creates a subset operator', inject(function() {
+      var config = {element: {type: 'SubsetOperator', name: 'SubsetOperator'}};
+      var response = this.algorithmElementFactory.addWorkflowObject(config, this.scope);
+      expect(response.nodeType).toEqual('Group');
+      expect(this.scope.canvasDetails.kineticStageObj.find('#mainLayer').getChildren().length).toEqual(1);
+      expect(response.find('.leftConnector').length).toEqual(1);
+      expect(response.find('.rightConnector').length).toEqual(1);
+      expect(response.element().type).toEqual(config.element.type);
+      expect(response.element().name).toEqual(config.element.name);
+    }));
+
     it('creates a phenotype', inject(function() {
       var config = {element: {type: 'Phenotype', name: 'Phenotype'}};
       var response = this.algorithmElementFactory.addWorkflowObject(config, this.scope);

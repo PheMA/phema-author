@@ -53,15 +53,21 @@
         </accordion-heading>
         <div temporal-operators></div>
       </accordion-group>
-      <accordion-group class="phenotype-element-list" is-open="status.open[5]">
+      <accordion-group id="subset-operators-list" class="phenotype-element-list" is-open="status.open[5]">
         <accordion-heading>
-          Existing Phenotypes <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[5], 'glyphicon-chevron-right': !status.open[5]}"></i>
+          Subset Operators <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[5], 'glyphicon-chevron-right': !status.open[5]}"></i>
+        </accordion-heading>
+        <div subset-operators></div>
+      </accordion-group>
+      <accordion-group class="phenotype-element-list" is-open="status.open[6]">
+        <accordion-heading>
+          Existing Phenotypes <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[6], 'glyphicon-chevron-right': !status.open[6]}"></i>
         </accordion-heading>
         <div phenotype-elements></div>
       </accordion-group>
-      <accordion-group id="fhir-elements-list" class="phenotype-element-list" is-open="status.open[6]">
+      <accordion-group id="fhir-elements-list" class="phenotype-element-list" is-open="status.open[7]">
         <accordion-heading>
-          FHIR Data Elements <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[6], 'glyphicon-chevron-right': !status.open[6]}"></i>
+          FHIR Data Elements <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[7], 'glyphicon-chevron-right': !status.open[7]}"></i>
         </accordion-heading>
         <div fhir-data-elements></div>
       </accordion-group>

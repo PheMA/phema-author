@@ -58,6 +58,18 @@ QDMRepository.prototype.getTemporalOperators = function(callback) {
   });
 }
 
+QDMRepository.prototype.getSubsetOperators = function(callback) {
+  request(this.baseURL + '/subsetOperators', function(error, response, body) {
+    if (!error && response.statusCode === 200) {
+      callback(null, body);
+    }
+    else {
+      console.log(error);
+      callback({message: 'Unable to retrieve the list of QDM subset operators'});
+    }
+  });
+}
+
 QDMRepository.prototype.getAttributes = function(type, item, callback) {
   request(this.baseURL + '/' + type + '/' + item + '/attributes', function(error, response, body) {
     if (!error && response.statusCode === 200) {

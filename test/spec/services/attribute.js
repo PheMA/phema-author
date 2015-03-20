@@ -129,7 +129,7 @@ describe('Factory: AttributeService', function () {
 
     it('converts a reason', inject(function() {
       var formItem = this.AttributeService.translateQDMToForm({id: 'Reason', name: 'Test Item', type: 'http://www.w3.org/2001/XMLSchema#string'});
-      expect(formItem.type).toEqual('select');
+      expect(formItem.type).toEqual('valueSet');
     }));
   });
 });

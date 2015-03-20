@@ -2,13 +2,13 @@
 
 /* globals updateSizeOfMainRect */
 
-var LogicalOperator = function() {}
-LogicalOperator.prototype = new BaseElement;
+var SubsetOperator = function() {}
+SubsetOperator.prototype = new BaseElement;
 
-var LOGICAL_OPERATOR_SIZER_SIZE = 7;
-var LOGICAL_OPERATOR_MIN_SIZE = 100;
+var SUBSET_OPERATOR_SIZER_SIZE = 7;
+var SUBSET_OPERATOR_MIN_SIZE = 100;
 
-LogicalOperator.prototype.resizeShapeToGroup = function(group, scope) {
+SubsetOperator.prototype.resizeShapeToGroup = function(group, scope) {
   var mainRect = group.find('.mainRect')[0];
   mainRect.setWidth(group.getWidth());
   mainRect.setHeight(group.getHeight());
@@ -17,9 +17,9 @@ LogicalOperator.prototype.resizeShapeToGroup = function(group, scope) {
   updateSizeOfMainRect(mainRect, group, group.getWidth(), group.getHeight());
 };
 
-LogicalOperator.prototype.calculateMinimumSize = function(group) {
-  var farthestX = LOGICAL_OPERATOR_MIN_SIZE;
-  var farthestY = LOGICAL_OPERATOR_MIN_SIZE;
+SubsetOperator.prototype.calculateMinimumSize = function(group) {
+  var farthestX = SUBSET_OPERATOR_MIN_SIZE;
+  var farthestY = SUBSET_OPERATOR_MIN_SIZE;
   for (var index = 0; index < this._containedElements.length; index++) {
     var element = this._containedElements[index];
     farthestX = Math.max(element.getX() + element.getWidth(), farthestX);
@@ -29,16 +29,16 @@ LogicalOperator.prototype.calculateMinimumSize = function(group) {
   this._minimumSize = { width: farthestX + BORDER, height: farthestY + BORDER };
 }
 
-LogicalOperator.prototype.reconcileMinimumSize = function(group) {
+SubsetOperator.prototype.reconcileMinimumSize = function(group) {
   this.calculateMinimumSize(group);
   var sizeBar = group.find('.sizer');
-  sizeBar.setX(group.width() - LOGICAL_OPERATOR_SIZER_SIZE);
-  sizeBar.setY(group.height() - LOGICAL_OPERATOR_SIZER_SIZE);
+  sizeBar.setX(group.width() - SUBSET_OPERATOR_SIZER_SIZE);
+  sizeBar.setY(group.height() - SUBSET_OPERATOR_SIZER_SIZE);
 }
 
 // For a container (represented by group), lay out all contained elements within the
 // main rectangle.
-LogicalOperator.prototype.layoutElementsInContainer = function() {
+SubsetOperator.prototype.layoutElementsInContainer = function() {
   var group = this._container;
   var header = group.getChildren(function(node) { return node.getClassName() === 'Text'; })[0];
   var rect = group.getChildren(function(node) { return node.getClassName() === 'Rect'; })[0];
@@ -68,12 +68,12 @@ LogicalOperator.prototype.layoutElementsInContainer = function() {
   this.reconcileMinimumSize(group);
 };
 
-// Connects the appropriate QDM logical operator shapes to event handlers.
+// Connects the appropriate QDM subset operator shapes to event handlers.
 // Used when constructing a new element, or when loading from a definition.
-LogicalOperator.prototype.connectEvents = function(group, scope) {
+SubsetOperator.prototype.connectEvents = function(group, scope) {
   this.addStandardEventHandlers(group, scope);
   this.addCursorEventHandlers(group, scope);
-  this.setDroppable(group.find('.mainRect')[0], ['Category', 'DataElement', 'LogicalOperator']);
+  this.setDroppable(group.find('.mainRect')[0], ['Category', 'DataElement']);
   this.addConnectionHandler(group.find('.leftConnector')[0], scope);
   this.addConnectionHandler(group.find('.rightConnector')[0], scope);
   this.connectConnectorEvents(group);
@@ -81,7 +81,7 @@ LogicalOperator.prototype.connectEvents = function(group, scope) {
   this.addSizerEventHandlers(sizer, scope);
 };
 
-LogicalOperator.prototype.containedElements = function(elements) {
+SubsetOperator.prototype.containedElements = function(elements) {
   if ('undefined' === typeof elements) {
     return this._containedElements;
   }
@@ -91,7 +91,7 @@ LogicalOperator.prototype.containedElements = function(elements) {
   }
 };
 
-LogicalOperator.prototype.create = function(config, scope) {
+SubsetOperator.prototype.create = function(config, scope) {
   var options = {
     x: 0, y: 0, width: 200, height: 200,
     fill: '#eeeeee', name: 'mainRect',
@@ -107,8 +107,6 @@ LogicalOperator.prototype.create = function(config, scope) {
   group.phemaObject(this);
 
   var mainRect = this.createRectangle(options, group);
-  mainRect.dash([10, 5]);
-  mainRect.dashEnabled(true);
 
   var headerOptions = {
     x: options.x, y: options.y,
@@ -123,8 +121,8 @@ LogicalOperator.prototype.create = function(config, scope) {
 
   var sizer = new Kinetic.PhemaSizeBar({
     stroke: 'gray', strokeWidth: 1, fill: 'gray',
-    x: mainRect.width() - LOGICAL_OPERATOR_SIZER_SIZE, y: mainRect.height() - LOGICAL_OPERATOR_SIZER_SIZE,
-    width: LOGICAL_OPERATOR_SIZER_SIZE, height: LOGICAL_OPERATOR_SIZER_SIZE, name: 'sizer'
+    x: mainRect.width() - SUBSET_OPERATOR_SIZER_SIZE, y: mainRect.height() - SUBSET_OPERATOR_SIZER_SIZE,
+    width: SUBSET_OPERATOR_SIZER_SIZE, height: SUBSET_OPERATOR_SIZER_SIZE, name: 'sizer'
   });
   group.add(sizer);
 
@@ -136,18 +134,18 @@ LogicalOperator.prototype.create = function(config, scope) {
   mainLayer.draw();
 };
 
-LogicalOperator.prototype.toObject = function() {
+SubsetOperator.prototype.toObject = function() {
   var obj = {};
 
   obj.containedElements = [];
   for (var index = 0; index < this._containedElements.length; index++) {
     obj.containedElements.push({id: this._containedElements[index]._id});
   }
-  obj.className = 'LogicalOperator';
+  obj.className = 'SubsetOperator';
   return obj;
 };
 
-LogicalOperator.prototype.load = function(group, scope) {
+SubsetOperator.prototype.load = function(group, scope) {
   var obj = group.phemaObject();
   this.container(group);
   // Don't call the setter, it calls calculateMinimumSize which we can't do until after
