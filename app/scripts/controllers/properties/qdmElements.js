@@ -8,10 +8,10 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('QDMElementPropertiesController', ['$scope', '$modalInstance', 'QDMElementService', 'AttributeService', 'element', 'valueSet', function ($scope, $modalInstance, QDMElementService, AttributeService, element, valueSet) {
+  .controller('QDMElementPropertiesController', ['$scope', '$modalInstance', 'QDMElementService', 'AttributeService', 'element', 'valueSet', 'attributes', function ($scope, $modalInstance, QDMElementService, AttributeService, element, valueSet, attributes) {
     $scope.element = element;    // Element is a JSON value, and is a copy of the original
     $scope.valueSet = valueSet;  // Value set is a JSON value, and is a copy of the original
-    $scope.formData = element.attributes || {};
+    $scope.formData = attributes || {};
     $scope.isSearchingValueSets = false;
     $scope.selectedValueSets = [];
     $scope.selectedTerms = [];
@@ -33,6 +33,12 @@ angular.module('sopheAuthorApp')
           }
         }
       }
+
+      // There are standard attributes available to every data element that are implied.
+      // We will explicitly define those here
+      template.push({ 'type': 'valueSet', 'label': 'Health Record Field', 'model': 'HealthRecordField' });
+      template.push({ 'type': 'valueSet', 'label': 'Source', 'model': 'Source' });
+      template.push({ 'type': 'valueSet', 'label': 'Recorder', 'model': 'Recorder' });
 
       // We want to put all fieldsets at the end
       for (index = 0; index < fieldsets.length; index++) {

@@ -72,11 +72,23 @@ angular.module('sophe.services.attribute', ['sophe.services.url', 'ngResource'])
       'model': attribute.id
     };
 
-    if (attribute.id === 'Reason') {
-      // Reasons use value sets
-      item.type = 'select';
-    }
-    else if (attribute.id === 'Severity' || attribute.id === 'AnatomicalLocationSite') {
+    if (attribute.id === 'Severity' ||
+      attribute.id === 'AnatomicalLocationSite' ||
+      attribute.id === 'NegationRationale' ||
+      attribute.id === 'PatientPreference' ||
+      attribute.id === 'ProviderPreference' ||
+      attribute.id === 'RelatedTo' ||
+      attribute.id === 'TargetOutcome' ||
+      attribute.id === 'Laterality' ||
+      attribute.id === 'Ordinality' ||
+      attribute.id === 'Reaction' ||
+      attribute.id === 'AnatomicalApproachSite' ||
+      attribute.id === 'Reason' ||
+      attribute.id === 'Method' ||
+      attribute.id === 'FacilityLocation' ||
+      attribute.id === 'Cause' ||
+      attribute.id === 'Route' ||
+      attribute.id === 'Status') {
       // Reasons use value sets
       item.type = 'valueSet';
     }
@@ -104,11 +116,15 @@ angular.module('sophe.services.attribute', ['sophe.services.url', 'ngResource'])
       // Suppress it - we created our matched pair above
       return null;
     }
-    else if (attribute.id === 'Ordinality') {
-      item.placeholder = '1=primary, 2=secondary';
-      item.type = 'number';
-    }
-    else if (attribute.id === 'Date' || attribute.id === 'ActiveDatetime' || attribute.id === 'AdmissionDatetime' || attribute.id === 'DischargeDatetime') {
+    // else if (attribute.id === 'Ordinality') {
+    //   item.placeholder = '1=primary, 2=secondary';
+    //   item.type = 'number';
+    // }
+    else if (attribute.id === 'Date' || attribute.id === 'ActiveDatetime' || attribute.id === 'AdmissionDatetime' ||
+      attribute.id === 'DischargeDatetime' ||
+      attribute.id === 'FacilityLocationArrivalDatetime' ||
+      attribute.id === 'FacilityLocationDepartureDatetime' ||
+      attribute.id === 'IncisionDatetime') {
       item.type = 'date';
     }
     else if (attribute.type === 'http://www.w3.org/2001/XMLSchema#date') {

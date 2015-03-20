@@ -225,6 +225,7 @@ angular.module('sopheAuthorApp')
 
     $scope.save = function() {
       var phenotypeDefinition = $scope.canvasDetails.kineticStageObj.mainLayer.toJSON();
+      console.log(phenotypeDefinition);
 
       // If the phenotype was already saved (because there is an ID) we don't need to display
       // the dialog again and we can just save.
@@ -368,6 +369,9 @@ angular.module('sopheAuthorApp')
             element: function () {
               return angular.copy(element);
             },
+            attributes: function () {
+              return angular.copy(selectedElement.phemaObject().attributes());
+            },
             valueSet: function() {
               if (selectedElement.phemaObject() && selectedElement.phemaObject().valueSet()) {
                 return angular.copy(selectedElement.phemaObject().valueSet().element());
@@ -380,7 +384,12 @@ angular.module('sopheAuthorApp')
         });
 
         modalInstance.result.then(function (result) {
-          element.attributes = result.attributes;
+          if (selectedElement.phemaObject() && selectedElement.phemaObject().attributes) {
+            selectedElement.phemaObject().attributes(result.attributes);
+          }
+          else {
+            element.attributes = result.attributes;
+          }
 
           var createNewVS = false;
           var removeOldVS = false;
