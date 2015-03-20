@@ -334,6 +334,7 @@ angular.module('sopheAuthorApp')
           if (result.timeRange.comparison) {
             element.timeRange.comparison = result.timeRange.comparison.name;
           }
+          selectedElement.element(element);
           var label = selectedElement.label();
           label.setText(element.name);
           label.getStage().draw();
@@ -359,6 +360,7 @@ angular.module('sopheAuthorApp')
 
         modalInstance.result.then(function (result) {
           element = result;
+          selectedElement.element(element);
           findParentElementByName(selectedElement, 'header').setText(element.name);
           selectedElement.getStage().draw();
         });
@@ -394,6 +396,7 @@ angular.module('sopheAuthorApp')
           }
           else {
             element.attributes = result.attributes;
+            selectedElement.element(element);
           }
 
           var createNewVS = false;
@@ -445,6 +448,7 @@ angular.module('sopheAuthorApp')
         modalInstance.result.then(function (result) {
           element.name = result.name;
           element.description = result.description;
+          selectedElement.element(element);
           findParentElementByName(selectedElement, 'header').setText(element.name);
           selectedElement.getStage().draw();
         });
@@ -482,6 +486,7 @@ angular.module('sopheAuthorApp')
 
         modalInstance.result.then(function (result) {
           element = result;
+          selectedElement.element(element);
           findParentElementByName(selectedElement, 'header').setText(element.name);
           selectedElement.getStage().draw();
         });

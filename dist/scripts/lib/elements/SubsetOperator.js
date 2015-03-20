@@ -147,10 +147,34 @@ SubsetOperator.prototype.toObject = function() {
 
 SubsetOperator.prototype.load = function(group, scope) {
   var obj = group.phemaObject();
-  this.containedElements(obj.containedElements);
   this.container(group);
+  // Don't call the setter, it calls calculateMinimumSize which we can't do until after
+  // we have associated all of the references
+  this._containedElements = obj.containedElements;
   group.phemaObject(this);
   this.connectEvents(group, scope);
+
+  // In addition to the base method for re-associating references, we also need to
+  // associate our contained elements (if they were defined);
   this.associateReferences(group, scope);
+  if (this._containedElements) {
+    var groups = scope.canvasDetails.kineticStageObj.mainLayer.find('Group');
+    var groupIndex;
+    for (var index = 0; index < this._containedElements.length; index++) {
+      var element = this._containedElements[index];
+      if (element.id) {
+        for (var groupIndex = 0; groupIndex < groups.length; groupIndex++) {
+          if (groups[groupIndex]._id === element.id) {
+            this._containedElements[index] = groups[groupIndex];
+            break;
+          }
+        }
+      }
+    }
+  }
+  else {
+    this._containedElements = [];
+  }
+
   this.calculateMinimumSize(group);
 };
