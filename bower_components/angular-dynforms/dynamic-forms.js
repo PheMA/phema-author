@@ -48,7 +48,9 @@ angular.module('dynform', [])
         'image': {element: 'input', type: 'image', editable: false, textBased: false},
         'legend': {element: 'legend', editable: false, textBased: false},
         'reset': {element: 'button', type: 'reset', editable: false, textBased: false},
-        'submit': {element: 'button', type: 'submit', editable: false, textBased: false}
+        'submit': {element: 'button', type: 'submit', editable: false, textBased: false},
+        // PhEMA custom editables
+        'valueSet': {element: 'value-sets', type: 'valueSet', editable: true, textBased: false}
       };
     
     return {
@@ -269,7 +271,11 @@ angular.module('dynform', [])
                     newElement = workingElement;
                   }
                 }
-                
+                else if (field.type === 'valueSet') {
+                  newElement.attr('location', 'input');
+                  newElement.attr('selected-value-sets', bracket(field.model, attrs.ngModel));
+                }
+
                 //  Common attributes; radio already applied these...
                 if (field.type !== "radio") {
                   if (angular.isDefined(field['class'])) {newElement.attr('ng-class', field['class']);}

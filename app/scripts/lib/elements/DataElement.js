@@ -61,6 +61,15 @@ DataElement.prototype.containedElements = function(elements) {
   }
 };
 
+DataElement.prototype.attributes = function(attributes) {
+  if ('undefined' === typeof attributes) {
+    return this._attributes;
+  }
+  else {
+    this._attributes = attributes;
+  }
+};
+
 DataElement.prototype.valueSet = function(valueSet) {
   if ('undefined' === typeof valueSet) {
     return this._valueSet;
@@ -162,6 +171,38 @@ DataElement.prototype.toObject = function() {
   if (this._valueSet) {
     obj.valueSet = {id: this._valueSet._id};
   }
+  if (this._attributes) {
+    obj.attributes = {};
+    var attrKey;
+    var attrValue;
+    for (attrKey in this._attributes) {
+      attrValue = this._attributes[attrKey];
+      // Arrays are typically collections of value sets that need special handling
+      // to avoid circular references
+      if (attrValue instanceof Array) {
+        obj.attributes[attrKey] = [];
+        var index;
+        for (index = 0; index < attrValue.length; index++) {
+          // If it is the special type we expect, we custom format it.  Otherwise we just
+          // write out the existing value
+          if (attrValue[index].customList) {
+            obj.attributes[attrKey].push({
+              id: attrValue[index].id,
+              name: attrValue[index].name,
+              type: attrValue[index].type,
+              customList: {terms: attrValue[index].customList.terms, valueSets: []}
+            });
+          }
+          else {
+            obj.attributes[attrKey].push(attrValue[index]);
+          }
+        }
+      }
+      else {
+        obj.attributes[attrKey] = attrValue;
+      }
+    }
+  }
   obj.className = 'DataElement';
   return obj;
 };
@@ -186,5 +227,12 @@ DataElement.prototype.load = function(group, scope) {
   }
   else {
     this.valueSet(null);
+  }
+
+  if (obj.attributes) {
+    this.attributes(obj.attributes);
+  }
+  else {
+    this.attributes(null);
   }
 };

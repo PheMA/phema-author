@@ -13,9 +13,9 @@ angular.module('sopheAuthorApp')
 .controller('ValueSetsTermsController', ['$scope', '$http', 'ValueSetService', 'CodeSystemService', function ($scope, $http, ValueSetService, CodeSystemService) {
   $scope.termSearch = {term: '', isSearching: false, results: []};
   $scope.valueSetSearch = {term: '', isSearching: false, results: []};
-  $scope.selectedTerms = [];
-  $scope.selectedValueSets = [];
   $scope.selectedValueSetMembers = [];
+  $scope.selectedTerms = $scope.selectedTerms || [];
+  $scope.selectedValueSets = $scope.selectedValueSets || [];
 
   $scope.$watch('valueSetSearch.term', function() {
     ValueSetService.searchHelper($scope.valueSetSearch);

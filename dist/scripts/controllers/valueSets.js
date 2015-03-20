@@ -1,4 +1,4 @@
-/* globals _ */
+/* globals _, ValueSet */
 
 'use strict';
 
@@ -14,7 +14,7 @@ angular.module('sopheAuthorApp')
   $scope.searchTerm = '';
   $scope.isSearching = false;
   $scope.searchResults = [];
-  $scope.selectedValueSets = [];
+  $scope.selectedValueSets = $scope.selectedValueSets || [];
 
   $scope.loadValueSetDetails = function(el) {
     $timeout(function() {
@@ -69,5 +69,22 @@ angular.module('sopheAuthorApp')
   // Used for single-selection mode
   $scope.setSelected = function(valueSet) {
     $scope.selectedValueSets[0] = valueSet;
+  };
+
+  $scope.chooseValueSet = function() {
+    $scope.isSearching = !$scope.isSearchingValueSets;
+  };
+
+  $scope.saveValueSet = function() {
+    $scope.selectedValueSets[0] = ValueSet.createElementFromData({valueSets: $scope.selectedValueSets, terms: $scope.selectedTerms});
+    $scope.isSearching = false;
+  };
+
+  $scope.cancelValueSet = function() {
+    $scope.isSearching = false;
+  };
+
+  $scope.reset = function() {
+    $scope.selectedValueSets = [];
   };
 }]);

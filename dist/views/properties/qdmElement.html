@@ -5,15 +5,8 @@
   <div class="value-set">
     <label style="width: 100%">
       Value set:
-      <span ng-show="valueSet.name">
-        {{valueSet.name}}
-        <span class="note" style="margin-right: 15px;">
-          ID: ({{valueSet.id}})
-        </span>
-      </span>
-      <span class="clickable" ng-click="chooseValueSet()">
-        Select
-      </span>
+      <span class="clickable fa fa-pencil" style="padding-left: 5px; padding-right: 10px;" ng-click="chooseValueSet()"></span>
+      <input type="text" value="{{valueSet.name}}" ng-click="chooseValueSet()" readonly></input>
     </label>
   </div>
   <div ng-show="isSearchingValueSets" class="value-set-search-panel">

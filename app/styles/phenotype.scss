@@ -120,12 +120,37 @@
   label {
     width: 48%;
     padding-right: 25px;
-    input {
+    input, .value-set-inline {
       font-weight: normal;
       float: right;
     }
   }
+
+  fieldset {
+    padding-bottom: 10px;
+
+    label {
+      padding-left: 15px;
+    }
+  }
+
+  legend {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    border: none;
+  }
 }
+
+#data-element-properties > .value-set {
+    label {
+      padding-right: 25px;
+      input {
+        float: none;
+        width: 250px;
+      }
+    }
+  }
 
 #data-element-properties .value-set {
   label {
@@ -327,4 +352,18 @@ $value-sets-background-color: #eee;
   .col-xs-9 {
     width: 50%;
   }
+}
+
+.value-set-inline * .value-set-container {
+  padding: 5;
+}
+
+.value-set-inline .value-set-search-panel {
+  position: absolute;
+  display: block;
+  left: 30px;
+  background-color: white;
+  border: solid 1px #DDD;
+  box-shadow: inset -2px -2px 0 rgba(221, 221, 221, 0.25);
+  padding: 10px;
 }
