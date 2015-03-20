@@ -48,6 +48,7 @@ exports.index = function(req, res){
       res.status(200).send(data);
     }
     });
+  }
   else if (req.params.type === 'subsetOperators') {
     repository.getSubsetOperators(function(error, data) {
     if (error) {
