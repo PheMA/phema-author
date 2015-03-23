@@ -8,7 +8,8 @@ angular.module('sophe.services.codeSystem', ['sophe.services.url', 'ngResource']
   this.supportedCodeSystems = [
     { codeSystem: 'ICD-9-CM', version: '2013_2012_08_06' },
     { codeSystem: 'ICD-10', version: '2010' },
-    { codeSystem: 'LOINC', version: '246' }
+    { codeSystem: 'LOINC', version: '246' },
+    { codeSystem: 'NDFRT', version: 'February2015' }
   ];
 
   this.search = function(codeSystem, version, search) {
