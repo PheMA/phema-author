@@ -229,7 +229,6 @@ angular.module('sopheAuthorApp')
 
     $scope.save = function() {
       var phenotypeDefinition = $scope.canvasDetails.kineticStageObj.mainLayer.toJSON();
-      console.log(phenotypeDefinition);
 
       // If the phenotype was already saved (because there is an ID) we don't need to display
       // the dialog again and we can just save.
