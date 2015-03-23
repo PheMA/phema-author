@@ -37,13 +37,15 @@ DataElement.prototype._layoutElementsAfterTermDrop = function(valueSet) {
   termDropText.width(termDrop.width());
   termDropText.height(termDrop.height());
 
-  var configRect = this._container.find('.config')[0];
-  configRect.width(termDrop.width());
-  configRect.y(termDrop.y() + termDrop.height() + 5);
+  // var configRect = this._container.find('.config')[0];
+  // configRect.width(termDrop.width());
+  // configRect.y(termDrop.y() + termDrop.height() + 5);
 
   var mainRect = findObjectInPhemaGroupType('mainRect', this._container, ['Category', 'DataElement']);
+  // updateSizeOfMainRect(mainRect, this._container,
+  //   (termDrop.width() + 20), (configRect.getY() + configRect.getHeight() + 10));
   updateSizeOfMainRect(mainRect, this._container,
-    (termDrop.width() + 20), (configRect.getY() + configRect.getHeight() + 10));
+    (termDrop.width() + 20), (termDrop.getY() + termDrop.getHeight() + 10));
 
   var headerRect = findObjectInPhemaGroupType('header', this._container, ['Category', 'DataElement']);
   headerRect.width(mainRect.width());
@@ -129,7 +131,7 @@ DataElement.prototype.create = function(config, scope) {
     align: 'center', padding: 5, name: 'termDropText',
   };
   var termTextObj = this.createText(termTextOptions, group);
-  
+
   termTextObj.on('mouseover', function (e) {
     termObj.setStrokeWidth(3);
     termObj.setStroke('#AAAAAA');
@@ -141,17 +143,18 @@ DataElement.prototype.create = function(config, scope) {
     termObj.getParent().draw();
   });
 
-  var configOptions = {
-    x: termDropOptions.x, y: termObj.height() + termDropOptions.y + 5,
-    width: termDropOptions.width, height: termDropOptions.height,
-    fill: '#EEEEEE', name: 'config',
-    stroke: '#CCCCCC', strokeWidth: 1
-  };
-  var configObj = this.createRectangle(configOptions, group);
+  // var configOptions = {
+  //   x: termDropOptions.x, y: termObj.height() + termDropOptions.y + 5,
+  //   width: termDropOptions.width, height: termDropOptions.height,
+  //   fill: '#EEEEEE', name: 'config',
+  //   stroke: '#CCCCCC', strokeWidth: 1
+  // };
+  // var configObj = this.createRectangle(configOptions, group);
 
   // Resize the main container to ensure consistent spacing regardless of the
   // height of internal components.
-  mainRect.setHeight(configObj.getY() + configObj.getHeight() - options.y + 10);
+  //mainRect.setHeight(configObj.getY() + configObj.getHeight() - options.y + 10);
+  mainRect.setHeight(termObj.getY() + termObj.getHeight() - options.y + 10);
 
   this.addConnectors(scope, mainRect, group);
 
