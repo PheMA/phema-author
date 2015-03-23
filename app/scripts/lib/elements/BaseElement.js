@@ -217,8 +217,8 @@ BaseElement.prototype = {
 
       // For the element we are moving, redraw all connection lines
       var stage = group.getStage();
-      updateConnectedLines(targetGroup.find('.rightConnector')[0], stage);
-      updateConnectedLines(targetGroup.find('.leftConnector')[0], stage);
+      updateConnectedLines(findParentElementByName(targetGroup, 'rightConnector'), stage);
+      updateConnectedLines(findParentElementByName(targetGroup, 'leftConnector'), stage);
       stage.mainLayer.draw();
     });
   },
