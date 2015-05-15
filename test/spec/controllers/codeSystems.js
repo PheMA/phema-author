@@ -57,10 +57,11 @@ describe('Controller: CodeSystemsController', function () {
     scope.$apply();
     this.$httpBackend.flush();
     $timeout.flush();
-    // 1 result is returned 3 times (one for each code system)
-    expect(scope.search.results.length).toBe(3);
+    // 1 result is returned 4 times (one for each code system)
+    expect(scope.search.results.length).toBe(4);
     expect(scope.search.results[0].id).toBe('ICD-9-CM');
     expect(scope.search.results[1].id).toBe('ICD-10');
     expect(scope.search.results[2].id).toBe('LOINC');
+    expect(scope.search.results[3].id).toBe('NDFRT');
   }));
 });
