@@ -25,11 +25,24 @@ BaseElement.prototype = {
     kineticObj.on('mousemove', function(evt) {
       updateActiveLineLocation(stage, evt);
     });
-    kineticObj.on('mouseup', function() {
+    kineticObj.on('mouseup', function(evt) {
       var line = endConnector(stage, undefined, scope);
-      clearSelections(stage);
-      // If a line is created, we don't want to select the other object.
-      if (!line) {
+
+      // We don't want to allow connectors to trigger selection
+      var shouldSelect = false;
+      if (evt && evt.target && evt.target.className !== 'PhemaConnector') {
+        shouldSelect = (!line) && (kineticObj.phemaObject().isChild(evt.target));
+      }
+
+      // Always clear the selection if a line was drawn, but if this is a click event we should only
+      // clear the selection if we're going to be selecting a new item.
+      if (line || shouldSelect) {
+        clearSelections(stage);
+      }
+
+      // We don't want to select another object if a line is created, or if we're responding to a click
+      // and the click was in some other (nested) object.
+      if (shouldSelect) {
         selectObject(stage, kineticObj, scope);
       }
     });
@@ -306,5 +319,20 @@ BaseElement.prototype = {
         }
       }
     });
+  },
+
+  // Determine if 'item' is a direct child of this base element.  This is used when we
+  // have nested items in containers (where everything is a descendent) and we need to ensure
+  // that an item just belongs to the object directly.
+  isChild: function(item) {
+    var counter = 0;
+    var children = this._container.getChildren();
+    for (counter = 0; counter < children.length; counter++) {
+      if (children[counter] === item) {
+        return true;
+      }
+    }
+
+    return false;
   }
 };
