@@ -31,6 +31,13 @@
       .spacer {
         width: 15px;
       }
+
+      ul.dropdown-menu li {
+        display: list-item;
+        a:hover {
+          background-color: $list-item-hover-background-color;
+        }
+      }
     }
   }
 }

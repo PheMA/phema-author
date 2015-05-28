@@ -7,6 +7,26 @@
 
 var BORDER = 20;
 
+// Find the first descendant in 'kineticObj' with the name of 'name'.
+// If 'shallow' is set to true, it will only search immediate children
+// of 'kineticObj'.
+function findFirst(kineticObj, name, shallow) {
+  if (shallow) {
+    var index = 0;
+    var children = kineticObj.getChildren();
+    for (index = 0; index < children.length; index++) {
+      if (children[index].name() === name) {
+        return children[index];
+      }
+    }
+
+    return null;
+  }
+  else {
+    return kineticObj.find('.' + name)[0];
+  }
+}
+
 function updateStrokeWidth(kineticObj, normal) {
   var strokeWidth = 1;
   if (kineticObj.originalStrokeWidth) {
@@ -23,7 +43,7 @@ function updateStrokeWidth(kineticObj, normal) {
   }
 
   if ('Group' === kineticObj.nodeType) {
-    var mainRect = kineticObj.find('.mainRect')[0];
+    var mainRect = findFirst(kineticObj, 'mainRect', true);
     if (mainRect) {
       mainRect.setStrokeWidth(strokeWidth);
     }
@@ -256,7 +276,10 @@ function removeElementFromContainer(stage, element) {
     if (phemaObject.layoutElementsInContainer) {
       phemaObject.layoutElementsInContainer(group);
     }
-    stage.mainLayer.draw();
+
+    if (stage) {
+      stage.mainLayer.draw();
+    }
   }
 }
 
@@ -278,10 +301,15 @@ function selectObject(stage, selectObj, scope) {
 function _clearSelection(item) {
   var counter = 0;
   var children = item.getChildren();
+  var clearChildren = false;
   for (counter = 0; counter < children.length; counter++) {
+    clearChildren = (children[counter].selected || children[counter].nodeType === 'Group');
     if (children[counter].selected) {
       children[counter].selected = false;
       updateStrokeWidth(children[counter], true);
+    }
+
+    if (clearChildren) {
       _clearSelection(children[counter]);
     }
   }

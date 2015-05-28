@@ -42,6 +42,8 @@ describe('Controller: PhenotypeController', function () {
     this.fhirElementsGet.respond({});
     this.subsetOperatorsGet = this.$httpBackend.when('GET', 'data/qdm-subsetOperators.json');
     this.subsetOperatorsGet.respond({});
+    this.subsetOperatorsGet = this.$httpBackend.when('GET', 'data/config-exporters.json');
+    this.subsetOperatorsGet.respond([]);
 
     this.setupDirective = function($compile, $controller) {
       angular.element(document.body).append('<div data-kinetic-canvas data-canvas-details="canvasDetails" id="canvas">&nbsp;</div>');

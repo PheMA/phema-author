@@ -1,6 +1,6 @@
 'use strict';
 /* globals Kinetic, DataElement, GenericElement, LogicalOperator, TemporalOperator, ValueSet, Term, SubsetOperator,
-getIntersectingShape, allowsDrop, addElementToContainer */
+getIntersectingShape, allowsDrop, addElementToContainer, removeElementFromContainer */
 
 angular.module('sophe.factories.algorithmElement', [])
   .factory('algorithmElementFactory', function() {
@@ -69,6 +69,9 @@ angular.module('sophe.factories.algorithmElement', [])
     }
 
     function _destroyGroup(group) {
+      // Ensure we have cleaned ourselves up from any containers we were in
+      removeElementFromContainer(null, group);
+
       // In the group, find all connectors
       var connectors = group.find('.leftConnector, .rightConnector');
       connectors.each(function(connector) {
@@ -90,6 +93,26 @@ angular.module('sophe.factories.algorithmElement', [])
         group.deleteReferences();
       }
       group.destroy();
+    }
+
+    // Recursive version of getSelectedItem that will look for the first selected item
+    // or descendant, starting with 'item'
+    function _getSelectedItemOrDescendant(item) {
+      if (item.selected) {
+        return item;
+      }
+      else if (item.nodeType === 'Group' || item.nodeType === 'Layer') {
+        var children = item.getChildren();
+        var selectedItem = null;
+        for (var counter = 0; counter < children.length; counter++) {
+          selectedItem = _getSelectedItemOrDescendant(children[counter]);
+          if (selectedItem) {
+            return selectedItem;
+          }
+        }
+      }
+
+      return null;
     }
 
     var factory = {};
@@ -245,14 +268,7 @@ angular.module('sophe.factories.algorithmElement', [])
       }
 
       var layer = scope.canvasDetails.kineticStageObj.mainLayer;
-      var children = layer.getChildren();
-      for (var counter = 0; counter < children.length; counter++) {
-        if (children[counter].selected) {
-          return children[counter];
-        }
-      }
-
-      return null;
+      return _getSelectedItemOrDescendant(layer);
     };
 
     return factory;

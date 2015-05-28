@@ -5,4 +5,5 @@ angular.module('sophe.config', [])
 .constant('libraryBaseUrl', '@@libraryBaseUrl')
 .constant('valueSetServiceBaseUrl', '@@valueSetServiceBaseUrl')
 .constant('codeSystemServiceBaseUrl', '@@codeSystemServiceBaseUrl')
+.constant('configServiceBaseUrl', '@@configServiceBaseUrl')
 ;

@@ -1,7 +1,9 @@
 'use strict';
 
 angular.module('sophe.services.url', ['sophe.config'])
-.service('URLService', ['environment', 'dataServiceBaseUrl', 'fhirServiceBaseUrl', 'libraryBaseUrl', 'valueSetServiceBaseUrl', 'codeSystemServiceBaseUrl', function(environment, dataServiceBaseUrl, fhirServiceBaseUrl, libraryBaseUrl, valueSetServiceBaseUrl, codeSystemServiceBaseUrl) {
+.service('URLService', ['environment', 'dataServiceBaseUrl', 'fhirServiceBaseUrl', 'libraryBaseUrl', 'valueSetServiceBaseUrl', 'codeSystemServiceBaseUrl', 'configServiceBaseUrl', 
+    function(environment, dataServiceBaseUrl, fhirServiceBaseUrl, libraryBaseUrl, valueSetServiceBaseUrl, codeSystemServiceBaseUrl, configServiceBaseUrl) {
+
   this.getDataServiceURL = function(resource) {
     if (environment === 'local' || environment.substring(0, 2) === '@@') {
       // For our local setup, we sometimes stub things in.  This isn't code we plan to
@@ -80,6 +82,21 @@ angular.module('sophe.services.url', ['sophe.config'])
     }
 
     var url = codeSystemServiceBaseUrl + codeSystem + '/version/' + version + '/search=' + search;
+    return url;
+  };
+
+  this.getConfigServiceURL = function(attribute) {
+    if (environment === 'local' || environment.substring(0, 2) === '@@') {
+      if (attribute === 'exporters') {
+        return 'data/config-exporters.json';
+      }
+      return 'data/config.json';
+    }
+
+    var url = configServiceBaseUrl;
+    if (attribute === 'exporters') {
+      url = url + attribute;
+    }
     return url;
   };
 }]);

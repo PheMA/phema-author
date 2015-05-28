@@ -4,5 +4,6 @@
   "fhirServiceBaseUrl":"data/",
   "libraryBaseUrl":"data/",
   "valueSetServiceBaseUrl":"data/",
-  "codeSystemServiceBaseUrl":"data/"
+  "codeSystemServiceBaseUrl":"data/",
+  "configServiceBaseUrl":"data/"
 }
