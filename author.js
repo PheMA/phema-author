@@ -9,6 +9,7 @@ var fhir = require('./services/routes/fhirElements');
 var library = require('./services/routes/library');
 var valueSets = require('./services/routes/valueSets');
 var codeSystems = require('./services/routes/codeSystems');
+var config = require('./services/routes/config');
 
 module.exports = app;
 
@@ -39,5 +40,8 @@ app.get('/api/valueset/:id/members', valueSets.members);
 
 app.get('/api/codesystem/:codesystem/version/:version/search=:search', codeSystems.search);
 
+
+app.get('/api/config', config.index);
+app.get('/api/config/exporters', config.exporters);
 
 app.listen(process.env.PORT || 8081);

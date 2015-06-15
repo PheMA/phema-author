@@ -16,6 +16,7 @@ angular.module('sophe', [
   'sophe.elements.phenotype',
   'sophe.elements.valueSets',
   'sophe.elements.codeSystems',
+  'sophe.services.configuration',
   'sophe.services.codeSystem',
   'sophe.services.attribute',
   'sophe.services.temporalOperator',

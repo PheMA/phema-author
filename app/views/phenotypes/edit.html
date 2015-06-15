@@ -11,10 +11,16 @@
 <div class="row">
   <div class="phenotype-toolbar" id="phenotypeToolbar">
     <ul>
-      <li ng-repeat="btn in buttons" title="{{btn.tooltip}}">
-        <button ng-hide="{{btn.spacer}}" type="button" class="btn phenotype-toolbar-button" ng-click="btn.event()" ng-class="{'disabled': btn.disabled}">
+      <li ng-repeat="btn in buttons" title="{{btn.tooltip}}" ng-class="{'dropdown': btn.dropdown}">
+        <button ng-hide="{{btn.spacer}}" type="button" class="btn phenotype-toolbar-button" ng-click="btn.event()" ng-class="{'disabled': btn.disabled, 'dropdown-toggle': btn.dropdown}" id="{{btn.id}}" data-toggle="dropdown" aria-expanded="true">
           <span class="{{btn.iconClass}}"></span> {{btn.text}}
+          <span class="caret" ng-show="{{btn.dropdown}}"></span>
         </button>
+        <ul ng-show="{{btn.dropdown}}" class="dropdown-menu" role="menu" aria-labelledby="{{btn.id}}">
+          <li ng-repeat="child in btn.children" title="{{child.tooltip}}">
+            <a href="javascript:void(0);" ng-click="child.event()">{{child.text}}</a>
+          </li>
+        </ul>
         <div ng-show="{{btn.spacer}}" class="spacer" />
       </li>
     </ul>
