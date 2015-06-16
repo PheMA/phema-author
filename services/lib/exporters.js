@@ -1,8 +1,10 @@
 'use strict';
-var request = require('request');
-var Nedb = require('nedb');
-var exec = require('child_process').exec;
+var MONGO_CONNECTION = 'mongodb://localhost/phema-author';
 
+var request = require('request');
+var exec = require('child_process').exec;
+var mongojs = require('mongojs');
+var db = mongojs(MONGO_CONNECTION, ['exporterTempFiles']);
 
 var exporterConfig = [
   {
@@ -38,7 +40,7 @@ exports.exporters = exporterConfig;
 ///////////////////////////////////////////////////////////////////////////////
 
 var ExporterRepository = function() {
-  this.tempFiles = new Nedb({ filename: 'exporters/tempFiles.db', autoload: true });
+  this.tempFiles =  db.collection('exporterTempFiles');
 }
 
 ExporterRepository.prototype.saveDefinitionForProcessing = function(definition, callback) {
@@ -53,7 +55,7 @@ ExporterRepository.prototype.saveDefinitionForProcessing = function(definition, 
 }
 
 ExporterRepository.prototype.markAsCompleted = function(id, callback) {
-  this.tempFiles.update({_id: id}, { $set: { definition: null, status: 'completed', updatedOn: new Date() } }, {}, function (err, numReplaced) {
+  this.tempFiles.update({_id: mongojs.ObjectId(id)}, { $set: { definition: null, status: 'completed', updatedOn: new Date() } }, {}, function (err, numReplaced) {
     if (err === null) {
       callback({id: id, status: 'completed'});
     }
@@ -65,7 +67,7 @@ ExporterRepository.prototype.markAsCompleted = function(id, callback) {
 
 
 ExporterRepository.prototype.markAsError = function(id, callback) {
-  this.tempFiles.update({_id: id}, { $set: { status: 'error', updatedOn: new Date() } }, {}, function (err, numReplaced) {
+  this.tempFiles.update({_id: mongojs.ObjectId(id)}, { $set: { status: 'error', updatedOn: new Date() } }, {}, function (err, numReplaced) {
     if (err === null) {
       callback({id: id, status: 'error'});
     }
@@ -76,7 +78,7 @@ ExporterRepository.prototype.markAsError = function(id, callback) {
 }
 
 ExporterRepository.prototype.getStatus = function(id, callback) {
-  this.tempFiles.findOne({_id: id}, function (err, doc) {
+  this.tempFiles.findOne({_id: mongojs.ObjectId(id)}, function (err, doc) {
     console.log(doc);
     if (err === null && doc !== null) {
       callback({id: doc._id, status: doc.status, updatedOn: doc.updatedOn});
