@@ -494,6 +494,10 @@ module.exports = function (grunt) {
             {
               match: 'configServiceBaseUrl',
               replacement: settings.configServiceBaseUrl
+            },
+            {
+              match: 'exporterServiceBaseUrl',
+              replacement: settings.exporterServiceBaseUrl
             }
           ]
         },

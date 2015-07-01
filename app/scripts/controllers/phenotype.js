@@ -45,16 +45,36 @@ angular.module('sopheAuthorApp')
       .then(function(operators) { $scope.subsetOperators = operators; });
 
     $scope.export = function() {
-      var hiddenElement = document.createElement('a');
-      var blob = new Blob([$scope.canvasDetails.kineticStageObj.mainLayer.toJSON()],
-        {type: 'text/json;charset=utf-8;'});
-      var url = URL.createObjectURL(blob);
-      document.body.appendChild(hiddenElement);
-      hiddenElement.style.display = 'none';
-      hiddenElement.href = url;
-      hiddenElement.setAttribute('download', 'phenotype.json');
-      hiddenElement.click();
-      $window.URL.revokeObjectURL(url);
+      var exporter = this;
+      var modalInstance = $modal.open({
+        templateUrl: 'views/phenotypes/export.html',
+        controller: 'ExportPhenotypeController',
+        size: 'md',
+        resolve: {
+          phenotype: function() {
+            return $scope.canvasDetails.kineticStageObj.mainLayer.toJSON();
+          },
+          exporter: function() {
+            return exporter;
+          }
+        }
+      });
+
+      // If the user selects a phenotype to load, redirect to that phenotype's ID which
+      // will cause it to load properly.
+      modalInstance.result.then(function () {
+      });
+
+      // var hiddenElement = document.createElement('a');
+      // var blob = new Blob([$scope.canvasDetails.kineticStageObj.mainLayer.toJSON()],
+      //   {type: 'text/json;charset=utf-8;'});
+      // var url = URL.createObjectURL(blob);
+      // document.body.appendChild(hiddenElement);
+      // hiddenElement.style.display = 'none';
+      // hiddenElement.href = url;
+      // hiddenElement.setAttribute('download', 'phenotype.json');
+      // hiddenElement.click();
+      // $window.URL.revokeObjectURL(url);
     };
 
     // Exporters that we create will be reformatted similar to menu items.

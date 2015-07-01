@@ -374,3 +374,34 @@ $value-sets-background-color: #eee;
   box-shadow: inset -2px -2px 0 rgba(221, 221, 221, 0.25);
   padding: 10px;
 }
+
+#phenotype-export {
+  div {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+  }
+
+  .message {
+    font-size: 1.2em;
+  }
+
+  .note {
+    padding-top: 0px;
+  }
+
+  .group {
+    padding: 0px;
+    margin: 0px;
+  }
+
+  .spinner {
+    height: 50px;
+    display: block;
+  }
+
+  .error {
+    font-weight: bold;
+    color: red;
+  }
+}

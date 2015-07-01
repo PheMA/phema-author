@@ -31,6 +31,9 @@ var exporterConfig = [
 exports.exporters = exporterConfig;
 
 ///////////////////////////////////////////////////////////////////////////////
+// The ExporterRepository can be configured to use NeDB (for lightweight persistance),
+// or MongoDB (default configuration)
+//
 // Schema for entries in the tempFiles repository:
 //   _id  (string)       Auto-generated ID by the database system
 //   definition (JSON)   The phenotype algorithm created in the authoring tool
@@ -38,7 +41,6 @@ exports.exporters = exporterConfig;
 //   updatedOn (Date)    The most recent date and time this record was updated
 //   status (string)     Can be one of:   processing | completed | error
 ///////////////////////////////////////////////////////////////////////////////
-
 var ExporterRepository = function() {
   this.tempFiles =  db.collection('exporterTempFiles');
 }
