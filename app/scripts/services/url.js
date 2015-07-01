@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sophe.services.url', ['sophe.config'])
-.service('URLService', ['environment', 'dataServiceBaseUrl', 'fhirServiceBaseUrl', 'libraryBaseUrl', 'valueSetServiceBaseUrl', 'codeSystemServiceBaseUrl', 'configServiceBaseUrl', 
-    function(environment, dataServiceBaseUrl, fhirServiceBaseUrl, libraryBaseUrl, valueSetServiceBaseUrl, codeSystemServiceBaseUrl, configServiceBaseUrl) {
+.service('URLService', ['environment', 'dataServiceBaseUrl', 'fhirServiceBaseUrl', 'libraryBaseUrl', 'valueSetServiceBaseUrl', 'codeSystemServiceBaseUrl', 'configServiceBaseUrl', 'exporterServiceBaseUrl',
+    function(environment, dataServiceBaseUrl, fhirServiceBaseUrl, libraryBaseUrl, valueSetServiceBaseUrl, codeSystemServiceBaseUrl, configServiceBaseUrl, exporterServiceBaseUrl) {
 
   this.getDataServiceURL = function(resource) {
     if (environment === 'local' || environment.substring(0, 2) === '@@') {
@@ -97,6 +97,33 @@ angular.module('sophe.services.url', ['sophe.config'])
     if (attribute === 'exporters') {
       url = url + attribute;
     }
+    return url;
+  };
+
+  this.getExporterServiceURL = function(action, params) {
+    if (environment === 'local' || environment.substring(0, 2) === '@@') {
+      if (action === 'run') {
+        return 'data/exporter-run.json';
+      }
+      else if (action === 'result') {
+        return 'data/exporter-result.json';
+      }
+      else {
+        return 'data/exporter-status.json';
+      }
+    }
+
+    var url = exporterServiceBaseUrl;
+    if (action === 'run') {
+      url = url + params.exporterKey;
+    }
+    else if (action === 'result') {
+      url = url + params.exporterId + '/result';
+    }
+    else if (action === 'status') {
+      url = url + params.exporterId;
+    }
+
     return url;
   };
 }]);

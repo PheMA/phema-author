@@ -1,12 +1,9 @@
 var request = require('request');
+var exporters = require('../lib/exporters');
 
 var configuration = {
-  exporters: [
-    {name: "HQMF", description: "HL7 Health Quality Measure Format (HQMF)"},
-    {name: "PhEMA (JSON)", description: "Native format created by the authoring tool"},
-    {name: "KNIME", description: "Creates an executable KNIME workflow"}
-  ]
-};
+  exporters: exporters.exporters
+}
 
 exports.index = function(req, res){
   res.set('Content-Type', 'application/json');

@@ -26,4 +26,5 @@ angular.module('sophe', [
   'sophe.services.logicalOperator',
   'sophe.services.subsetOperator',
   'sophe.services.url',
-  'sophe.services.valueSet']);
+  'sophe.services.valueSet',
+  'sophe.services.exporter']);
