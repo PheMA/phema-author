@@ -25,4 +25,39 @@ angular.module('sophe.services.exporter', ['sophe.services.url', 'ngResource'])
   this.getResult = function(exportId) {
     return this._load(URLService.getExporterServiceURL('result', {exportId: exportId}));
   };
+
+  function minimizeJson(originalJson) {
+    var minimizedJson = originalJson;
+    var index;
+    for (var key in minimizedJson) {
+      if (!minimizedJson.hasOwnProperty(key)) {
+        continue;
+      }
+
+      if (key === 'attrs') {
+        minimizedJson[key] = minimizeJson(minimizedJson[key]);
+      }
+      else if (key === 'children') {
+        for (index = 0; index < minimizedJson[key].length; index++) {
+          minimizedJson[key][index] = minimizeJson(minimizedJson[key][index]);
+        }
+      }
+      else if (key === 'element') {
+        if (minimizedJson[key].hasOwnProperty('members')) {
+          delete minimizedJson[key].members;
+        }
+      }
+      // This is the whitelist of keys we will export
+      else if (key !== 'phemaObject' && key !== 'valueSet' && key !== 'className' && key !== 'connections' && key !== 'connectors') {
+        minimizedJson[key] = null;
+        delete minimizedJson[key];
+      }
+    }
+
+    return minimizedJson;
+  }
+
+  this.minimizeJsonFormat = function(originalJson) {
+    return minimizeJson(JSON.parse(originalJson));
+  };
 }]);
