@@ -127,6 +127,9 @@ angular.module('sophe.services.attribute', ['sophe.services.url', 'ngResource'])
       attribute.id === 'IncisionDatetime') {
       item.type = 'date';
     }
+    else if (attribute.id === 'Result') {
+      item.type = 'result';
+    }
     else if (attribute.type === 'http://www.w3.org/2001/XMLSchema#date') {
       item.type = 'date';
     }

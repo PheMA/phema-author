@@ -88,6 +88,17 @@
     "dataElementLabel":{"type":"literal","value":"Anatomical Location Site","datatype":"http://www.w3.org/2001/XMLSchema#string"},
     "dataElementName":{"type":"literal","value":"AnatomicalLocationSite","datatype":"http://www.w3.org/2001/XMLSchema#string"},
     "cardinality":{},
-    "cluster":{}}
+    "cluster":{}},
+   {"id":{"type":"uri","value":"http://rdf.healthit.gov/qdm/element#LaboratoryTestPerformed.Result"},
+    "attributeLabel":{"type":"literal","value":"Result","datatype":"http://www.w3.org/2001/XMLSchema#string"},
+    "context":{"type":"uri","value":"http://rdf.healthit.gov/qdm/element#LaboratoryTestPerformed"},
+    "version":{"type":"uri","value":"http://rdf.healthit.gov/qdm/element#qdm-4-1"},
+    "definition":{"type":"literal","value":"The final consequences or data collected from the datatype. Results can be used in three ways: (a) to express that a result is present in the electronic record but any entry is acceptable. (b) to express a numerical result, combined with a mathematical operator and units (e.g., LDL >= 100mg/dL, or systolic blood pressure is < 140 mmHg). (c) to express a result that matches one of a specific set of coded concepts in a value set.","datatype":"http://www.w3.org/2001/XMLSchema#string"},
+    "dataElementDescription":{"type":"literal","value":"The final consequences or data collected from the datatype. Results can be used in three ways: (a) to express that a result is present in the electronic record but any entry is acceptable. (b) to express a numerical result, combined with a mathematical operator and units (e.g., LDL >= 100mg/dL, or systolic blood pressure is < 140 mmHg). (c) to express a result that matches one of a specific set of coded concepts in a value set.","datatype":"http://www.w3.org/2001/XMLSchema#string"},
+    "note":{},
+    "dataElementLabel":{"type":"literal","value":"Result","datatype":"http://www.w3.org/2001/XMLSchema#string"},
+    "dataElementName":{"type":"literal","value":"Result","datatype":"http://www.w3.org/2001/XMLSchema#string"},
+    "cardinality":{},
+    "type":{}}
   ]
  }}
