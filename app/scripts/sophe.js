@@ -28,4 +28,6 @@ angular.module('sophe', [
   'sophe.services.subsetOperator',
   'sophe.services.url',
   'sophe.services.valueSet',
-  'sophe.services.exporter']);
+  'sophe.services.exporter',
+  'sophe.services.unit'
+]);

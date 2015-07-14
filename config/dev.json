@@ -6,5 +6,6 @@
   "valueSetServiceBaseUrl":"api/valueset/",
   "codeSystemServiceBaseUrl":"api/codesystem/",
   "configServiceBaseUrl":"api/config/",
-  "exporterServiceBaseUrl":"api/export/"
+  "exporterServiceBaseUrl":"api/export/",
+  "unitServiceBaseUrl":"api/unit/"
 }

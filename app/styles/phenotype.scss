@@ -147,6 +147,38 @@
     margin-bottom: 5px;
     border: none;
   }
+  
+  .results-container {
+    display: inline;
+  
+    ul {
+      list-style-type: none;
+    }
+    label {
+      width: 100%;
+    }
+    select {
+      float: right;
+    }
+    label input[type=radio] {
+      float: left;
+      margin-right: 5px;
+    }
+    .results-type-panel {
+      margin-top: 3px;
+      margin-left: 10px;
+      margin-right: 7px;
+    }
+  }
+  
+  #results-values-panel {
+    input, select {
+      float: none;
+    }
+    input[type=text] {
+      width: 50px;
+    }
+  }
 }
 
 #data-element-properties > .value-set {
@@ -404,4 +436,10 @@ $value-sets-background-color: #eee;
     font-weight: bold;
     color: red;
   }
+}
+
+
+.thin-select {
+  width: 100%;
+  max-width: 100%;
 }

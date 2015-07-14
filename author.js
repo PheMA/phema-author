@@ -11,6 +11,7 @@ var valueSets = require('./services/routes/valueSets');
 var codeSystems = require('./services/routes/codeSystems');
 var config = require('./services/routes/config');
 var exporters = require('./services/routes/exporters');
+var units = require('./services/routes/units');
 
 module.exports = app;
 
@@ -46,5 +47,7 @@ app.get('/api/config/exporters', config.exporters);
 
 app.post('/api/export/:exporter', exporters.invoke);
 app.get('/api/export/:id', exporters.status);
+
+app.get('/api/units', units.index);
 
 app.listen(process.env.PORT || 8081);

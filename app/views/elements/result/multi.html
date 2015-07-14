@@ -1,3 +1,38 @@
 <div id="result-multi" class="results-container">
-  Test
+<!--   Must be:
+  <ul>
+    <li>
+      <label><input type="radio" name="result-type" value="present" />Present in the record (any value)</label>
+    </li>
+    <li>
+      <label><input type="radio" name="result-type" value="value" />Range of values</label>
+    </li>
+    <li>
+      <label><input type="radio" name="result-type" value="match" />Specific value(s)</label>
+    </li>
+  </ul> -->
+  <select ng-model="formData.resultType">
+    <option value="present">Present in the record (any value)</option>
+    <option value="value">Range of values</option>
+    <option value="match">Specific value(s)</option>
+  </select>
+  <div class="results-type-panel" ng-show="formData.resultType === 'present'">
+    <span class="note">A result is present in the electronic record but any entry is acceptable</span>
+  </div>
+  <div class="results-type-panel" id="results-values-panel" ng-show="formData.resultType === 'value'">
+    <select ng-model="formData.result.operator">
+      <option value="LT">Less than (<)</option>
+      <option value="LE">Less than or equal to (<=)</option>
+      <option value="EQ">Equal to (=)</option>
+      <option value="BW">Between</option>
+      <option value="GT">Greater than (>)</option>
+      <option value="GE">Greater than or equal to (>=)</option>
+    </select>
+    <input type="text" ng-model="formData.result.valueLow"/>
+    <input type="text" ng-model="formData.result.valueHigh" ng-show="formData.result.operator === 'BW'"/><br/>
+    Units: <select ng-options="unit as unit.value for unit in units" ng-model="formData.result.units" class="thin-select"></select>
+  </div>
+  <div class="results-type-panel" ng-show="formData.resultType === 'match'">
+    <value-sets location="input" selected-value-sets="formData.resultValueSet"></value-sets>
+  </div>
 </div>

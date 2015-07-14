@@ -6,5 +6,6 @@
   "valueSetServiceBaseUrl":"data/",
   "codeSystemServiceBaseUrl":"data/",
   "configServiceBaseUrl":"data/",
-  "exporterServiceBaseUrl":"data/"
+  "exporterServiceBaseUrl":"data/",
+  "unitServiceBaseUrl":"data/"
 }
