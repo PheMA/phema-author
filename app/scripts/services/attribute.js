@@ -89,8 +89,10 @@ angular.module('sophe.services.attribute', ['sophe.services.url', 'ngResource'])
       attribute.id === 'Cause' ||
       attribute.id === 'Route' ||
       attribute.id === 'Status') {
-      // Reasons use value sets
       item.type = 'valueSet';
+    }
+    else if (attribute.id === 'CumulativeMedicationDuration') {
+      item.type = 'number';
     }
     // We are assuming a start datetime is paired with a stop datetime
     else if (attribute.id === 'StartDatetime') {

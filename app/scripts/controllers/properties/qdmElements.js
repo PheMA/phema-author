@@ -18,6 +18,7 @@ angular.module('sopheAuthorApp')
     $scope.units = [];
     
     UnitService.load()
+      .then(UnitService.processValues)
       .then(function(units) { $scope.units = units; });
 
     // Load the attributes (makes a call to the data services) and map into the dynamic form format.

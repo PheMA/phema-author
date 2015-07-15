@@ -29,8 +29,9 @@
       <option value="GE">Greater than or equal to (>=)</option>
     </select>
     <input type="text" ng-model="formData.result.valueLow"/>
+    <span ng-show="formData.result.operator === 'BW'"> - </span>
     <input type="text" ng-model="formData.result.valueHigh" ng-show="formData.result.operator === 'BW'"/><br/>
-    Units: <select ng-options="unit as unit.value for unit in units" ng-model="formData.result.units" class="thin-select"></select>
+    Units: <select ng-options="unit.id as unit.label for unit in units" ng-model="formData.result.units"></select>
   </div>
   <div class="results-type-panel" ng-show="formData.resultType === 'match'">
     <value-sets location="input" selected-value-sets="formData.resultValueSet"></value-sets>
