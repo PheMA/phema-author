@@ -1,66 +1,44 @@
 'use strict';
 
-describe('Factory: CodeSystemService', function () {
+describe('Factory: UnitService', function () {
 
-  beforeEach(module('sophe.services.codeSystem'));
+  beforeEach(module('sophe.services.unit'));
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function (_CodeSystemService_, _$http_, _$httpBackend_) {
-    this.CodeSystemService = _CodeSystemService_;
+  beforeEach(inject(function (_UnitService_, _$http_, _$httpBackend_) {
+    this.UnitService = _UnitService_;
     this.$http = _$http_;
     this.$httpBackend = _$httpBackend_;
-    this.codeSystemSearch = this.$httpBackend.when('GET', 'data/codeSystem-search.json');
-    this.codeSystemSearch.respond({});
+    this.unitsGet = this.$httpBackend.when('GET', 'data/units.json');
+    this.unitsGet.respond([]);
   }));
 
-  describe('search', function() {
+  describe('load', function() {
     it('returns a promise', inject(function() {
-      var promise = this.CodeSystemService.search();
+      var promise = this.UnitService.load();
       this.$httpBackend.flush();
       expect(promise.then).toNotEqual(null);
     }));
   });
 
   describe('processValues', function() {
-    it('returns an array', inject(function() {
-      this.codeSystemSearch.respond({
-        'EntityDirectory': {
-          'entry': [
-            {
-              'about': 'urn:oid:2.16.840.1.113883.6.2:253.5',
-              'name': {
-                'namespace': 'ICD-9-CM',
-                'name': '253.5'
-              },
-              'knownEntityDescription': [
-                {
-                  'href': 'http://lexevs62cts2.nci.nih.gov/lexevscts2/codesystem/ICD-9-CM/version/2013_2012_08_06/entity/253.5',
-                  'describingCodeSystemVersion': {
-                    'version': {
-                      'content': 'ICD-9-CM-2013_2012_08_06',
-                      'href': 'http://lexevs62cts2.nci.nih.gov/lexevscts2/codesystem/ICD-9-CM/version/2013_2012_08_06'
-                    },
-                    'codeSystem': {
-                      'content': 'ICD-9-CM',
-                      'uri': 'urn:oid:2.16.840.1.113883.6.2'
-                    }
-                  },
-                  'designation': 'Diabetes insipidus'
-                }
-              ]
-            }
-          ]
-        }
-      });
-      var codeSystems = [];
-      this.CodeSystemService.search('test')
-        .then(this.CodeSystemService.processValues)
-        .then(function(vs) { codeSystems = vs; });
+    it('returns a sorted and formatted list', inject(function() {
+      this.unitsGet.respond([
+        {code:"nm/{m}", value:"nm per meter"},
+        {code:"[arb'U]", value:"arbitrary unit"},
+      ]);
+      var units = [];
+      this.UnitService.load()
+        .then(this.UnitService.processValues)
+        .then(function(u) { units = u; });
       this.$httpBackend.flush();
-      expect(codeSystems.length).toEqual(1);
-      expect(codeSystems[0].name).toEqual('Diabetes insipidus');
-      expect(codeSystems[0].id).toEqual('253.5');
-      expect(codeSystems[0].uri).toEqual('urn:oid:2.16.840.1.113883.6.2:253.5');
+      expect(units.length).toEqual(2);
+      expect(units[0].name).toEqual('arbitrary unit');
+      expect(units[0].id).toEqual('[arb\'U]');
+      expect(units[0].label).toEqual('arb\'U');
+      expect(units[1].name).toEqual('nm per meter');
+      expect(units[1].id).toEqual('nm/{m}');
+      expect(units[1].label).toEqual('nm/ m');
     }));
   });
 });
