@@ -126,4 +126,13 @@ angular.module('sophe.services.url', ['sophe.config'])
 
     return url;
   };
+  
+  this.getUnitServiceURL = function() {
+    if (environment === 'local' || environment.substring(0, 2) === '@@') {
+      return 'data/units.json';
+    }
+
+    var url = unitServiceBaseUrl;
+    return url;
+  };
 }]);

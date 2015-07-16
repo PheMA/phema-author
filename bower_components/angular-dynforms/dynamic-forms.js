@@ -50,7 +50,8 @@ angular.module('dynform', [])
         'reset': {element: 'button', type: 'reset', editable: false, textBased: false},
         'submit': {element: 'button', type: 'submit', editable: false, textBased: false},
         // PhEMA custom editables
-        'valueSet': {element: 'value-sets', type: 'valueSet', editable: true, textBased: false}
+        'valueSet': {element: 'value-sets', type: 'valueSet', editable: true, textBased: false},
+        'result': {element: 'results', type: 'result', editable: true, textBased: false}
       };
     
     return {
