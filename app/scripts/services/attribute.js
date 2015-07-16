@@ -91,7 +91,7 @@ angular.module('sophe.services.attribute', ['sophe.services.url', 'ngResource'])
       attribute.id === 'Status') {
       item.type = 'valueSet';
     }
-    else if (attribute.id === 'CumulativeMedicationDuration') {
+    else if (attribute.id === 'CumulativeMedicationDuration' || attribute.id === 'Refills') {
       item.type = 'number';
     }
     // We are assuming a start datetime is paired with a stop datetime
@@ -129,7 +129,11 @@ angular.module('sophe.services.attribute', ['sophe.services.url', 'ngResource'])
       attribute.id === 'IncisionDatetime') {
       item.type = 'date';
     }
-    else if (attribute.id === 'Result') {
+    else if (attribute.id === 'Result' ||
+      attribute.id === 'Dose' ||
+      attribute.id === 'Frequency' ||
+      attribute.id === 'RadiationDosage' ||
+      attribute.id === 'RadiationDuration') {
       item.type = 'result';
     }
     else if (attribute.type === 'http://www.w3.org/2001/XMLSchema#date') {
