@@ -8,7 +8,7 @@ var UnitRepository = function(baseURL) {
 }
 
 UnitRepository.prototype.getUnits = function(callback) {
-  fs.readFile('../data/units.json', function (error,data) {
+  fs.readFile('./services/data/units.json', function (error,data) {
     if (error) {
       console.log(error);
       callback({message: 'Unable to retrieve the list of units'});

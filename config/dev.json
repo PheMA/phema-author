@@ -7,5 +7,5 @@
   "codeSystemServiceBaseUrl":"api/codesystem/",
   "configServiceBaseUrl":"api/config/",
   "exporterServiceBaseUrl":"api/export/",
-  "unitServiceBaseUrl":"api/unit/"
+  "unitServiceBaseUrl":"api/units/"
 }

@@ -801,8 +801,7 @@
   {"code":"{TSI_index}", "value":"thyroid-stimulating immunoglobulin index"},
   {"code":"{titer}", "value":"titer"},
   {"code":"[todd'U]", "value":"Todd unit"},
-  "{""code"":""Torr"", ""value"":""Torr 
-  ""},"
+  {"code":"Torr", "value":"Torr"},
   {"code":"10*12/L", "value":"trillion per liter"},
   {"code":"[oz_tr]", "value":"Troy ounce"},
   {"code":"[tb'U]", "value":"tuberculin unit"},
