@@ -39,6 +39,7 @@ angular.module('sopheAuthorApp')
       template.push({ 'type': 'valueSet', 'label': 'Health Record Field', 'model': 'HealthRecordField' });
       template.push({ 'type': 'valueSet', 'label': 'Source', 'model': 'Source' });
       template.push({ 'type': 'valueSet', 'label': 'Recorder', 'model': 'Recorder' });
+      template.push({ 'type': 'checkbox', 'label': 'Reference this element later', 'model': 'Occurrence' });
 
       // We want to put all fieldsets at the end
       for (index = 0; index < fieldsets.length; index++) {
