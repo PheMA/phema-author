@@ -276,6 +276,9 @@ angular.module('dynform', [])
                   newElement.attr('location', 'input');
                   newElement.attr('selected-value-sets', bracket(field.model, attrs.ngModel));
                 }
+                else if (field.type === 'result') {
+                  newElement.attr('result', bracket(field.model, attrs.ngModel));
+                }
 
                 //  Common attributes; radio already applied these...
                 if (field.type !== "radio") {

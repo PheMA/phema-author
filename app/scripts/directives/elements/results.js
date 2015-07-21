@@ -8,7 +8,8 @@ angular.module('sophe.elements.results', [])
     },
     restrict: 'EA',
     controller: 'ResultsController',
-    replace: true
+    replace: true,
+    scope: {result: '='}
   };
   return directive;
 }]);

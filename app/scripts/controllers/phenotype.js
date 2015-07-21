@@ -65,17 +65,17 @@ angular.module('sopheAuthorApp')
       modalInstance.result.then(function () {
       });
 
-      // var hiddenElement = document.createElement('a');
-      // var blob = new Blob([$scope.canvasDetails.kineticStageObj.mainLayer.toJSON()],
-      // var blob = new Blob([JSON.stringify(ExporterService.minimizeJsonFormat($scope.canvasDetails.kineticStageObj.mainLayer.toJSON()))],
-      //   {type: 'text/json;charset=utf-8;'});
-      // var url = URL.createObjectURL(blob);
-      // document.body.appendChild(hiddenElement);
-      // hiddenElement.style.display = 'none';
-      // hiddenElement.href = url;
-      // hiddenElement.setAttribute('download', 'phenotype.json');
-      // hiddenElement.click();
-      // $window.URL.revokeObjectURL(url);
+      var hiddenElement = document.createElement('a');
+      var blob = new Blob([$scope.canvasDetails.kineticStageObj.mainLayer.toJSON()],
+      //var blob = new Blob([JSON.stringify(ExporterService.minimizeJsonFormat($scope.canvasDetails.kineticStageObj.mainLayer.toJSON()))],
+        {type: 'text/json;charset=utf-8;'});
+      var url = URL.createObjectURL(blob);
+      document.body.appendChild(hiddenElement);
+      hiddenElement.style.display = 'none';
+      hiddenElement.href = url;
+      hiddenElement.setAttribute('download', 'phenotype.json');
+      hiddenElement.click();
+      $window.URL.revokeObjectURL(url);
     };
 
     // Exporters that we create will be reformatted similar to menu items.
