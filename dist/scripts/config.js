@@ -6,4 +6,6 @@ angular.module('sophe.config', [])
 .constant('valueSetServiceBaseUrl', 'api/valueset/')
 .constant('codeSystemServiceBaseUrl', 'api/codesystem/')
 .constant('configServiceBaseUrl', 'api/config/')
+.constant('exporterServiceBaseUrl', 'api/export/')
+.constant('unitServiceBaseUrl', 'api/units/')
 ;

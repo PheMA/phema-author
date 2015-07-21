@@ -15,6 +15,10 @@ angular.module('sopheAuthorApp')
     $scope.isSearchingValueSets = false;
     $scope.selectedValueSets = [];
     $scope.selectedTerms = [];
+    
+    // UnitService.load()
+      // .then(UnitService.processValues)
+      // .then(function(units) { $scope.units = units; });
 
     // Load the attributes (makes a call to the data services) and map into the dynamic form format.
     // We are assigning a promise to the form template so that it will load when the data is loaded.
@@ -39,6 +43,7 @@ angular.module('sopheAuthorApp')
       template.push({ 'type': 'valueSet', 'label': 'Health Record Field', 'model': 'HealthRecordField' });
       template.push({ 'type': 'valueSet', 'label': 'Source', 'model': 'Source' });
       template.push({ 'type': 'valueSet', 'label': 'Recorder', 'model': 'Recorder' });
+      template.push({ 'type': 'checkbox', 'label': 'Reference this element later', 'model': 'Occurrence' });
 
       // We want to put all fieldsets at the end
       for (index = 0; index < fieldsets.length; index++) {

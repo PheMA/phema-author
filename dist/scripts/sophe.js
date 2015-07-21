@@ -16,6 +16,7 @@ angular.module('sophe', [
   'sophe.elements.phenotype',
   'sophe.elements.valueSets',
   'sophe.elements.codeSystems',
+  'sophe.elements.results',
   'sophe.services.configuration',
   'sophe.services.codeSystem',
   'sophe.services.attribute',
@@ -26,4 +27,7 @@ angular.module('sophe', [
   'sophe.services.logicalOperator',
   'sophe.services.subsetOperator',
   'sophe.services.url',
-  'sophe.services.valueSet']);
+  'sophe.services.valueSet',
+  'sophe.services.exporter',
+  'sophe.services.unit'
+]);

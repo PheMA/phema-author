@@ -50,7 +50,8 @@ angular.module('dynform', [])
         'reset': {element: 'button', type: 'reset', editable: false, textBased: false},
         'submit': {element: 'button', type: 'submit', editable: false, textBased: false},
         // PhEMA custom editables
-        'valueSet': {element: 'value-sets', type: 'valueSet', editable: true, textBased: false}
+        'valueSet': {element: 'value-sets', type: 'valueSet', editable: true, textBased: false},
+        'result': {element: 'results', type: 'result', editable: true, textBased: false}
       };
     
     return {
@@ -274,6 +275,9 @@ angular.module('dynform', [])
                 else if (field.type === 'valueSet') {
                   newElement.attr('location', 'input');
                   newElement.attr('selected-value-sets', bracket(field.model, attrs.ngModel));
+                }
+                else if (field.type === 'result') {
+                  newElement.attr('result', bracket(field.model, attrs.ngModel));
                 }
 
                 //  Common attributes; radio already applied these...
