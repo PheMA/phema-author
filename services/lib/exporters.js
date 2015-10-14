@@ -14,10 +14,18 @@ var exporterConfig = [
     invokeAs: 'function'
   },
   {
-    id: "phema",
+    id: "phema-json",
     name:"PhEMA (JSON)",
     description: "Native format created by the authoring tool",
-    invokeAs: 'function'
+    invokeAs: 'program',
+    invokeParams: ''
+  },
+  {
+    id: "hds-json",
+    name:"Health Data Standards (JSON)",
+    description: "A JSON format (dervied from HQMF) that is supported by the Health Data Standards library",
+    invokeAs: 'program',
+    invokeParams: ''
   },
   {
     id: "knime",

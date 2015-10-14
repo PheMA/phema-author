@@ -44,6 +44,12 @@ angular.module('sopheAuthorApp')
       .then(SubsetOperatorService.processValues)
       .then(function(operators) { $scope.subsetOperators = operators; });
 
+    // Update the phenotype metadata so that it is available within the phenotype definition
+    // for export.  This needs to be synced each time we update/save.
+    function _setPhenotypeData(id, name, description) {
+      $scope.canvasDetails.kineticStageObj.mainLayer.setAttr("phenotypeData", {"id":id, "name":name, "description":description});
+    }
+
     $scope.export = function() {
       var exporter = this;
       var modalInstance = $modal.open({
@@ -142,10 +148,12 @@ angular.module('sopheAuthorApp')
     function _handlePhenotypeSave(result) {
       LibraryService.saveDetails(result)
         .then(function(data) {
+          _setPhenotypeData(data.id, data.name, data.description);
           $scope.successMessage = 'Your phenotype was successfully saved';
           $location.path('/phenotype/' + data.id);
           $timeout(_resetMessages, 5000); // Only timeout success
         }, function() {
+          _setPhenotypeData("", result["name"], result["description"]);
           $scope.errorMessage = 'There was an error trying to save your phenotype definition';
         });
     }
