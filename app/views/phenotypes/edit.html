@@ -29,43 +29,43 @@
 <div class="row phenotype-elements">
   <div class="col-sm-3 col-xs-3">
     <accordion close-others="oneAtATime">
-      <accordion-group id="data-elements-list" class="phenotype-element-list" is-open="status.open[0]">
+      <accordion-group id="data-elements-list" class="data-element-list" is-open="status.open[0]">
         <accordion-heading>
           QDM Data Elements <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[0], 'glyphicon-chevron-right': !status.open[0]}"></i>
         </accordion-heading>
         <div qdm-data-elements></div>
       </accordion-group>
-      <accordion-group id="value-sets-list" class="phenotype-element-list" is-open="status.open[1]">
+      <accordion-group id="value-sets-list" class="term-element-list" is-open="status.open[1]">
         <accordion-heading>
           Value Sets <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[1], 'glyphicon-chevron-right': !status.open[1]}"></i>
         </accordion-heading>
         <div value-sets selected-value-sets="selectedValueSets" location="sidebar"></div>
       </accordion-group>
-<!--       <accordion-group id="code-systems-list" class="phenotype-element-list" is-open="status.open[2]">
+<!--       <accordion-group id="code-systems-list" class="term-element-list" is-open="status.open[2]">
         <accordion-heading>
           Terminologies / Codes <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[2], 'glyphicon-chevron-right': !status.open[2]}"></i>
         </accordion-heading>
         <div code-systems location="sidebar"></div>
       </accordion-group> -->
-      <accordion-group id="logical-operators-list" class="phenotype-element-list" is-open="status.open[3]">
+      <accordion-group id="logical-operators-list" class="operator-element-list" is-open="status.open[3]">
         <accordion-heading>
           Logical Operators <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[3], 'glyphicon-chevron-right': !status.open[3]}"></i>
         </accordion-heading>
         <div logical-operators></div>
       </accordion-group>
-      <accordion-group id="temporal-operators-list" class="phenotype-element-list" is-open="status.open[4]">
+      <accordion-group id="temporal-operators-list" class="operator-element-list" is-open="status.open[4]">
         <accordion-heading>
           Temporal Operators <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[4], 'glyphicon-chevron-right': !status.open[4]}"></i>
         </accordion-heading>
         <div temporal-operators></div>
       </accordion-group>
-      <accordion-group id="subset-operators-list" class="phenotype-element-list" is-open="status.open[5]">
+      <accordion-group id="subset-operators-list" class="operator-element-list" is-open="status.open[5]">
         <accordion-heading>
           Subset Operators <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[5], 'glyphicon-chevron-right': !status.open[5]}"></i>
         </accordion-heading>
         <div subset-operators></div>
       </accordion-group>
-      <accordion-group class="phenotype-element-list" is-open="status.open[6]">
+      <accordion-group id="phenotype-element-list" class="data-element-list" is-open="status.open[6]">
         <accordion-heading>
           Existing Phenotypes <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[6], 'glyphicon-chevron-right': !status.open[6]}"></i>
         </accordion-heading>

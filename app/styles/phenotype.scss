@@ -56,13 +56,12 @@
   }
 }
 
-.phenotype-element-list{
+.data-element-list, .main-element-list, .term-element-list, .operator-element-list {
   border: solid 1px black;
   border-radius: 2px;
   margin-bottom: 15px;
 
   .panel-heading {
-    background-color: $dashboard-header-background-color;
     color: white;
     padding: 3px 5px;
     text-align: center;
@@ -98,6 +97,25 @@
     }
   }
 }
+
+.data-element-list, {
+  .panel-heading {
+    background-color: $dashboard-header-background-color;
+  }
+}
+
+.term-element-list {
+  .panel-heading {
+    background-color: #609AAA;
+  }
+}
+
+.operator-element-list {
+  .panel-heading {
+    background-color: #829D43;
+  }
+}
+
 
 #relationship-properties {
   input[type='text'] {
