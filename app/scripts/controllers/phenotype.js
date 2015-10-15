@@ -20,6 +20,13 @@ angular.module('sopheAuthorApp')
       dirSelectable: false
     };
 
+    $scope.$on('onBeforeUnload', function (e, confirmation) {
+        if (_hasPhenotypeChanged()) {
+         confirmation.message = "You have some unsaved changes that may be lost.";
+          e.preventDefault();
+        }
+    });
+
     LibraryService.load()
       .then(LibraryService.processValues)
       .then(function(elements) { $scope.phenotypes = elements; });
