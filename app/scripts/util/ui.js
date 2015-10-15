@@ -477,3 +477,76 @@ function getIntersectingShape(layer, pos) {
 
   return null;
 }
+
+// Factor in the following when resizing the stage
+//  - Find the farthest control along X and Y axes.  Make sure it fits that, plus a little more and expand if not.
+//  - It should never be less than the minimum height & weight set on construction
+//  - It should expand as far as the visible area (when the window resizes), but not be smaller
+function resizeStageForEvent(stage, updatedSize, movedElement) {
+  var isChanged = false;
+  var minimumSize = { width: 800, height: 600 };
+  var mainLayer = stage.mainLayer;
+  var newSize = { width: 0, height: 0 };
+  var farthestChild = { width: 0, height: 0 };
+
+  if (updatedSize != null && updatedSize != undefined) {
+    // The new size will be set in response to a window resize
+  }
+
+  if (movedElement != null && movedElement != undefined) {
+    // If we moved an element, we need to look at all of the elements again to figure out
+    // what is now the farthest along.  The element we moved may have been moved in, and we
+    // need to shrink the canvas back down (not up).
+    var child = null;
+    var children = mainLayer.getChildren();
+    var childExtent = {};
+    for (var index = 0; index < children.length; index++) {
+      child = children[index];
+      childExtent.x = child.getX() + child.getWidth();
+      childExtent.y = child.getY() + child.getHeight();
+      if (childExtent.x > farthestChild.width) {
+        farthestChild.width = childExtent.x + 25;
+      }
+
+      if (childExtent.y > farthestChild.height) {
+        farthestChild.height = childExtent.y + 25;
+      }
+    }
+  }
+
+  // First, just figure out if there is a difference in the height or width.  Then we'll manage
+  // if we actually need to change the width or height (depending on limits).
+  if (farthestChild.width != mainLayer.getWidth()) {
+    if (farthestChild.width <= minimumSize.width) {
+      newSize.width = minimumSize.width;
+    }
+    else {
+      newSize.width = farthestChild.width;
+    }
+    isChanged = true;
+  }
+
+  if (farthestChild.height != mainLayer.getHeight()) {
+    if (farthestChild.height <= minimumSize.height) {
+      newSize.height = minimumSize.height;
+    }
+    else {
+      newSize.height = farthestChild.height;
+    }
+    isChanged = true;
+  }
+
+  if (isChanged) {
+    mainLayer.setWidth(newSize.width);
+    mainLayer.setHeight(newSize.height);
+    stage.backgroundLayer.setWidth(newSize.width);
+    stage.backgroundLayer.setHeight(newSize.height);
+    stage.backgroundLayer.children[0].setWidth(stage.getWidth());
+    stage.backgroundLayer.children[0].setHeight(stage.getHeight());
+    stage.backgroundLayer.draw();
+    stage.setWidth(newSize.width);
+    stage.setHeight(newSize.height);
+
+    stage.drawScene();
+  }
+}

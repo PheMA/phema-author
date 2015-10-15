@@ -19,7 +19,7 @@
         // Our KineticJS canvas has containing DIV elements and so we use this recursive function
         // to size everything to the same dimensions.
         var resizeElementAndChildren = function(element, width, height) {
-          var children = $(element).children();
+          var children = $(element).children().not('canvas');
           for (var index = 0; index < children.length; index++) {
             resizeElementAndChildren(children[index], width, height);
           }
@@ -41,8 +41,6 @@
           // we have to update the stage size, otherwise it will retain its original size.
           var stage = scope.canvasDetails.kineticStageObj;
           if (stage) {
-            stage.setWidth(element.windowWidth);
-            stage.setHeight(element.windowHeight);
             // We need to explicitly draw the background layer, otherwise the KineticJS internal cache
             // holds the wrong size for the shape in the layer, and mouse events won't work.
             stage.backgroundLayer.children[0].setWidth(stage.getWidth());
