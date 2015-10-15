@@ -1,11 +1,12 @@
 /* globals Kinetic */
 /* exported startConnector, endConnector, updateActiveLineLocation, getIntersectingShape,
   addElementToContainer, removeElementFromContainer, updateConnectedLines, changeConnectorEndpoints,
-  allowsDrop, findObjectInPhemaGroupType, BORDER, updateSizeOfMainRect */
+  allowsDrop, findObjectInPhemaGroupType, BORDER, updateSizeOfMainRect, resizeStageForEvent, MINIMUM_CANVAS_SIZE */
 
 'use strict';
 
 var BORDER = 20;
+var MINIMUM_CANVAS_SIZE = { width: 800, height: 600 };
 
 // Find the first descendant in 'kineticObj' with the name of 'name'.
 // If 'shallow' is set to true, it will only search immediate children
@@ -478,25 +479,38 @@ function getIntersectingShape(layer, pos) {
   return null;
 }
 
-// Factor in the following when resizing the stage
-//  - Find the farthest control along X and Y axes.  Make sure it fits that, plus a little more and expand if not.
-//  - It should never be less than the minimum height & weight set on construction
-//  - It should expand as far as the visible area (when the window resizes), but not be smaller
+// updatedSize - new dimensions, set after a resize event.  This is expected to be null
+//    when a drag and drop event is processed.
+// movedElement - the element that was moved in a drag and drop operation.  This is
+//    expected to be null when a resize event is processed.
 function resizeStageForEvent(stage, updatedSize, movedElement) {
   var isChanged = false;
-  var minimumSize = { width: 800, height: 600 };
   var mainLayer = stage.mainLayer;
   var newSize = { width: 0, height: 0 };
   var farthestChild = { width: 0, height: 0 };
 
+  // Determine absolute minimum allowed size.  It should never be less than the larger of:
+  // - minimum height & weight set on construction
+  // - current container DIV width and height
+  var viewport = stage.content;
+  var minimumSize = {
+    width: Math.max(MINIMUM_CANVAS_SIZE.width, viewport.width),
+    height: Math.max(MINIMUM_CANVAS_SIZE.height, viewport.height)
+  };
+
+  // It should expand as far as the visible area (when the window resizes), but not be smaller
   if (updatedSize != null && updatedSize != undefined) {
     // The new size will be set in response to a window resize
+    farthestChild.width = updatedSize.width;
+    farthestChild.height = updatedSize.height;
   }
 
+  // Find the farthest control along X and Y axes.  Make sure the stage fits that.
+  // If not, expand the stage to that object, plus a little more (for future growth).
+  // If we moved an element, we need to look at all of the elements again to figure out
+  // what is now the farthest along.  The element we moved may have been moved in, and we
+  // need to shrink the canvas back down (not up).
   if (movedElement != null && movedElement != undefined) {
-    // If we moved an element, we need to look at all of the elements again to figure out
-    // what is now the farthest along.  The element we moved may have been moved in, and we
-    // need to shrink the canvas back down (not up).
     var child = null;
     var children = mainLayer.getChildren();
     var childExtent = {};
@@ -525,6 +539,9 @@ function resizeStageForEvent(stage, updatedSize, movedElement) {
     }
     isChanged = true;
   }
+  else {
+    newSize.width = mainLayer.getWidth();
+  }
 
   if (farthestChild.height != mainLayer.getHeight()) {
     if (farthestChild.height <= minimumSize.height) {
@@ -534,6 +551,9 @@ function resizeStageForEvent(stage, updatedSize, movedElement) {
       newSize.height = farthestChild.height;
     }
     isChanged = true;
+  }
+  else {
+    newSize.height = mainLayer.getHeight();
   }
 
   if (isChanged) {
