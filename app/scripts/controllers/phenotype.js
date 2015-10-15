@@ -336,6 +336,19 @@ angular.module('sopheAuthorApp')
         element.type === 'SubsetOperator');
     };
 
+    function _getConnectorElementType(selectedConnection, start) {
+      if (selectedConnection == null || selectedConnection.attrs == null || selectedConnection.attrs.connectors == null) {
+        return null;
+      }
+
+      var contextItem = start ? selectedConnection.attrs.connectors.start : selectedConnection.attrs.connectors.end;
+      if (contextItem == null || contextItem.parent == null || contextItem.parent.attrs == null || contextItem.parent.attrs.element == null) {
+        return null;
+      }
+
+      return contextItem.parent.attrs.element.type;
+    }
+
     $scope.showProperties = function() {
       var selectedElement = algorithmElementFactory.getFirstSelectedItem($scope);
       if (!$scope.canShowProperties(selectedElement)) {
@@ -355,6 +368,14 @@ angular.module('sopheAuthorApp')
             },
             temporalOperators: function() {
               return $scope.temporalOperators;
+            },
+            startLabel: function() {
+              var startType = _getConnectorElementType(selectedElement, true);
+              return (startType == null || startType == 'TemporalOperator') ? "Event A" : selectedElement.attrs.connectors.start.parent.attrs.element.name;
+            },
+            endLabel: function() {
+              var endType = _getConnectorElementType(selectedElement, false);
+              return (endType == null || endType == 'TemporalOperator') ? "Event B" : selectedElement.attrs.connectors.end.parent.attrs.element.name;
             }
           }
         });
