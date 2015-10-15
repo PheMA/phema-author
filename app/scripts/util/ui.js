@@ -479,6 +479,24 @@ function getIntersectingShape(layer, pos) {
   return null;
 }
 
+function _setDimension(farthestChild, mainLayer, minimumSize) {
+  var result = { size: 0, isChanged: false };
+  if (farthestChild != mainLayer) {
+    if (farthestChild <= minimumSize) {
+      result.size = minimumSize;
+    }
+    else {
+      result.size = farthestChild;
+    }
+    result.isChanged = true;
+  }
+  else {
+    result.size = mainLayer;
+  }
+
+  return result;
+}
+
 // updatedSize - new dimensions, set after a resize event.  This is expected to be null
 //    when a drag and drop event is processed.
 // movedElement - the element that was moved in a drag and drop operation.  This is
@@ -530,31 +548,13 @@ function resizeStageForEvent(stage, updatedSize, movedElement) {
 
   // First, just figure out if there is a difference in the height or width.  Then we'll manage
   // if we actually need to change the width or height (depending on limits).
-  if (farthestChild.width != mainLayer.getWidth()) {
-    if (farthestChild.width <= minimumSize.width) {
-      newSize.width = minimumSize.width;
-    }
-    else {
-      newSize.width = farthestChild.width;
-    }
-    isChanged = true;
-  }
-  else {
-    newSize.width = mainLayer.getWidth();
-  }
+  var result = _setDimension(farthestChild.width, mainLayer.getWidth(), minimumSize.width);
+  newSize.width = result.size;
+  isChanged = isChanged || result.isChanged;
 
-  if (farthestChild.height != mainLayer.getHeight()) {
-    if (farthestChild.height <= minimumSize.height) {
-      newSize.height = minimumSize.height;
-    }
-    else {
-      newSize.height = farthestChild.height;
-    }
-    isChanged = true;
-  }
-  else {
-    newSize.height = mainLayer.getHeight();
-  }
+  result = _setDimension(farthestChild.height, mainLayer.getHeight(), minimumSize.height);
+  newSize.height = result.size;
+  isChanged = isChanged || result.isChanged;
 
   if (isChanged) {
     mainLayer.setWidth(newSize.width);
