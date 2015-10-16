@@ -20,6 +20,13 @@ angular.module('sopheAuthorApp')
       dirSelectable: false
     };
 
+    $scope.$on('onBeforeUnload', function (e, confirmation) {
+        if (_hasPhenotypeChanged()) {
+         confirmation.message = 'You have some unsaved changes that may be lost.';
+          e.preventDefault();
+        }
+    });
+
     LibraryService.load()
       .then(LibraryService.processValues)
       .then(function(elements) { $scope.phenotypes = elements; });
@@ -43,6 +50,12 @@ angular.module('sopheAuthorApp')
     SubsetOperatorService.load()
       .then(SubsetOperatorService.processValues)
       .then(function(operators) { $scope.subsetOperators = operators; });
+
+    // Update the phenotype metadata so that it is available within the phenotype definition
+    // for export.  This needs to be synced each time we update/save.
+    function _setPhenotypeData(id, name, description) {
+      $scope.canvasDetails.kineticStageObj.mainLayer.setAttr('phenotypeData', {'id':id, 'name':name, 'description':description});
+    }
 
     $scope.export = function() {
       var exporter = this;
@@ -142,10 +155,12 @@ angular.module('sopheAuthorApp')
     function _handlePhenotypeSave(result) {
       LibraryService.saveDetails(result)
         .then(function(data) {
+          _setPhenotypeData(data.id, data.name, data.description);
           $scope.successMessage = 'Your phenotype was successfully saved';
           $location.path('/phenotype/' + data.id);
           $timeout(_resetMessages, 5000); // Only timeout success
         }, function() {
+          _setPhenotypeData('', result.name, result.description);
           $scope.errorMessage = 'There was an error trying to save your phenotype definition';
         });
     }
@@ -328,6 +343,19 @@ angular.module('sopheAuthorApp')
         element.type === 'SubsetOperator');
     };
 
+    function _getConnectorElementType(selectedConnection, start) {
+      if (selectedConnection === null || selectedConnection.attrs === null || selectedConnection.attrs.connectors === null) {
+        return null;
+      }
+
+      var contextItem = start ? selectedConnection.attrs.connectors.start : selectedConnection.attrs.connectors.end;
+      if (contextItem === null || contextItem.parent === null || contextItem.parent.attrs === null || contextItem.parent.attrs.element === null) {
+        return null;
+      }
+
+      return contextItem.parent.attrs.element.type;
+    }
+
     $scope.showProperties = function() {
       var selectedElement = algorithmElementFactory.getFirstSelectedItem($scope);
       if (!$scope.canShowProperties(selectedElement)) {
@@ -347,6 +375,14 @@ angular.module('sopheAuthorApp')
             },
             temporalOperators: function() {
               return $scope.temporalOperators;
+            },
+            startLabel: function() {
+              var startType = _getConnectorElementType(selectedElement, true);
+              return (startType === null || startType === 'TemporalOperator') ? 'Event A' : selectedElement.attrs.connectors.start.parent.attrs.element.name;
+            },
+            endLabel: function() {
+              var endType = _getConnectorElementType(selectedElement, false);
+              return (endType === null || endType === 'TemporalOperator') ? 'Event B' : selectedElement.attrs.connectors.end.parent.attrs.element.name;
             }
           }
         });

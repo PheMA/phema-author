@@ -8,7 +8,9 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('RelationshipPropertiesController', ['$scope', '$modalInstance', 'TemporalOperatorService', 'element', 'temporalOperators', function ($scope, $modalInstance, TemporalOperatorService, element, temporalOperators) {
+  .controller('RelationshipPropertiesController', ['$scope', '$modalInstance', 'TemporalOperatorService', 'element', 'temporalOperators', 'startLabel', 'endLabel', function ($scope, $modalInstance, TemporalOperatorService, element, temporalOperators, startLabel, endLabel) {
+    $scope.startLabel = startLabel;
+    $scope.endLabel = endLabel;
     $scope.element = element;
     $scope.relationship = {
       relationship: {base: '', modifier: '', value: element.uri},

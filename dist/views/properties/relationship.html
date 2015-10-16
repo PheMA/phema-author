@@ -3,7 +3,7 @@
 </div>
 <div class="modal-body" id="relationship-properties">
     <div>
-        Event A
+        {{startLabel}}
         <select ng-options="item as item.label for item in relationships" ng-model="relationship.relationship.base"></select>
         <select ng-options="item as item.name for item in comparisons" ng-model="relationship.timeRange.comparison"
             ng-show="relationship.relationship.base.allowsTimeRange"></select>
@@ -19,7 +19,7 @@
         <select ng-options="item as item.label for item in relationship.relationship.base.modifiers
                 | advancedFilter:showAdvanced"
             ng-model="relationship.relationship.modifier" ng-show="relationship.relationship.base.modifiers.length > 0"></select>
-        Event B
+        {{endLabel}}
     </div>
     <div class="options" ng-show="relationship.relationship.base.modifiers.length > 0">
         <label>

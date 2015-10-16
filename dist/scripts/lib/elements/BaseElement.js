@@ -185,6 +185,8 @@ BaseElement.prototype = {
         highlightedDrop = null;
         stage.mainLayer.draw();
       }
+      
+      resizeStageForEvent(stage, null, dragItem);
     });
   },
 

@@ -6,6 +6,7 @@ angular.module('sophe', [
   'sophe.doubleClickable',
   'sophe.onlyDigits',
   'sophe.valueSetsTerms',
+  'sophe.factories.window',
   'sophe.factories.algorithmElement',
   'sophe.factories.kineticStage',
   'sophe.elements.fhir.dataElements',

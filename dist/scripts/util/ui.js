@@ -1,11 +1,12 @@
 /* globals Kinetic */
 /* exported startConnector, endConnector, updateActiveLineLocation, getIntersectingShape,
   addElementToContainer, removeElementFromContainer, updateConnectedLines, changeConnectorEndpoints,
-  allowsDrop, findObjectInPhemaGroupType, BORDER, updateSizeOfMainRect */
+  allowsDrop, findObjectInPhemaGroupType, BORDER, updateSizeOfMainRect, resizeStageForEvent, MINIMUM_CANVAS_SIZE */
 
 'use strict';
 
 var BORDER = 20;
+var MINIMUM_CANVAS_SIZE = { width: 800, height: 600 };
 
 // Find the first descendant in 'kineticObj' with the name of 'name'.
 // If 'shallow' is set to true, it will only search immediate children
@@ -476,4 +477,96 @@ function getIntersectingShape(layer, pos) {
   }
 
   return null;
+}
+
+function _setDimension(farthestChild, mainLayer, minimumSize) {
+  var result = { size: 0, isChanged: false };
+  if (farthestChild !== mainLayer) {
+    if (farthestChild <= minimumSize) {
+      result.size = minimumSize;
+    }
+    else {
+      result.size = farthestChild;
+    }
+    result.isChanged = true;
+  }
+  else {
+    result.size = mainLayer;
+  }
+
+  return result;
+}
+
+// updatedSize - new dimensions, set after a resize event.  This is expected to be null
+//    when a drag and drop event is processed.
+// movedElement - the element that was moved in a drag and drop operation.  This is
+//    expected to be null when a resize event is processed.
+function resizeStageForEvent(stage, updatedSize, movedElement) {
+  var isChanged = false;
+  var mainLayer = stage.mainLayer;
+  var newSize = { width: 0, height: 0 };
+  var farthestChild = { width: 0, height: 0 };
+
+  // Determine absolute minimum allowed size.  It should never be less than the larger of:
+  // - minimum height & weight set on construction
+  // - current container DIV width and height
+  var viewport = stage.content;
+  var minimumSize = {
+    width: Math.max(MINIMUM_CANVAS_SIZE.width, viewport.width),
+    height: Math.max(MINIMUM_CANVAS_SIZE.height, viewport.height)
+  };
+
+  // It should expand as far as the visible area (when the window resizes), but not be smaller
+  if (updatedSize !== null && updatedSize !== undefined) {
+    // The new size will be set in response to a window resize
+    farthestChild.width = updatedSize.width;
+    farthestChild.height = updatedSize.height;
+  }
+
+  // Find the farthest control along X and Y axes.  Make sure the stage fits that.
+  // If not, expand the stage to that object, plus a little more (for future growth).
+  // If we moved an element, we need to look at all of the elements again to figure out
+  // what is now the farthest along.  The element we moved may have been moved in, and we
+  // need to shrink the canvas back down (not up).
+  if (movedElement !== null && movedElement !== undefined) {
+    var child = null;
+    var children = mainLayer.getChildren();
+    var childExtent = {};
+    for (var index = 0; index < children.length; index++) {
+      child = children[index];
+      childExtent.x = child.getX() + child.getWidth();
+      childExtent.y = child.getY() + child.getHeight();
+      if (childExtent.x > farthestChild.width) {
+        farthestChild.width = childExtent.x + 25;
+      }
+
+      if (childExtent.y > farthestChild.height) {
+        farthestChild.height = childExtent.y + 25;
+      }
+    }
+  }
+
+  // First, just figure out if there is a difference in the height or width.  Then we'll manage
+  // if we actually need to change the width or height (depending on limits).
+  var result = _setDimension(farthestChild.width, mainLayer.getWidth(), minimumSize.width);
+  newSize.width = result.size;
+  isChanged = isChanged || result.isChanged;
+
+  result = _setDimension(farthestChild.height, mainLayer.getHeight(), minimumSize.height);
+  newSize.height = result.size;
+  isChanged = isChanged || result.isChanged;
+
+  if (isChanged) {
+    mainLayer.setWidth(newSize.width);
+    mainLayer.setHeight(newSize.height);
+    stage.backgroundLayer.setWidth(newSize.width);
+    stage.backgroundLayer.setHeight(newSize.height);
+    stage.backgroundLayer.children[0].setWidth(stage.getWidth());
+    stage.backgroundLayer.children[0].setHeight(stage.getHeight());
+    stage.backgroundLayer.draw();
+    stage.setWidth(newSize.width);
+    stage.setHeight(newSize.height);
+
+    stage.drawScene();
+  }
 }
