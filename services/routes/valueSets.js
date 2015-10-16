@@ -1,4 +1,4 @@
-var VALUE_SET_SERVICE_URL = 'https://umls_user:umls_pwd@informatics.mayo.edu/vsmc/cts2/'
+var VALUE_SET_SERVICE_URL = 'https://umls_user:umls_pwd@projectphema.org:8080/vsmc/cts2/'
 
 
 var request = require('request');
