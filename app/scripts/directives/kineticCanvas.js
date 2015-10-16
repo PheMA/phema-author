@@ -1,4 +1,4 @@
-/* globals $ */
+/* globals $, resizeStageForEvent */
 
 (function() {
   'use strict';

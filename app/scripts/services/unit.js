@@ -1,5 +1,7 @@
 'use strict';
 
+/* globals ArrayUtil */
+
 angular.module('sophe.services.unit', ['sophe.services.url', 'ngResource'])
 .service('UnitService', ['$http', '$q', 'URLService', function($http, $q, URLService) {
   this.load = function() {

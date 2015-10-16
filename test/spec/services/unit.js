@@ -24,8 +24,8 @@ describe('Factory: UnitService', function () {
   describe('processValues', function() {
     it('returns a sorted and formatted list', inject(function() {
       this.unitsGet.respond([
-        {code:"nm/{m}", value:"nm per meter"},
-        {code:"[arb'U]", value:"arbitrary unit"},
+        {code:'nm/{m}', value:'nm per meter'},
+        {code:'[arb\'U]', value:'arbitrary unit'},
       ]);
       var units = [];
       this.UnitService.load()

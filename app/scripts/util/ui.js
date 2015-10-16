@@ -481,7 +481,7 @@ function getIntersectingShape(layer, pos) {
 
 function _setDimension(farthestChild, mainLayer, minimumSize) {
   var result = { size: 0, isChanged: false };
-  if (farthestChild != mainLayer) {
+  if (farthestChild !== mainLayer) {
     if (farthestChild <= minimumSize) {
       result.size = minimumSize;
     }
@@ -517,7 +517,7 @@ function resizeStageForEvent(stage, updatedSize, movedElement) {
   };
 
   // It should expand as far as the visible area (when the window resizes), but not be smaller
-  if (updatedSize != null && updatedSize != undefined) {
+  if (updatedSize !== null && updatedSize !== undefined) {
     // The new size will be set in response to a window resize
     farthestChild.width = updatedSize.width;
     farthestChild.height = updatedSize.height;
@@ -528,7 +528,7 @@ function resizeStageForEvent(stage, updatedSize, movedElement) {
   // If we moved an element, we need to look at all of the elements again to figure out
   // what is now the farthest along.  The element we moved may have been moved in, and we
   // need to shrink the canvas back down (not up).
-  if (movedElement != null && movedElement != undefined) {
+  if (movedElement !== null && movedElement !== undefined) {
     var child = null;
     var children = mainLayer.getChildren();
     var childExtent = {};

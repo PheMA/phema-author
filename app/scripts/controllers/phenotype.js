@@ -22,7 +22,7 @@ angular.module('sopheAuthorApp')
 
     $scope.$on('onBeforeUnload', function (e, confirmation) {
         if (_hasPhenotypeChanged()) {
-         confirmation.message = "You have some unsaved changes that may be lost.";
+         confirmation.message = 'You have some unsaved changes that may be lost.';
           e.preventDefault();
         }
     });
@@ -54,7 +54,7 @@ angular.module('sopheAuthorApp')
     // Update the phenotype metadata so that it is available within the phenotype definition
     // for export.  This needs to be synced each time we update/save.
     function _setPhenotypeData(id, name, description) {
-      $scope.canvasDetails.kineticStageObj.mainLayer.setAttr("phenotypeData", {"id":id, "name":name, "description":description});
+      $scope.canvasDetails.kineticStageObj.mainLayer.setAttr('phenotypeData', {'id':id, 'name':name, 'description':description});
     }
 
     $scope.export = function() {
@@ -160,7 +160,7 @@ angular.module('sopheAuthorApp')
           $location.path('/phenotype/' + data.id);
           $timeout(_resetMessages, 5000); // Only timeout success
         }, function() {
-          _setPhenotypeData("", result["name"], result["description"]);
+          _setPhenotypeData('', result.name, result.description);
           $scope.errorMessage = 'There was an error trying to save your phenotype definition';
         });
     }
@@ -344,12 +344,12 @@ angular.module('sopheAuthorApp')
     };
 
     function _getConnectorElementType(selectedConnection, start) {
-      if (selectedConnection == null || selectedConnection.attrs == null || selectedConnection.attrs.connectors == null) {
+      if (selectedConnection === null || selectedConnection.attrs === null || selectedConnection.attrs.connectors === null) {
         return null;
       }
 
       var contextItem = start ? selectedConnection.attrs.connectors.start : selectedConnection.attrs.connectors.end;
-      if (contextItem == null || contextItem.parent == null || contextItem.parent.attrs == null || contextItem.parent.attrs.element == null) {
+      if (contextItem === null || contextItem.parent === null || contextItem.parent.attrs === null || contextItem.parent.attrs.element === null) {
         return null;
       }
 
@@ -378,11 +378,11 @@ angular.module('sopheAuthorApp')
             },
             startLabel: function() {
               var startType = _getConnectorElementType(selectedElement, true);
-              return (startType == null || startType == 'TemporalOperator') ? "Event A" : selectedElement.attrs.connectors.start.parent.attrs.element.name;
+              return (startType === null || startType === 'TemporalOperator') ? 'Event A' : selectedElement.attrs.connectors.start.parent.attrs.element.name;
             },
             endLabel: function() {
               var endType = _getConnectorElementType(selectedElement, false);
-              return (endType == null || endType == 'TemporalOperator') ? "Event B" : selectedElement.attrs.connectors.end.parent.attrs.element.name;
+              return (endType === null || endType === 'TemporalOperator') ? 'Event B' : selectedElement.attrs.connectors.end.parent.attrs.element.name;
             }
           }
         });
