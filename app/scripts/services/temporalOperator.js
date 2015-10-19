@@ -69,6 +69,7 @@ angular.module('sophe.services.temporalOperator', ['sophe.services.url', 'ngReso
           name: originalData[index].temporalOperatorLabel.value,
           uri: originalData[index].id.value,
           type: 'TemporalOperator',
+          description: originalData[index].definition.value,
           children: []
         };
 
@@ -77,6 +78,7 @@ angular.module('sophe.services.temporalOperator', ['sophe.services.url', 'ngReso
           existingItem.id = item.id;
           existingItem.name = item.name;
           existingItem.type = item.type;
+          existingItem.description = item.description;
           existingItem.children = item.children;
         }
         else {
