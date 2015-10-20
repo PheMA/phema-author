@@ -5,7 +5,7 @@
      filter-comparator="false"
      options="treeOptions">
      <span draggable double-clickable dblclick-event="addWorkflowObject(config)">
-      <span popover="{{node.description}}"
+      <span popover="{{node.tooltip ? node.tooltip : node.description}}"
         popover-trigger="mouseenter"
         popover-placement="right"
         popover-append-to-body="true">{{node.name}}</span>
