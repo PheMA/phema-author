@@ -60,3 +60,27 @@ app.config(function ($routeProvider) {
         $rootScope.title = current.$$route.title;
     });
 }]);*/
+
+//-------------------------------------------------------------------------
+// The code below is a workaround to allow unsafe HTML popover controls, via http://plnkr.co/edit/4QQTNp7xrNKtkmBz4KdK?p=preview
+//
+angular.module('sopheAuthorApp').filter('unsafe', ['$sce', function ($sce) {
+    return function (val) {
+        return $sce.trustAsHtml(val);
+    };
+}]);
+
+// update popover template for binding unsafe html
+angular.module('template/popover/popover.html', []).run(['$templateCache', function ($templateCache) {
+    $templateCache.put('template/popover/popover.html',
+      '<div class=\'popover {{placement}}\' ng-class=\'{ in: isOpen(), fade: animation() }\'>\n' +
+      '  <div class=\'arrow\'></div>\n' +
+      '\n' +
+      '  <div class=\'popover-inner\'>\n' +
+      '      <h3 class=\'popover-title\' ng-bind-html=\'title | unsafe\' ng-show=\'title\'></h3>\n' +
+      '      <div class=\'popover-content\'ng-bind-html=\'content | unsafe\'></div>\n' +
+      '  </div>\n' +
+      '</div>\n' +
+      '');
+}]);
+//-------------------------------------------------------------------------
