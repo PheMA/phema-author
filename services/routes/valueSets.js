@@ -1,4 +1,4 @@
-var VALUE_SET_SERVICE_URL = 'https://umls_user:umls_pwd@localhost:8080/vsmc/cts2/'
+var VALUE_SET_SERVICE_URL = 'http://umls_user:umls_pwd@localhost:8080/'
 
 
 var request = require('request');
