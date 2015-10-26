@@ -591,7 +591,7 @@ module.exports = function (grunt) {
     'concurrent:dist',
     'autoprefixer',
     'copy:nomin',
-    'cdnify',
+    //'cdnify',
     'cssmin',
     'replace:dist',  // Assumes it's being done at the end of the process
   ]);

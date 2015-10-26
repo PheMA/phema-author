@@ -1,7 +1,7 @@
 var request = require('request');
 var http = require('http');
 var QDMRepository = require('../lib/dataService/qdmRepository.js').QDMRepository;
-var repository = new QDMRepository('http://www.projectphema.org:8080/DER/rest/qdm');
+var repository = new QDMRepository('http://localhost:8080/DER/rest/qdm');
 
 exports.index = function(req, res){
   if (req.params.type === 'categories') {
