@@ -33,7 +33,10 @@ angular.module('sopheAuthorApp')
                 pollForResponse();
               }
               else if (status.status === 'completed') {
-                cancelDialog();
+                ExporterService.getEntry($scope.exportData.id)
+                .then(function(status) {
+                  cancelDialog();
+                });
               }
             }
           })

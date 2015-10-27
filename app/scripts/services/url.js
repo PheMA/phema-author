@@ -118,10 +118,10 @@ angular.module('sophe.services.url', ['sophe.config'])
       url = url + params.exporterKey;
     }
     else if (action === 'result') {
-      url = url + params.exporterId + '/result';
+      url = url + params.exportId + '/result';
     }
     else if (action === 'status') {
-      url = url + params.exporterId;
+      url = url + params.exportId;
     }
 
     return url;
