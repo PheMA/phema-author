@@ -1,7 +1,7 @@
 'use strict';
 var MONGO_CONNECTION = 'mongodb://localhost/phema-author';
 var INPUT_EXTENSION = 'json';
-var INPUT_DIRECTORY = '/Users/lvr491/Development/phema-hqmf-generator/temp/input/';
+var INPUT_DIRECTORY = '/opt/phema-hqmf-generator/temp/input/';
 
 var request = require('request');
 var exec = require('child_process').exec;
@@ -109,7 +109,7 @@ ExporterRepository.prototype.markAsError = function(id, callback) {
 
 ExporterRepository.prototype.getStatus = function(id, callback) {
   this.tempFiles.findOne({_id: mongojs.ObjectId(id)}, function (err, doc) {
-    console.log(doc);
+    console.log('Found status: ' + doc.status);
     if (err === null && doc !== null) {
       callback({id: doc._id, status: doc.status, updatedOn: doc.updatedOn});
     }
@@ -121,7 +121,7 @@ ExporterRepository.prototype.getStatus = function(id, callback) {
 
 ExporterRepository.prototype.getEntry = function(id, callback) {
   this.tempFiles.findOne({_id: mongojs.ObjectId(id)}, function (err, doc) {
-    console.log(doc);
+    console.log('Found entry');
     if (err === null && doc !== null) {
       doc.id = doc._id;
       callback(doc);
