@@ -4,6 +4,7 @@ var MONGO_CONNECTION = 'mongodb://localhost/phema-author';
 var request = require('request');
 var exec = require('child_process').exec;
 var mongojs = require('mongojs');
+var mongo = require('mongodb');
 var EchoExporter = require('./exporter/echo').EchoExporter;
 var echoExport = new EchoExporter();
 var db = mongojs(MONGO_CONNECTION, ['exporterTempFiles']);
@@ -69,8 +70,8 @@ ExporterRepository.prototype.saveDefinitionForProcessing = function(definition, 
   });
 }
 
-ExporterRepository.prototype.markAsCompleted = function(id, result, mimeType, callback) {
-  this.tempFiles.update({_id: mongojs.ObjectId(id)}, { $set: { result: result, mime_type: mimeType, status: 'completed', updatedOn: new Date() } }, {}, function (err, numReplaced) {
+ExporterRepository.prototype.markAsCompleted = function(id, result, mimeType, extension, callback) {
+  this.tempFiles.update({_id: mongojs.ObjectId(id)}, { $set: { result: new mongo.Binary(result), mime_type: mimeType, extension: extension, status: 'completed', updatedOn: new Date() } }, {}, function (err, numReplaced) {
     if (err === null) {
       callback({id: id, status: 'completed'});
     }
@@ -154,14 +155,14 @@ exports.run = function(exporterKey, definition, callback) {
           if (error) {
             repository.markAsError(data._id, function(data, error) {
               console.log('All done - error');
-              callback(null, error);
             });
+            callback(null, error);
           }
           else {
-            repository.markAsCompleted(data._id, null, null, function(data, error) {
+            repository.markAsCompleted(data._id, null, null, null, function(data, error) {
               console.log('All done - success');
-              callback(data);
             });
+            callback(data);
           }
         });
       }
@@ -169,12 +170,9 @@ exports.run = function(exporterKey, definition, callback) {
         console.log('processing as inline function');
         var exportedResult = exportDef.fn(data.definition);
         if (exportedResult) {
-          repository.markAsCompleted(data._id, exportedResult, 'application/json', function(data, error) {
+          repository.markAsCompleted(data._id, exportedResult, 'application/json', 'json', function(data, error) {
             console.log('Marked as completed - success');
-            repository.getEntry(data._id, function(entry, error) {
-              console.log('Retrieved updated entry');
-              callback(entry);
-            });
+            callback(data);
           });
         }
         else {
