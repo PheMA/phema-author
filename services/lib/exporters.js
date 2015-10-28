@@ -1,5 +1,7 @@
 'use strict';
 var MONGO_CONNECTION = 'mongodb://localhost/phema-author';
+var INPUT_EXTENSION = 'json';
+var INPUT_DIRECTORY = '/Users/lvr491/Development/phema-hqmf-generator/temp/input/';
 
 var request = require('request');
 var exec = require('child_process').exec;
@@ -8,29 +10,40 @@ var mongo = require('mongodb');
 var EchoExporter = require('./exporter/echo').EchoExporter;
 var echoExport = new EchoExporter();
 var db = mongojs(MONGO_CONNECTION, ['exporterTempFiles']);
+var fs = require('fs');
 
 var exporterConfig = [
-  // {
-  //   id: "hqmf",
-  //   name: "HQMF",
-  //   description: "HL7 Health Quality Measure Format (HQMF)",
-  //   invokeAs: 'program'
-  // },
+  {
+    id: "hqmf",
+    name: "HQMF (XML)",
+    description: "HL7 Health Quality Measure Format (HQMF)",
+    invokeAs: 'program',
+    invokePath: 'BUNDLE_GEMFILE=/opt/phema-hqmf-generator/Gemfile bundle exec rake -f /opt/phema-hqmf-generator/lib/tasks/phema.rake phema:generate[{input},{output},hqmf]',
+    inputDirectory: '/opt/phema-hqmf-generator/temp/input/',
+    outputDirectory: '/opt/phema-hqmf-generator/temp/output/',
+    outputExtension: 'xml',
+    outputMIMEType: 'application/xml'
+  },
+  {
+    id: "hds-json",
+    name: "HQMF (JSON)",
+    description: "A JSON format (based on HQMF) that is supported by the Health Data Standards library",
+    invokeAs: 'program',
+    invokePath: 'BUNDLE_GEMFILE=/opt/phema-hqmf-generator/Gemfile bundle exec rake -f /opt/phema-hqmf-generator/lib/tasks/phema.rake phema:generate[{input},{output},hds]',
+    inputDirectory: '/opt/phema-hqmf-generator/temp/input/',
+    outputDirectory: '/opt/phema-hqmf-generator/temp/output/',
+    outputExtension: 'json',
+    outputMIMEType: 'application/json'
+  },
   {
     id: "phema-json",
     name:"PhEMA (JSON)",
     description: "Native format created by the authoring tool",
     invokeAs: 'function',
-    invokeParams: '',
-    fn: echoExport.echo
+    fn: echoExport.echo,
+    outputExtension: 'json',
+    outputMIMEType: 'application/json'
   },
-  // {
-  //   id: "hds-json",
-  //   name:"Health Data Standards (JSON)",
-  //   description: "A JSON format (dervied from HQMF) that is supported by the Health Data Standards library",
-  //   invokeAs: 'program',
-  //   invokeParams: ''
-  // },
   // {
   //   id: "knime",
   //   name: "KNIME",
@@ -39,6 +52,7 @@ var exporterConfig = [
   //   invokeParams: ''
   // }
 ];
+
 
 exports.exporters = exporterConfig;
 
@@ -120,6 +134,13 @@ ExporterRepository.prototype.getEntry = function(id, callback) {
 
 exports.ExporterRepository = ExporterRepository;
 
+function establishInputFile(exportDef, definition, id, callback) {
+  var inputFile = INPUT_DIRECTORY + id + '.' + INPUT_EXTENSION;
+  fs.writeFile(inputFile, definition, 'utf8', function(err) {
+    callback(inputFile, err);
+  });
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 exports.run = function(exporterKey, definition, callback) {
@@ -148,32 +169,47 @@ exports.run = function(exporterKey, definition, callback) {
       callback(null, error);
     }
     else {
+      var callbackResult = { id: data._id, status: data.status };
+
       console.log('Started processing with temp record id: ' + data._id);
       if (exportDef.invokeAs === 'program') {
         console.log('processing as program');
-        exec('sleep 25', function (error, stdout, stderr) {
+        establishInputFile(exportDef, definition, data._id, function(input, error) {
           if (error) {
-            repository.markAsError(data._id, function(data, error) {
-              console.log('All done - error');
-            });
-            callback(null, error);
+            console.log('Failed to create input file');
+            return callback(null, error);
           }
-          else {
-            repository.markAsCompleted(data._id, null, null, null, function(data, error) {
-              console.log('All done - success');
-            });
-            callback(data);
-          }
+
+          var output = exportDef.outputDirectory + data._id + '.' + exportDef.outputExtension;
+          var command = exportDef.invokePath.replace("{input}", input).replace("{output}", output);
+          console.log('running: ' + command);
+          exec(command, function (error, stdout, stderr) {
+            if (error) {
+              console.log('stdout: ' + stdout);
+              console.log('stderr: ' + stderr);
+              repository.markAsError(data._id, function(data, error) {
+                console.log('All done - error');
+              });
+            }
+            else {
+              fs.readFile(output, 'utf8', function(error, exportData){
+                repository.markAsCompleted(data._id, exportData, exportDef.outputMIMEType, exportDef.outputExtension, function(data, error) {
+                  console.log('All done - success');
+                });
+              });
+            }
+          });
+          callback(callbackResult);
         });
       }
       else if (exportDef.invokeAs === 'function') {
         console.log('processing as inline function');
         var exportedResult = exportDef.fn(data.definition);
         if (exportedResult) {
-          repository.markAsCompleted(data._id, exportedResult, 'application/json', 'json', function(data, error) {
+          repository.markAsCompleted(data._id, exportedResult, exportDef.outputMIMEType, exportDef.outputExtension, function(data, error) {
             console.log('Marked as completed - success');
-            callback(data);
           });
+          callback(callbackResult);
         }
         else {
           repository.markAsError(data._id, function(data, error) {
