@@ -31,3 +31,18 @@ exports.status = function(req, res){
     }
   });
 };
+
+exports.result = function(req, res){
+  var status = repository.getEntry(req.params.id, function(data, error){
+    if (error) {
+      console.log(error);
+      res.status(400).send(error);
+    }
+    else {
+      res.set('Content-Type', data.mime_type);
+      res.set('Content-Length', data.result.length);
+      res.set('Content-disposition', 'attachment; filename=' + data.id + '.' + data.extension);
+      res.status(200).send(data.result.buffer);
+    }
+  });
+};

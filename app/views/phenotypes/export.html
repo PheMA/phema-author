@@ -10,8 +10,10 @@
     <div class="message">Please wait while the {{exporter.text}} export is generated...</div>
     <div class="spinner" us-spinner="{radius:10, width:4, length: 8, top: '35%', left: '50%'}">
     </div>
-    <div class="sub-title">Once the export is complete, the download will begin.</div>
     <div class="note">Depending on the size of your phenotype and the export type, this may take a minute to complete.</div>
+  </div>
+  <div class="group" ng-show="state === 'completed'">
+    <div class="message"><a href="api/export/{{exportData.id}}" ng-click="cancel()" target="_new">Click here to download your file</a></div>
   </div>
   <div class="group" ng-show="state === 'error'">
     <div class="message error">We were unable to create your export.</div>
@@ -25,5 +27,5 @@
   </div>
 </div>
 <div class="modal-footer">
-  <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+  <button class="btn btn-warning" ng-click="cancel()">Close</button>
 </div>
