@@ -33,12 +33,12 @@ angular.module('sopheAuthorApp')
                 pollForResponse();
               }
               else if (status.status === 'completed') {
-                cancelDialog();
+                $scope.state = 'completed';
               }
             }
           })
           .catch(handleError);
-        }, 5000);
+        }, 2000);
     }
 
     ExporterService.run(exporter.id, phenotype)

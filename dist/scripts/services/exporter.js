@@ -14,8 +14,20 @@ angular.module('sophe.services.exporter', ['sophe.services.url', 'ngResource'])
     return deferred.promise;
   };
 
-  this.run = function(exporterKey) {
-    return this._load(URLService.getExporterServiceURL('run', {exporterKey: exporterKey}));
+  this._post = function(url, data) {
+    var deferred = $q.defer();
+    $http.post(url, data)
+      .success(function(data) {
+        deferred.resolve(data);
+      })
+      .error(function(data, status) {
+        deferred.reject('There was an error: ' + status);
+      });
+    return deferred.promise;
+  };
+
+  this.run = function(exporterKey, phenotype) {
+    return this._post(URLService.getExporterServiceURL('run', {exporterKey: exporterKey}), {definition: phenotype});
   };
 
   this.getStatus = function(exportId) {

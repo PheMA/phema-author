@@ -46,7 +46,8 @@ app.get('/api/config', config.index);
 app.get('/api/config/exporters', config.exporters);
 
 app.post('/api/export/:exporter', exporters.invoke);
-app.get('/api/export/:id', exporters.status);
+app.get('/api/export/:id/status', exporters.status);
+app.get('/api/export/:id', exporters.result);
 
 app.get('/api/units', units.index);
 
