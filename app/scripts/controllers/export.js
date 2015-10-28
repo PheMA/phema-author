@@ -34,15 +34,11 @@ angular.module('sopheAuthorApp')
               }
               else if (status.status === 'completed') {
                 $scope.state = 'completed';
-                // ExporterService.getResult($scope.exportData.id)
-                // .then(function(result) {
-                //   cancelDialog();
-                // });
               }
             }
           })
           .catch(handleError);
-        }, 5000);
+        }, 2000);
     }
 
     ExporterService.run(exporter.id, phenotype)
