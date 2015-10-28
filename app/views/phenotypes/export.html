@@ -13,7 +13,7 @@
     <div class="note">Depending on the size of your phenotype and the export type, this may take a minute to complete.</div>
   </div>
   <div class="group" ng-show="state === 'completed'">
-    <div class="message"><a href="api/export/{{exportData.id}}" target="_new">Click here to download your file</a></div>
+    <div class="message"><a href="api/export/{{exportData.id}}" ng-click="cancel()" target="_new">Click here to download your file</a></div>
   </div>
   <div class="group" ng-show="state === 'error'">
     <div class="message error">We were unable to create your export.</div>

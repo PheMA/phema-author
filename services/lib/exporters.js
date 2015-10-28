@@ -10,12 +10,12 @@ var echoExport = new EchoExporter();
 var db = mongojs(MONGO_CONNECTION, ['exporterTempFiles']);
 
 var exporterConfig = [
-  {
-    id: "hqmf",
-    name: "HQMF",
-    description: "HL7 Health Quality Measure Format (HQMF)",
-    invokeAs: 'program'
-  },
+  // {
+  //   id: "hqmf",
+  //   name: "HQMF",
+  //   description: "HL7 Health Quality Measure Format (HQMF)",
+  //   invokeAs: 'program'
+  // },
   {
     id: "phema-json",
     name:"PhEMA (JSON)",
@@ -24,20 +24,20 @@ var exporterConfig = [
     invokeParams: '',
     fn: echoExport.echo
   },
-  {
-    id: "hds-json",
-    name:"Health Data Standards (JSON)",
-    description: "A JSON format (dervied from HQMF) that is supported by the Health Data Standards library",
-    invokeAs: 'program',
-    invokeParams: ''
-  },
-  {
-    id: "knime",
-    name: "KNIME",
-    description: "Creates an executable KNIME workflow",
-    invokeAs: 'program',
-    invokeParams: ''
-  }
+  // {
+  //   id: "hds-json",
+  //   name:"Health Data Standards (JSON)",
+  //   description: "A JSON format (dervied from HQMF) that is supported by the Health Data Standards library",
+  //   invokeAs: 'program',
+  //   invokeParams: ''
+  // },
+  // {
+  //   id: "knime",
+  //   name: "KNIME",
+  //   description: "Creates an executable KNIME workflow",
+  //   invokeAs: 'program',
+  //   invokeParams: ''
+  // }
 ];
 
 exports.exporters = exporterConfig;
