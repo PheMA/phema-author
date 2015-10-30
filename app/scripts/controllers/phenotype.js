@@ -157,6 +157,7 @@ angular.module('sopheAuthorApp')
         .then(function(data) {
           _setPhenotypeData(data.id, data.name, data.description);
           $scope.successMessage = 'Your phenotype was successfully saved';
+          $scope.checkForUnsavedChanges = false;
           $location.path('/phenotype/' + data.id);
           $timeout(_resetMessages, 5000); // Only timeout success
         }, function() {
