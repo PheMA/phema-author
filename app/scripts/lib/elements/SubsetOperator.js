@@ -31,9 +31,9 @@ SubsetOperator.prototype.calculateMinimumSize = function(group) {
 
 SubsetOperator.prototype.reconcileMinimumSize = function(group) {
   this.calculateMinimumSize(group);
-  var sizeBar = group.find('.sizer');
-  sizeBar.setX(group.width() - SUBSET_OPERATOR_SIZER_SIZE);
-  sizeBar.setY(group.height() - SUBSET_OPERATOR_SIZER_SIZE);
+  // var sizeBar = group.find('.sizer');
+  // sizeBar.setX(group.width() - SUBSET_OPERATOR_SIZER_SIZE);
+  // sizeBar.setY(group.height() - SUBSET_OPERATOR_SIZER_SIZE);
 }
 
 // Connects the appropriate QDM subset operator shapes to event handlers.
@@ -45,8 +45,8 @@ SubsetOperator.prototype.connectEvents = function(group, scope) {
   this.addConnectionHandler(group.find('.leftConnector')[0], scope);
   this.addConnectionHandler(group.find('.rightConnector')[0], scope);
   this.connectConnectorEvents(group);
-  var sizer = group.find('.sizer')[0];
-  this.addSizerEventHandlers(sizer, scope);
+  // var sizer = group.find('.sizer')[0];
+  // this.addSizerEventHandlers(sizer, scope);
 };
 
 SubsetOperator.prototype.containedElements = function(elements) {
@@ -87,12 +87,12 @@ SubsetOperator.prototype.create = function(config, scope) {
 
   this.addConnectors(scope, mainRect, group);
 
-  var sizer = new Kinetic.PhemaSizeBar({
-    stroke: 'gray', strokeWidth: 1, fill: 'gray',
-    x: mainRect.width() - SUBSET_OPERATOR_SIZER_SIZE, y: mainRect.height() - SUBSET_OPERATOR_SIZER_SIZE,
-    width: SUBSET_OPERATOR_SIZER_SIZE, height: SUBSET_OPERATOR_SIZER_SIZE, name: 'sizer'
-  });
-  group.add(sizer);
+  // var sizer = new Kinetic.PhemaSizeBar({
+  //   stroke: 'gray', strokeWidth: 1, fill: 'gray',
+  //   x: mainRect.width() - SUBSET_OPERATOR_SIZER_SIZE, y: mainRect.height() - SUBSET_OPERATOR_SIZER_SIZE,
+  //   width: SUBSET_OPERATOR_SIZER_SIZE, height: SUBSET_OPERATOR_SIZER_SIZE, name: 'sizer'
+  // });
+  // group.add(sizer);
 
   this.connectEvents(group, scope);
 
