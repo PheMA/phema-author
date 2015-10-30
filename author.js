@@ -15,7 +15,7 @@ var units = require('./services/routes/units');
 
 module.exports = app;
 
-app.use(logger());
+app.use(logger('combined'));
 app.use(express.static("" + __dirname + "/dist", {maxAge: 1}));
 
 // parse application/json
@@ -33,7 +33,7 @@ app.get('/api/library', library.index);
 app.get('/api/library/:id', library.details);
 app.post('/api/library', library.add);
 app.put('/api/library/:id', library.update);
-app.del('/api/library/:id', library.delete);
+app.delete('/api/library/:id', library.delete);
 
 app.get('/api/valueset', valueSets.index);
 app.get('/api/valueset/search=:search', valueSets.search);
