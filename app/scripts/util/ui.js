@@ -231,7 +231,7 @@ function addElementToContainer(stage, container, element) {
         element.container = group;
       }
 
-      phemaObject.layoutElementsInContainer(group);
+      phemaObject.layoutElementsInContainer(true);
       stage.draw();
     }
   }
@@ -275,7 +275,7 @@ function removeElementFromContainer(stage, element) {
     group.phemaObject().containedElements(containedElements);
     element.container = null;
     if (phemaObject.layoutElementsInContainer) {
-      phemaObject.layoutElementsInContainer(group);
+      phemaObject.layoutElementsInContainer(true);
     }
 
     if (stage) {
