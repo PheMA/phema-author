@@ -3,7 +3,7 @@
 /* globals updateSizeOfMainRect */
 
 var SubsetOperator = function() {}
-SubsetOperator.prototype = new BaseElement;
+SubsetOperator.prototype = new BaseContainer;
 
 var SUBSET_OPERATOR_SIZER_SIZE = 7;
 var SUBSET_OPERATOR_MIN_SIZE = 100;
@@ -31,42 +31,10 @@ SubsetOperator.prototype.calculateMinimumSize = function(group) {
 
 SubsetOperator.prototype.reconcileMinimumSize = function(group) {
   this.calculateMinimumSize(group);
-  var sizeBar = group.find('.sizer');
-  sizeBar.setX(group.width() - SUBSET_OPERATOR_SIZER_SIZE);
-  sizeBar.setY(group.height() - SUBSET_OPERATOR_SIZER_SIZE);
+  // var sizeBar = group.find('.sizer');
+  // sizeBar.setX(group.width() - SUBSET_OPERATOR_SIZER_SIZE);
+  // sizeBar.setY(group.height() - SUBSET_OPERATOR_SIZER_SIZE);
 }
-
-// For a container (represented by group), lay out all contained elements within the
-// main rectangle.
-SubsetOperator.prototype.layoutElementsInContainer = function() {
-  var group = this._container;
-  var header = group.getChildren(function(node) { return node.getClassName() === 'Text'; })[0];
-  var rect = group.getChildren(function(node) { return node.getClassName() === 'Rect'; })[0];
-
-  if (this._containedElements.length === 0) {
-    updateSizeOfMainRect(rect, group, 200, 200);
-    header.setWidth(rect.getWidth());
-    this.reconcileMinimumSize(group);
-    return;
-  }
-
-  var currentX = BORDER;
-  var currentY = header.getHeight() + BORDER;
-  var maxHeight = 0;
-  var element = null;
-  for (var index = 0; index < this._containedElements.length; index ++) {
-    element = this._containedElements[index];
-    element.moveTo(group);
-    element.setX(currentX);
-    element.setY(currentY);
-    currentX = currentX + element.getWidth() + BORDER;
-    maxHeight = Math.max(maxHeight, currentY + element.getHeight() + BORDER);
-  }
-
-  updateSizeOfMainRect(rect, group, currentX, maxHeight);
-  header.setWidth(rect.getWidth());
-  this.reconcileMinimumSize(group);
-};
 
 // Connects the appropriate QDM subset operator shapes to event handlers.
 // Used when constructing a new element, or when loading from a definition.
@@ -77,8 +45,8 @@ SubsetOperator.prototype.connectEvents = function(group, scope) {
   this.addConnectionHandler(group.find('.leftConnector')[0], scope);
   this.addConnectionHandler(group.find('.rightConnector')[0], scope);
   this.connectConnectorEvents(group);
-  var sizer = group.find('.sizer')[0];
-  this.addSizerEventHandlers(sizer, scope);
+  // var sizer = group.find('.sizer')[0];
+  // this.addSizerEventHandlers(sizer, scope);
 };
 
 SubsetOperator.prototype.containedElements = function(elements) {
@@ -119,12 +87,12 @@ SubsetOperator.prototype.create = function(config, scope) {
 
   this.addConnectors(scope, mainRect, group);
 
-  var sizer = new Kinetic.PhemaSizeBar({
-    stroke: 'gray', strokeWidth: 1, fill: 'gray',
-    x: mainRect.width() - SUBSET_OPERATOR_SIZER_SIZE, y: mainRect.height() - SUBSET_OPERATOR_SIZER_SIZE,
-    width: SUBSET_OPERATOR_SIZER_SIZE, height: SUBSET_OPERATOR_SIZER_SIZE, name: 'sizer'
-  });
-  group.add(sizer);
+  // var sizer = new Kinetic.PhemaSizeBar({
+  //   stroke: 'gray', strokeWidth: 1, fill: 'gray',
+  //   x: mainRect.width() - SUBSET_OPERATOR_SIZER_SIZE, y: mainRect.height() - SUBSET_OPERATOR_SIZER_SIZE,
+  //   width: SUBSET_OPERATOR_SIZER_SIZE, height: SUBSET_OPERATOR_SIZER_SIZE, name: 'sizer'
+  // });
+  // group.add(sizer);
 
   this.connectEvents(group, scope);
 
