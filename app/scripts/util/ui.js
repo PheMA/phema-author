@@ -110,7 +110,7 @@ function findParentElementByName(parent, elementName) {
 
 // Update a connector line so that it is drawn between a start position and an
 // end position.
-function changeConnectorEndpoints(stage, line, startPos, endPos) {
+function changeConnectorEndpoints(line, startPos, endPos) {
   var x = endPos.x;
   var y = endPos.y;
   line.points([0, 0, x - startPos.x, y - startPos.y]);
@@ -136,7 +136,7 @@ function changeConnectorEndpoints(stage, line, startPos, endPos) {
   );
 }
 
-function updateConnectedLines(connector, stage) {
+function updateConnectedLines(connector) {
   var i = 0;
   var connections = connector.connections();
   for (i = connections.length - 1; i >= 0; i--) {
@@ -153,7 +153,8 @@ function updateConnectedLines(connector, stage) {
       x: lineConnectors.end.getAbsolutePosition().x - lineConnectors.start.getAbsolutePosition().x,
       y: lineConnectors.end.getAbsolutePosition().y - lineConnectors.start.getAbsolutePosition().y,
     };
-    changeConnectorEndpoints(stage, line, startPos, endPos);
+    changeConnectorEndpoints(line, startPos, endPos);
+    line.moveToTop();
     var label = line.label();
     if (label !== null && typeof(label) !== 'undefined') {
       label.x(lineConnectors.start.getAbsolutePosition().x);
@@ -162,6 +163,7 @@ function updateConnectedLines(connector, stage) {
       var slope = (endPos.y - startPos.y) / (endPos.x - startPos.x);
       label.rotation(Math.atan(slope));
       line.label(label);
+      label.moveToTop();
     }
   }
 }
@@ -243,7 +245,9 @@ function addElementToContainer(stage, container, element) {
         _addElementToOperator(connectedElements[counter], phemaObject);
       }
 
-      phemaObject.layoutElementsInContainer(true);
+      if (phemaObject.layoutElementsInContainer) {
+        phemaObject.layoutElementsInContainer(true);
+      }
       stage.draw();
     }
   }
@@ -375,7 +379,7 @@ function updateActiveLineLocation(stage, evt) {
   if (stage.connector.status === 'drawing') {
     var startPos = {x: stage.connector.line.getX(), y: stage.connector.line.getY()};
     var endPos = {x: evt.evt.layerX, y: evt.evt.layerY};
-    changeConnectorEndpoints(stage, stage.connector.line, startPos, endPos);
+    changeConnectorEndpoints(stage.connector.line, startPos, endPos);
     stage.drawScene();
   }
 }

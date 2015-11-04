@@ -36,6 +36,9 @@ BaseContainer.prototype.layoutElementsInContainer = function(vertical) {
       currentX = currentX + element.getWidth() + BORDER;
       maxHeight = Math.max(maxHeight, currentY + element.getHeight() + BORDER);
     }
+
+    updateConnectedLines(findParentElementByName(element, 'rightConnector'), null);
+    updateConnectedLines(findParentElementByName(element, 'leftConnector'), null);
   }
 
   var newWidth = 0;

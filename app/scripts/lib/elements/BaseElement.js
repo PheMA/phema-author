@@ -200,7 +200,7 @@ BaseElement.prototype = {
       }
     });
 
-    dragItem.on('dragend',function(){
+    dragItem.on('dragend',function(evt){
       dragItem.moveTo(stage.mainLayer); // Must do this before remove element
       removeElementFromContainer(stage, dragItem);  // Clear from a container, if it was in one before
       document.body.style.cursor = 'default';
@@ -214,6 +214,7 @@ BaseElement.prototype = {
       }
       
       resizeStageForEvent(stage, null, dragItem);
+      evt.cancelBubble = true;
     });
   },
 
