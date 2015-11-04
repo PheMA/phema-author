@@ -25,12 +25,6 @@ function _getConnectedElements(element, connectorName, elements) {
       var connectors = connections[counter].connectors();
       _addConnectorToListIfNotElement(connectors.start, element, elements);
       _addConnectorToListIfNotElement(connectors.end, element, elements);
-      // if (connectors.start && connectors.start.parent !== this) {
-      //   elements.push(connectors.start.parent);
-      // }
-      // else if (connectors.end && connectors.end.parent !== this) {
-      //   elements.push(connectors.end.parent);
-      // }
     }
   }
 }
@@ -376,23 +370,6 @@ BaseElement.prototype = {
     var elements = new Array;
     _getConnectedElements(this._container, 'rightConnector', elements);
     _getConnectedElements(this._container, 'leftConnector', elements);
-    // var connector = findParentElementByName(this._container, 'rightConnector');
-    // if (connector !== null) {
-    //   var counter = 0;
-    //   var connections = connector.connections();
-    //   for (counter = 0; counter < connections.length; counter++) {
-    //     var connectors = connections[counter].connectors();
-    //     _addConnectorToListIfNotElement(connectors.start, this._container, elements);
-    //     _addConnectorToListIfNotElement(connectors.end, this._container, elements);
-    //     // if (connectors.start && connectors.start.parent !== this) {
-    //     //   elements.push(connectors.start.parent);
-    //     // }
-    //     // else if (connectors.end && connectors.end.parent !== this) {
-    //     //   elements.push(connectors.end.parent);
-    //     // }
-    //   }
-    // }
-
     return elements;
   }
 };
