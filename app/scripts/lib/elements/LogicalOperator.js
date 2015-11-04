@@ -81,7 +81,7 @@ LogicalOperator.prototype.create = function(config, scope) {
   var headerOptions = {
     x: options.x, y: options.y,
     width: options.width, // Leave out height so it auto-sizes
-    fontFamily: 'Calibri', fontSize: 14, fill: 'black',
+    fontFamily: 'Calibri', fontSize: 16, fill: 'black', fontStyle: 'bold',
     text: config.element.name, name: 'header',
     align: 'center', padding: 5
   };
