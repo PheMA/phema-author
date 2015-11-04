@@ -205,9 +205,9 @@ function _replaceTemporalElement(isEventA, containerParent, container, element, 
 function addElementToContainer(stage, container, element) {
   var group = (container.nodeType === 'Group' ? container : container.parent);
   if (group) {
-    var elementDefinition = group.element();
+    var groupDefinition = group.element();
     var phemaObject = group.phemaObject();
-    if (elementDefinition.type === 'TemporalOperator') {
+    if (groupDefinition.type === 'TemporalOperator') {
       // Replace container with element
       var containerParent = container.getParent();
       if (container === containerParent.find('.eventA')[0]) {
@@ -217,12 +217,12 @@ function addElementToContainer(stage, container, element) {
         _replaceTemporalElement(false, containerParent, container, element, stage);
       }
     }
-    else if (elementDefinition.type === 'DataElement' || elementDefinition.type === 'Category') {
+    else if (groupDefinition.type === 'DataElement' || groupDefinition.type === 'Category') {
       phemaObject.valueSet(element);
       element.container = group;
       stage.draw();
     }
-    else if (elementDefinition.type === 'LogicalOperator' || elementDefinition.type === 'SubsetOperator') {
+    else if (groupDefinition.type === 'LogicalOperator' || groupDefinition.type === 'SubsetOperator') {
       // Add the item (if it's not already in the array)
       var containedElements = phemaObject.containedElements();
       if (containedElements.indexOf(element) === -1) {
@@ -230,6 +230,8 @@ function addElementToContainer(stage, container, element) {
         phemaObject.containedElements(containedElements);
         element.container = group;
       }
+
+      var connectedElements = element.phemaObject().getConnectedElements();
 
       phemaObject.layoutElementsInContainer(true);
       stage.draw();

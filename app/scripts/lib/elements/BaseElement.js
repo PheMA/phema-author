@@ -2,6 +2,39 @@
 
 var BaseElement = function() {};
 
+
+// Helper function used by BaseElement.getConnectedElements
+// For a Connector object, determine if it's parent is the element
+// parameter.  If not, add it to the list.
+function _addConnectorToListIfNotElement(connector, element, list) {
+  if (connector && connector.parent !== element) {
+    list.push(connector.parent);
+  }
+}
+
+// Helper function used by BaseElement.getConnectedElements
+// For an element, look at all connected items for the connector
+// identified by connectorName.  Add all connected elements to the
+// elements array.
+function _getConnectedElements(element, connectorName, elements) {
+  var connector = findParentElementByName(element, connectorName);
+  if (connector !== null) {
+    var counter = 0;
+    var connections = connector.connections();
+    for (counter = 0; counter < connections.length; counter++) {
+      var connectors = connections[counter].connectors();
+      _addConnectorToListIfNotElement(connectors.start, element, elements);
+      _addConnectorToListIfNotElement(connectors.end, element, elements);
+      // if (connectors.start && connectors.start.parent !== this) {
+      //   elements.push(connectors.start.parent);
+      // }
+      // else if (connectors.end && connectors.end.parent !== this) {
+      //   elements.push(connectors.end.parent);
+      // }
+    }
+  }
+}
+
 BaseElement.prototype = {
   _init: function() {
   },
@@ -336,5 +369,30 @@ BaseElement.prototype = {
     }
 
     return false;
+  },
+
+  // Identify all elements that are directly connected to this element
+  getConnectedElements: function() {
+    var elements = new Array;
+    _getConnectedElements(this._container, 'rightConnector', elements);
+    _getConnectedElements(this._container, 'leftConnector', elements);
+    // var connector = findParentElementByName(this._container, 'rightConnector');
+    // if (connector !== null) {
+    //   var counter = 0;
+    //   var connections = connector.connections();
+    //   for (counter = 0; counter < connections.length; counter++) {
+    //     var connectors = connections[counter].connectors();
+    //     _addConnectorToListIfNotElement(connectors.start, this._container, elements);
+    //     _addConnectorToListIfNotElement(connectors.end, this._container, elements);
+    //     // if (connectors.start && connectors.start.parent !== this) {
+    //     //   elements.push(connectors.start.parent);
+    //     // }
+    //     // else if (connectors.end && connectors.end.parent !== this) {
+    //     //   elements.push(connectors.end.parent);
+    //     // }
+    //   }
+    // }
+
+    return elements;
   }
 };
