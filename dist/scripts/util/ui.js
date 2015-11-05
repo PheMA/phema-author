@@ -110,7 +110,7 @@ function findParentElementByName(parent, elementName) {
 
 // Update a connector line so that it is drawn between a start position and an
 // end position.
-function changeConnectorEndpoints(stage, line, startPos, endPos) {
+function changeConnectorEndpoints(line, startPos, endPos) {
   var x = endPos.x;
   var y = endPos.y;
   line.points([0, 0, x - startPos.x, y - startPos.y]);
@@ -136,7 +136,11 @@ function changeConnectorEndpoints(stage, line, startPos, endPos) {
   );
 }
 
-function updateConnectedLines(connector, stage) {
+function updateConnectedLines(connector) {
+  if (connector === null || connector === undefined) {
+    return;
+  }
+
   var i = 0;
   var connections = connector.connections();
   for (i = connections.length - 1; i >= 0; i--) {
@@ -153,7 +157,8 @@ function updateConnectedLines(connector, stage) {
       x: lineConnectors.end.getAbsolutePosition().x - lineConnectors.start.getAbsolutePosition().x,
       y: lineConnectors.end.getAbsolutePosition().y - lineConnectors.start.getAbsolutePosition().y,
     };
-    changeConnectorEndpoints(stage, line, startPos, endPos);
+    changeConnectorEndpoints(line, startPos, endPos);
+    line.moveToTop();
     var label = line.label();
     if (label !== null && typeof(label) !== 'undefined') {
       label.x(lineConnectors.start.getAbsolutePosition().x);
@@ -162,6 +167,7 @@ function updateConnectedLines(connector, stage) {
       var slope = (endPos.y - startPos.y) / (endPos.x - startPos.x);
       label.rotation(Math.atan(slope));
       line.label(label);
+      label.moveToTop();
     }
   }
 }
@@ -201,13 +207,22 @@ function _replaceTemporalElement(isEventA, containerParent, container, element, 
   updateConnectedLines(connector, stage);
 }
 
+function _addElementToOperator(element, operatorObject) {
+  var containedElements = operatorObject.containedElements();
+  if (containedElements.indexOf(element) === -1) {
+    containedElements.push(element);
+    operatorObject.containedElements(containedElements);
+    element.container = operatorObject._container;
+  }
+}
+
 // Given a droppable container, handle adding the element to that container
 function addElementToContainer(stage, container, element) {
   var group = (container.nodeType === 'Group' ? container : container.parent);
   if (group) {
-    var elementDefinition = group.element();
+    var groupDefinition = group.element();
     var phemaObject = group.phemaObject();
-    if (elementDefinition.type === 'TemporalOperator') {
+    if (groupDefinition.type === 'TemporalOperator') {
       // Replace container with element
       var containerParent = container.getParent();
       if (container === containerParent.find('.eventA')[0]) {
@@ -217,21 +232,26 @@ function addElementToContainer(stage, container, element) {
         _replaceTemporalElement(false, containerParent, container, element, stage);
       }
     }
-    else if (elementDefinition.type === 'DataElement' || elementDefinition.type === 'Category') {
+    else if (groupDefinition.type === 'DataElement' || groupDefinition.type === 'Category') {
       phemaObject.valueSet(element);
       element.container = group;
       stage.draw();
     }
-    else if (elementDefinition.type === 'LogicalOperator' || elementDefinition.type === 'SubsetOperator') {
+    else if (groupDefinition.type === 'LogicalOperator' || groupDefinition.type === 'SubsetOperator') {
       // Add the item (if it's not already in the array)
-      var containedElements = phemaObject.containedElements();
-      if (containedElements.indexOf(element) === -1) {
-        containedElements.push(element);
-        phemaObject.containedElements(containedElements);
-        element.container = group;
+      _addElementToOperator(element, phemaObject);
+
+      // If we have connected (via a temporal operator) to other elements, we need to bring those
+      // into our group too.
+      var counter = 0;
+      var connectedElements = element.phemaObject().getConnectedElements(true);
+      for (counter = 0; counter < connectedElements.length; counter++) {
+        _addElementToOperator(connectedElements[counter], phemaObject);
       }
 
-      phemaObject.layoutElementsInContainer(true);
+      if (phemaObject.layoutElementsInContainer) {
+        phemaObject.layoutElementsInContainer(true);
+      }
       stage.draw();
     }
   }
@@ -260,20 +280,38 @@ function allowsDrop(dragElement, dropElement) {
   return false;
 }
 
+// Utility function to perform the actual removal of an element from a group, ensuring it exists
+// and clearing out all appropriate object references.
+function _removeElementFromContainer(group, containedElements, element) {
+  var foundIndex = containedElements.indexOf(element);
+  if (foundIndex < 0) {
+    console.error('Unable to find element to remove from container');
+    return;
+  }
+  containedElements.splice(foundIndex, 1);
+  group.phemaObject().containedElements(containedElements);
+  element.container = null;
+}
 
+// Remove an element (passed as a parameter) from whichever container it is currently a member
+// of.  If there are associated elements that also need to be removed (such as with temporally
+// related items), move those as well.
 function removeElementFromContainer(stage, element) {
   if (element && element.container) {
     var group = (element.container.nodeType === 'Group' ? element.container : element.container.parent);
     var phemaObject = group.phemaObject();
     var containedElements = phemaObject.containedElements();
-    var foundIndex = containedElements.indexOf(element);
-    if (foundIndex < 0) {
-      console.error('Unable to find element to remove from container');
-      return;
+    _removeElementFromContainer(group, containedElements, element);
+
+    // If we have connected (via a temporal operator) to other elements, we need to bring those
+    // into our group too.
+    var counter = 0;
+    var connectedElements = element.phemaObject().getConnectedElements(true);
+    for (counter = 0; counter < connectedElements.length; counter++) {
+      connectedElements[counter].moveTo(element.parent);
+      _removeElementFromContainer(group, containedElements, connectedElements[counter]);
     }
-    containedElements.splice(foundIndex, 1);
-    group.phemaObject().containedElements(containedElements);
-    element.container = null;
+
     if (phemaObject.layoutElementsInContainer) {
       phemaObject.layoutElementsInContainer(true);
     }
@@ -346,7 +384,7 @@ function updateActiveLineLocation(stage, evt) {
   if (stage.connector.status === 'drawing') {
     var startPos = {x: stage.connector.line.getX(), y: stage.connector.line.getY()};
     var endPos = {x: evt.evt.layerX, y: evt.evt.layerY};
-    changeConnectorEndpoints(stage, stage.connector.line, startPos, endPos);
+    changeConnectorEndpoints(stage.connector.line, startPos, endPos);
     stage.drawScene();
   }
 }

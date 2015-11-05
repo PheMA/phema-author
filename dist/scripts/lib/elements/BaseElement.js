@@ -2,6 +2,46 @@
 
 var BaseElement = function() {};
 
+
+// Helper function used by BaseElement.getConnectedElements
+// For a Connector object, determine if it's parent is the element
+// parameter.  If not, add it to the list.
+function _addConnectorToListIfNotElement(connector, element, list) {
+  if (connector && connector.parent !== element) {
+    list.push(connector.parent);
+  }
+}
+
+// Helper function used by BaseElement.getConnectedElements
+// For an element, look at all connected items for the connector
+// identified by connectorName.  Add all connected elements to the
+// elements array.
+function _getConnectedElements(element, connectorName, elements, includeLabels) {
+  var connector = findParentElementByName(element, connectorName);
+  if (connector !== null) {
+    var counter = 0;
+    var connections = connector.connections();
+    for (counter = 0; counter < connections.length; counter++) {
+      var connectors = connections[counter].connectors();
+      _addConnectorToListIfNotElement(connectors.start, element, elements);
+      _addConnectorToListIfNotElement(connectors.end, element, elements);
+
+      if (includeLabels) {
+        elements.push(connections[counter]);
+        elements.push(connections[counter].label());
+      }
+    }
+  }
+}
+
+// Helper function that returns true/false if an element has anything
+// connected to its connector identified by connectorName
+function _hasConnectedElements(element, connectorName) {
+  var elements = new Array;
+  _getConnectedElements(element, connectorName, elements);
+  return elements !== null && elements.length > 0;
+}
+
 BaseElement.prototype = {
   _init: function() {
   },
@@ -173,7 +213,7 @@ BaseElement.prototype = {
       }
     });
 
-    dragItem.on('dragend',function(){
+    dragItem.on('dragend',function(evt){
       dragItem.moveTo(stage.mainLayer); // Must do this before remove element
       removeElementFromContainer(stage, dragItem);  // Clear from a container, if it was in one before
       document.body.style.cursor = 'default';
@@ -187,6 +227,7 @@ BaseElement.prototype = {
       }
       
       resizeStageForEvent(stage, null, dragItem);
+      evt.cancelBubble = true;
     });
   },
 
@@ -336,5 +377,24 @@ BaseElement.prototype = {
     }
 
     return false;
+  },
+
+  // Return true/false if we have any elements connected to our left
+  hasLeftConnectedElements: function() {
+    return _hasConnectedElements(this._container, 'leftConnector');
+  },
+
+  // Return true/false if we have any elements connected to our right
+  hasRightConnectedElements: function() {
+    return _hasConnectedElements(this._container, 'rightConnector');
+  },
+
+  // Identify all elements that are directly connected to this element
+  // on either connector (left or right)
+  getConnectedElements: function(includeLabels) {
+    var elements = new Array;
+    _getConnectedElements(this._container, 'rightConnector', elements, includeLabels);
+    _getConnectedElements(this._container, 'leftConnector', elements, includeLabels);
+    return elements;
   }
 };
