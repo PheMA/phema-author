@@ -161,8 +161,14 @@ function updateConnectedLines(connector) {
     line.moveToTop();
     var label = line.label();
     if (label !== null && typeof(label) !== 'undefined') {
-      label.x(lineConnectors.start.getAbsolutePosition().x);
-      label.y(lineConnectors.start.getAbsolutePosition().y + 5);
+      if (lineConnectors.start.parent.parent.nodeType === 'Layer') {
+        label.x(lineConnectors.start.getAbsolutePosition().x);
+        label.y(lineConnectors.start.getAbsolutePosition().y + 5);
+      }
+      else {
+        label.x(lineConnectors.start.getPosition().x);
+        label.y(lineConnectors.start.getPosition().y);
+      }
       label.width(endPos.x - startPos.x);
       var slope = (endPos.y - startPos.y) / (endPos.x - startPos.x);
       label.rotation(Math.atan(slope));
@@ -314,6 +320,16 @@ function removeElementFromContainer(stage, element) {
 
     if (phemaObject.layoutElementsInContainer) {
       phemaObject.layoutElementsInContainer(true);
+    }
+
+    // Because the layout algorithm doesn't update connected lines for things that have been removed,
+    // we will add a separate processing loop here to update our lines accordingly.
+    for (counter = 0; counter < connectedElements.length; counter ++) {
+      var item = connectedElements[counter];
+      if (item.className !== 'PhemaConnection' && item.className !== 'Text') {
+        updateConnectedLines(findParentElementByName(item, 'rightConnector'), null);
+        updateConnectedLines(findParentElementByName(item, 'leftConnector'), null);
+      }
     }
 
     if (stage) {

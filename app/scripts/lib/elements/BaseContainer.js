@@ -44,11 +44,18 @@ BaseContainer.prototype.layoutElementsInContainer = function(vertical) {
         }
         maxHeight = Math.max(maxHeight, currentY + element.getHeight() + BORDER);
       }
+    }
+  }
 
+  // After all of the elements have been moved, loop through again to refresh connected lines
+  for (var index = 0; index < this._containedElements.length; index ++) {
+    element = this._containedElements[index];
+    if (element.className !== 'PhemaConnection' && element.className !== 'Text') {
       updateConnectedLines(findParentElementByName(element, 'rightConnector'), null);
       updateConnectedLines(findParentElementByName(element, 'leftConnector'), null);
     }
   }
+
 
   var newWidth = 0;
   var newHeight = 0;
