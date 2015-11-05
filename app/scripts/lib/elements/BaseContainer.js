@@ -1,5 +1,7 @@
 'use strict';
 
+var BUFFER_FOR_CONNECTED_ITEMS = 50;
+
 var BaseContainer = function() {};
 BaseContainer.prototype = new BaseElement;
 
@@ -7,6 +9,7 @@ BaseContainer.prototype = new BaseElement;
 // main rectangle.  By default this will be horizontally, but if the vertical parameter
 // is set to true, it will render vertically.
 BaseContainer.prototype.layoutElementsInContainer = function(vertical) {
+  vertical = false;
   var group = this._container;
   var header = group.getChildren(function(node) { return node.getClassName() === 'Text'; })[0];
   var rect = group.getChildren(function(node) { return node.getClassName() === 'Rect'; })[0];
@@ -26,17 +29,33 @@ BaseContainer.prototype.layoutElementsInContainer = function(vertical) {
   for (var index = 0; index < this._containedElements.length; index ++) {
     element = this._containedElements[index];
     element.moveTo(group);
-    element.setX(currentX);
-    element.setY(currentY);
-    if (vertical) {
-      currentY = currentY + element.getHeight() + BORDER;
-      maxWidth = Math.max(maxWidth, currentX + element.getWidth() + BORDER);
-    }
-    else {
-      currentX = currentX + element.getWidth() + BORDER;
-      maxHeight = Math.max(maxHeight, currentY + element.getHeight() + BORDER);
+
+    if (element.className !== 'PhemaConnection' && element.className !== 'Text') {
+      element.setX(currentX);
+      element.setY(currentY);
+      if (vertical) {
+        currentY = currentY + element.getHeight() + BORDER;
+        maxWidth = Math.max(maxWidth, currentX + element.getWidth() + BORDER);
+      }
+      else {
+        currentX = currentX + element.getWidth() + BORDER;
+        if (element.phemaObject && element.phemaObject().hasRightConnectedElements()) {
+          currentX = currentX + BUFFER_FOR_CONNECTED_ITEMS;
+        }
+        maxHeight = Math.max(maxHeight, currentY + element.getHeight() + BORDER);
+      }
     }
   }
+
+  // After all of the elements have been moved, loop through again to refresh connected lines
+  for (var index = 0; index < this._containedElements.length; index ++) {
+    element = this._containedElements[index];
+    if (element.className !== 'PhemaConnection' && element.className !== 'Text') {
+      updateConnectedLines(findParentElementByName(element, 'rightConnector'), null);
+      updateConnectedLines(findParentElementByName(element, 'leftConnector'), null);
+    }
+  }
+
 
   var newWidth = 0;
   var newHeight = 0;
