@@ -161,6 +161,9 @@ function updateConnectedLines(connector) {
     line.moveToTop();
     var label = line.label();
     if (label !== null && typeof(label) !== 'undefined') {
+      // When the connected elements are in the main layer, we need to use absolute position to
+      // determine position.  Otherwise, we can use the parent's relative position.  I won't lie,
+      // I haven't figured out why we need to do this yet.
       if (lineConnectors.start.parent.parent.nodeType === 'Layer') {
         label.x(lineConnectors.start.getAbsolutePosition().x);
         label.y(lineConnectors.start.getAbsolutePosition().y + 5);
@@ -171,7 +174,7 @@ function updateConnectedLines(connector) {
       }
       label.width(endPos.x - startPos.x);
       var slope = (endPos.y - startPos.y) / (endPos.x - startPos.x);
-      label.rotation(Math.atan(slope));
+      label.setRotationDeg(Math.atan(slope) * (180 / Math.PI));   // atan gives us radians, so we convert to degrees
       line.label(label);
       label.moveToTop();
     }
