@@ -16,7 +16,7 @@ function _addConnectorToListIfNotElement(connector, element, list) {
 // For an element, look at all connected items for the connector
 // identified by connectorName.  Add all connected elements to the
 // elements array.
-function _getConnectedElements(element, connectorName, elements) {
+function _getConnectedElements(element, connectorName, elements, includeLabels) {
   var connector = findParentElementByName(element, connectorName);
   if (connector !== null) {
     var counter = 0;
@@ -25,6 +25,11 @@ function _getConnectedElements(element, connectorName, elements) {
       var connectors = connections[counter].connectors();
       _addConnectorToListIfNotElement(connectors.start, element, elements);
       _addConnectorToListIfNotElement(connectors.end, element, elements);
+
+      if (includeLabels) {
+        elements.push(connections[counter]);
+        elements.push(connections[counter].label());
+      }
     }
   }
 }
@@ -386,10 +391,10 @@ BaseElement.prototype = {
 
   // Identify all elements that are directly connected to this element
   // on either connector (left or right)
-  getConnectedElements: function() {
+  getConnectedElements: function(includeLabels) {
     var elements = new Array;
-    _getConnectedElements(this._container, 'rightConnector', elements);
-    _getConnectedElements(this._container, 'leftConnector', elements);
+    _getConnectedElements(this._container, 'rightConnector', elements, includeLabels);
+    _getConnectedElements(this._container, 'leftConnector', elements, includeLabels);
     return elements;
   }
 };

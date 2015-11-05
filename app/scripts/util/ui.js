@@ -244,7 +244,7 @@ function addElementToContainer(stage, container, element) {
       // If we have connected (via a temporal operator) to other elements, we need to bring those
       // into our group too.
       var counter = 0;
-      var connectedElements = element.phemaObject().getConnectedElements();
+      var connectedElements = element.phemaObject().getConnectedElements(true);
       for (counter = 0; counter < connectedElements.length; counter++) {
         _addElementToOperator(connectedElements[counter], phemaObject);
       }
@@ -306,8 +306,9 @@ function removeElementFromContainer(stage, element) {
     // If we have connected (via a temporal operator) to other elements, we need to bring those
     // into our group too.
     var counter = 0;
-    var connectedElements = element.phemaObject().getConnectedElements();
+    var connectedElements = element.phemaObject().getConnectedElements(true);
     for (counter = 0; counter < connectedElements.length; counter++) {
+      connectedElements[counter].moveTo(element.parent);
       _removeElementFromContainer(group, containedElements, connectedElements[counter]);
     }
 

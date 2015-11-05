@@ -29,22 +29,25 @@ BaseContainer.prototype.layoutElementsInContainer = function(vertical) {
   for (var index = 0; index < this._containedElements.length; index ++) {
     element = this._containedElements[index];
     element.moveTo(group);
-    element.setX(currentX);
-    element.setY(currentY);
-    if (vertical) {
-      currentY = currentY + element.getHeight() + BORDER;
-      maxWidth = Math.max(maxWidth, currentX + element.getWidth() + BORDER);
-    }
-    else {
-      currentX = currentX + element.getWidth() + BORDER;
-      if (element.phemaObject().hasRightConnectedElements()) {
-        currentX = currentX + BUFFER_FOR_CONNECTED_ITEMS;
-      }
-      maxHeight = Math.max(maxHeight, currentY + element.getHeight() + BORDER);
-    }
 
-    updateConnectedLines(findParentElementByName(element, 'rightConnector'), null);
-    updateConnectedLines(findParentElementByName(element, 'leftConnector'), null);
+    if (element.className !== 'PhemaConnection' && element.className !== 'Text') {
+      element.setX(currentX);
+      element.setY(currentY);
+      if (vertical) {
+        currentY = currentY + element.getHeight() + BORDER;
+        maxWidth = Math.max(maxWidth, currentX + element.getWidth() + BORDER);
+      }
+      else {
+        currentX = currentX + element.getWidth() + BORDER;
+        if (element.phemaObject && element.phemaObject().hasRightConnectedElements()) {
+          currentX = currentX + BUFFER_FOR_CONNECTED_ITEMS;
+        }
+        maxHeight = Math.max(maxHeight, currentY + element.getHeight() + BORDER);
+      }
+
+      updateConnectedLines(findParentElementByName(element, 'rightConnector'), null);
+      updateConnectedLines(findParentElementByName(element, 'leftConnector'), null);
+    }
   }
 
   var newWidth = 0;
