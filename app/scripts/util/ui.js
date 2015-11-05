@@ -137,6 +137,10 @@ function changeConnectorEndpoints(line, startPos, endPos) {
 }
 
 function updateConnectedLines(connector) {
+  if (connector === null || connector === undefined) {
+    return;
+  }
+
   var i = 0;
   var connections = connector.connections();
   for (i = connections.length - 1; i >= 0; i--) {

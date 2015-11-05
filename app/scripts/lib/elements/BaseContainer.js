@@ -1,5 +1,7 @@
 'use strict';
 
+var BUFFER_FOR_CONNECTED_ITEMS = 50;
+
 var BaseContainer = function() {};
 BaseContainer.prototype = new BaseElement;
 
@@ -7,6 +9,7 @@ BaseContainer.prototype = new BaseElement;
 // main rectangle.  By default this will be horizontally, but if the vertical parameter
 // is set to true, it will render vertically.
 BaseContainer.prototype.layoutElementsInContainer = function(vertical) {
+  vertical = false;
   var group = this._container;
   var header = group.getChildren(function(node) { return node.getClassName() === 'Text'; })[0];
   var rect = group.getChildren(function(node) { return node.getClassName() === 'Rect'; })[0];
@@ -34,6 +37,9 @@ BaseContainer.prototype.layoutElementsInContainer = function(vertical) {
     }
     else {
       currentX = currentX + element.getWidth() + BORDER;
+      if (element.phemaObject().hasRightConnectedElements()) {
+        currentX = currentX + BUFFER_FOR_CONNECTED_ITEMS;
+      }
       maxHeight = Math.max(maxHeight, currentY + element.getHeight() + BORDER);
     }
 

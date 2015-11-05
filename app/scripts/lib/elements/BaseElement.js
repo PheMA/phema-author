@@ -29,6 +29,14 @@ function _getConnectedElements(element, connectorName, elements) {
   }
 }
 
+// Helper function that returns true/false if an element has anything
+// connected to its connector identified by connectorName
+function _hasConnectedElements(element, connectorName) {
+  var elements = new Array;
+  _getConnectedElements(element, connectorName, elements);
+  return elements !== null && elements.length > 0;
+}
+
 BaseElement.prototype = {
   _init: function() {
   },
@@ -366,7 +374,18 @@ BaseElement.prototype = {
     return false;
   },
 
+  // Return true/false if we have any elements connected to our left
+  hasLeftConnectedElements: function() {
+    return _hasConnectedElements(this._container, 'leftConnector');
+  },
+
+  // Return true/false if we have any elements connected to our right
+  hasRightConnectedElements: function() {
+    return _hasConnectedElements(this._container, 'rightConnector');
+  },
+
   // Identify all elements that are directly connected to this element
+  // on either connector (left or right)
   getConnectedElements: function() {
     var elements = new Array;
     _getConnectedElements(this._container, 'rightConnector', elements);
