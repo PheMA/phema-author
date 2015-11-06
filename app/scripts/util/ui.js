@@ -302,6 +302,13 @@ function _removeElementFromContainer(group, containedElements, element) {
   element.container = null;
 }
 
+function _updateElementConnections(element) {
+  if (element && element.className !== 'PhemaConnection' && element.className !== 'Text') {
+    updateConnectedLines(findParentElementByName(element, 'rightConnector'), null);
+    updateConnectedLines(findParentElementByName(element, 'leftConnector'), null);
+  }
+}
+
 // Remove an element (passed as a parameter) from whichever container it is currently a member
 // of.  If there are associated elements that also need to be removed (such as with temporally
 // related items), move those as well.
@@ -328,12 +335,9 @@ function removeElementFromContainer(stage, element) {
     // Because the layout algorithm doesn't update connected lines for things that have been removed,
     // we will add a separate processing loop here to update our lines accordingly.
     for (counter = 0; counter < connectedElements.length; counter ++) {
-      var item = connectedElements[counter];
-      if (item.className !== 'PhemaConnection' && item.className !== 'Text') {
-        updateConnectedLines(findParentElementByName(item, 'rightConnector'), null);
-        updateConnectedLines(findParentElementByName(item, 'leftConnector'), null);
-      }
+      _updateElementConnections(connectedElements[counter]);
     }
+    _updateElementConnections(element);
 
     if (stage) {
       stage.mainLayer.draw();
