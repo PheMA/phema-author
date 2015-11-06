@@ -270,7 +270,7 @@ function addElementToContainer(stage, container, element) {
       }
 
       if (phemaObject.layoutElementsInContainer) {
-        phemaObject.layoutElementsInContainer(true);
+        phemaObject.layoutElementsInContainer();
       }
       stage.draw();
     }
@@ -333,7 +333,7 @@ function removeElementFromContainer(stage, element) {
     }
 
     if (phemaObject.layoutElementsInContainer) {
-      phemaObject.layoutElementsInContainer(true);
+      phemaObject.layoutElementsInContainer();
     }
 
     // Because the layout algorithm doesn't update connected lines for things that have been removed,
