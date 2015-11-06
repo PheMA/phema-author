@@ -140,25 +140,14 @@ function changeConnectorEndpoints(line, startPos, endPos) {
 function _setLabelLocationGivenConnections(lineConnectors, line) {
   var label = line.label();
   if (label !== null && typeof(label) !== 'undefined') {
-    var startPos = {x: line.getPoints()[0], y: line.getPoints()[1]};
-    var endPos = {
-      x: lineConnectors.end.getAbsolutePosition().x - lineConnectors.start.getAbsolutePosition().x,
-      y: lineConnectors.end.getAbsolutePosition().y - lineConnectors.start.getAbsolutePosition().y,
-    };
+    var linePos = line.getPosition();
+    var linePoints = line.getPoints();
 
-    // When the connected elements are in the main layer, we need to use absolute position to
-    // determine position.  Otherwise, we can use the parent's relative position.  I won't lie,
-    // I haven't figured out why we need to do this yet.
-    if (lineConnectors.start.parent.parent.nodeType === 'Layer') {
-      label.x(lineConnectors.start.getAbsolutePosition().x);
-      label.y(lineConnectors.start.getAbsolutePosition().y + 5);
-    }
-    else {
-      label.x(lineConnectors.start.getPosition().x);
-      label.y(lineConnectors.start.getPosition().y);
-    }
-    label.width(endPos.x - startPos.x);
-    var slope = (endPos.y - startPos.y) / (endPos.x - startPos.x);
+    label.x(linePos.x);
+    label.y(linePos.y + 5);
+    label.width(linePoints[2]);
+
+    var slope = (linePoints[3] - linePoints[1]) / (linePoints[2] - linePoints[0]);
     label.setRotationDeg(Math.atan(slope) * (180 / Math.PI));   // atan gives us radians, so we convert to degrees
     line.label(label);
     label.moveToTop();

@@ -82,28 +82,6 @@ BaseContainer.prototype.layoutElementsInContainer = function(vertical) {
   dimensions.maxWidth = Math.max(dimensions.maxWidth, dimensions.currentX);
   dimensions.maxHeight = Math.max(dimensions.maxHeight, dimensions.currentY);
 
-  // for (var index = 0; index < this._containedElements.length; index ++) {
-  //   element = this._containedElements[index];
-  //   element.moveTo(group);
-
-  //   if (element.className !== 'PhemaConnection' && element.className !== 'Text') {
-  //     element.setX(currentX);
-  //     element.setY(currentY);
-  //     if (vertical) {
-  //       currentY = currentY + element.getHeight() + BORDER;
-  //       maxWidth = Math.max(maxWidth, currentX + element.getWidth() + BORDER);
-  //     }
-  //     else {
-  //       currentX = currentX + element.getWidth() + BORDER;
-  //       if (element.phemaObject && element.phemaObject().hasRightConnectedElements()) {
-  //         currentX = currentX + BUFFER_FOR_CONNECTED_ITEMS;
-  //       }
-  //       maxHeight = Math.max(maxHeight, currentY + element.getHeight() + BORDER);
-  //     }
-  //   }
-  // }
-
-
 
   // After all of the elements have been moved, loop through again to refresh connected lines
   for (var index = 0; index < this._containedElements.length; index ++) {
@@ -114,17 +92,10 @@ BaseContainer.prototype.layoutElementsInContainer = function(vertical) {
     }
   }
 
-
   var newWidth = 0;
   var newHeight = 0;
-  //if (vertical) {
-    newWidth = dimensions.maxWidth;
-  //  newHeight = dimensions.currentY;
-  //}
-  //else {
-  //  newWidth = dimensions.currentX;
-    newHeight = dimensions.maxHeight;
-  //}
+  newWidth = dimensions.maxWidth;
+  newHeight = dimensions.maxHeight;
 
   updateSizeOfMainRect(rect, group, newWidth, newHeight);
   header.setWidth(rect.getWidth());
