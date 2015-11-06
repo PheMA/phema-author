@@ -136,6 +136,24 @@ function changeConnectorEndpoints(line, startPos, endPos) {
   );
 }
 
+// Given connections for a line, calculate and set the position of the label.
+function _setLabelLocationGivenConnections(lineConnectors, line) {
+  var label = line.label();
+  if (label !== null && typeof(label) !== 'undefined') {
+    var linePos = line.getPosition();
+    var linePoints = line.getPoints();
+
+    label.x(linePos.x);
+    label.y(linePos.y + 5);
+    label.width(linePoints[2]);
+
+    var slope = (linePoints[3] - linePoints[1]) / (linePoints[2] - linePoints[0]);
+    label.setRotationDeg(Math.atan(slope) * (180 / Math.PI));   // atan gives us radians, so we convert to degrees
+    line.label(label);
+    label.moveToTop();
+  }
+}
+
 function updateConnectedLines(connector) {
   if (connector === null || connector === undefined) {
     return;
@@ -159,16 +177,7 @@ function updateConnectedLines(connector) {
     };
     changeConnectorEndpoints(line, startPos, endPos);
     line.moveToTop();
-    var label = line.label();
-    if (label !== null && typeof(label) !== 'undefined') {
-      label.x(lineConnectors.start.getAbsolutePosition().x);
-      label.y(lineConnectors.start.getAbsolutePosition().y + 5);
-      label.width(endPos.x - startPos.x);
-      var slope = (endPos.y - startPos.y) / (endPos.x - startPos.x);
-      label.rotation(Math.atan(slope));
-      line.label(label);
-      label.moveToTop();
-    }
+    _setLabelLocationGivenConnections(lineConnectors, line);
   }
 }
 
@@ -250,7 +259,7 @@ function addElementToContainer(stage, container, element) {
       }
 
       if (phemaObject.layoutElementsInContainer) {
-        phemaObject.layoutElementsInContainer(true);
+        phemaObject.layoutElementsInContainer();
       }
       stage.draw();
     }
@@ -293,6 +302,13 @@ function _removeElementFromContainer(group, containedElements, element) {
   element.container = null;
 }
 
+function _updateElementConnections(element) {
+  if (element && element.className !== 'PhemaConnection' && element.className !== 'Text') {
+    updateConnectedLines(findParentElementByName(element, 'rightConnector'), null);
+    updateConnectedLines(findParentElementByName(element, 'leftConnector'), null);
+  }
+}
+
 // Remove an element (passed as a parameter) from whichever container it is currently a member
 // of.  If there are associated elements that also need to be removed (such as with temporally
 // related items), move those as well.
@@ -313,8 +329,15 @@ function removeElementFromContainer(stage, element) {
     }
 
     if (phemaObject.layoutElementsInContainer) {
-      phemaObject.layoutElementsInContainer(true);
+      phemaObject.layoutElementsInContainer();
     }
+
+    // Because the layout algorithm doesn't update connected lines for things that have been removed,
+    // we will add a separate processing loop here to update our lines accordingly.
+    for (counter = 0; counter < connectedElements.length; counter ++) {
+      _updateElementConnections(connectedElements[counter]);
+    }
+    _updateElementConnections(element);
 
     if (stage) {
       stage.mainLayer.draw();
@@ -450,6 +473,8 @@ function endConnector(stage, connectorObj, scope, suppressCreateEvent) {
       stage.mainLayer.add(labelObj);
       line.label(labelObj);
       line.element({name: labelTextOptions.text, uri: '', type: 'TemporalOperator'});
+
+      _setLabelLocationGivenConnections(lineConnectors, line);
 
       var mouseUpHandler = function() {
         clearSelections(stage);
