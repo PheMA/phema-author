@@ -1,6 +1,6 @@
 'use strict';
 /* globals Kinetic, DataElement, GenericElement, LogicalOperator, TemporalOperator, ValueSet, Term, SubsetOperator,
-getIntersectingShape, allowsDrop, addElementToContainer, removeElementFromContainer */
+getIntersectingShape, allowsDrop, addElementToContainer, removeElementFromContainer, resizeStageForEvent */
 
 angular.module('sophe.factories.algorithmElement', [])
   .factory('algorithmElementFactory', function() {
@@ -208,7 +208,8 @@ angular.module('sophe.factories.algorithmElement', [])
       stage.mainLayer.setZIndex(2);
       stage.tempLayer.setZIndex(3);
 
-      stage.mainLayer.get('Group').each(function(group) {
+      var groups = stage.mainLayer.get('Group');
+      groups.each(function(group) {
         var element = group.element();
         if (element.type === 'TemporalOperator') {
           var temporalOperator = new TemporalOperator();
@@ -239,6 +240,12 @@ angular.module('sophe.factories.algorithmElement', [])
           genericElement.load(group, scope);
         }
       });
+
+      // If there are any items in the canvas, make the stage resize to accommodate
+      // them.
+      if (groups.length > 0) {
+        resizeStageForEvent(stage, null, groups[0]);
+      }
     };
 
     factory.deleteSelectedObjects = function(scope) {
