@@ -39,6 +39,10 @@ BaseContainer.prototype.layoutElementsInContainer = function(vertical) {
   var header = group.getChildren(function(node) { return node.getClassName() === 'Text'; })[0];
   var rect = group.getChildren(function(node) { return node.getClassName() === 'Rect'; })[0];
 
+  if (!header || !rect) {
+    return;
+  }
+
   if (this._containedElements.length === 0) {
     updateSizeOfMainRect(rect, group, 200, 200);
     header.setWidth(rect.getWidth());
@@ -67,7 +71,7 @@ BaseContainer.prototype.layoutElementsInContainer = function(vertical) {
 
   var dimensions = {
     currentX: BORDER,
-    currentY: header.getHeight() + BORDER,
+    currentY: (header ? header.getHeight() + BORDER : BORDER),
     maxHeight: 0,
     maxWidth: 0,
   };
@@ -98,6 +102,8 @@ BaseContainer.prototype.layoutElementsInContainer = function(vertical) {
   newHeight = dimensions.maxHeight;
 
   updateSizeOfMainRect(rect, group, newWidth, newHeight);
-  header.setWidth(rect.getWidth());
+  if (header && rect) {
+    header.setWidth(rect.getWidth());
+  }
   this.reconcileMinimumSize(group);
 };

@@ -68,6 +68,10 @@ function setConnectorLocation(rect, group, connectorName, x, y) {
 }
 
 function updateSizeOfMainRect(rect, group, width, height) {
+  if (!rect || !group) {
+    return;
+  }
+
   rect.setWidth(width);
   rect.setHeight(height);
   group.setWidth(width);
@@ -98,13 +102,14 @@ function findObjectInPhemaGroupType(objectName, container, allowedTypes) {
 
 function findParentElementByName(parent, elementName) {
   var elements = Kinetic.names[elementName];
-  var length = elements.length;
-  for (var index = 0; index < length; index++) {
-    if (elements[index].getParent() === parent) {
-      return elements[index];
+  if (elements) {
+    var length = elements.length;
+    for (var index = 0; index < length; index++) {
+      if (elements[index].getParent() === parent) {
+        return elements[index];
+      }
     }
   }
-
   return null;
 }
 
