@@ -327,7 +327,8 @@ BaseElement.prototype = {
       var newConnections = [];
       for (var refIndex = 0; refIndex < connectionRefs.length; refIndex++) {
         for (var index = 0; index < connections.length; index++) {
-          if (connections[index]._id === connectionRefs[refIndex].id) {
+          if (connections[index]._id === connectionRefs[refIndex]._id
+            || connections[index]._id === connectionRefs[refIndex].id) {
             newConnections.push(connections[index]);
 
             // We have a bi-directional reference between connectors and connections, so we
