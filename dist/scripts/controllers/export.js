@@ -35,6 +35,9 @@ angular.module('sopheAuthorApp')
               else if (status.status === 'completed') {
                 $scope.state = 'completed';
               }
+              else if (status.state === 'error') {
+                handleError();
+              }
             }
           })
           .catch(handleError);
