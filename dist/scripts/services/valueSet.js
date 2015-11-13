@@ -30,6 +30,77 @@
 //             CTS2: uri
 //         type:
 //             'Term'
+//
+// NOTE: The VSMC service that wraps the VSAC is based on an older version of the
+//   CTS2 framework than the cts2-vsd-service (which serves custom value sets).
+//   Because there are differences in the JSON across these versions of the CTS2
+//   framework, we need to process the results differently.  There are utility
+//   functions that live outside the service which provide common processing
+//   logic.  Within the service calls, it detects the version of the CTS2 framework
+//   and prepares results to be processed.
+
+
+function _processValueList(originalData) {
+  var valueSets = [];
+  var transformedData = [];
+  for (var index = 0; index < originalData.length; index++) {
+    if (originalData[index].currentDefinition) {
+      transformedData.push({
+        id: originalData[index].currentDefinition.valueSet.content,
+        name: originalData[index].formalName,
+        uri: originalData[index].currentDefinition.valueSetDefinition.uri,
+        type: 'ValueSet',
+        loadDetailStatus: null,
+        description: null,
+        codeSystems: [],
+        members: []} );
+    }
+  }
+  valueSets = transformedData.sort(ArrayUtil.sortByName);
+  return valueSets;
+}
+
+function _processSingleValue(originalData) {
+  var valueSet = null;
+  valueSet = {
+    id: originalData.definedValueSet.content,
+    name: originalData.formalName,
+    uri: originalData.documentURI,
+    type: 'ValueSet',
+    loadDetailStatus: null,
+    description: null,
+    codeSystems: [],
+    members: []
+  };
+  return valueSet;
+}
+
+function _processCodeSystemDetails(resolutionInfo) {
+  var codeSystems = [];
+  if (resolutionInfo && resolutionInfo.resolvedUsingCodeSystemList) {
+    var codeSystemList = resolutionInfo.resolvedUsingCodeSystemList;
+    for (var codeIndex = 0; codeIndex < codeSystemList.length; codeIndex++) {
+      codeSystems.push(codeSystemList[codeIndex].codeSystem.content);
+    }
+  }
+  return codeSystems;
+}
+
+function _processMemberDetails(originalData) {
+  var members = [];
+  if (originalData) {
+    for (var index = 0; index < originalData.length; index++) {
+      members.push({
+        codeset: originalData[index].namespace,
+        code: originalData[index].name,
+        name: originalData[index].designation,
+        uri: originalData[index].uri,
+        type: 'Term'} );
+    }
+  }
+  return members;
+}
+
 
 angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
 .service('ValueSetService', ['$http', '$q', 'URLService', function($http, $q, URLService) {
@@ -83,63 +154,39 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
 
   this.processValues = function(data) {
     var valueSets = [];
-    if (data && data.valueSetCatalogEntryDirectory && data.valueSetCatalogEntryDirectory.entryList) {
-      var transformedData = [];
-      var originalData = data.valueSetCatalogEntryDirectory.entryList;
-      for (var index = 0; index < originalData.length; index++) {
-        transformedData.push({
-          id: originalData[index].currentDefinition.valueSet.content,
-          name: originalData[index].formalName,
-          uri: originalData[index].currentDefinition.valueSetDefinition.uri,
-          type: 'ValueSet',
-          loadDetailStatus: null,
-          description: null,
-          codeSystems: [],
-          members: []} );
+    if (data) {
+      if (data.valueSetCatalogEntryDirectory && data.valueSetCatalogEntryDirectory.entryList) {
+        valueSets = _processValueList(data.valueSetCatalogEntryDirectory.entryList);
       }
-      valueSets = transformedData.sort(ArrayUtil.sortByName);
+      else if (data.ValueSetCatalogEntryDirectory && data.ValueSetCatalogEntryDirectory.entry) {
+        valueSets = _processValueList(data.ValueSetCatalogEntryDirectory.entry);
+      }
     }
     return valueSets;
   };
 
   this.processSingleValue = function(data) {
     var valueSet = null;
-    if (data && data.valueSetDefinitionMsg && data.valueSetDefinitionMsg.valueSetDefinition) {
-      var originalData = data.valueSetDefinitionMsg.valueSetDefinition;
-      valueSet = {
-        id: originalData.definedValueSet.content,
-        name: originalData.formalName,
-        uri: originalData.documentURI,
-        type: 'ValueSet',
-        loadDetailStatus: null,
-        description: null,
-        codeSystems: [],
-        members: []
-      };
+    if (data) {
+      if (data.valueSetDefinitionMsg && data.valueSetDefinitionMsg.valueSetDefinition) {
+        valueSet = _processSingleValue(data.valueSetDefinitionMsg.valueSetDefinition);
+      }
+      else if (data.ValueSetDefinitionMsg && data.ValueSetDefinitionMsg.valueSetDefinition) {
+        valueSet = _processSingleValue(data.ValueSetDefinitionMsg.valueSetDefinition);
+      }
     }
-    return valueSet;
   };
 
   this.processDetails = function(data) {
     var details = { codeSystems: [], members: [] };
-    if (data && data.iteratableResolvedValueSet) {
-      if (data.iteratableResolvedValueSet.resolutionInfo && data.iteratableResolvedValueSet.resolutionInfo.resolvedUsingCodeSystemList) {
-        var codeSystemList = data.iteratableResolvedValueSet.resolutionInfo.resolvedUsingCodeSystemList;
-        for (var codeIndex = 0; codeIndex < codeSystemList.length; codeIndex++) {
-          details.codeSystems.push(codeSystemList[codeIndex].codeSystem.content);
-        }
+    if (data) {
+      if (data.iteratableResolvedValueSet) {
+        details.codeSystems = _processCodeSystemDetails(data.iteratableResolvedValueSet.resolutionInfo);
+        details.members = _processMemberDetails(data.iteratableResolvedValueSet.entryList);
       }
-
-      if (data.iteratableResolvedValueSet.entryList) {
-        var originalData = data.iteratableResolvedValueSet.entryList;
-        for (var index = 0; index < originalData.length; index++) {
-          details.members.push({
-            codeset: originalData[index].namespace,
-            code: originalData[index].name,
-            name: originalData[index].designation,
-            uri: originalData[index].uri,
-            type: 'Term'} );
-        }
+      else if (data.IteratableResolvedValueSet) {
+        details.codeSystems = _processCodeSystemDetails(data.IteratableResolvedValueSet.resolutionInfo);
+        details.members = _processMemberDetails(data.IteratableResolvedValueSet.entry);
       }
     }
     return details;
