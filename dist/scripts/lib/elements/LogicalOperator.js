@@ -128,7 +128,9 @@ LogicalOperator.prototype.load = function(group, scope) {
   // associate our contained elements (if they were defined);
   this.associateReferences(group, scope);
   if (this._containedElements) {
-    var groups = scope.canvasDetails.kineticStageObj.mainLayer.find('Group');
+    var groups = scope.canvasDetails.kineticStageObj.mainLayer.find('Group').toArray().concat(
+      scope.canvasDetails.kineticStageObj.mainLayer.find('PhemaConnection').toArray()).concat(
+      scope.canvasDetails.kineticStageObj.mainLayer.find('Text').toArray());
     var groupIndex;
     for (var index = 0; index < this._containedElements.length; index++) {
       var element = this._containedElements[index];
@@ -136,6 +138,7 @@ LogicalOperator.prototype.load = function(group, scope) {
         for (var groupIndex = 0; groupIndex < groups.length; groupIndex++) {
           if (groups[groupIndex]._id === element.id) {
             this._containedElements[index] = groups[groupIndex];
+            groups[groupIndex].container = group;
             break;
           }
         }
