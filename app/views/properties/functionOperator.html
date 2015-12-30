@@ -1,0 +1,16 @@
+<div class="modal-header">
+  <h3 class="modal-title">Define the function</h3>
+</div>
+<div class="modal-body" id="function-operator-properties">
+  <select ng-options="item as item.name for item in functionOperators" ng-model="functionOperator"></select>
+  <span style="padding-left: 10px;">{{functionOperator.description}}</span>
+  <ul>
+    <li ng-repeat="item in containedElements">
+      {{item.element().name}}
+    </li>
+  </ul>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="ok()">OK</button>
+  <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

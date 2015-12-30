@@ -8,13 +8,13 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('FunctionPropertiesController', ['$scope', '$modalInstance', 'FunctionService', 'element', 'containedElements', 'functions', function ($scope, $modalInstance, FunctionService, element, containedElements, functions) {
-    $scope.functions = functions;
-    $scope.selectedFunction = ArrayUtil.findInArray($scope.functions, 'name', element.name);
+  .controller('FunctionOperatorPropertiesController', ['$scope', '$modalInstance', 'FunctionOperatorService', 'element', 'containedElements', 'functionOperators', function ($scope, $modalInstance, FunctionOperatorService, element, containedElements, functionOperators) {
+    $scope.functionOperators = functionOperators;
+    $scope.functionOperator = ArrayUtil.findInArray($scope.functionOperators, 'name', element.name);
     $scope.containedElements = containedElements;
 
     $scope.ok = function () {
-      $modalInstance.close($scope.selectedFunction);
+      $modalInstance.close($scope.functionOperator);
     };
 
     $scope.cancel = function () {
