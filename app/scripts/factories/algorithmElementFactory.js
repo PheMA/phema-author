@@ -1,5 +1,5 @@
 'use strict';
-/* globals Kinetic, DataElement, GenericElement, LogicalOperator, TemporalOperator, ValueSet, Term, SubsetOperator,
+/* globals Kinetic, DataElement, GenericElement, LogicalOperator, TemporalOperator, ValueSet, Term, SubsetOperator, Function
 getIntersectingShape, allowsDrop, addElementToContainer, removeElementFromContainer, resizeStageForEvent */
 
 angular.module('sophe.factories.algorithmElement', [])
@@ -24,6 +24,12 @@ angular.module('sophe.factories.algorithmElement', [])
 
     function createQDMSubsetOperator(config, scope) {
       var element = new SubsetOperator();
+      element.create(config, scope);
+      return element.container();
+    }
+
+    function createQDMFunctionOperator(config, scope) {
+      var element = new FunctionOperator();
       element.create(config, scope);
       return element.container();
     }
@@ -141,6 +147,9 @@ angular.module('sophe.factories.algorithmElement', [])
       else if (config.element.type === 'SubsetOperator') {
         workflowObject = createQDMSubsetOperator(config, scope);
       }
+      else if (config.element.type === 'FunctionOperator') {
+        workflowObject = createQDMFunctionOperator(config, scope);
+      }
       else if (config.element.type === 'Phenotype') {
         workflowObject = createGenericElement(config, scope);
       }
@@ -226,6 +235,10 @@ angular.module('sophe.factories.algorithmElement', [])
         else if (element.type === 'SubsetOperator') {
           var subsetOperator = new SubsetOperator();
           subsetOperator.load(group, scope);
+        }
+        else if (element.type === 'FunctionOperator') {
+          var functionOperator = new FunctionOperator();
+          functionOperator.load(group, scope);
         }
         else if (element.type === 'Phenotype') {
           var phenotype = new GenericElement();
