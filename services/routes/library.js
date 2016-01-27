@@ -43,7 +43,9 @@ exports.add = function(req, res) {
     name: req.body.name,
     description: req.body.description,
     definition: req.body.definition,
+    phekb: req.body.phekb
   };
+  
 
   repository.addItem(item, function(error, data) {
     if (error) {
@@ -83,6 +85,17 @@ exports.update = function(req, res) {
 
 exports.delete = function(req, res) {
   repository.deleteItem(req.params.id, function(error, data) {
+    if (error) {
+      res.status(400).send(error);
+    }
+    else {
+      res.set('Content-Type', 'application/json');
+      res.status(200).send(data);
+    }
+  });
+};
+exports.repositories = function(req, res) {
+  repository.repositories(function(error, data) {
     if (error) {
       res.status(400).send(error);
     }

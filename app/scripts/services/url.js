@@ -3,9 +3,10 @@
 angular.module('sophe.services.url', ['sophe.config'])
 .service('URLService', ['environment', 'dataServiceBaseUrl', 'fhirServiceBaseUrl', 'libraryBaseUrl', 'valueSetServiceBaseUrl', 'codeSystemServiceBaseUrl', 'configServiceBaseUrl', 'exporterServiceBaseUrl', 'unitServiceBaseUrl',
     function(environment, dataServiceBaseUrl, fhirServiceBaseUrl, libraryBaseUrl, valueSetServiceBaseUrl, codeSystemServiceBaseUrl, configServiceBaseUrl, exporterServiceBaseUrl, unitServiceBaseUrl) {
-
+  // Todo -- set environment variable 
   this.getDataServiceURL = function(resource) {
-    if (environment === 'local' || environment.substring(0, 2) === '@@') {
+    
+    if (true || environment === 'local' || environment.substring(0, 2) === '@@') {
       // For our local setup, we sometimes stub things in.  This isn't code we plan to
       // use in production, so it's okay if it's a little messy.
       if (/attributes/.test(resource)) {
@@ -19,7 +20,7 @@ angular.module('sophe.services.url', ['sophe.config'])
   };
 
   this.getFHIRServiceURL = function(resource) {
-    if (environment === 'local' || environment.substring(0, 2) === '@@') {
+    if (true || environment === 'local' || environment.substring(0, 2) === '@@') {
       // For our local setup, we sometimes stub things in.  This isn't code we plan to
       // use in production, so it's okay if it's a little messy.
       if (/attributes/.test(resource)) {
@@ -29,11 +30,12 @@ angular.module('sophe.services.url', ['sophe.config'])
     }
 
     var url = fhirServiceBaseUrl + resource;
-    return url;
+    return url 
   };
 
   this.getLibraryURL = function(details) {
-    if (environment === 'local' || environment.substring(0, 2) === '@@') {
+    
+    /*if (false && environment === 'local' || environment.substring(0, 2) === '@@') {
       if (details) {
         return 'data/phenotype.json';
       }
@@ -41,8 +43,10 @@ angular.module('sophe.services.url', ['sophe.config'])
         return 'data/phenotypes.json';
       }
     }
+    */
 
-    var url = libraryBaseUrl;
+    var url = "api/library/";//libraryBaseUrl;
+    console.log(url);
     if (details) {
       url = url + ':id';
     }
@@ -50,7 +54,7 @@ angular.module('sophe.services.url', ['sophe.config'])
   };
 
   this.getValueSetServiceURL = function(action, params) {
-    if (environment === 'local' || environment.substring(0, 2) === '@@') {
+    if (true || environment === 'local' || environment.substring(0, 2) === '@@') {
       if (action === 'single') {
         return 'data/valueSet.json';
       }
@@ -77,7 +81,7 @@ angular.module('sophe.services.url', ['sophe.config'])
   };
 
   this.getCodeSystemServiceURL = function(codeSystem, version, search) {
-    if (environment === 'local' || environment.substring(0, 2) === '@@') {
+    if (true || environment === 'local' || environment.substring(0, 2) === '@@') {
       return 'data/codeSystem-search.json';
     }
 
@@ -86,7 +90,7 @@ angular.module('sophe.services.url', ['sophe.config'])
   };
 
   this.getConfigServiceURL = function(attribute) {
-    if (environment === 'local' || environment.substring(0, 2) === '@@') {
+    if (true || environment === 'local' || environment.substring(0, 2) === '@@') {
       if (attribute === 'exporters') {
         return 'data/config-exporters.json';
       }
@@ -101,7 +105,7 @@ angular.module('sophe.services.url', ['sophe.config'])
   };
 
   this.getExporterServiceURL = function(action, params) {
-    if (environment === 'local' || environment.substring(0, 2) === '@@') {
+    if (true || environment === 'local' || environment.substring(0, 2) === '@@') {
       if (action === 'run') {
         return 'data/exporter-run.json';
       }
@@ -128,7 +132,7 @@ angular.module('sophe.services.url', ['sophe.config'])
   };
   
   this.getUnitServiceURL = function() {
-    if (environment === 'local' || environment.substring(0, 2) === '@@') {
+    if (true || environment === 'local' || environment.substring(0, 2) === '@@') {
       return 'data/units.json';
     }
 

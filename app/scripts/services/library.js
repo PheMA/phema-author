@@ -13,6 +13,16 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
     });
     return deferred.promise;
   };
+  this.repositories = function() {
+    var deferred = $q.defer();
+    $resource(URLService.getLibraryURL() + 'repositories').get(function(data) {
+      deferred.resolve(data);
+    }, function(data, status) {
+      deferred.reject('There was an error: ' + status);
+    });
+    return deferred.promise;
+  };
+
 
   function _formatLastModified(item) {
     return (item.modified ? item.modified : (item.created ? item.created : '(Unknown)'));

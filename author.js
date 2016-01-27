@@ -31,6 +31,7 @@ app.get('/api/fhir/:type', fhir.index);
 
 app.get('/api/library', library.index);
 app.get('/api/library/:id', library.details);
+app.get('/api/library/repositories', library.repositories);
 app.post('/api/library', library.add);
 app.put('/api/library/:id', library.update);
 app.delete('/api/library/:id', library.delete);

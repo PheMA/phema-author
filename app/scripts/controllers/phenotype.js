@@ -20,6 +20,13 @@ angular.module('sopheAuthorApp')
       dirSelectable: false
     };
 
+    $scope.repositories = {};
+    LibraryService.repositories()
+      .then(function(data){
+        console.log(data);
+        $scope.repositories = data;
+      });
+
     $scope.$on('onBeforeUnload', function (e, confirmation) {
         if (_hasPhenotypeChanged()) {
          confirmation.message = 'You have some unsaved changes that may be lost.';
@@ -283,7 +290,8 @@ angular.module('sopheAuthorApp')
             phenotype: function() {
               return {definition: phenotypeDefinition };
             },
-            isReference: function() { return false; }
+            isReference: function() { return false; },
+            repositories: function() { return $scope.repositories; }
           }
         });
 
