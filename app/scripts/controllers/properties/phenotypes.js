@@ -27,26 +27,26 @@ angular.module('sopheAuthorApp')
         'type': 'textarea',
         'label': 'Description',
         'model': 'description'
-      }];
-      for (var key in $scope.repositories)
-      {
-        console.log(key);
-        /*console.log($scope.repositories.key)
-        var repo =  key;
-        var label = $scope.repositories.key;
-        $scope.formTemplate.push({
-          'type': 'checkbox',
-          'label': label,
-          'model': key
-        });*/
-      }
-      $scope.formTemplate.push(
+      },
       {
         'type': 'hidden',
         'label': 'Definition',
         'model': 'definition'
+      }
+    ];
+    for (var i = 0; i < repositories.length; i++)  
+    {
+      var repo = repositories[i]; 
+      console.log(repo);
+     
+      $scope.formTemplate.push({
+        'type': 'checkbox',
+        'label': repo.description,
+        'model': repo.name
       });
+    }
     
+      
 
     $scope.ok = function () {
       $modalInstance.close($scope.formData);

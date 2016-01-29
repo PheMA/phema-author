@@ -22,9 +22,10 @@ angular.module('sopheAuthorApp')
 
     $scope.repositories = {};
     LibraryService.repositories()
-      .then(function(data){
-        console.log(data);
-        $scope.repositories = data;
+      .then(LibraryService.processRepositories)
+      .then(function(repos){
+        console.log(repos);
+        $scope.repositories = repos;
       });
 
     $scope.$on('onBeforeUnload', function (e, confirmation) {

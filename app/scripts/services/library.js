@@ -16,7 +16,7 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
   this.repositories = function() {
     var deferred = $q.defer();
     $resource(URLService.getLibraryURL() + 'repositories').get(function(data) {
-      deferred.resolve(data);
+        deferred.resolve(data);
     }, function(data, status) {
       deferred.reject('There was an error: ' + status);
     });
@@ -51,6 +51,10 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
     phenotypes = transformedData.sort(ArrayUtil.sortByName);
     return phenotypes;
   };
+  this.processRepositories = function(data) {
+    return data.repos;
+  };
+    
 
   this.loadDetails = function(id) {
     var deferred = $q.defer();

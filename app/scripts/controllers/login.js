@@ -27,7 +27,9 @@ angular.module('security.login.form', [])
 
     // Try to login
     security.login($scope.user.email, $scope.user.password).then(function(loggedIn) {
-      if ( !loggedIn ) {
+      console.log("in security login callback ")
+      console.log(loggedIn);
+      if ( !security.isAuthenticated() ) {
         // If we get here then the login failed due to bad credentials
         $scope.authError = 'Invalid login or password';
       }

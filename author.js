@@ -12,6 +12,8 @@ var codeSystems = require('./services/routes/codeSystems');
 var config = require('./services/routes/config');
 var exporters = require('./services/routes/exporters');
 var units = require('./services/routes/units');
+// Set user routes 
+var user = require('./services/routes/phekb_user'); 
 
 module.exports = app;
 
@@ -51,5 +53,11 @@ app.get('/api/export/:id/status', exporters.status);
 app.get('/api/export/:id', exporters.result);
 
 app.get('/api/units', units.index);
+
+app.post('/login', user.login);
+app.post('/logout', user.login);
+/*app.post('/new_phekb', user.new_phekb);
+app.get('/new_phekb', user.new_phekb);
+*/
 
 app.listen(process.env.PORT || 8081);
