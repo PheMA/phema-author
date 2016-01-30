@@ -1,9 +1,11 @@
 // Based loosely around work by Witold Szczerba - https://github.com/witoldsz/angular-http-auth
 // phekb_security.js 
 // Security Authorization for phekb integration 
+// These are our local security services that call out the the webservices on the server 
 angular.module('security.service', [
   'security.retryQueue',    // Keeps track of failed requests that need to be retried once the user logs in
   'security.login',         // Contains the login form template and controller
+  'security.register',      // Registration form controller
   'ui.bootstrap.modal'      // Used to display the login form as a modal dialog.
 ])
 
@@ -26,7 +28,6 @@ angular.module('security.service', [
       loginDialog.result.then(onLoginDialogClose);
     }
   }
-
   function closeLoginDialog(success) {
     if (loginDialog) {
       loginDialog.close(success);
@@ -43,6 +44,34 @@ angular.module('security.service', [
     }
   }
 
+  // Registration dialog stuff
+  var registerDialog = null;
+  function openRegisterDialog() {
+    if ( !registerDialog ) {
+      //loginDialog = $modal.open();
+      registerDialog = $modal.open({
+        templateUrl: 'views/security/register.html',
+        controller: 'RegisterController'
+      });
+      registerDialog.result.then(onRegisterDialogClose);
+    }
+  }
+  
+  function closeRegisterDialog(success) {
+    if (registerDialog) {
+      registerDialog.close(success);
+      registerDialog = null;
+    }
+  }
+
+  function onRegisterDialogClose(success) {
+    if ( success ) {
+      queue.retryAll();
+    } else {
+      queue.cancelAll();
+      redirect();
+    }
+  }
   // Register a handler for when an item is added to the retry queue
   queue.onItemAddedCallbacks.push(function(retryItem) {
     if ( queue.hasMore() ) {
@@ -62,9 +91,15 @@ angular.module('security.service', [
     showLogin: function() {
       openLoginDialog();
     },
+    showRegister: function() {
+      openRegisterDialog();
+    },
+    closeRegister: function(success) {
+      closeRegisterDialog(success);
+    },
 
     // Attempt to authenticate a user by the given email and password
-    // Luke Explain 
+    // Todo -- fix
     login: function(email, password) {
       var request = $http.post('/login', {email: email, password: password});
       return request.then(function(response) {
@@ -77,6 +112,19 @@ angular.module('security.service', [
         }
       });
     },
+    /*register: function(email, password) {
+      var request = $http.post('/register', {email: email, password: password});
+      return request.then(function(response) {
+        if (response.data.registration.error == null){
+          return response.data.registration;
+        }
+        else {
+          return $q.reject(response.data);
+        }
+
+      });
+
+    }, */
 
     // Give up trying to login and clear the retry queue
     cancelLogin: function() {

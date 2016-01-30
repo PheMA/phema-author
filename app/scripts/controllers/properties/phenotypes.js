@@ -37,7 +37,6 @@ angular.module('sopheAuthorApp')
     for (var i = 0; i < repositories.length; i++)  
     {
       var repo = repositories[i]; 
-      console.log(repo);
      
       $scope.formTemplate.push({
         'type': 'checkbox',

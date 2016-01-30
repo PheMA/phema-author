@@ -12,6 +12,7 @@ angular.module('security.login.toolbar', [])
       $scope.isAuthenticated = security.isAuthenticated;
       $scope.login = security.showLogin;
       $scope.logout = security.logout;
+      $scope.register = security.showRegister;
       $scope.$watch(function() {
         return security.currentUser;
       }, function(currentUser) {

@@ -1,6 +1,6 @@
 // Phekb_user routes 
 var request = require('request');
-/*var mongoose = require('mongoose');
+var mongoose = require('mongoose');
 
 var MONGO_CONNECTION = 'mongodb://localhost/phema-user';
 
@@ -69,47 +69,80 @@ function formatItemForReturn(item) {
     item.id =  item._id.toHexString();
     return item;
 }
-*/
 
-/*
-// callback(error, result) 
+
+
+// callback has this signature : callback(error, result) 
 function findUser(data, callback)
 {
-  var search = {email: data.email};
+  var search = data;
+  console.log(search);
   UserRepo.findOne(search, callback);
 }
 
 function addUser(data, callback) { 
   console.log("adding user to db"); 
   var item = new UserRepo(data);
-  item.save(callback);
+  item.save(function(err, user) { 
+    callback(err, formatItemForReturn(user));
+  });
 }
-*/
+
+
 
 exports.login = function(req, res){
   console.log("In Login. Set cookie and session");
  	
    console.log(req.body);
    res.set('Content-Type', 'application/json');
-   var user_data = {email: req.body.email, password: req.body.password, firstName: req.body.email, lastName: 'Simpson'};
-   //PhemaUser.findUser(user_data, function(err, user) { 
-   // if (err){ res.status(403).send({user: null}); }
-    //else {
+   var user_data = {email: req.body.email, password: req.body.password}; //, firstName: req.body.email, lastName: 'Simpson'};
+   UserRepo.findOne(user_data, function(err, user) { 
+    console.log("Find user: ", err, user);
+    if (err){ 
+        res.status(404).send({user:user});
+    
+    }
+    else {
       var retdata = {user: user_data };
       res.status(200).send(retdata);
-    //}
-   // });
+    }
+   });
+ };
+ exports.register = function(req, res){
+  console.log("In Register on Server . Set cookie and session");
+   var user = null;
+   var user_data = {email: req.body.email, password: req.body.password}; //, firstName: req.body.email, lastName: 'Simpson'};
+   UserRepo.findOne(user_data, function(err, cur_user) { 
+    console.log('Finding user callback');
+    console.log(err,cur_user);
+    if (cur_user == null){ 
+      var new_user = new UserRepo(user_data);
+      new_user.save(function(err) { 
+        if (err){
+          console.log("Error registering: " + err);
+          res.send({error: err, user: null})
+        }
+        else{
+          var registration = {error: err, user: formatItemForReturn(new_user)};
+          console.log("Regitsered user ", new_user);
+          res.send(registration);
+        }
+      });
+    }
+    else {
+      var registration =  {error: "Email already registered", user: null};
+      res.send(registration);
+    }
+   });
  };
     
 
 exports.logout = function(req, res){
   console.log("In logout.");
   console.log(req.body);
- 	
-   
-   res.set('Content-Type', 'application/json');
-   var retdata = {user: null };
-   res.status(200).send(retdata);
+  res.set('Content-Type', 'application/json');
+  var retdata = {user: null };
+  res.status(200).send(retdata);
     
 
 };
