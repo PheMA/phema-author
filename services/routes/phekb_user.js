@@ -92,29 +92,27 @@ function addUser(data, callback) {
 
 exports.login = function(req, res){
   console.log("In Login. Set cookie and session");
- 	
-   console.log(req.body);
-   res.set('Content-Type', 'application/json');
-   var user_data = {email: req.body.email, password: req.body.password}; //, firstName: req.body.email, lastName: 'Simpson'};
-   UserRepo.findOne(user_data, function(err, user) { 
-    console.log("Find user: ", err, user);
+  console.log(req.body);
+  res.set('Content-Type', 'application/json');
+  var user_data = {email: req.body.email, password: req.body.password};
+  UserRepo.findOne(user_data, function(err, cur_user) {
+    console.log("Find user: ", err, cur_user);
     if (err){ 
-        res.status(404).send({user:user});
-    
+        user_data.password = '';
+        res.status(404).send({user:user_data});
     }
     else {
-      var retdata = {user: user_data };
-      res.status(200).send(retdata);
+      res.status(200).send({user: cur_user });
     }
-   });
- };
- exports.register = function(req, res){
+  });
+};
+
+exports.register = function(req, res){
   console.log("In Register on Server . Set cookie and session");
    var user = null;
-   var user_data = {email: req.body.email, password: req.body.password}; //, firstName: req.body.email, lastName: 'Simpson'};
-   UserRepo.findOne(user_data, function(err, cur_user) { 
-    console.log('Finding user callback');
-    console.log(err,cur_user);
+   var user_data = 
+    {email: req.body.email, password: req.body.password, firstName: req.body.firstName, lastName: req.body.lastName};
+   UserRepo.findOne({email: user_data.email}, function(err, cur_user) { 
     if (cur_user == null){ 
       var new_user = new UserRepo(user_data);
       new_user.save(function(err) { 
@@ -123,14 +121,15 @@ exports.login = function(req, res){
           res.send({error: err, user: null})
         }
         else{
-          var registration = {error: err, user: formatItemForReturn(new_user)};
-          console.log("Regitsered user ", new_user);
+          var registration = {error: null, user: formatItemForReturn(new_user)};
+          console.log("Regitsered user . Returning object: ", registration);
           res.send(registration);
         }
       });
     }
     else {
       var registration =  {error: "Email already registered", user: null};
+      console.log("Error registering: ", registration)
       res.send(registration);
     }
    });

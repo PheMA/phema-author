@@ -4,9 +4,9 @@ angular.module('security.login.form', [])
 
 // The LoginFormController provides the behaviour behind a reusable form to allow users to authenticate.
 // This controller and its template (login/form.tpl.html) are used in a modal dialog box by the security service.
-.controller('LoginFormController', ['$scope', 'security', function($scope, security) {
+.controller('LoginFormController', ['$scope', 'security','$location',  '$rootScope',function($scope, security, $location, $rootScope) {
   // The model for this form 
-  $scope.user = {};
+  $scope.user = security.currentUser;
 
   // Any error message from failing to login
   $scope.authError = null;
@@ -25,17 +25,23 @@ angular.module('security.login.form', [])
     // Clear any previous security errors
     $scope.authError = null;
 
-    // Try to login
-    security.login($scope.user.email, $scope.user.password).then(function(loggedIn) {
-      console.log("in security login callback ")
-      console.log(loggedIn);
+    // Try to login, sets the security.currentUser var
+    security.login($scope.user.email, $scope.user.password).then(function(user) {
+      
       if ( !security.isAuthenticated() ) {
         // If we get here then the login failed due to bad credentials
         $scope.authError = 'Invalid login or password';
       }
-    }, function(x) {
+      else {
+        security.closeLogin(true);
+        //$scope.user = user;
+        $rootScope.$broadcast('user:updated', user);
+        console.log("Logged in user ", $scope.user);
+        //$location("/");
+      }
+    }, function(err) {
       // If we get here then there was a problem with the login request to the server
-      $scope.authError = x;
+      $scope.authError = err;
     });
   };
 

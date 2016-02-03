@@ -4,7 +4,7 @@ angular.module('security.register', [])
 
 // The LoginFormController provides the behaviour behind a reusable form to allow users to authenticate.
 // This controller and its template (login/form.tpl.html) are used in a modal dialog box by the security service.
-.controller('RegisterController', ['$scope', 'security', '$http',function($scope, security, $http) {
+.controller('RegisterController', ['$scope', 'security', '$http', '$rootScope',function($scope, security, $http, $rootScope) {
   // The model for this form 
   $scope.user = {};
 
@@ -29,25 +29,30 @@ angular.module('security.register', [])
     $scope.authError = null;
 
     // Try to Register. This sets the user 
-    var request = $http.post('/register', {email: $scope.user.email, password: $scope.user.password});
+    var user_data = {email: $scope.user.email, password: $scope.user.password, firstName: $scope.user.firstName, lastName: $scope.user.lastName};
+    var request = $http.post('/register', user_data);
     return request.then(function(response) {
     //security.register($scope.user.email, $scope.user.password).then(function(registration) {
-      console.log("in registration  callback ")
-      console.log(response);
-      if ( response.error ) {
+     // console.log("in registration  callback ")
+     // console.log(response);
+      var data = response.data;
+      if ( data.error ) {
         // If we get here then the login failed due to bad credentials
         console.log(response.error)
-        $scope.authError = 'Registration Failed: ' + response.error.message + '. Please try again.'; 
+        $scope.authError = 'Registration Failed: ' + data.error + '. Please try again.'; 
         $scope.user.email = '';
         $scope.user.password = '';
+        return null;
       }
       else
       {
         // all good 
         $scope.authError = null;
-        security.currentUser = response.user; 
+        security.currentUser = data.user; 
         security.closeRegister(true); 
-        //return response.data.registration;
+        $rootScope.$broadcast('user:updated', data.user);
+        //console.log("Registered user ", $scope.user);
+        return security.currentUser; 
       }
     }); 
   };
@@ -57,6 +62,6 @@ angular.module('security.register', [])
   };
 
   this.cancel = function() {
-    security.cancelLogin();
+    security.closeRegister(true); 
   };
 }]);

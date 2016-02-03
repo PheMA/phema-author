@@ -61,7 +61,26 @@
               </ul>
             </li>
           </ul>
-          <login-toolbar />
+          <ul ng-cloak class="nav navbar-nav" ng-controller="ToolbarController as toolbarCtrl">
+            <!-- toolbar here --> 
+              <li class="dropdown" ng-show="security.isAuthenticated()">
+                <a href="#" class="dropdown-toggle">{{toolbarCtrl.user.firstName}} {{user.lastName}} <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#/user/{{user.id}}">Profile</a></li>
+                  <li>
+                    <a href="#" ng-click="security.logout()">Log out</a>
+                  </li>
+                </ul>
+              </li>
+              <li ng-hide="security.isAuthenticated()" class="login">
+                  <form class="navbar-form">
+                      <button class="btn login" ng-click="security.showLogin()">Log in</button>
+                      <button class="btn register" ng-click="security.showRegister()">Register</button>
+                  </form>
+              </li>
+            </ul>
+         <!-- <ng-include src="views/security/toolbar.html"> </ng-include> -->
+        <!--  <login-toolbar /> -->
         </div>
       </div>
 

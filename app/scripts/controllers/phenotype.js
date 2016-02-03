@@ -24,7 +24,6 @@ angular.module('sopheAuthorApp')
     LibraryService.repositories()
       .then(LibraryService.processRepositories)
       .then(function(repos){
-        console.log(repos);
         $scope.repositories = repos;
       });
 

@@ -9,7 +9,7 @@ angular.module('security.service', [
   'ui.bootstrap.modal'      // Used to display the login form as a modal dialog.
 ])
 
-.factory('security', ['$http', '$q', '$location', 'securityRetryQueue', '$modal', function($http, $q, $location, queue, $modal) {
+.factory('security', ['$http', '$q', '$location', 'securityRetryQueue', '$modal', '$rootScope', function($http, $q, $location, queue, $modal, $rootScope) {
 
   // Redirect to the given url (defaults to '/')
   function redirect(url) {
@@ -81,7 +81,7 @@ angular.module('security.service', [
 
   // The public API of the service
   var service = {
-
+    
     // Get the first reason for needing a login
     getLoginReason: function() {
       return queue.retryReason();
@@ -102,14 +102,10 @@ angular.module('security.service', [
     // Todo -- fix
     login: function(email, password) {
       var request = $http.post('/login', {email: email, password: password});
+
       return request.then(function(response) {
-        console.log(response);
-        console.log("In login service");
         service.currentUser = response.data.user;
-        // why is this not this.isAuthent
-        if ( service.isAuthenticated() ) {
-          closeLoginDialog(true);
-        }
+        return service.currentUser;
       });
     },
     /*register: function(email, password) {
@@ -130,6 +126,11 @@ angular.module('security.service', [
     cancelLogin: function() {
       closeLoginDialog(false);
       redirect();
+    },
+    // Give up trying to login and clear the retry queue
+    closeLogin: function(success) {
+      closeLoginDialog(success);
+      
     },
 
     // Logout the current user and redirect
@@ -152,7 +153,7 @@ angular.module('security.service', [
       }
     },
 
-    // Information about the current user
+    // Information about the current user, set this from any controller like login or register
     currentUser: null,
 
     // Is the current user authenticated?

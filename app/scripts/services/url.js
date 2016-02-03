@@ -46,7 +46,7 @@ angular.module('sophe.services.url', ['sophe.config'])
     */
 
     var url = "api/library/";//libraryBaseUrl;
-    console.log(url);
+    
     if (details) {
       url = url + ':id';
     }
