@@ -5,8 +5,8 @@
 var FunctionOperator = function() {}
 FunctionOperator.prototype = new BaseContainer;
 
-var SUBSET_OPERATOR_SIZER_SIZE = 7;
-var SUBSET_OPERATOR_MIN_SIZE = 100;
+var FUNCTION_OPERATOR_SIZER_SIZE = 7;
+var FUNCTION_OPERATOR_MIN_SIZE = 100;
 
 FunctionOperator.prototype.resizeShapeToGroup = function(group, scope) {
   var mainRect = group.find('.mainRect')[0];
@@ -18,8 +18,8 @@ FunctionOperator.prototype.resizeShapeToGroup = function(group, scope) {
 };
 
 FunctionOperator.prototype.calculateMinimumSize = function(group) {
-  var farthestX = SUBSET_OPERATOR_MIN_SIZE;
-  var farthestY = SUBSET_OPERATOR_MIN_SIZE;
+  var farthestX = FUNCTION_OPERATOR_MIN_SIZE;
+  var farthestY = FUNCTION_OPERATOR_MIN_SIZE;
   for (var index = 0; index < this._containedElements.length; index++) {
     var element = this._containedElements[index];
     farthestX = Math.max(element.getX() + element.getWidth(), farthestX);
@@ -32,8 +32,12 @@ FunctionOperator.prototype.calculateMinimumSize = function(group) {
 FunctionOperator.prototype.reconcileMinimumSize = function(group) {
   this.calculateMinimumSize(group);
   // var sizeBar = group.find('.sizer');
-  // sizeBar.setX(group.width() - SUBSET_OPERATOR_SIZER_SIZE);
-  // sizeBar.setY(group.height() - SUBSET_OPERATOR_SIZER_SIZE);
+  // sizeBar.setX(group.width() - FUNCTION_OPERATOR_SIZER_SIZE);
+  // sizeBar.setY(group.height() - FUNCTION_OPERATOR_SIZER_SIZE);
+}
+
+FunctionOperator.prototype.atCapacity = function() {
+  return (this._containedElements && this._containedElements.length > 0);
 }
 
 // Connects the appropriate QDM subset operator shapes to event handlers.
@@ -41,7 +45,7 @@ FunctionOperator.prototype.reconcileMinimumSize = function(group) {
 FunctionOperator.prototype.connectEvents = function(group, scope) {
   this.addStandardEventHandlers(group, scope);
   this.addCursorEventHandlers(group, scope);
-  this.setDroppable(group.find('.mainRect')[0], ['Category', 'DataElement']);
+  this.setDroppable(group.find('.mainRect')[0], ['Category', 'DataElement'], this.atCapacity);
   this.addConnectionHandler(group.find('.leftConnector')[0], scope);
   this.addConnectionHandler(group.find('.rightConnector')[0], scope);
   this.connectConnectorEvents(group);
