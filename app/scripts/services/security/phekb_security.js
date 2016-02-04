@@ -108,19 +108,7 @@ angular.module('security.service', [
         return service.currentUser;
       });
     },
-    /*register: function(email, password) {
-      var request = $http.post('/register', {email: email, password: password});
-      return request.then(function(response) {
-        if (response.data.registration.error == null){
-          return response.data.registration;
-        }
-        else {
-          return $q.reject(response.data);
-        }
-
-      });
-
-    }, */
+    
 
     // Give up trying to login and clear the retry queue
     cancelLogin: function() {

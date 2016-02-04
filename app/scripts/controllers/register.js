@@ -1,10 +1,10 @@
 'use strict';
 
-angular.module('security.register', [])
+angular.module('security.register', ['ngCookies'])
 
 // The LoginFormController provides the behaviour behind a reusable form to allow users to authenticate.
 // This controller and its template (login/form.tpl.html) are used in a modal dialog box by the security service.
-.controller('RegisterController', ['$scope', 'security', '$http', '$rootScope',function($scope, security, $http, $rootScope) {
+.controller('RegisterController', ['$scope', 'security', '$http', '$rootScope', '$cookies',function($scope, security, $http, $rootScope, $cookies) {
   // The model for this form 
   $scope.user = {};
 

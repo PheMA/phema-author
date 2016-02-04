@@ -3,4 +3,6 @@ angular.module('security', [
   'security.service',
   'security.interceptor',
   'security.login',
-  'security.authorization']);
+  'security.authorization',
+  'security.register',
+  'security.user']);

@@ -48,7 +48,8 @@ app.config(function ($routeProvider) {
         title: 'Help - Tutorial', templateUrl: 'views/help/tutorial.html', controller: 'HelpController' })
       .when('/help', {
         title: 'Help', templateUrl: 'views/help/index.html', controller: 'HelpController' })
-
+      .when('/user', {
+        title: 'User', templateUrl: 'views/user.html', controller: 'UserController' })
       .otherwise({
         redirectTo: '/'
       })
