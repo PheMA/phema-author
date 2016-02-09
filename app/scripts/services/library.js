@@ -44,7 +44,8 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
         name: data[index].name,
         description: _formatDescription(data[index]),
         type: 'Phenotype',
-        lastModified: _formatLastModified(data[index])
+        lastModified: _formatLastModified(data[index]),
+        external: data[index].external
       });
     }
 
@@ -67,17 +68,20 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
   };
 
   this.saveDetails = function(details) {
-    console.log("library service saveDetails", details);
+    
     if (security.currentUser)
     {
       console.log(security.currentUser);
       details.createdBy = security.currentUser.email;
+      // todo add whole user object 
+      details.user = security.currentUser;
     }
     var deferred = $q.defer();
     var LibraryItem = $resource(URLService.getLibraryURL(true), {id:'@id'},
       {
           'update': { method:'PUT' }
       });
+    console.log("adding library item ", details);
     var item = new LibraryItem(details);
     if (details.id && details.id !== '') {
       item.$update({ id: details.id }, function(data) {

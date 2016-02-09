@@ -3,13 +3,14 @@
 // Security Authorization for phekb integration 
 // These are our local security services that call out the the webservices on the server 
 angular.module('security.service', [
+  'ngCookies',              // cookies api
   'security.retryQueue',    // Keeps track of failed requests that need to be retried once the user logs in
   'security.login',         // Contains the login form template and controller
   'security.register',      // Registration form controller
   'ui.bootstrap.modal'      // Used to display the login form as a modal dialog.
 ])
 
-.factory('security', ['$http', '$q', '$location', 'securityRetryQueue', '$modal', '$rootScope', function($http, $q, $location, queue, $modal, $rootScope) {
+.factory('security', ['$http', '$q', '$location', 'securityRetryQueue', '$modal', '$rootScope', '$cookies', function($http, $q, $location, queue, $modal, $rootScope, $cookies) {
 
   // Redirect to the given url (defaults to '/')
   function redirect(url) {
@@ -105,7 +106,10 @@ angular.module('security.service', [
 
       return request.then(function(response) {
         service.currentUser = response.data.user;
+        $cookies.session = service.currentUser.session;
+        closeLoginDialog(true);
         return service.currentUser;
+        
       });
     },
     
@@ -123,26 +127,44 @@ angular.module('security.service', [
 
     // Logout the current user and redirect
     logout: function(redirectTo) {
-      $http.post('/logout').then(function() {
+      $cookies.session = null;
+      service.currentUser = null;
+      $rootScope.$broadcast('user:updated', service.currentUser);
+      redirect(redirectTo);
+      /*$http.post('/logout').then(function() {
         service.currentUser = null;
         redirect(redirectTo);
-      });
+      }); */
     },
 
     // Ask the backend to see if a user is already authenticated - this may be from a previous session.
     requestCurrentUser: function() {
       if ( service.isAuthenticated() ) {
         return $q.when(service.currentUser);
-      } else {
-        return $http.get('/current-user').then(function(response) {
-          service.currentUser = response.data.user;
+      } 
+      else {
+        session = $cookies.session;
+        if (session) {
+          return $http.post('/current-user', {session: session}).then(function(response) {
+            service.currentUser = response.data.user;
+            $rootScope.$broadcast('user:updated', service.currentUser);
+            return service.currentUser;
+          },  
+          function(error) { 
+            console.log(error);
+            return service.currentUser;
+          }); 
+        }
+        else {
           return service.currentUser;
-        });
+        }
       }
     },
 
     // Information about the current user, set this from any controller like login or register
+    // Get user from session cookie
     currentUser: null,
+      
 
     // Is the current user authenticated?
     isAuthenticated: function(){
@@ -157,6 +179,9 @@ angular.module('security.service', [
       return !!(service.currentUser && service.currentUser.admin);
     }
   };
+
+  // Initialize current user from session cookie
+  service.requestCurrentUser();
 
   return service;
 }]);

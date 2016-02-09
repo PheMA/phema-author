@@ -37,6 +37,7 @@ mod.directive('loginToolbar', ['security', function(security) {
   return directive;
 }]);
 
+/*
 mod.controller('ToolbarController', ['$scope', 'security', function($scope,security) {
   $scope.isAuthenticated = security.isAuthenticated;
   $scope.login = security.showLogin;
@@ -54,4 +55,5 @@ mod.controller('ToolbarController', ['$scope', 'security', function($scope,secur
     $scope.user = null;
   });
 }]);
+*/
 

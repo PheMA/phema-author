@@ -57,7 +57,8 @@ app.get('/api/units', units.index);
 app.post('/login', user.login);
 app.post('/logout', user.logout);
 app.post('/register', user.register);
-app.post('/auth_user', user.auth_user);
+app.post('/current-user', user.current_user);
+app.post('/phekb-resource', user.phekb_resource);
 
 /*app.post('/new_phekb', user.new_phekb);
 app.get('/new_phekb', user.new_phekb);

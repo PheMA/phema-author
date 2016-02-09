@@ -274,7 +274,13 @@ angular.module('sopheAuthorApp')
 
     $scope.save = function() {
       var phenotypeDefinition = $scope.canvasDetails.kineticStageObj.mainLayer.toJSON();
-
+      var config = { callback: function(image_data) { 
+        console.log('To image callback' , image_data); 
+        $scope.image = image_data;
+        $('body').append(image_data);
+        $scope.$apply();
+        }};
+      $scope.canvasDetails.kineticStageObj.toImage(config);
       // If the phenotype was already saved (because there is an ID) we don't need to display
       // the dialog again and we can just save.
       if ($scope.phenotype) {
@@ -318,6 +324,10 @@ angular.module('sopheAuthorApp')
         _handleLoad();
       }
     };
+
+    $scope.openExternal = function() {
+      $window.open($scope.phenotype.external.url, '_blank');
+    }
 
     $scope.canShowProperties = function(item) {
       var selectedElement = item || algorithmElementFactory.getFirstSelectedItem($scope);
@@ -563,6 +573,8 @@ angular.module('sopheAuthorApp')
       {id: 'btnDelete', text: 'Delete', iconClass:'fa fa-remove', event: $scope.delete, disabled: true, tooltip: 'Delete the highlighted element(s) in the canvas'},
       {spacer: true},
       {id: 'btnFeedback', text: 'Feedback', iconClass:'fa fa-comment', event: $scope.delete, disabled: true, tooltip: 'Suggestions or comments'},
+      {id: 'btnOpenExternal', text: 'Open in PheKB', iconClass:'fa fa-external', event: $scope.openExternal, disabled: false, tooltip: 'Open Phenotype in PheKB.org'},
+ 
     ];
 
 

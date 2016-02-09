@@ -44,7 +44,8 @@ exports.add = function(req, res) {
     description: req.body.description,
     definition: req.body.definition,
     createdBy: req.body.createdBy,
-    phekb: req.body.phekb
+    phekb: req.body.phekb,
+    external: req.body.external
   };
   
 

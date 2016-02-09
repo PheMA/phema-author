@@ -64,7 +64,7 @@
           <ul ng-cloak class="nav navbar-nav" ng-controller="ToolbarController as toolbarCtrl">
             <!-- toolbar here --> 
               <li class="dropdown" ng-show="security.isAuthenticated()">
-                <a href="#" class="dropdown-toggle">{{toolbarCtrl.user.firstName}} {{user.lastName}} <b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle">{{user.fullName}} <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li><a href="#/user/{{user.id}}">Profile</a></li>
                   <li>
@@ -197,8 +197,9 @@
     <script src="scripts/controllers/phenotype.js"></script>
     <script src="scripts/controllers/prompt.js"></script>
     <script src="scripts/controllers/login.js"></script>
+    <script src="scripts/controllers/toolbar.js"></script>
     <script src="scripts/controllers/register.js"></script>
-    <script src="scripts/controllers/user.js"></script>
+    <script src="scripts/controllers/phekb.js"></script>
     <script src="scripts/controllers/dashboard.js"></script>
     <script src="scripts/controllers/loadPhenotype.js"></script>
     <script src="scripts/controllers/export.js"></script>
@@ -221,7 +222,7 @@
     <script src="scripts/services/security/phekb_security.js"></script>
     <script src="scripts/services/security/authorization.js"></script>
     <script src="scripts/directives/security/login.js"></script>
-    <script src="scripts/directives/security/toolbar.js"></script>
+    
     
     <!-- endbuild -->
 </body>

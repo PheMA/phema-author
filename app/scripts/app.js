@@ -21,7 +21,9 @@ var app = angular.module('sopheAuthorApp', [
     'security',
     'ng-context-menu',
     'dynform',
-    'angularSpinner'
+    'angularSpinner',
+    'toolbar',
+    'phekb'
   ]);
 
 app.config(function ($routeProvider) {
@@ -41,15 +43,19 @@ app.config(function ($routeProvider) {
         title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
       .when('/phenotype/:id', {
         title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
-
+       
       .when('/help/quick-start', {
         title: 'Help - Quick Start', templateUrl: 'views/help/quickStart.html', controller: 'HelpController' })
       .when('/help/tutorial', {
         title: 'Help - Tutorial', templateUrl: 'views/help/tutorial.html', controller: 'HelpController' })
       .when('/help', {
         title: 'Help', templateUrl: 'views/help/index.html', controller: 'HelpController' })
-      .when('/user', {
-        title: 'User', templateUrl: 'views/user.html', controller: 'UserController' })
+
+      .when('/phekb-resource', {
+        title: 'Phekb Resource', templateUrl: 'views/phekb_resource.html', controller: 'PhekbController' })
+      .when('/phekb', {
+        title: 'PheKB Entry Point', templateUrl: 'views/phekb_entry.html', controller: 'PhekbEntryController' })
+
       .otherwise({
         redirectTo: '/'
       })
