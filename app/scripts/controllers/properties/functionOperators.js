@@ -14,8 +14,15 @@ angular.module('sopheAuthorApp')
     $scope.functionName = element.name;
     $scope.containedElement = "(data element not yet defined)";
 
-    if (containedElements && containedElements.length > 0) {
-      $scope.containedElement = containedElements[0].element().name;
+    if (containedElements) {
+      switch (containedElements.length) {
+        case 2:
+          $scope.containedElement = containedElements[0].element().name  + ' and ' + containedElements[1].element().name;
+          break;
+        case 1:
+          $scope.containedElement = containedElements[0].element().name;
+          break;
+      }
     }
 
     // There are standard attributes available to every data element that are implied.

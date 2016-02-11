@@ -8,6 +8,17 @@ FunctionOperator.prototype = new BaseContainer;
 var FUNCTION_OPERATOR_SIZER_SIZE = 7;
 var FUNCTION_OPERATOR_MIN_SIZE = 100;
 
+FunctionOperator.prototype.getFunctionConfig = function(functionURI) {
+  if (functionURI === 'http://rdf.healthit.gov/qdm/element#DateDiff') {
+    return { maxCapacity: 2 };
+  }
+  if (functionURI === 'http://rdf.healthit.gov/qdm/element#TimeDiff') {
+    return { maxCapacity: 2 };
+  }
+
+  return { maxCapacity: 1 };
+}
+
 FunctionOperator.prototype.resizeShapeToGroup = function(group, scope) {
   var mainRect = group.find('.mainRect')[0];
   mainRect.setWidth(group.getWidth());
@@ -37,7 +48,9 @@ FunctionOperator.prototype.reconcileMinimumSize = function(group) {
 }
 
 FunctionOperator.prototype.atCapacity = function() {
-  return (this._containedElements && this._containedElements.length > 0);
+  var uri = this._container.element().uri;
+  var capacity = this.getFunctionConfig(uri).maxCapacity;
+  return (this._containedElements && this._containedElements.length >= capacity);
 }
 
 // Connects the appropriate QDM subset operator shapes to event handlers.
