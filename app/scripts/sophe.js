@@ -19,6 +19,7 @@ angular.module('sophe', [
   'sophe.elements.valueSets',
   'sophe.elements.codeSystems',
   'sophe.elements.results',
+  'sophe.elements.resultValue',
   'sophe.services.configuration',
   'sophe.services.codeSystem',
   'sophe.services.attribute',

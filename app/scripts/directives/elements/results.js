@@ -9,7 +9,7 @@ angular.module('sophe.elements.results', [])
     restrict: 'EA',
     controller: 'ResultsController',
     replace: true,
-    scope: {result: '='}
+    scope: { result: '=' }
   };
   return directive;
 }]);

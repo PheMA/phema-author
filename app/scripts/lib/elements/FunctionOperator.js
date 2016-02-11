@@ -63,6 +63,15 @@ FunctionOperator.prototype.containedElements = function(elements) {
   }
 };
 
+FunctionOperator.prototype.attributes = function(attributes) {
+  if ('undefined' === typeof attributes) {
+    return this._attributes;
+  }
+  else {
+    this._attributes = attributes;
+  }
+};
+
 FunctionOperator.prototype.create = function(config, scope) {
   var options = {
     x: 0, y: 0, width: 200, height: 200,
@@ -106,6 +115,39 @@ FunctionOperator.prototype.toObject = function() {
   for (var index = 0; index < this._containedElements.length; index++) {
     obj.containedElements.push({id: this._containedElements[index]._id});
   }
+  
+  if (this._attributes) {
+    obj.attributes = {};
+    var attrKey;
+    var attrValue;
+    for (attrKey in this._attributes) {
+      attrValue = this._attributes[attrKey];
+      // Arrays are typically collections of value sets that need special handling
+      // to avoid circular references
+      if (attrValue instanceof Array) {
+        obj.attributes[attrKey] = [];
+        var index;
+        for (index = 0; index < attrValue.length; index++) {
+          // If it is the special type we expect, we custom format it.  Otherwise we just
+          // write out the existing value
+          if (attrValue[index].customList) {
+            obj.attributes[attrKey].push({
+              id: attrValue[index].id,
+              name: attrValue[index].name,
+              type: attrValue[index].type,
+              customList: {terms: attrValue[index].customList.terms, valueSets: []}
+            });
+          }
+          else {
+            obj.attributes[attrKey].push(attrValue[index]);
+          }
+        }
+      }
+      else {
+        obj.attributes[attrKey] = attrValue;
+      }
+    }
+  }
   obj.className = 'FunctionOperator';
   return obj;
 };
@@ -139,6 +181,13 @@ FunctionOperator.prototype.load = function(group, scope) {
   }
   else {
     this._containedElements = [];
+  }
+
+  if (obj.attributes) {
+    this.attributes(obj.attributes);
+  }
+  else {
+    this.attributes(null);
   }
 
   this.calculateMinimumSize(group);

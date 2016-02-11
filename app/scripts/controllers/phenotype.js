@@ -550,19 +550,23 @@ angular.module('sopheAuthorApp')
             element: function () {
               return angular.copy(element);
             },
+            attributes: function () {
+              return angular.copy(selectedElement.phemaObject().attributes());
+            },
             containedElements: function () {
               return selectedElement.phemaObject().containedElements();
-            },
-            functionOperators: function() {
-              return $scope.functionOperators;
             }
           }
         });
 
         modalInstance.result.then(function (result) {
-          element = result;
-          selectedElement.element(element);
-          findParentElementByName(selectedElement, 'header').setText(element.name);
+          if (selectedElement.phemaObject() && selectedElement.phemaObject().attributes) {
+            selectedElement.phemaObject().attributes(result);
+          }
+          else {
+            element.attributes = result;
+            selectedElement.element(element);
+          }
           selectedElement.getStage().draw();
         });
       }

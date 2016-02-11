@@ -7,20 +7,7 @@
   <div class="results-type-panel" ng-show="result.type === 'present'">
     <span class="note">A result is present in the electronic record but any entry is acceptable</span>
   </div>
-  <div class="results-type-panel" id="results-values-panel" ng-show="result.type === 'value'">
-    <select ng-model="result.operator">
-      <option value="LT">Less than (<)</option>
-      <option value="LE">Less than or equal to (<=)</option>
-      <option value="EQ">Equal to (=)</option>
-      <option value="BW">Between</option>
-      <option value="GT">Greater than (>)</option>
-      <option value="GE">Greater than or equal to (>=)</option>
-    </select>
-    <input type="text" ng-model="result.valueLow"/>
-    <span ng-show="result.operator === 'BW'"> - </span>
-    <input type="text" ng-model="result.valueHigh" ng-show="result.operator === 'BW'"/><br/>
-    Units: <select ng-options="unit.label for unit in units track by unit.id" ng-model="result.units"></select>
-  </div>
+  <result-value id="results-values-panel" id="results-values-panel" result="result" ng-show="result.type === 'value'" />
   <div class="results-type-panel" ng-show="result.type === 'match'">
     <value-sets location="input" selected-value-sets="result.valueSet"></value-sets>
   </div>
