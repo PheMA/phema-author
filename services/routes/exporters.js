@@ -40,7 +40,7 @@ exports.result = function(req, res){
     }
     else {
       res.set('Content-Type', data.mime_type);
-      res.set('Content-Length', data.result.length);
+      res.set('Content-Length', data.result.length());
       res.set('Content-disposition', 'attachment; filename=' + data.id + '.' + data.extension);
       res.status(200).send(data.result.buffer);
     }
