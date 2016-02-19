@@ -70,6 +70,18 @@ QDMRepository.prototype.getSubsetOperators = function(callback) {
   });
 }
 
+QDMRepository.prototype.getFunctionOperators = function(callback) {
+  request(this.baseURL + '/functions', function(error, response, body) {
+    if (!error && response.statusCode === 200) {
+      callback(null, body);
+    }
+    else {
+      console.log(error);
+      callback({message: 'Unable to retrieve the list of QDM functions'});
+    }
+  });
+}
+
 QDMRepository.prototype.getAttributes = function(type, item, callback) {
   request(this.baseURL + '/' + type + '/' + item + '/attributes', function(error, response, body) {
     if (!error && response.statusCode === 200) {

@@ -51,7 +51,8 @@ angular.module('dynform', [])
         'submit': {element: 'button', type: 'submit', editable: false, textBased: false},
         // PhEMA custom editables
         'valueSet': {element: 'value-sets', type: 'valueSet', editable: true, textBased: false},
-        'result': {element: 'results', type: 'result', editable: true, textBased: false}
+        'result': {element: 'results', type: 'result', editable: true, textBased: false},
+        'resultValue': {element: 'result-value', type: 'resultValue', editable: true, textBased: false}
       };
     
     return {
@@ -279,6 +280,9 @@ angular.module('dynform', [])
                 else if (field.type === 'result') {
                   newElement.attr('result', bracket(field.model, attrs.ngModel));
                 }
+                else if (field.type === 'resultValue') {
+                  newElement.attr('result', bracket(field.model, attrs.ngModel));
+                }
 
                 //  Common attributes; radio already applied these...
                 if (field.type !== "radio") {
@@ -441,7 +445,7 @@ angular.module('dynform', [])
       restrict: 'E',
       require: '?ngModel',
       link: function (scope, element, attrs, ctrl) {
-        if (ctrl === null) {
+        if (!ctrl) {
           // Doesn't have an ng-model attribute; nothing to do here.
           return;
         }

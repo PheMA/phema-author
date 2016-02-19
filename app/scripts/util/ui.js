@@ -251,7 +251,7 @@ function addElementToContainer(stage, container, element) {
       element.container = group;
       stage.draw();
     }
-    else if (groupDefinition.type === 'LogicalOperator' || groupDefinition.type === 'SubsetOperator') {
+    else if (groupDefinition.type === 'LogicalOperator' || groupDefinition.type === 'SubsetOperator' || groupDefinition.type === 'FunctionOperator') {
       // Add the item (if it's not already in the array)
       _addElementToOperator(element, phemaObject);
 
@@ -280,6 +280,12 @@ function allowsDrop(dragElement, dropElement) {
 
   if (!dropElement.droppable || (!dropElement.droppableElementTypes) || dropElement.droppableElementTypes.length === 0) {
     console.error('This element is not configured to accept drops');
+    return false;
+  }
+
+  // Not all elements care about capacity.  For those that do, we will verify they can accept
+  // new elements.
+  if (dropElement.parent && dropElement.parent.phemaObject() && dropElement.parent.phemaObject().atCapacity()) {
     return false;
   }
 
