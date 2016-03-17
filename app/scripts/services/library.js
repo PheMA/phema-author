@@ -13,16 +13,6 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
     });
     return deferred.promise;
   };
-  this.repositories = function() {
-    var deferred = $q.defer();
-    $resource(URLService.getLibraryURL() + 'repositories').get(function(data) {
-        deferred.resolve(data);
-    }, function(data, status) {
-      deferred.reject('There was an error: ' + status);
-    });
-    return deferred.promise;
-  };
-
 
   function _formatLastModified(item) {
     return (item.modified ? item.modified : (item.created ? item.created : '(Unknown)'));
@@ -45,15 +35,13 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
         description: _formatDescription(data[index]),
         type: 'Phenotype',
         lastModified: _formatLastModified(data[index]),
-        external: data[index].external
+        external: data[index].external,
+        image: data[index].image
       });
     }
 
     phenotypes = transformedData.sort(ArrayUtil.sortByName);
     return phenotypes;
-  };
-  this.processRepositories = function(data) {
-    return data.repos;
   };
     
 
@@ -71,7 +59,6 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
     
     if (security.currentUser)
     {
-      console.log(security.currentUser);
       details.createdBy = security.currentUser.email;
       // todo add whole user object 
       details.user = security.currentUser;
@@ -81,7 +68,6 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
       {
           'update': { method:'PUT' }
       });
-    console.log("adding library item ", details);
     var item = new LibraryItem(details);
     if (details.id && details.id !== '') {
       item.$update({ id: details.id }, function(data) {

@@ -8,15 +8,10 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PhenotypePropertiesController', ['$scope', '$modalInstance', 'LibraryService', 'phenotype', 'isReference', 'repositories', function ($scope, $modalInstance, LibraryService, phenotype, isReference, repositories) {
+  .controller('PhenotypePropertiesController', ['$scope', '$modalInstance', 'LibraryService', 'phenotype', 'isReference', function ($scope, $modalInstance, LibraryService, phenotype, isReference) {
     $scope.formData = phenotype;
     $scope.displayReferenceNote = isReference;
-    $scope.repositories = repositories;
-    console.log(repositories);
     
-    // Get list of available repositories from the library service 
-    //LibraryService.repositories()
-     // .then(function(elements) { $scope.repositories = elements; });
     $scope.formTemplate = [
       {
         'type': 'text',
@@ -34,7 +29,7 @@ angular.module('sopheAuthorApp')
         'model': 'definition'
       }
     ];
-    for (var i = 0; i < repositories.length; i++)  
+    /*for (var i = 0; i < repositories.length; i++)  
     {
       var repo = repositories[i]; 
      
@@ -43,7 +38,7 @@ angular.module('sopheAuthorApp')
         'label': repo.description,
         'model': repo.name
       });
-    }
+    } */
     
       
 

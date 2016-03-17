@@ -20,13 +20,6 @@ angular.module('sopheAuthorApp')
       dirSelectable: false
     };
 
-    $scope.repositories = {};
-    LibraryService.repositories()
-      .then(LibraryService.processRepositories)
-      .then(function(repos){
-        $scope.repositories = repos;
-      });
-
     $scope.$on('onBeforeUnload', function (e, confirmation) {
         if (_hasPhenotypeChanged()) {
          confirmation.message = 'You have some unsaved changes that may be lost.';
@@ -146,6 +139,13 @@ angular.module('sopheAuthorApp')
       LibraryService.saveDetails(result)
         .then(function(data) {
           _setPhenotypeData(data.id, data.name, data.description);
+          // Update the phenotype with any external data we got from save -- such as phekb node id , etc
+          if ($scope.phenotype) { 
+            $scope.phenotype.external = data.external;
+          }
+          else {
+            $scope.phenotype = data;
+          }
           $scope.successMessage = 'Your phenotype was successfully saved';
           $scope.checkForUnsavedChanges = false;
           $location.path('/phenotype/' + data.id);
@@ -274,19 +274,16 @@ angular.module('sopheAuthorApp')
 
     $scope.save = function() {
       var phenotypeDefinition = $scope.canvasDetails.kineticStageObj.mainLayer.toJSON();
-      var config = { callback: function(image_data) { 
-        console.log('To image callback' , image_data); 
-        $scope.image = image_data;
-        $('body').append(image_data);
-        $scope.$apply();
-        }};
-      $scope.canvasDetails.kineticStageObj.toImage(config);
-      // If the phenotype was already saved (because there is an ID) we don't need to display
-      // the dialog again and we can just save.
+      
+      
       if ($scope.phenotype) {
         $scope.phenotype.definition = phenotypeDefinition;
-        _handlePhenotypeSave($scope.phenotype);
+        $scope.canvasDetails.kineticStageObj.toImage({callback: function(image){
+          $scope.phenotype.image = image.src;
+          _handlePhenotypeSave($scope.phenotype);
+        }});
       }
+      
       else {
         var modalInstance = $modal.open({
           templateUrl: 'views/properties/phenotype.html',
@@ -297,12 +294,15 @@ angular.module('sopheAuthorApp')
               return {definition: phenotypeDefinition };
             },
             isReference: function() { return false; },
-            repositories: function() { return $scope.repositories; }
           }
         });
 
         modalInstance.result.then(function (result) {
+          $scope.canvasDetails.kineticStageObj.toImage({callback: function(image){
+            
+            result.image = image.src;
           _handlePhenotypeSave(result);
+          }});
         });
       }
     };
@@ -325,8 +325,12 @@ angular.module('sopheAuthorApp')
       }
     };
 
-    $scope.openExternal = function() {
-      $window.open($scope.phenotype.external.url, '_blank');
+    $scope.openExternal = function(url) {
+      
+      if (!url) { 
+        url = $scope.phenotype.external.url;
+      }
+      $window.open(url, '_blank');
     }
 
     $scope.canShowProperties = function(item) {

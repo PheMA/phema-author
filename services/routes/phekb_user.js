@@ -18,16 +18,6 @@ function nameValidator (v) {
 
 
 var PhemaUser = new Schema({
-  firstName: {
-    type: String,
-    require: false,
-    //validate: [nameValidator, 'The name must be at least 4 characters long']
-  },
-  lastName: {
-    type: String,
-    require: false,
-    //validate: [nameValidator, 'The name must be at least 4 characters long']
-  },
   fullName: {
     type: String,
     require: false,
@@ -36,11 +26,6 @@ var PhemaUser = new Schema({
   email: {
     type: String,
     require: true,
-  },
-  password: { 
-    type: String,
-    require: true,
-    default: 'abc123'
   },
   fromSite: {
     type: String,
@@ -65,12 +50,15 @@ var PhemaUser = new Schema({
     // User id from phekb or other system 
     type: Number,
     default: 0
+  },
+  data: {
+    type: [Schema.Types.Mixed]
   }
   
 });
 
-// Phekb variables 
-var ws_url = 'http://local.phekb.org';
+// Phekb variables  todo config 
+var ws_url = 'https://phekb.org';
 var appid = 'phema_author';
 
 var UserRepo = mongoose.model('PhemaUser', PhemaUser);
@@ -92,58 +80,12 @@ function formatItemForReturn(item) {
 
 
 
-// callback has this signature : callback(error, result) 
-function findUser(data, callback)
-{
-  var search = data;
-  console.log(search);
-  UserRepo.findOne(search, callback);
-}
-
-function addUser(data, callback) { 
-  console.log("adding user to db"); 
-  var item = new UserRepo(data);
-  item.save(function(err, user) { 
-    callback(err, formatItemForReturn(user));
-  });
-}
-
-
-
 exports.login = function(req, res){
   res.set('Content-Type', 'application/json');
   var user_data = {email: req.body.email, password: req.body.password};
   login_phekb(res,user_data.email, user_data.password);
 };
 
-exports.register = function(req, res){
-  console.log("In Register on Server . Set cookie and session");
-   var user = null;
-   var user_data = 
-    {email: req.body.email, password: req.body.password, firstName: req.body.firstName, lastName: req.body.lastName};
-   UserRepo.findOne({email: user_data.email}, function(err, cur_user) { 
-    if (cur_user == null){ 
-      var new_user = new UserRepo(user_data);
-      new_user.save(function(err) { 
-        if (err){
-          console.log("Error registering: " + err);
-          res.send({error: err, user: null})
-        }
-        else{
-          var registration = {error: null, user: formatItemForReturn(new_user)};
-          console.log("Regitsered user . Returning object: ", registration);
-          res.send(registration);
-        }
-      });
-    }
-    else {
-      var registration =  {error: "Email already registered", user: null};
-      console.log("Error registering: ", registration)
-      res.send(registration);
-    }
-   });
- };
-    
 
 exports.logout = function(req, res){
   console.log("In logout.");
@@ -177,8 +119,6 @@ exports.current_user= function(req,res){
   
 }
 
-
-
 exports.phekb_resource = function(req, res){
   var session = req.body.session;
   var uid = req.body.uid;
@@ -187,11 +127,11 @@ exports.phekb_resource = function(req, res){
   console.log("phekb_resource path: " + url);
   request({url: url, headers: { Cookie: session} }, function(error, response, body) {
     if (!error){
-      console.log("Got phekb response ",body);
+      //console.log("Got phekb response ",body);
       if (body.length)
       {
         var data = JSON.parse(body); 
-        console.log(data);
+        //console.log(data);
         res.status(200).send(data);
       }
       else
@@ -206,52 +146,63 @@ exports.phekb_resource = function(req, res){
     }
           
   });
-  
-  // Returns {user: user, id:phenotype_id }
-  
-  /*
-
-  console.log("In new phekb. Set cookie and session");
-  console.log(req);
-  var user_data = {email: req.body.email, firstName: req.body.firstName, lastName: req.body.lastName};
-  var nid = req.body.nid;
-  function start_new_phekb(err, user) {
-    console.log("Start new phekb nid: " + nid + " User: ");
-    console.log(user);
-    res.redirect('/api/library/');
-  }
-  UserRepo.findOne({email: user_data.email}, function(err, user){
-    if (user) {
-      // Is nid available here? 
-      console.log("Nid in find one callback " + nid);
-      start_new_phekb(err,user);
-    }
-    else {
-      addUser(user_data, start_new_phekb);
-    }
-  });
-  */
-/*
-   res.set('Content-Type', 'application/json');
-   var retdata = {user: { firstName: 'Peter', lastName: 'Peltz'}, id: null};
-   res.status(200).send(retdata);
-    */
 
 };
 
+/* login with phekb 
+ *  We pass the user name and password to phekb.org login service. On success we get back a  user object and session id we can 
+ * store in the cookie on the front end. The angular app can request current_user($session)
+ */
+function inArray(needle, haystack) {
+    var length = haystack.length;
+    for(var i = 0; i < length; i++) {
+        if(haystack[i] == needle) return true;
+    }
+    return false;
+}
+
+function user_in_role(role, roles) {
+  for (var key in roles)
+  {
+    if (roles[key] == role) { return true;}
+  }
+  return false;
+}
 function login_phekb(res,email, password)
 {
+  console.log("Login phekb : ", email, password);
   
   var url = ws_url + '/services/user/login';
 
   request.post({url: url, formData: {username: email, password: password}}, function(error, response, body) {
-     
-    body = JSON.parse(body);
+    
+    try{
+      body = JSON.parse(body);
+    } catch(e){
+      console.log("Error parsing phekb response ", e)
+      res.status(500).send({error_msg: "Error parsing phekb response " , error: e} );
+      return;
+    }
     if (body.sessid)
     {
-      console.log("Logged in in phekb", body.sessid);
+      console.log(body);
       var session = body.session_name + "=" + body.sessid;
-      var user_data = {session: session , sessid: body.sessid, session_name: body.session_name, uid: body.user.uid, email: email, fromSite: 'phekb.org', fullName: body.user.field_full_name.und[0].value};
+      var admin = false; 
+      if ( user_in_role('administrator', body.user.roles) ) { admin = true; }
+
+      // Temporary -- must be a phema_author or deny 
+      if ( ! user_in_role('phema_author', body.user.roles) ) {
+        res.status(403).send('Forbidden not a phema_author');
+      } 
+
+      var user_data = {session: session , sessid: body.sessid, session_name: body.session_name, admin: admin,
+        uid: body.user.uid, fullName: body.user.field_full_name.und[0].value, email: body.user.mail, fromSite: 'phekb.org',  
+        data : { roles: body.user.roles,  groups: body.user.field_user_pgroups.und, institution: body.user.field_user_institution.und[0].tid }
+      };
+      
+      // Set admin if admin on phekb 
+      console.log("user roles: " , user_data.data.roles);
+      
       UserRepo.findOne({email: email}, function(err, cur_user) {
         console.log("Find user: ", err, cur_user);
         if (cur_user)
@@ -261,6 +212,7 @@ function login_phekb(res,email, password)
           cur_user.session= user_data.session;
           cur_user.fromSite = 'phekb.org';
           cur_user.uid = user_data.uid;
+          cur_user.data = user_data.data; // update their roles and such 
           cur_user.save(function(err){
             if (err)
             {
@@ -284,15 +236,45 @@ function login_phekb(res,email, password)
             }
           });
         }
-      });
+      }); // end find or add user to local db 
+      
     }
     else {
-      console.log("No sessid");
-      res.status(200).send({user: null });
+      console.log("No sessid from phekb. Login failed: " , body);
+      res.status(200).send({user: null});
     }
   });
 }
 
 
+/* No registration . Register on PheKB.org 
+exports.register = function(req, res){
+  console.log("In Register on Server . Set cookie and session");
+   var user = null;
+   var user_data = 
+    {email: req.body.email, password: req.body.password, firstName: req.body.firstName, lastName: req.body.lastName};
+   UserRepo.findOne({email: user_data.email}, function(err, cur_user) { 
+    if (cur_user == null){ 
+      var new_user = new UserRepo(user_data);
+      new_user.save(function(err) { 
+        if (err){
+          console.log("Error registering: " + err);
+          res.send({error: err, user: null})
+        }
+        else{
+          var registration = {error: null, user: formatItemForReturn(new_user)};
+          console.log("Regitsered user . Returning object: ", registration);
+          res.send(registration);
+        }
+      });
+    }
+    else {
+      var registration =  {error: "Email already registered", user: null};
+      console.log("Error registering: ", registration)
+      res.send(registration);
+    }
+   });
+ };
+ */
 
 

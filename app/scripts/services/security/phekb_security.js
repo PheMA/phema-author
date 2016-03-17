@@ -10,7 +10,8 @@ angular.module('security.service', [
   'ui.bootstrap.modal'      // Used to display the login form as a modal dialog.
 ])
 
-.factory('security', ['$http', '$q', '$location', 'securityRetryQueue', '$modal', '$rootScope', '$cookies', function($http, $q, $location, queue, $modal, $rootScope, $cookies) {
+.factory('security', ['$http', '$q', '$location', 'securityRetryQueue', '$modal', '$rootScope', '$cookies', '$window',
+  function($http, $q, $location, queue, $modal, $rootScope, $cookies, $window) {
 
   // Redirect to the given url (defaults to '/')
   function redirect(url) {
@@ -93,7 +94,11 @@ angular.module('security.service', [
       openLoginDialog();
     },
     showRegister: function() {
-      openRegisterDialog();
+      // Phekb register there 
+      // TODO 
+      var url = 'https://phekb.org/contact';
+      $window.open(url, '_blank');
+      /* openRegisterDialog(); */
     },
     closeRegister: function(success) {
       closeRegisterDialog(success);
@@ -102,11 +107,13 @@ angular.module('security.service', [
     // Attempt to authenticate a user by the given email and password
     // Todo -- fix
     login: function(email, password) {
-      var request = $http.post('/login', {email: email, password: password});
+      var request = $http.post('/api/login', {email: email, password: password});
 
       return request.then(function(response) {
         service.currentUser = response.data.user;
         $cookies.session = service.currentUser.session;
+        console.log(service.currentUser);
+        $rootScope.$broadcast('user:updated', service.currentUser);
         closeLoginDialog(true);
         return service.currentUser;
         
@@ -130,8 +137,11 @@ angular.module('security.service', [
       $cookies.session = null;
       service.currentUser = null;
       $rootScope.$broadcast('user:updated', service.currentUser);
-      redirect(redirectTo);
-      /*$http.post('/logout').then(function() {
+      if (redirectTo) {
+        redirect(redirectTo);
+      }
+      
+      /*$http.post('/api/logout').then(function() {
         service.currentUser = null;
         redirect(redirectTo);
       }); */
@@ -145,18 +155,18 @@ angular.module('security.service', [
       else {
         session = $cookies.session;
         if (session) {
-          return $http.post('/current-user', {session: session}).then(function(response) {
+          return $http.post('/api/current-user', {session: session}).then(function(response) {
             service.currentUser = response.data.user;
             $rootScope.$broadcast('user:updated', service.currentUser);
             return service.currentUser;
           },  
           function(error) { 
             console.log(error);
-            return service.currentUser;
+            return null;
           }); 
         }
         else {
-          return service.currentUser;
+          return null;
         }
       }
     },

@@ -15,13 +15,18 @@ var units = require('./services/routes/units');
 // Set user routes 
 var user = require('./services/routes/phekb_user'); 
 
+// Set the images directory to be served as files 
+app.use(express.static('public'));
+
 module.exports = app;
 
 app.use(logger('combined'));
 app.use(express.static("" + __dirname + "/dist", {maxAge: 1}));
 
 // parse application/json
-app.use(bodyParser.json());
+// And add limit to how big requests can be. Saving image of canvas caused error when too big. 
+app.use(bodyParser.json({limit: '50mb'}));
+
 
 // Routing examples at: https://github.com/strongloop/express/tree/master/examples/route-separation
 app.get('/', site.index);
@@ -33,7 +38,9 @@ app.get('/api/fhir/:type', fhir.index);
 
 app.get('/api/library', library.index);
 app.get('/api/library/:id', library.details);
-app.get('/api/library/repositories', library.repositories);
+// Image view 
+//app.get('/image/:id', library.image);
+
 app.post('/api/library', library.add);
 app.put('/api/library/:id', library.update);
 app.delete('/api/library/:id', library.delete);
@@ -54,14 +61,12 @@ app.get('/api/export/:id', exporters.result);
 
 app.get('/api/units', units.index);
 
-app.post('/login', user.login);
-app.post('/logout', user.logout);
-app.post('/register', user.register);
-app.post('/current-user', user.current_user);
+//User api 
+app.post('/api/login', user.login);
+app.post('/api/logout', user.logout);
+//app.post('/register', user.register);
+app.post('/api/current-user', user.current_user);
 app.post('/phekb-resource', user.phekb_resource);
 
-/*app.post('/new_phekb', user.new_phekb);
-app.get('/new_phekb', user.new_phekb);
-*/
 
 app.listen(process.env.PORT || 8081);
