@@ -58,8 +58,9 @@ var PhemaUser = new Schema({
 });
 
 // Phekb variables  todo config 
-//var ws_url = 'https://phekb.org';
-var ws_url = 'http://local.phekb.org';
+
+//var phekb_url = 'http://local.phekb.org';
+var phekb_url = 'https://phekb.org';
 var appid = 'phema_author';
 // Must connect this way to have multiple connections in one node js app 
 var userconn = mongoose.createConnection('mongodb://localhost/phema-user');
@@ -127,7 +128,7 @@ exports.phekb_resource = function(req, res){
   var session = req.body.session;
   var uid = req.body.uid;
   var path = req.body.path;
-  var url = ws_url + '/' +  path;
+  var url = phekb_url + '/' +  path;
   console.log("phekb_resource path: " + url);
   request({url: url, headers: { Cookie: session} }, function(error, response, body) {
     if (!error){
@@ -176,7 +177,7 @@ function login_phekb(res,email, password)
 {
   console.log("Login phekb : ", email, password);
   
-  var url = ws_url + '/services/user/login';
+  var url = phekb_url + '/services/user/login';
 
   request.post({url: url, formData: {username: email, password: password}}, function(error, response, body) {
     

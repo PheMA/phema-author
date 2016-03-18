@@ -19,8 +19,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var request = require('request');
 
-var phekb_url = 'http://local.phekb.org';
-//var phekb_url = 'https://phekb.org';
+//var phekb_url = 'http://local.phekb.org';
+var phekb_url = 'https://phekb.org';
 
 
 function nameValidator (v) {
@@ -109,7 +109,6 @@ function saveToPhekb(item)
 {
   // If phekb save to phekb 
   // Todo -- add default groups 
-		console.log("in save to phekb ");
     var id = 0;
     var phekb_save_url = phekb_url + '/phema-author/ws/save';
     if (item._id)
@@ -138,7 +137,6 @@ function saveToPhekb(item)
     
     if (item.image) phekb_data.image = item.image;
 
-    console.log('phekb data ', phekb_data);
     request.post({url: phekb_save_url, formData:phekb_data }, function (error, response, body) {
       try {
         body = JSON.parse(body);
@@ -147,7 +145,6 @@ function saveToPhekb(item)
       }
      
       if (!error && response.statusCode == 200) {
-        console.log('returned save phekb ' , body);
         // Save the phekb nid and url and such 
         item.external.nid  = body.nid; 
         item.external.url = phekb_url + '/phenotype/'+item.external.nid;
@@ -371,8 +368,6 @@ exports.update = function(req, res) {
 
     return item.save(function(err) {
       if(!err) {
-        console.log('Updated');
-        console.log("updated : " , item.definition);
         // phekb custom  send data to phekb and save phekb data in item 
         saveToPhekb(item);
        	res.send(formatItemForReturn(item));
