@@ -152,11 +152,18 @@ BaseElement.prototype = {
     });
   },
 
+  // By default, an element has no capacity.  Subclasses can override this if they want to enforce
+  // some type of limit.
+  atCapacity: function() {
+    return false;
+  },
+
   // Sets up a Kinetic shape to be a droppable target that accepts an array of types that
   // can be dropped on it.
-  setDroppable: function(kineticObj, allowedDropTypes) {
+  setDroppable: function(kineticObj, allowedDropTypes, atCapacityFn) {
     kineticObj.droppable = true;
     kineticObj.droppableElementTypes = allowedDropTypes;
+    kineticObj.atCapacity = atCapacityFn;
   },
 
     // Adds appropriate event handlers to a draggable object.

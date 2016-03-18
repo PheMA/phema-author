@@ -141,7 +141,7 @@
   }
 }
 
-#data-element-properties, #value-set-properties {
+#data-element-properties, #value-set-properties, #function-operator-properties {
   label {
     width: 48%;
     padding-right: 25px;
@@ -195,6 +195,16 @@
     }
     input[type=text] {
       width: 50px;
+    }
+  }
+}
+
+#function-operator-properties {
+  label {
+    width: 100%;
+    padding-right: 25px;
+    input {
+      float: none;
     }
   }
 }

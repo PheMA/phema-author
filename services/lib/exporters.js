@@ -121,12 +121,13 @@ ExporterRepository.prototype.getStatus = function(id, callback) {
 
 ExporterRepository.prototype.getEntry = function(id, callback) {
   this.tempFiles.findOne({_id: mongojs.ObjectId(id)}, function (err, doc) {
-    console.log('Found entry');
     if (err === null && doc !== null) {
+      console.log('Found entry');
       doc.id = doc._id;
       callback(doc);
     }
     else {
+      console.log('Error: No record was found with that ID');
       callback(null, {message: 'No record was found with that ID'});
     }
   });

@@ -88,7 +88,11 @@ angular.module('sophe.services.attribute', ['sophe.services.url', 'ngResource'])
       attribute.id === 'FacilityLocation' ||
       attribute.id === 'Cause' ||
       attribute.id === 'Route' ||
-      attribute.id === 'Status') {
+      attribute.id === 'Status' ||
+      attribute.id === 'DocumentSection' ||
+      attribute.id === 'Certainty' ||
+      attribute.id === 'Temporality' ||
+      attribute.id === 'Negation') {
       item.type = 'valueSet';
     }
     else if (attribute.id === 'CumulativeMedicationDuration' || attribute.id === 'Refills') {

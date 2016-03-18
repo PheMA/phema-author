@@ -9,9 +9,9 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', '$location', '$window', '$timeout', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'SubsetOperatorService', 'QDMElementService', 'FHIRElementService', 'LibraryService', 'ConfigurationService', function ($scope, $http, $routeParams, $modal, $location, $window, $timeout, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, SubsetOperatorService, QDMElementService, FHIRElementService, LibraryService, ConfigurationService) {
+  .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', '$location', '$window', '$timeout', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'SubsetOperatorService', 'QDMElementService', 'FHIRElementService', 'LibraryService', 'ConfigurationService', 'FunctionOperatorService', function ($scope, $http, $routeParams, $modal, $location, $window, $timeout, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, SubsetOperatorService, QDMElementService, FHIRElementService, LibraryService, ConfigurationService, FunctionOperatorService) {
     $scope.phenotype = ($routeParams.id ? {id: $routeParams.id } : null );
-    $scope.status = { open: [false, false, false, false, false, false, false, false]};
+    $scope.status = { open: [false, false, false, false, false, false, false, false, false]};
     $scope.isPropertiesDisabled = true;
     $scope.successMessage = null;
     $scope.errorMessage = null;
@@ -50,6 +50,10 @@ angular.module('sopheAuthorApp')
     SubsetOperatorService.load()
       .then(SubsetOperatorService.processValues)
       .then(function(operators) { $scope.subsetOperators = operators; });
+
+    FunctionOperatorService.load()
+      .then(FunctionOperatorService.processValues)
+      .then(function(operators) { $scope.functionOperators = operators; });
 
     // Update the phenotype metadata so that it is available within the phenotype definition
     // for export.  This needs to be synced each time we update/save.
@@ -355,7 +359,8 @@ angular.module('sopheAuthorApp')
         element.type === 'Phenotype' ||
         element.type === 'DataElement' ||
         element.type === 'ValueSet' ||
-        element.type === 'SubsetOperator');
+        element.type === 'SubsetOperator' ||
+        element.type === 'FunctionOperator');
     };
 
     function _getConnectorElementType(selectedConnection, start) {
@@ -564,6 +569,35 @@ angular.module('sopheAuthorApp')
           element = result;
           selectedElement.element(element);
           findParentElementByName(selectedElement, 'header').setText(element.name);
+          selectedElement.getStage().draw();
+        });
+      }
+      else if (element.type === 'FunctionOperator') {
+        modalInstance = $modal.open({
+          templateUrl: 'views/properties/functionOperator.html',
+          controller: 'FunctionOperatorPropertiesController',
+          size: 'lg',
+          resolve: {
+            element: function () {
+              return angular.copy(element);
+            },
+            attributes: function () {
+              return angular.copy(selectedElement.phemaObject().attributes());
+            },
+            containedElements: function () {
+              return selectedElement.phemaObject().containedElements();
+            }
+          }
+        });
+
+        modalInstance.result.then(function (result) {
+          if (selectedElement.phemaObject() && selectedElement.phemaObject().attributes) {
+            selectedElement.phemaObject().attributes(result);
+          }
+          else {
+            element.attributes = result;
+            selectedElement.element(element);
+          }
           selectedElement.getStage().draw();
         });
       }
