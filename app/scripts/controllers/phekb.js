@@ -1,8 +1,8 @@
 'use strict';
 
 var mod = angular.module('phekb', ['ngCookies']);
-//var phekb_url = "http://local.phekb.org";
-var phekb_url = "https://phekb.org";
+var phekb_url = "http://local.phekb.org";
+//var phekb_url = "https://phekb.org";
 function htmlToPlaintext(text) {
   return text ? String(text).replace(/<[^>]+>/gm, '') : '';
 }
@@ -12,9 +12,9 @@ function htmlToPlaintext(text) {
  */
 
 function phekb_add_to_local_lib(user, phenotype, $scope, LibraryService, i, ptype){
-  var external = { nid: phenotype.nid, uid: phenotype.uid, site: phekb_url, url: phekb_url + "/phenotype/" + phenotype.nid };
+  var external = { nid: phenotype.nid, site: phekb_url, url: phekb_url + "/phenotype/" + phenotype.nid };
   var lib_pheno = {phekb: true, modifiedBy: user.email, createdBy: user.email, name: phenotype.title, description: phenotype.description,
-  external: external };  
+  external: external, user : user};  
   LibraryService.saveDetails(lib_pheno)
     .then(function(data) {
       console.log("added phekb pheno to local lib : " + data.id);
@@ -101,8 +101,8 @@ mod.controller('PhekbEntryController', ['$scope', 'security', '$http', '$rootSco
       }
       else {
         console.log("creating new from phekb ");
-        var external = { nid: args.nid, uid: args.uid, site: args.site, url: phekb_url + "/phenotype/" + args.nid };
-        var phenotype = {phekb: true, modifiedBy: user.email, createdBy: user.email, name: args.title, description: args.description,
+        var external = { nid: args.nid, site: args.site, url: phekb_url + "/phenotype/" + args.nid };
+        var phenotype = {user: user, modifiedBy: user.email, createdBy: user.email, name: args.title, description: args.description,
         external: external };  //nid: args.nid, uid: args.uid, site: args.site };
         LibraryService.saveDetails(phenotype)
           .then(function(data) {
@@ -173,8 +173,14 @@ mod.controller('PhekbPhenotypesController', ['$scope', 'security', '$http', '$ro
 
     // Foreach phenotype that is not in the local library , add it so that editing is seemless and links back to phekb 
     for (var i = $scope.phenotypes.length - 1; i >= 0; i--) {
+      console.log('dashboard id : ', $scope.phenotypes[i].id );
       if ($scope.phenotypes[i].id == 0) {
         phekb_add_to_local_lib($scope.user, $scope.phenotypes[i], $scope, LibraryService, i, 'mine');
+        //console.log("my adding to local lib")
+      }
+      else
+      {
+        //console.log("my NOT adding to local lib ");
       }
     };
   }, function(error) {
@@ -190,8 +196,14 @@ mod.controller('PhekbPhenotypesController', ['$scope', 'security', '$http', '$ro
 
     // Foreach phenotype that is not in the local library , add it so that editing is seemless and links back to phekb 
     for (var i = $scope.group_phenotypes.length - 1; i >= 0; i--) {
+      console.log('dashboard group id : ', $scope.group_phenotypes[i].id );
       if ($scope.group_phenotypes[i].id == 0) {
+        //console.log(" group adding to local lib ");
         phekb_add_to_local_lib($scope.user, $scope.group_phenotypes[i], $scope, LibraryService, i, 'group');
+      }
+      else
+      {
+        //console.log("group NOT adding to local lib ");
       }
     };
   }, function(error) {

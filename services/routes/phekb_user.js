@@ -3,7 +3,7 @@ var request = require('request');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 
-var MONGO_CONNECTION = 'mongodb://localhost/phema-user';
+//var USER_CONNECTION = 'mongodb://localhost/phema-user';
 
 var Schema = mongoose.Schema;
 
@@ -58,20 +58,23 @@ var PhemaUser = new Schema({
 });
 
 // Phekb variables  todo config 
-var ws_url = 'https://phekb.org';
+//var ws_url = 'https://phekb.org';
+var ws_url = 'http://local.phekb.org';
 var appid = 'phema_author';
-
-var UserRepo = mongoose.model('PhemaUser', PhemaUser);
-
+// Must connect this way to have multiple connections in one node js app 
+var userconn = mongoose.createConnection('mongodb://localhost/phema-user');
+var UserRepo = userconn.model('PhemaUser', PhemaUser);
+//var UserRepo = mongoose.model('PhemaUser', PhemaUser);
+/*
 // MongoDB configuration
-mongoose.connect(MONGO_CONNECTION, function(err) {
+mongoose.connect(USER_CONNECTION, function(err) {
   if(err) {
     console.log('error connecting to MongoDB Database. ' + err);
   } else {
     console.log('Connected to Database');
   }
 });
-
+*/
 
 function formatItemForReturn(item) {
     item.id =  item._id.toHexString();
@@ -96,7 +99,8 @@ exports.logout = function(req, res){
     
 
 };
-// Return a user if one is logged in
+// Return a user if one is logged in -- the app sends the cookie which is stored with 
+// a user when they login. We find user with that cookie and return it.
 exports.current_user= function(req,res){
   console.log('auth_user', req.body);
   var session = req.body.session;

@@ -1,6 +1,6 @@
 /* phekb_library.js 
  * copied from the library apps /services/routes/library.js an tweaked to send data to phekb 
- 
+
 Test sending items via:
 
 var xmlhttp = new XMLHttpRequest();
@@ -16,12 +16,11 @@ xmlhttp.send();
 
 var mongoose = require('mongoose');
 
-var MONGO_CONNECTION = 'mongodb://localhost/phema-library';
-
 var Schema = mongoose.Schema;
 var request = require('request');
-//var phekb_url = 'http://local.phekb.org';
-var phekb_url = 'https://phekb.org';
+
+var phekb_url = 'http://local.phekb.org';
+//var phekb_url = 'https://phekb.org';
 
 
 function nameValidator (v) {
@@ -36,7 +35,7 @@ var LibraryItem = new Schema({
   name: {
     type: String,
     require: true,
-    validate: [nameValidator, 'The name must be at least 4 characters long']
+    //validate: [nameValidator, 'The name must be at least 4 characters long']
   },
   description: {
     type: String
@@ -92,22 +91,25 @@ function formatItemForReturn(item) {
     
   };
 }
-
-var LibraryRepository = mongoose.model('LibraryItem', LibraryItem);
+// Must connect this way to have multiple connections in one node js app 
+var libconn = mongoose.createConnection('mongodb://localhost/phema-library');
+var LibraryRepository = libconn.model('LibraryItem', LibraryItem);
 
 // MongoDB configuration
-mongoose.connect(MONGO_CONNECTION, function(err) {
+/*mongoose.connect(LIBRARY_CONNECTION, function(err) {
   if(err) {
     console.log('error connecting to MongoDB Database. ' + err);
   } else {
     console.log('Connected to Database');
   }
 });
+*/
 
-function saveToPhekb(item, res)
+function saveToPhekb(item)
 {
   // If phekb save to phekb 
-  
+  // Todo -- add default groups 
+		console.log("in save to phekb ");
     var id = 0;
     var phekb_save_url = phekb_url + '/phema-author/ws/save';
     if (item._id)
@@ -118,18 +120,26 @@ function saveToPhekb(item, res)
     // We need to send this back to phekb so it can update 
     var nid = 0; // phekb's id 
     var uid = 0;
+    if (item.user) { 
+      uid = item.user.uid;
+    }
+    else
+    {
+      console.log("No user when saving to phekb ");
+    }
     if (!item.external ) { 
-      item.external = {nid : 0 , uid : 0, url: ''};
+      item.external = {nid : 0 };
     }
 
+    if (!item.name) {item.name = 'No Name'; }
+    if (!item.description) {item.description = 'No Description'; }
 
-    var phekb_data = {name: item.name, description: item.description, id: id , nid: item.external.nid, uid: item.external.uid};
+    var phekb_data = {name: item.name, description: item.description, id: id , nid: item.external.nid, uid: uid};
     
     if (item.image) phekb_data.image = item.image;
 
-    
+    console.log('phekb data ', phekb_data);
     request.post({url: phekb_save_url, formData:phekb_data }, function (error, response, body) {
-      console.log(body);
       try {
         body = JSON.parse(body);
       } catch(e) {
@@ -140,23 +150,26 @@ function saveToPhekb(item, res)
         console.log('returned save phekb ' , body);
         // Save the phekb nid and url and such 
         item.external.nid  = body.nid; 
-        item.external.uid = body.user.uid;
         item.external.url = phekb_url + '/phenotype/'+item.external.nid;
         item.save(function(err) {
           if(!err) { 
-           res.statusCode = 200;
-           res.send(formatItemForReturn(item));
+           // In case phekb service is down we don't want app depending on it 
+           //res.statusCode = 200;
+           //res.send(formatItemForReturn(item));
+           return true;
           } 
           else { 
             console.log("Error saving phekb return nid : " + err);
-            res.statusCode = 400;
-            res.send({ error:err });
+            //res.statusCode = 400;
+            //res.send({ error:err });
+            return true;
           }
         });
       }
     });
   
 }
+
 
 
 exports.index = function(req, res){
@@ -244,9 +257,24 @@ exports.image = function(req, res){
 exports.add = function(req, res) {
   console.log('POST - /library');
   var item = new LibraryRepository({
-    name: req.body.name,
-   
   });
+  if (req.body.name)
+  {
+    item.name = req.body.name;
+  }
+  else 
+  {
+    item.name = "No Name";
+  }
+  if (req.body.description)
+  {
+    item.description = req.body.description;
+  }
+  else
+  {
+    item.description = "No description";
+  }
+  
   if (req.body.phekb)
   {
     item.phekb = req.body.phekb;
@@ -282,7 +310,6 @@ exports.add = function(req, res) {
   }
 
   item.save(function(err) {
-    console.log("item saved ", item.definition);
     if (err) {
       console.log('Error while saving library item: ' + err);
       res.statusCode = 400;
@@ -291,7 +318,10 @@ exports.add = function(req, res) {
     }
     else {
       console.log("Library item created");
-      saveToPhekb(item, res);
+      // phekb custom -- send to phekb and save phekb data back in the item 
+      saveToPhekb(item);
+      res.send(formatItemForReturn(item));
+
     }
   });
 };
@@ -343,7 +373,10 @@ exports.update = function(req, res) {
       if(!err) {
         console.log('Updated');
         console.log("updated : " , item.definition);
-        saveToPhekb(item,res);
+        // phekb custom  send data to phekb and save phekb data in item 
+        saveToPhekb(item);
+       	res.send(formatItemForReturn(item));
+
 
       
       } else {

@@ -46,8 +46,7 @@ exports.image = function(req, res){
       // defaults to html for string 
       //res.set('Content-Type', 'text/html');
       if (data.image) {
-        res.status(200).send('<img  width="300" height="200" src="' + data.image + '">');
-        
+        res.status(200).send('<img  width="1024" height="960" src="' + data.image + '">');
       }
       else {
         console.log('no image');

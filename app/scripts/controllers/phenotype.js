@@ -326,11 +326,20 @@ angular.module('sopheAuthorApp')
     };
 
     $scope.openExternal = function(url) {
-      
+      // Todo -- figure out how to get phenotype data from phekb back to app phenotype 
       if (!url) { 
-        url = $scope.phenotype.external.url;
+        LibraryService.loadDetails($scope.phenotype.id)
+            .then(function(phenotype) { 
+              $scope.phenotype = phenotype; // update with latest because when saving to phekb on s
+              url = $scope.phenotype.external.url;
+              $window.open(url, '_blank');
+            }, function(error) { 
+              console.log("Couldn't get url for phenotype in external library.", error);
+            });
+      } else {
+        $window.open(url, '_blank');
       }
-      $window.open(url, '_blank');
+      
     }
 
     $scope.canShowProperties = function(item) {

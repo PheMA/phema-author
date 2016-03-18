@@ -1,3 +1,4 @@
+
 'use strict';
 var request = require('request');
 
@@ -25,7 +26,6 @@ LibraryRepository.prototype.getItems = function(callback) {
 LibraryRepository.prototype.getItem = function(id, callback) {
   request(this.baseURL + '/library/' + id, function(error, response, body) {
     if (!error && response.statusCode === 200) {
-     
      // Have to parse the body for the image 
       try {
         body = JSON.parse(body);
@@ -42,7 +42,6 @@ LibraryRepository.prototype.getItem = function(id, callback) {
 };
 
 LibraryRepository.prototype.addItem = function(item, callback) {
-  console.log("repo putting add item image ", item.image);
   request.post(this.baseURL + '/library/', {json: item}, function(error, response, body) {
     if (!error && response.statusCode === 200) {
       callback(null, body);
