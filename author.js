@@ -6,13 +6,14 @@ var app = express();
 var site = require('./services/routes/site');
 var elements = require('./services/routes/dataElements');
 var fhir = require('./services/routes/fhirElements');
-var library = require('./services/routes/library');
+// Use the phekb library 
+var library = require('./services/routes/phekb_library');
 var valueSets = require('./services/routes/valueSets');
 var codeSystems = require('./services/routes/codeSystems');
 var config = require('./services/routes/config');
 var exporters = require('./services/routes/exporters');
 var units = require('./services/routes/units');
-// Set user routes 
+// Use phekb user 
 var user = require('./services/routes/phekb_user'); 
 
 // Set the images directory to be served as files 
