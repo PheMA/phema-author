@@ -143,6 +143,13 @@ angular.module('sopheAuthorApp')
       LibraryService.saveDetails(result)
         .then(function(data) {
           _setPhenotypeData(data.id, data.name, data.description);
+          // Update the phenotype with any external data we got from save -- such as phekb node id , etc
+          if ($scope.phenotype) { 
+            $scope.phenotype.external = data.external;
+          }
+          else {
+            $scope.phenotype = data;
+          }
           $scope.successMessage = 'Your phenotype was successfully saved';
           $scope.checkForUnsavedChanges = false;
           $location.path('/phenotype/' + data.id);
@@ -271,13 +278,16 @@ angular.module('sopheAuthorApp')
 
     $scope.save = function() {
       var phenotypeDefinition = $scope.canvasDetails.kineticStageObj.mainLayer.toJSON();
-
-      // If the phenotype was already saved (because there is an ID) we don't need to display
-      // the dialog again and we can just save.
+      
+      
       if ($scope.phenotype) {
         $scope.phenotype.definition = phenotypeDefinition;
-        _handlePhenotypeSave($scope.phenotype);
+        $scope.canvasDetails.kineticStageObj.toImage({callback: function(image){
+          $scope.phenotype.image = image.src;
+          _handlePhenotypeSave($scope.phenotype);
+        }});
       }
+      
       else {
         var modalInstance = $modal.open({
           templateUrl: 'views/properties/phenotype.html',
@@ -287,12 +297,16 @@ angular.module('sopheAuthorApp')
             phenotype: function() {
               return {definition: phenotypeDefinition };
             },
-            isReference: function() { return false; }
+            isReference: function() { return false; },
           }
         });
 
         modalInstance.result.then(function (result) {
+          $scope.canvasDetails.kineticStageObj.toImage({callback: function(image){
+            
+            result.image = image.src;
           _handlePhenotypeSave(result);
+          }});
         });
       }
     };
@@ -314,6 +328,23 @@ angular.module('sopheAuthorApp')
         _handleLoad();
       }
     };
+
+    $scope.openExternal = function(url) {
+      // Todo -- figure out how to get phenotype data from phekb back to app phenotype 
+      if (!url) { 
+        LibraryService.loadDetails($scope.phenotype.id)
+            .then(function(phenotype) { 
+              $scope.phenotype = phenotype; // update with latest because when saving to phekb on s
+              url = $scope.phenotype.external.url;
+              $window.open(url, '_blank');
+            }, function(error) { 
+              console.log("Couldn't get url for phenotype in external library.", error);
+            });
+      } else {
+        $window.open(url, '_blank');
+      }
+      
+    }
 
     $scope.canShowProperties = function(item) {
       var selectedElement = item || algorithmElementFactory.getFirstSelectedItem($scope);
@@ -589,6 +620,8 @@ angular.module('sopheAuthorApp')
       {id: 'btnDelete', text: 'Delete', iconClass:'fa fa-remove', event: $scope.delete, disabled: true, tooltip: 'Delete the highlighted element(s) in the canvas'},
       {spacer: true},
       {id: 'btnFeedback', text: 'Feedback', iconClass:'fa fa-comment', event: $scope.delete, disabled: true, tooltip: 'Suggestions or comments'},
+      {id: 'btnOpenExternal', text: 'Open in PheKB', iconClass:'fa fa-external', event: $scope.openExternal, disabled: false, tooltip: 'Open Phenotype in PheKB.org'},
+ 
     ];
 
 

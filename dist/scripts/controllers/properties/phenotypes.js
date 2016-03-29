@@ -11,6 +11,7 @@ angular.module('sopheAuthorApp')
   .controller('PhenotypePropertiesController', ['$scope', '$modalInstance', 'LibraryService', 'phenotype', 'isReference', function ($scope, $modalInstance, LibraryService, phenotype, isReference) {
     $scope.formData = phenotype;
     $scope.displayReferenceNote = isReference;
+    
     $scope.formTemplate = [
       {
         'type': 'text',
@@ -26,11 +27,24 @@ angular.module('sopheAuthorApp')
         'type': 'hidden',
         'label': 'Definition',
         'model': 'definition'
-      },
+      }
     ];
+    /*for (var i = 0; i < repositories.length; i++)  
+    {
+      var repo = repositories[i]; 
+     
+      $scope.formTemplate.push({
+        'type': 'checkbox',
+        'label': repo.description,
+        'model': repo.name
+      });
+    } */
+    
+      
 
     $scope.ok = function () {
       $modalInstance.close($scope.formData);
+
     };
 
     $scope.cancel = function () {

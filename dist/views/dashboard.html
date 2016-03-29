@@ -1,28 +1,72 @@
 <h1>Dashboard</h1>
-<div class="col-md-6">
-  <div class="dashboard-col">
-    <div class="dashboard-header">
-      My Phenotypes
+<div ng-controller="PhekbPhenotypesController">
+  <div >
+    <div class="dashboard-col">
+      <div class="dashboard-header">
+        My PheKB Phenotypes
+      </div>
+      <div class="dashboard-body">
+        <table class="phenotype-list">
+          <thead>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Last Updated</th>
+            <th>Link to PheKB </th>
+            <th> Owner Groups </th> 
+            <th> Description </th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="phenotype in phenotypes">
+              <td><a href="#/phenotype/{{phenotype.id}}">{{phenotype.title}}</a></td>
+              <td>{{phenotype.status}}</td>
+              <td>{{phenotype.updated}}</td>
+              <td> <a href="{{phenotype.link}}" target="_blank"> Open in PheKB.org </a> </td> 
+              <td> {{phenotype.ownergroups.join(', ')}} </td>
+              <td> {{phenotype.description}} </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-    <div class="dashboard-body">
-      <table class="phenotype-list">
-        <thead>
-          <th>Name</th>
-          <th>Status</th>
-          <th>Last Updated</th>
-        </thead>
-        <tbody>
-          <tr ng-repeat="phenotype in phenotypes">
-            <td><a href="#/phenotype/{{phenotype.id}}">{{phenotype.name}}</a></td>
-            <td>Draft</td>
-            <td>{{phenotype.lastModified}}</td>
-          </tr>
-        </tbody>
-      </table>
+  </div>
+  <div >
+    <div class="dashboard-col">
+      <div class="dashboard-header">
+        My PheKB Owner Group Phenotypes
+      </div>
+      <div class="dashboard-body">
+        <table class="phenotype-list">
+          <thead>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Last Updated</th>
+            <th>Link to PheKB </th>
+            <th> Owner Groups </th> 
+            <th> Description </th>
+            <th>Email</th>
+            
+          </thead>
+          <tbody>
+            <tr ng-repeat="phenotype in group_phenotypes">
+             <td><a href="#/phenotype/{{phenotype.id}}">{{phenotype.title}}</a></td>
+              <td>{{phenotype.status}}</td>
+              <td>{{phenotype.updated}}</td>
+              <td> <a href="{{phenotype.link}}" target="_blank"> Open in PheKB.org </a> </td> 
+              <td> {{phenotype.ownergroups.join(', ')}} </td>
+              <td> {{phenotype.description}} </td>
+              <td>{{phenotype.email}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
-<div class="col-md-6">
+
+<div> &nbsp; </div>
+
+
+<div class="">
   <div class="dashboard-col">
     <div class="dashboard-header">
       Recent Activity
@@ -36,24 +80,6 @@
           <li>Changes made by others in groups you are a member of</li>
         </ul>
       </span>
-<!--       <ul>
-        <li>
-          <div class="activity-text">
-            <a href="#/people/0">You</a> updated the <a href="#/phenotype/0">eMERGE Type 2 Diabetes - Cases</a> phenotype in your <a href="#/phenotype/list/private">private list</a>
-            <div class="activity-time">
-              (2 minutes ago)
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="activity-text">
-            <a href="#/people/0">Jim Smith</a> updated the <a href="#/phenotype/0">eMERGE Resistant Hypertension Controls</a> phenotype phenotype in the <a href="#/phenotype/list/emerge-group">eMERGE Group list</a>
-            <div class="activity-time">
-              (2 minutes ago)
-            </div>
-          </div>
-        </li>
-      </ul> -->
     </div>
   </div>
 </div>

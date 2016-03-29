@@ -1,16 +1,17 @@
 <ul class="nav navbar-nav">
-  <li class="dropdown" ng-show="isAuthenticated()">
-    <a href="#" class="dropdown-toggle">{{currentUser.firstName}} {{currentUser.lastName}} <b class="caret"></b></a>
+  <li class="dropdown" ng-show="security.isAuthenticated()">
+    <a href="#" class="dropdown-toggle">{{security.currentUser.firstName}} {{security.currentUser.lastName}} <b class="caret"></b></a>
     <ul class="dropdown-menu">
-      <li><a href="#/user/{{currentUser.id}}">Profile</a></li>
+      <li><a href="#/user/{{security.currentUser.id}}">Profile</a></li>
       <li>
-        <a href="#" ng-click="logout()">Log out</a>
+        <a href="#" ng-click="security.logout()">Log out</a>
       </li>
     </ul>
   </li>
-  <li ng-hide="isAuthenticated()" class="login">
+  <li ng-hide="security.isAuthenticated()" class="login">
       <form class="navbar-form">
-          <button class="btn login" ng-click="login()">Log in</button>
+          <button class="btn login" ng-click="security.showLogin()">Log in</button>
+          <button class="btn register" ng-click="security.showegister()">Register</button>
       </form>
   </li>
 </ul>

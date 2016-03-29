@@ -1,0 +1,7 @@
+{
+  "exporters": [
+    {"name": "HQMF", "description": "HL7 Health Quality Measure Format (HQMF)"},
+    {"name": "PhEMA (JSON)", "description": "Native format created by the authoring tool"},
+    {"name": "KNIME", "description": "Creates an executable KNIME workflow"}
+  ]
+}

@@ -3,7 +3,7 @@
 /* globals ArrayUtil */
 
 angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
-.service('LibraryService', ['$resource', '$q', 'URLService', function($resource, $q, URLService) {
+.service('LibraryService', ['$resource', '$q', 'URLService', 'security', function($resource, $q, URLService, security) {
   this.load = function() {
     var deferred = $q.defer();
     $resource(URLService.getLibraryURL()).query(function(data) {
@@ -34,13 +34,16 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
         name: data[index].name,
         description: _formatDescription(data[index]),
         type: 'Phenotype',
-        lastModified: _formatLastModified(data[index])
+        lastModified: _formatLastModified(data[index]),
+        external: data[index].external,
+        image: data[index].image
       });
     }
 
     phenotypes = transformedData.sort(ArrayUtil.sortByName);
     return phenotypes;
   };
+    
 
   this.loadDetails = function(id) {
     var deferred = $q.defer();
@@ -53,6 +56,13 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
   };
 
   this.saveDetails = function(details) {
+    
+    if (security.currentUser)
+    {
+      details.createdBy = security.currentUser.email;
+      // todo add whole user object 
+      details.user = security.currentUser;
+    }
     var deferred = $q.defer();
     var LibraryItem = $resource(URLService.getLibraryURL(true), {id:'@id'},
       {

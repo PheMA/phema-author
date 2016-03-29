@@ -1,0 +1,29 @@
+
+<form name="form" novalidate class="register-form" ng-controller="RegisterController as regCtrl">
+    <div class="modal-header">
+        <h4>Register</h4>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-warning" ng-show="authReason">
+            {{authReason}}
+        </div>
+        <div class="alert alert-error" ng-show="authError">
+            {{authError}}
+        </div>
+        <div class="alert alert-info">Fill Out This Form to Register</div>
+        <div> <label>First Name</label>
+        <input name="firstName" type="text" ng-model="user.firstName" required autofocus></div>
+        <div><label>Last Name</label>
+        <input name="lastName" type="text" ng-model="user.lastName" required></div>
+        <div> <label>E-mail</label>
+        <input name="login" type="email" ng-model="user.email" required autofocus></div>
+        <div> <label>Password</label>
+        <input name="pass" type="password" ng-model="user.password" required></div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary register" ng-click="regCtrl.register()" ng-disabled='form.$invalid'>Submit</button>
+        <button class="btn clear" ng-click="regCtrl.clearForm()">Clear</button>
+        <button class="btn btn-warning cancel" ng-click="regCtrl.cancel()">Cancel</button>
+    </div>
+</form>
+

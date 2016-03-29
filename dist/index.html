@@ -61,7 +61,26 @@
               </ul>
             </li>
           </ul>
-          <login-toolbar />
+          <ul ng-cloak class="nav navbar-nav" ng-controller="ToolbarController as toolbarCtrl">
+            <!-- toolbar here --> 
+              <li class="dropdown" ng-show="security.isAuthenticated()">
+                <a href="#" class="dropdown-toggle">{{user.fullName}} <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#/user/{{user.id}}">Profile</a></li>
+                  <li>
+                    <a href="#" ng-click="security.logout()">Log out</a>
+                  </li>
+                </ul>
+              </li>
+              <li ng-hide="security.isAuthenticated()" class="login">
+                  <form class="navbar-form">
+                      <button class="btn login" ng-click="security.showLogin()">Log in</button>
+                      <button class="btn register" ng-click="security.showRegister()">Register</button>
+                  </form>
+              </li>
+            </ul>
+         <!-- <ng-include src="views/security/toolbar.html"> </ng-include> -->
+        <!--  <login-toolbar /> -->
         </div>
       </div>
 
@@ -182,6 +201,9 @@
     <script src="scripts/controllers/phenotype.js"></script>
     <script src="scripts/controllers/prompt.js"></script>
     <script src="scripts/controllers/login.js"></script>
+    <script src="scripts/controllers/toolbar.js"></script>
+    <script src="scripts/controllers/register.js"></script>
+    <script src="scripts/controllers/phekb.js"></script>
     <script src="scripts/controllers/dashboard.js"></script>
     <script src="scripts/controllers/loadPhenotype.js"></script>
     <script src="scripts/controllers/export.js"></script>
@@ -203,10 +225,11 @@
     <script src="scripts/services/security/index.js"></script>
     <script src="scripts/services/security/interceptor.js"></script>
     <script src="scripts/services/security/retryQueue.js"></script>
-    <script src="scripts/services/security/security.js"></script>
+    <script src="scripts/services/security/phekb_security.js"></script>
     <script src="scripts/services/security/authorization.js"></script>
     <script src="scripts/directives/security/login.js"></script>
-    <script src="scripts/directives/security/toolbar.js"></script>
+    
+    
     <!-- endbuild -->
 </body>
 </html>
