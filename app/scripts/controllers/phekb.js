@@ -95,7 +95,7 @@ mod.controller('PhekbEntryController', ['$scope', 'security', '$http', '$rootSco
     if (args.action == 'edit' ){
       
       //  phekb sends 0 for phenotypes that haven't been authored yet or the hex id 
-      if (args.id.length > 1 ) {
+      if (args.id.length > 1) {
         console.log("editing existing ");
         $location.path('/phenotype/'+args.id).search({}).replace();
       }
@@ -124,7 +124,7 @@ mod.controller('PhekbEntryController', ['$scope', 'security', '$http', '$rootSco
       //console.log($scope.user);
       // Entry to Edit a phenotype 
       if (args.action == 'edit' ){
-        if (args.id) {
+        if (args.id.length > 1) {  // 0 by default on phekb 
           $location.path('/phenotype/'+args.id).search({}).replace();
         }
         else {
