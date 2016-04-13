@@ -74,9 +74,13 @@ BaseElement.prototype = {
         shouldSelect = (!line) && (kineticObj.phemaObject().isChild(evt.target));
       }
 
+      // Only deselect existing items if the user isn't drawing a line, and the user isn't holding
+      // down the shift or control keys.  This gives us the ability to select multiple items.
+      var shouldDeselect = !line && evt && evt.target && !evt.evt.shiftKey && !evt.evt.ctrlKey;
+
       // Always clear the selection if a line was drawn, but if this is a click event we should only
       // clear the selection if we're going to be selecting a new item.
-      if (line || shouldSelect) {
+      if (line || (shouldSelect && shouldDeselect)) {
         clearSelections(stage);
       }
 
