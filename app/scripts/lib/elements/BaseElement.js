@@ -34,6 +34,14 @@ function _getConnectedElements(element, connectorName, elements, includeLabels) 
   }
 }
 
+function _backgroundShouldHandleMouseEvent(obj, evt) {
+  if (obj.parent && obj.parent.isSelectionRectangleActive && obj.parent.updateSelectionRectangle) {
+    obj.parent.updateSelectionRectangle(evt);
+    return true;
+  }
+  return false;
+}
+
 // Helper function that returns true/false if an element has anything
 // connected to its connector identified by connectorName
 function _hasConnectedElements(element, connectorName) {
@@ -48,24 +56,37 @@ BaseElement.prototype = {
 
   addConnectionHandler: function(kineticObj, scope) {
     var stage = scope.canvasDetails.kineticStageObj;
-    kineticObj.on('mouseup', function (e) {
-      endConnector(stage, e.target, scope);
+    kineticObj.on('mouseup', function (evt) {
+      if (_backgroundShouldHandleMouseEvent(this, evt)) {
+        return;
+      }
+      endConnector(stage, evt.target, scope);
     });
     kineticObj.on('mousemove', function(evt) {
+      if (_backgroundShouldHandleMouseEvent(this, evt)) {
+        return;
+      }
       updateActiveLineLocation(stage, evt);
     });
-    kineticObj.on('mousedown', function (e) {
+    kineticObj.on('mousedown', function (evt) {
       endConnector(stage, undefined, scope);  // Make sure it's not carrying over from before
-      startConnector(stage, e.target);
+      startConnector(stage, evt.target);
     });
   },
 
   addStandardEventHandlers: function(kineticObj, scope) {
     var stage = scope.canvasDetails.kineticStageObj;
     kineticObj.on('mousemove', function(evt) {
+      if (_backgroundShouldHandleMouseEvent(this, evt)) {
+        return;
+      }
       updateActiveLineLocation(stage, evt);
     });
     kineticObj.on('mouseup', function(evt) {
+      if (_backgroundShouldHandleMouseEvent(this, evt)) {
+        return;
+      }
+
       var line = endConnector(stage, undefined, scope);
 
       // We don't want to allow connectors to trigger selection
@@ -105,10 +126,16 @@ BaseElement.prototype = {
 
   addCursorEventHandlers: function(kineticObj, scope) {
     // add cursor styling
-    kineticObj.on('mouseover', function () {
+    kineticObj.on('mouseover', function (evt) {
+      if (_backgroundShouldHandleMouseEvent(this, evt)) {
+        return;
+      }
       document.body.style.cursor = 'pointer';
     });
-    kineticObj.on('mouseout', function () {
+    kineticObj.on('mouseout', function (evt) {
+      if (_backgroundShouldHandleMouseEvent(this, evt)) {
+        return;
+      }
       document.body.style.cursor = 'default';
     });
   },

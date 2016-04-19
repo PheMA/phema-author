@@ -51,8 +51,8 @@ angular.module('sophe.factories.kineticStage', [])
         backgroundLayer.draw();
 
         background.on('mousedown', function() {
-          scope.isMouseDown = true;
-          scope.isSelectionRectangleActive = false;
+          mainLayer.isMouseDown = true;
+          mainLayer.isSelectionRectangleActive = false;
           createSelectionRectangle(stage, mainLayer);
         });
 
@@ -60,24 +60,28 @@ angular.module('sophe.factories.kineticStage', [])
           if (isDrawingLine(stage)) {
             updateActiveLineLocation(stage, evt);            
           }
-          else if (scope.isMouseDown) {
+          else if (mainLayer.isMouseDown) {
             updateSelectionRectangle(stage, mainLayer);
             highlightItemsInSelectionRectangle(stage, mainLayer);
-            scope.isSelectionRectangleActive = true;
+            mainLayer.isSelectionRectangleActive = true;
           }
         });
 
         background.on('mouseup', function() {
-          if (isDrawingLine(stage) || !scope.isSelectionRectangleActive) {
+          if (isDrawingLine(stage) || !mainLayer.isSelectionRectangleActive) {
             endConnector(stage, undefined, scope);
             clearSelections(stage);
           }
 
           removeSelectionRectangle(mainLayer);
-          scope.isMouseDown = false;
-          scope.isSelectionRectangleActive = false;
+          mainLayer.isMouseDown = false;
+          mainLayer.isSelectionRectangleActive = false;
           scope.$root.$broadcast('sophe-element-selected', null);
         });
+
+        mainLayer.updateSelectionRectangle = function(evt) {
+          background.fire(evt.type, evt, false);
+        };
       }
     };
 
