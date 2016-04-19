@@ -1,12 +1,14 @@
 /* globals Kinetic */
 /* exported startConnector, endConnector, updateActiveLineLocation, getIntersectingShape,
   addElementToContainer, removeElementFromContainer, updateConnectedLines, changeConnectorEndpoints,
-  allowsDrop, findObjectInPhemaGroupType, BORDER, updateSizeOfMainRect, resizeStageForEvent, MINIMUM_CANVAS_SIZE */
+  allowsDrop, findObjectInPhemaGroupType, BORDER, updateSizeOfMainRect, resizeStageForEvent, MINIMUM_CANVAS_SIZE,
+  createSelectionRectangle, updateSelectionRectangle, removeSelectionRectangle, highlightItemsInSelectionRectangle */
 
 'use strict';
 
 var BORDER = 20;
 var MINIMUM_CANVAS_SIZE = { width: 800, height: 600 };
+var SELECTION_RECTANGLE_NAME = 'PhemaSelectionRectangle';
 
 // Find the first descendant in 'kineticObj' with the name of 'name'.
 // If 'shallow' is set to true, it will only search immediate children
@@ -356,8 +358,12 @@ function removeElementFromContainer(stage, element) {
   }
 }
 
+function isDrawingLine(stage) {
+  return (stage && stage.connector && stage.connector.status === 'drawing');
+}
+
 function selectObject(stage, selectObj, scope) {
-  if (stage.connector && stage.connector.status === 'drawing') {
+  if (isDrawingLine(stage)) {
     return;
   }
   selectObj.selected = true;
@@ -415,7 +421,7 @@ function addOutlineStyles(kineticObj, originalWidth) {
 // Responding to a mouse move event, update the current connector line that is being drawn
 // to end at the cursor.
 function updateActiveLineLocation(stage, evt) {
-  if (stage.connector.status === 'drawing') {
+  if (isDrawingLine(stage)) {
     var startPos = {x: stage.connector.line.getX(), y: stage.connector.line.getY()};
     var endPos = {x: evt.evt.layerX, y: evt.evt.layerY};
     changeConnectorEndpoints(stage.connector.line, startPos, endPos);
@@ -452,7 +458,7 @@ function startConnector(stage, connectorObj) {
 // or the connector isn't valid, remove the in progress line.
 function endConnector(stage, connectorObj, scope, suppressCreateEvent) {
   var line = null;
-  if (stage.connector.status === 'drawing') {
+  if (isDrawingLine(stage)) {
     // If we are dropping where we started, or there is no end connection point, the line
     // is invalid and we will just clear it
     if (stage.connector.anchor === connectorObj || ('undefined' === typeof connectorObj)) {
@@ -512,10 +518,10 @@ function endConnector(stage, connectorObj, scope, suppressCreateEvent) {
 }
 
 function checkCollide(pointX, pointY, objectx, objecty, objectw, objecth) { // pointX, pointY belong to one rectangle, while the object variables belong to another rectangle
-  var oTop = objecty;
-  var oLeft = objectx;
-  var oRight = objectx+objectw;
-  var oBottom = objecty+objecth;
+  var oTop = Math.min(objecty, objecty+objecth);
+  var oLeft = Math.min(objectx, objectx+objectw);
+  var oRight = Math.max(objectx, objectx+objectw);
+  var oBottom = Math.max(objecty, objecty+objecth);
 
   if(pointX > oLeft && pointX < oRight){
     if(pointY > oTop && pointY < oBottom ){
@@ -525,7 +531,45 @@ function checkCollide(pointX, pointY, objectx, objecty, objectw, objecth) { // p
   return false;
 }
 
+function containedInSelection(selectionRectangle, shape) {
+  // Check if any of the 4 corners are contained in the selection.
+  var selX = selectionRectangle.getX();
+  var selY = selectionRectangle.getY();
+  var selWidth = selectionRectangle.getWidth();
+  var selHeight = selectionRectangle.getHeight();
+  if (checkCollide(shape.getX(), shape.getY(), selX, selY, selWidth, selHeight) ||
+    checkCollide(shape.getX() + shape.getWidth(), shape.getY(), selX, selY, selWidth, selHeight) ||
+    checkCollide(shape.getX(), shape.getY() + shape.getHeight(), selX, selY, selWidth, selHeight) ||
+    checkCollide(shape.getX() + shape.getWidth(), shape.getY() + shape.getHeight(), selX, selY, selWidth, selHeight)) {
+    return true;
+  }
+
+  return false;
+}
+
+function getIntersectingShapes(layer, shape, stopOnFirstFound) {
+  var groups = layer.getChildren();
+  var intersectingShapes = [];
+  stopOnFirstFound = (typeof stopOnFirstFound !== 'undefined' ? stopOnFirstFound : false);
+  for (var groupIndex = 0; groupIndex < groups.length; groupIndex++) {
+    if (containedInSelection(shape, groups[groupIndex])) {
+      intersectingShapes.push(groups[groupIndex]);
+      if (stopOnFirstFound) {
+        return intersectingShapes;
+      }
+    }
+  }
+
+  return intersectingShapes;
+}
+
 function getIntersectingShape(layer, pos) {
+  // var shapes = getIntersectingShapes(layer, pos, true);
+  // if (shapes.length === 0) {
+  //   return null;
+  // }
+
+  // return shapes[0];
   var groups = layer.getChildren();
   var shapes = null;
   var intersectingGroup = null;
@@ -642,5 +686,65 @@ function resizeStageForEvent(stage, updatedSize, movedElement) {
     stage.setHeight(newSize.height);
 
     stage.drawScene();
+  }
+}
+
+// Establish the visible selection rectangle in the specified layer.
+// This will begin drawing at the stage's current cursor position.
+function createSelectionRectangle(stage, layer) {
+  var pointerPosition = stage.getPointerPosition();
+  var x = Math.floor(pointerPosition.x);
+  var y = Math.floor(pointerPosition.y);
+  var selectionRectangle = new Kinetic.Rect({
+       x: x,
+       y: y,
+       width: 0,
+       height: 0,
+       stroke: 'gray',
+       strokeWidth: 2,
+       name: SELECTION_RECTANGLE_NAME
+   });
+  selectionRectangle.dash([5, 5]);
+  selectionRectangle.dashEnabled(true);
+  selectionRectangle.setListening(false);
+  layer.add(selectionRectangle);
+}
+
+// Update the dimensions of the selection rectangle, if it exists in the
+// specified layer.  The cursor is assumed to now be at the stage's
+// current position.
+function updateSelectionRectangle(stage, layer) {
+  var pointerPosition = stage.getPointerPosition();
+  var x = Math.floor(pointerPosition.x);
+  var y = Math.floor(pointerPosition.y);
+  var selectionRectangle = findFirst(layer, SELECTION_RECTANGLE_NAME, true);
+  if (selectionRectangle) {
+    selectionRectangle.setWidth(x - selectionRectangle.getX());
+    selectionRectangle.setHeight(y - selectionRectangle.getY());
+    layer.drawScene();
+  }
+}
+
+// Clean up and remove the selection rectangle from the specified layer.
+function removeSelectionRectangle(layer) {
+  var selectionRectangle = findFirst(layer, SELECTION_RECTANGLE_NAME, true);
+  if (selectionRectangle) {
+    selectionRectangle.destroy();
+    layer.drawScene();
+  }
+}
+
+// Identify all objects in the selection rectangle and mark those as selected.
+function highlightItemsInSelectionRectangle(stage, layer) {
+  var selectionRectangle = findFirst(layer, SELECTION_RECTANGLE_NAME, true);
+  if (!selectionRectangle) {
+    return;
+  }
+
+  clearSelections(stage);
+
+  var intersectingShapes = getIntersectingShapes(layer, selectionRectangle);
+  for (var index = 0; index < intersectingShapes.length; index++) {
+    selectObject(stage, intersectingShapes[index]);
   }
 }
