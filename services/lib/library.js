@@ -89,5 +89,18 @@ LibraryRepository.prototype.repositories = function(callback) {
   });
 };
 
+// This gets the property options we want for the library 
+LibraryRepository.prototype.properties = function(callback) {
+  request(this.baseURL + '/library/properties', function(error, response, body) {
+    if (!error && response.statusCode === 200) {
+      callback(null, body);
+    }
+    else {
+      console.log(error);
+      callback({message: 'Unable to get properties list'});
+    }
+  });
+};
+
 
 exports.LibraryRepository = LibraryRepository;

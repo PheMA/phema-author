@@ -78,6 +78,7 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
     }
     else {
       item.$save(null, function(data) {
+        console.log("Saved phenotype in service library.js", data);
         deferred.resolve(data);
       }, function() {
         deferred.reject('Unable to save the phenotype');
@@ -85,4 +86,30 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
     }
     return deferred.promise;
   };
+
+  // Get the property options needed to save a phenotype to the library 
+  this.properties = function() {
+    var deferred = $q.defer();
+    if (!security.currentUser) { 
+      deferred.reject("You must be logged in.");
+    }
+    else {
+      var session = security.currentUser.session;
+      if (session) {
+        var url = 'api/library-properties';
+        var props = $resource(url).get({session:session}, function(data) {
+          deferred.resolve(data);
+        }, function(data, status) {
+          deferred.reject('There was an getting phenotype properties: ' + status);
+        });
+      }
+      else {
+        deferred.reject('You must be logged in.');
+      }
+    }
+    return deferred.promise;
+
+  };
+
 }]);
+

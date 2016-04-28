@@ -19,8 +19,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var request = require('request');
 
-//var phekb_url = 'http://local.phekb.org';
-var phekb_url = 'https://phekb.org';
+var phekb_url = 'http://local.phekb.org';
+//var phekb_url = 'https://phekb.org';
 
 
 function nameValidator (v) {
@@ -105,65 +105,113 @@ var LibraryRepository = libconn.model('LibraryItem', LibraryItem);
 });
 */
 
-function saveToPhekb(item)
+function saveToPhekb(item, params)
 {
+  // Params has all the form fields for a new item that are not saved in the mongo local 
+  console.log(params);
   // If phekb save to phekb 
   // Todo -- add default groups 
     var id = 0;
-    var phekb_save_url = phekb_url + '/phema-author/ws/save';
+    var phekb_save_url = phekb_url + '/services/phenotypes/node';
     if (item._id)
     {
       id = item._id.toHexString();
     }
+    if (!item.user || !item.user.session)
+    {
+      console.log("No user to save to phekb.");
+      return true; // So we don't throw an error 
+    }
     // It is possible that phekb initiated the authoring , in which case , we will have an nid in the item
     // We need to send this back to phekb so it can update 
     var nid = 0; // phekb's id 
-    var uid = 0;
-    if (item.user) { 
-      uid = item.user.uid;
-    }
-    else
-    {
-      console.log("No user when saving to phekb ");
-    }
+    var uid = item.user.uid;
+    
     if (!item.external ) { 
-      item.external = {nid : 0 };
+      item.external = {nid : 0 , url: phekb_url};
     }
-
     if (!item.name) {item.name = 'No Name'; }
     if (!item.description) {item.description = 'No Description'; }
 
-    var phekb_data = {name: item.name, description: item.description, id: id , nid: item.external.nid, uid: uid};
+    // Make drupal node for phekb 
+    var nid = item.external.nid;
+    var lang = 'und';
     
-    if (item.image) phekb_data.image = item.image;
+    // Set up the drupal node.  For updates we just send the phema id and the image
+    var node = { 
+      "field_phema_author_id": {"und": [{"value": item.id}] },
+    }
+    if (!nid) {
+      // New phenotype gets all the required properties 
 
-    request.post({url: phekb_save_url, formData:phekb_data }, function (error, response, body) {
-      try {
-        body = JSON.parse(body);
-      } catch(e) {
-        console.log("error parsing phekb response to saving phenotype ", e);
-      }
-     
-      if (!error && response.statusCode == 200) {
-        // Save the phekb nid and url and such 
-        item.external.nid  = body.nid; 
-        item.external.url = phekb_url + '/phenotype/'+item.external.nid;
-        item.save(function(err) {
-          if(!err) { 
-           // In case phekb service is down we don't want app depending on it 
-           //res.statusCode = 200;
-           //res.send(formatItemForReturn(item));
-           return true;
-          } 
-          else { 
-            console.log("Error saving phekb return nid : " + err);
-            //res.statusCode = 400;
-            //res.send({ error:err });
-            return true;
+      node = {
+        "field_phema_author_id": {"und": [{"value": item.id}] },
+        "title": item.name, 
+        "type": 'phenotype',
+        "language": 'und',
+        "field_p_status": {"und": params.status},
+        "field_owner_pgroup":{"und":{}}, 
+        "field_view_pgroup": {"und": {}},
+        "body":{"und":[{"summary":"","value":item.description, "format":"filtered_html"}]},
+      };
+      node.field_owner_pgroup.und[params.owner_group] = params.owner_group; 
+      node.field_view_pgroup.und[params.view_group] = params.view_group; 
+    }
+
+    if (item.image) {
+      node.field_phema_image = {"und": [{"value": item.image}]};
+    }
+
+    // If we have a nid then this is an update
+    if (nid) {
+      phekb_save_url = phekb_save_url + '/' + nid;
+    }
+    console.log("Saving node ", node);
+
+    // Must get a token from drupal services 
+    request.get({url: phekb_url + '/services/session/token', headers: { Cookie: item.user.session}}, 
+      function (error, response, body) {
+        console.log(error, body);
+        if (!error) {
+          // We got a token and we can Save node 
+          var token = body;
+          
+          
+          request.post({url: phekb_save_url, headers: { 'Content-type': 'application/json', 'Accept':'application/json', 
+              'X-CSRF-Token': token, 'Cookie': item.user.session}, 
+            json:{'node': node} }, 
+            function (error, response, body) {
+              //console.log("Saved Phenotype" , error, body); 
+              
+              if (!error && response.statusCode == 200) {
+                // Save the phekb nid and url and such 
+                item.external.nid  = body.nid; 
+                item.external.url = body.uri; //  + '/phenotype/'+item.external.nid;
+                item.save(function(err) {
+                  if(!err) { 
+                   // In case phekb service is down we don't want app depending on it 
+                   //res.statusCode = 200;
+                   //res.send(formatItemForReturn(item));
+                   return true;
+                  } 
+                  else { 
+                    console.log("Error saving phekb return nid : " + err);
+                    //res.statusCode = 400;
+                    //res.send({ error:err });
+                    return true;
+                  }
+                });
+              }
+            });
           }
-        });
-      }
-    });
+          else {
+            console.log("error getting token ", error);
+            return true; 
+          }
+        } 
+      );
+
+    
   
 }
 
@@ -255,6 +303,8 @@ exports.add = function(req, res) {
   console.log('POST - /library');
   var item = new LibraryRepository({
   });
+
+
   if (req.body.name)
   {
     item.name = req.body.name;
@@ -316,7 +366,7 @@ exports.add = function(req, res) {
     else {
       console.log("Library item created");
       // phekb custom -- send to phekb and save phekb data back in the item 
-      saveToPhekb(item);
+      saveToPhekb(item, req.body);
       res.send(formatItemForReturn(item));
 
     }
@@ -369,7 +419,7 @@ exports.update = function(req, res) {
     return item.save(function(err) {
       if(!err) {
         // phekb custom  send data to phekb and save phekb data in item 
-        saveToPhekb(item);
+        saveToPhekb(item,req.body);
        	res.send(formatItemForReturn(item));
 
 
@@ -423,6 +473,90 @@ exports.delete = function(req, res) {
       res.send({});
     });
   });
+};
+
+
+exports.properties = function(req,res) {
+  
+  console.log("Properties - api/library-properties");
+  var session = req.query.session;
+  //var token = req.body.token;
+  
+  if (! session) 
+  {
+    res.statusCode = 400;
+    return res.send({error: 'No user session. You must login.'})
+  }
+  var terms_url = phekb_url + '/services/phenotypes/taxonomy_term'; 
+
+  // Required properties and options for saving a phenotype to the phekb library
+  var properties = {
+    type: 'phenotype',
+    owner_groups : [],
+    view_groups : [],
+    status : []
+  }
+  
+  // Must get a token from drupal services 
+  request.get({url: phekb_url + '/services/session/token', headers: { Cookie: session}}, 
+    function (error, response, body) {
+      console.log(error, body);
+      if (error) {
+        res.status(400).send({error: error});
+        return;
+      }
+      var token = body;
+      var headers = {
+        'X-CSRF-Token': token, 
+        'Cookie': session,
+        'Content-Type': 'application/json'
+      }
+
+      var query = {parameters:{vid:'10'}} ; // Vocabulary id 10 is the phenotyping groups 
+      request.get({url: terms_url, qs: query, headers: headers},
+        function (error, response, body) {
+          if (error) {
+            res.status(400).send({error: error});
+            return;
+          }
+          try{
+            body = JSON.parse(body);
+          } catch(e){
+            console.log("Error parsing phekb response ", e)
+            res.status(500).send({error_msg: "Error parsing phekb response " , error: e} );
+            return;
+          }
+          body.sort(
+            function(a,b) { 
+              if (a.name < b.name ) return -1; 
+              else if ( a.name > b.name ) return 1; 
+              else return 0;
+            });
+          properties.owner_groups = body;
+          properties.view_groups = body;
+          
+          // Get status 
+          query.parameters.vid = 3;
+          request.get({url: terms_url, qs: query, headers: headers},
+            function (error, response, body) {
+              if (error) {
+                res.status(500).send({error: error});
+                return;
+              }
+              try{
+                body = JSON.parse(body);
+              } catch(e){
+                console.log("Error parsing phekb response ", e)
+                res.status(500).send({error_msg: "Error parsing phekb response " , error: e} );
+                return;
+              }
+              properties.status = body;
+
+              res.status(200).send(properties);
+            });
+        });
+    });
+       
 };
 
 

@@ -110,12 +110,19 @@ angular.module('security.service', [
       var request = $http.post('/api/login', {email: email, password: password});
 
       return request.then(function(response) {
+        if (!response.data.user) {
+          service.currentUser = null;
+          console.log(response);
+          return null; 
+        }
+        else {
         service.currentUser = response.data.user;
         $cookies.session = service.currentUser.session;
         console.log(service.currentUser);
         $rootScope.$broadcast('user:updated', service.currentUser);
         closeLoginDialog(true);
         return service.currentUser;
+        }
         
       });
     },

@@ -43,8 +43,10 @@ app.get('/api/library/:id', library.details);
 //app.get('/image/:id', library.image);
 
 app.post('/api/library', library.add);
+app.get('/api/library-properties', library.properties);
 app.put('/api/library/:id', library.update);
 app.delete('/api/library/:id', library.delete);
+
 
 app.get('/api/valueset', valueSets.index);
 app.get('/api/valueset/search=:search', valueSets.search);

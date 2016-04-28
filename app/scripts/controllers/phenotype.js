@@ -289,24 +289,32 @@ angular.module('sopheAuthorApp')
       }
       
       else {
-        var modalInstance = $modal.open({
-          templateUrl: 'views/properties/phenotype.html',
-          controller: 'PhenotypePropertiesController',
-          size: 'lg',
-          resolve: {
-            phenotype: function() {
-              return {definition: phenotypeDefinition };
-            },
-            isReference: function() { return false; },
-          }
-        });
+        var modalInstance = null;
+        // Send the library properties to the modal form so it can build the form 
+        // for the library 
+        LibraryService.properties().then(function(props) {
+          modalInstance = $modal.open({
+            templateUrl: 'views/properties/phenotype.html',
+            controller: 'PhenotypePropertiesController',
+            size: 'lg',
+            resolve: {
+              phenotype: function() {
+                return {definition: phenotypeDefinition };
+              },
+              isReference: function() { return false; },
+              properties: function() { return props; },
+            }
+          });
 
-        modalInstance.result.then(function (result) {
-          $scope.canvasDetails.kineticStageObj.toImage({callback: function(image){
-            
-            result.image = image.src;
-          _handlePhenotypeSave(result);
-          }});
+          modalInstance.result.then(function (result) {
+            $scope.canvasDetails.kineticStageObj.toImage({callback: function(image){
+              
+              result.image = image.src;
+            _handlePhenotypeSave(result);
+            }});
+          });
+        }, function(error) { 
+          console.log("Error getting libary properties for phenotype save", error);
         });
       }
     };

@@ -59,9 +59,10 @@ var PhemaUser = new Schema({
 
 // Phekb variables  todo config 
 
-//var phekb_url = 'http://local.phekb.org';
-var phekb_url = 'https://phekb.org';
-var appid = 'phema_author';
+var phekb_url = 'http://local.phekb.org';
+//var phekb_url = 'https://phekb.org';
+// api_key must match the api key specified at phekb.org/admin/phema/config 
+var api_key = 'abc123';
 // Must connect this way to have multiple connections in one node js app 
 var userconn = mongoose.createConnection('mongodb://localhost/phema-user');
 var UserRepo = userconn.model('PhemaUser', PhemaUser);
@@ -177,20 +178,32 @@ function login_phekb(res,email, password)
 {
   console.log("Login phekb : ", email, password);
   
-  var url = phekb_url + '/services/user/login';
-
-  request.post({url: url, formData: {username: email, password: password}}, function(error, response, body) {
+  var url = phekb_url + '/services/remote_login/login';
+  // If we are logging in via a sid , a long hash , passed in from drupal then the url is login_sid
+  var data = {username: email, api_key: api_key};
+  if (password.length > 36) {
+      // We're logging in with a user session id instead of password
+      url += '_sid';
+      data.sid = password;
+  }
+  else
+  {
+    data.password = password;
+  }
+  
+  request.post({url: url, formData: data}, function(error, response, body) {
     
     try{
       body = JSON.parse(body);
     } catch(e){
       console.log("Error parsing phekb response ", e)
-      res.status(500).send({error_msg: "Error parsing phekb response " , error: e} );
+      res.status(500).send({error_msg: "An internal error occurred on PheKB. Please try again later. " } );
       return;
     }
     if (body.sessid)
     {
       console.log(body);
+      // This is the format that drupal wants it in the cookie for authenticated requests
       var session = body.session_name + "=" + body.sessid;
       var admin = false; 
       if ( user_in_role('administrator', body.user.roles) ) { admin = true; }
@@ -214,7 +227,7 @@ function login_phekb(res,email, password)
         { 
           // Record login 
           cur_user.lastLogin = Date.now();
-          cur_user.session= user_data.session;
+          cur_user.session = user_data.session;
           cur_user.fromSite = 'phekb.org';
           cur_user.uid = user_data.uid;
           cur_user.data = user_data.data; // update their roles and such 
@@ -246,7 +259,13 @@ function login_phekb(res,email, password)
     }
     else {
       console.log("No sessid from phekb. Login failed: " , body);
-      res.status(200).send({user: null});
+      if (body.error) {
+        res.status(200).send({user: null, error: body.error});
+      }
+      else
+      {
+        res.status(200).send({user: null, error: "Unknown error"});
+      }
     }
   });
 }

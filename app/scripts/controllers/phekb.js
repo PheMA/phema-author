@@ -118,8 +118,7 @@ mod.controller('PhekbEntryController', ['$scope', 'security', '$http', '$rootSco
   // Log user in if we have sid and uid 
   else if (args.sess_id && args.uid ) {
     // Try to login with uid and sess string  . A custom Phekb service allows this 
-    var password = 'phema_' + args.uid + '_' + args.sess_id ; 
-    security.login(args.uid, password).then(function(user) {
+    security.login(args.uid, args.sess_id).then(function(user) {
       $scope.user = security.currentUser;
       //console.log($scope.user);
       // Entry to Edit a phenotype 
