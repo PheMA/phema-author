@@ -11,11 +11,17 @@
  */
 angular.module('sopheAuthorApp')
 .controller('ValueSetsTermsController', ['$scope', '$http', 'ValueSetService', 'CodeSystemService', function ($scope, $http, ValueSetService, CodeSystemService) {
+  $scope.activeTabIndex = 0;
   $scope.termSearch = {term: '', isSearching: false, results: []};
   $scope.valueSetSearch = {term: '', isSearching: false, results: []};
   $scope.selectedValueSetMembers = [];
+  $scope.existingValueSet = $scope.existingValueSet || {};
   $scope.selectedTerms = $scope.selectedTerms || [];
   $scope.selectedValueSets = $scope.selectedValueSets || [];
+
+  if ($scope.existingValueSet && $scope.existingValueSet.customList) {
+    $scope.selectedTerms = $scope.existingValueSet.customList.terms;
+  }
 
   $scope.$watch('valueSetSearch.term', function() {
     ValueSetService.searchHelper($scope.valueSetSearch);

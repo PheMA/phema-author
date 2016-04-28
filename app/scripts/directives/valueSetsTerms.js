@@ -9,7 +9,9 @@ angular.module('sophe.valueSetsTerms', [])
     replace: true,
     scope: {
       selectedValueSets: '=',
-      selectedTerms: '='
+      selectedTerms: '=',
+      existingValueSet: '=',
+      selectedTabIndex: '='
     }
   };
   return directive;
