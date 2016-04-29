@@ -78,7 +78,6 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
     }
     else {
       item.$save(null, function(data) {
-        console.log("Saved phenotype in service library.js", data);
         deferred.resolve(data);
       }, function() {
         deferred.reject('Unable to save the phenotype');

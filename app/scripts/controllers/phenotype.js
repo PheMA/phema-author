@@ -142,6 +142,7 @@ angular.module('sopheAuthorApp')
     function _handlePhenotypeSave(result) {
       LibraryService.saveDetails(result)
         .then(function(data) {
+          console.log('Saved phenotype in controller', data.id);
           _setPhenotypeData(data.id, data.name, data.description);
           // Update the phenotype with any external data we got from save -- such as phekb node id , etc
           if ($scope.phenotype) { 
@@ -344,6 +345,7 @@ angular.module('sopheAuthorApp')
             .then(function(phenotype) { 
               $scope.phenotype = phenotype; // update with latest because when saving to phekb on s
               url = $scope.phenotype.external.url;
+              console.log("opening in phekb " + url);
               $window.open(url, '_blank');
             }, function(error) { 
               console.log("Couldn't get url for phenotype in external library.", error);

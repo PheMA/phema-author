@@ -104,7 +104,6 @@ exports.logout = function(req, res){
 // Return a user if one is logged in -- the app sends the cookie which is stored with 
 // a user when they login. We find user with that cookie and return it.
 exports.current_user= function(req,res){
-  console.log('auth_user', req.body);
   var session = req.body.session;
 
   if (session) { 
@@ -130,7 +129,7 @@ exports.phekb_resource = function(req, res){
   var uid = req.body.uid;
   var path = req.body.path;
   var url = phekb_url + '/' +  path;
-  console.log("phekb_resource path: " + url);
+  
   request({url: url, headers: { Cookie: session} }, function(error, response, body) {
     if (!error){
       //console.log("Got phekb response ",body);
@@ -176,7 +175,6 @@ function user_in_role(role, roles) {
 }
 function login_phekb(res,email, password)
 {
-  console.log("Login phekb : ", email, password);
   
   var url = phekb_url + '/services/remote_login/login';
   // If we are logging in via a sid , a long hash , passed in from drupal then the url is login_sid
@@ -202,7 +200,7 @@ function login_phekb(res,email, password)
     }
     if (body.sessid)
     {
-      console.log(body);
+      
       // This is the format that drupal wants it in the cookie for authenticated requests
       var session = body.session_name + "=" + body.sessid;
       var admin = false; 
@@ -219,10 +217,8 @@ function login_phekb(res,email, password)
       };
       
       // Set admin if admin on phekb 
-      console.log("user roles: " , user_data.data.roles);
       
       UserRepo.findOne({email: email}, function(err, cur_user) {
-        console.log("Find user: ", err, cur_user);
         if (cur_user)
         { 
           // Record login 

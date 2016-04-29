@@ -83,7 +83,9 @@ angular.module('security.service', [
 
   // The public API of the service
   var service = {
-    
+    // Disable login on phat here . They will have to login through other means like phekb
+    loginDisabled: true,
+
     // Get the first reason for needing a login
     getLoginReason: function() {
       return queue.retryReason();
@@ -146,6 +148,9 @@ angular.module('security.service', [
       $rootScope.$broadcast('user:updated', service.currentUser);
       if (redirectTo) {
         redirect(redirectTo);
+      }
+      else {
+        window.location('https://phekb.org');
       }
       
       /*$http.post('/api/logout').then(function() {

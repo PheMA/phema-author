@@ -96,11 +96,9 @@ mod.controller('PhekbEntryController', ['$scope', 'security', '$http', '$rootSco
       
       //  phekb sends 0 for phenotypes that haven't been authored yet or the hex id 
       if (args.id.length > 1) {
-        console.log("editing existing ");
         $location.path('/phenotype/'+args.id).search({}).replace();
       }
       else {
-        console.log("creating new from phekb ");
         var external = { nid: args.nid, site: args.site, url: phekb_url + "/phenotype/" + args.nid };
         var phenotype = {user: user, modifiedBy: user.email, createdBy: user.email, name: args.title, description: args.description,
         external: external };  //nid: args.nid, uid: args.uid, site: args.site };
@@ -172,7 +170,7 @@ mod.controller('PhekbPhenotypesController', ['$scope', 'security', '$http', '$ro
 
     // Foreach phenotype that is not in the local library , add it so that editing is seemless and links back to phekb 
     for (var i = $scope.phenotypes.length - 1; i >= 0; i--) {
-      console.log('dashboard id : ', $scope.phenotypes[i].id );
+      
       if ($scope.phenotypes[i].id == 0) {
         phekb_add_to_local_lib($scope.user, $scope.phenotypes[i], $scope, LibraryService, i, 'mine');
         //console.log("my adding to local lib")
@@ -195,7 +193,7 @@ mod.controller('PhekbPhenotypesController', ['$scope', 'security', '$http', '$ro
 
     // Foreach phenotype that is not in the local library , add it so that editing is seemless and links back to phekb 
     for (var i = $scope.group_phenotypes.length - 1; i >= 0; i--) {
-      console.log('dashboard group id : ', $scope.group_phenotypes[i].id );
+      
       if ($scope.group_phenotypes[i].id == 0) {
         //console.log(" group adding to local lib ");
         phekb_add_to_local_lib($scope.user, $scope.group_phenotypes[i], $scope, LibraryService, i, 'group');

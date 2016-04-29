@@ -85,24 +85,6 @@ angular.module('sopheAuthorApp')
         }
       ];
       
-    
-    /*for (var i = 0; i < repositories.length; i++)  
-    {
-      var repo = repositories[i]; 
-     
-      $scope.formTemplate.push({
-        'type': 'checkbox',
-        'label': repo.description,
-        'model': repo.name
-      });
-    } */
-    
-      
-    // Watch so the form templates can be updated from the service resolve promise
-    /*$scope.$watch(function () { return $scope.formTemplate }, function (newVal, oldVal) {
-    if (typeof newVal !== 'undefined') {
-        $scope.formTemplate = uaProgressService.taskList;
-    }*/
 
     $scope.ok = function () {
       $modalInstance.close($scope.formData);

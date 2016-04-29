@@ -105,10 +105,10 @@ var LibraryRepository = libconn.model('LibraryItem', LibraryItem);
 });
 */
 
-function saveToPhekb(item, params)
+function saveToPhekb(item, params, res)
 {
   // Params has all the form fields for a new item that are not saved in the mongo local 
-  console.log(params);
+  
   // If phekb save to phekb 
   // Todo -- add default groups 
     var id = 0;
@@ -120,7 +120,8 @@ function saveToPhekb(item, params)
     if (!item.user || !item.user.session)
     {
       console.log("No user to save to phekb.");
-      return true; // So we don't throw an error 
+      res.send(formatItemForReturn(item)); // So we don't throw an error if phekb is out
+      return false;
     }
     // It is possible that phekb initiated the authoring , in which case , we will have an nid in the item
     // We need to send this back to phekb so it can update 
@@ -141,9 +142,10 @@ function saveToPhekb(item, params)
     var node = { 
       "field_phema_author_id": {"und": [{"value": item.id}] },
     }
+    var method = null; // For create it is POST , update it is PUT
     if (!nid) {
       // New phenotype gets all the required properties 
-
+      method = 'POST';
       node = {
         "field_phema_author_id": {"und": [{"value": item.id}] },
         "title": item.name, 
@@ -164,9 +166,10 @@ function saveToPhekb(item, params)
 
     // If we have a nid then this is an update
     if (nid) {
+      node.nid = nid;
       phekb_save_url = phekb_save_url + '/' + nid;
+      method = 'PUT';
     }
-    console.log("Saving node ", node);
 
     // Must get a token from drupal services 
     request.get({url: phekb_url + '/services/session/token', headers: { Cookie: item.user.session}}, 
@@ -176,37 +179,37 @@ function saveToPhekb(item, params)
           // We got a token and we can Save node 
           var token = body;
           
-          
-          request.post({url: phekb_save_url, headers: { 'Content-type': 'application/json', 'Accept':'application/json', 
+          request({method: method, url: phekb_save_url, headers: { 'Content-type': 'application/json', 'Accept':'application/json', 
               'X-CSRF-Token': token, 'Cookie': item.user.session}, 
             json:{'node': node} }, 
             function (error, response, body) {
               //console.log("Saved Phenotype" , error, body); 
               
               if (!error && response.statusCode == 200) {
-                // Save the phekb nid and url and such 
+                // Drupal returns {nid: 222, uri: http://phekb.org/phenotype/.... } the phekb nid and url and such 
                 item.external.nid  = body.nid; 
-                item.external.url = body.uri; //  + '/phenotype/'+item.external.nid;
+                item.external.url = phekb_url  + '/phenotype/'+item.external.nid;
                 item.save(function(err) {
                   if(!err) { 
                    // In case phekb service is down we don't want app depending on it 
-                   //res.statusCode = 200;
-                   //res.send(formatItemForReturn(item));
+                   res.statusCode = 200;
+                   res.send(formatItemForReturn(item));
                    return true;
                   } 
                   else { 
                     console.log("Error saving phekb return nid : " + err);
-                    //res.statusCode = 400;
-                    //res.send({ error:err });
-                    return true;
+                    res.statusCode = 200;
+                    res.send(formatItemForReturn(item)); // don't error out
+                    return false;
                   }
                 });
               }
             });
           }
           else {
-            console.log("error getting token ", error);
-            return true; 
+            console.log("error getting token. Could not ", error);
+            res.send(formatItemForReturn(item));
+            return false;
           }
         } 
       );
@@ -364,10 +367,9 @@ exports.add = function(req, res) {
       return;
     }
     else {
-      console.log("Library item created");
+      
       // phekb custom -- send to phekb and save phekb data back in the item 
-      saveToPhekb(item, req.body);
-      res.send(formatItemForReturn(item));
+      saveToPhekb(item, req.body, res);
 
     }
   });
@@ -419,8 +421,8 @@ exports.update = function(req, res) {
     return item.save(function(err) {
       if(!err) {
         // phekb custom  send data to phekb and save phekb data in item 
-        saveToPhekb(item,req.body);
-       	res.send(formatItemForReturn(item));
+        saveToPhekb(item,req.body,res);
+       	
 
 
       
@@ -500,7 +502,6 @@ exports.properties = function(req,res) {
   // Must get a token from drupal services 
   request.get({url: phekb_url + '/services/session/token', headers: { Cookie: session}}, 
     function (error, response, body) {
-      console.log(error, body);
       if (error) {
         res.status(400).send({error: error});
         return;
