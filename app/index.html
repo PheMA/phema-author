@@ -36,8 +36,8 @@
       <div class="collapse navbar-collapse header" id="app-navbar-collapse">
         <div class="navbar-right">
           <ul class="nav navbar-nav">
-            <li><a href="#/dashboard">Dashboard</a>
-            <li><a class="btn btn-highlight btn-primary" ng-href="#/phenotype">Create Phenotype</a></li>
+            <li><a class="" href="#/dashboard">Dashboard</a>
+            <li><a class="" href="#/phenotype">Create Phenotype</a></li>
 <!--             <li class="dropdown">
               <a href="#/phenotype/new" class="dropdown-toggle">Phenotypes <b class="caret"></b></a>
               <ul class="dropdown-menu">
@@ -72,7 +72,7 @@
                   </li>
                 </ul>
               </li>
-              <li ng-hide="security.isAuthenticated()" class="login">
+              <li ng-hide="security.isAuthenticated() || security.loginDisabled" class="login">
                   <form class="navbar-form">
                       <button class="btn login" ng-click="security.showLogin()">Log in</button>
                       <button class="btn register" ng-click="security.showRegister()">Register</button>
