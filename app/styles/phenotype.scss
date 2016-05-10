@@ -297,6 +297,20 @@ $value-sets-background-color: #eee;
   }
 }
 
+.code-systems-container, .code-system-container {
+  max-height: 400px;
+  overflow-y: hidden;
+
+  .col-md-6 {
+    height: 300px;
+    overflow-y: scroll;
+  }
+
+  .add-to-term-list, .remove-from-term-list {
+    cursor: pointer;
+  }
+}
+
 .value-set-results {
   .divider-right {
     border-right: solid 1px black;
@@ -333,6 +347,17 @@ $value-sets-background-color: #eee;
   td {
     padding-right: 5px;
     padding-bottom: 5px;
+  }
+}
+
+.term-table {
+  table-layout: fixed;
+  width: 100%;
+  .name-col {
+    width: 80%;
+  }
+  .code-col {
+    width: 15%;
   }
 }
 
