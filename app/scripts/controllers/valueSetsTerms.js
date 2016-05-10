@@ -11,7 +11,7 @@
  */
 angular.module('sopheAuthorApp')
 .controller('ValueSetsTermsController', ['$scope', '$http', 'ValueSetService', 'CodeSystemService', function ($scope, $http, ValueSetService, CodeSystemService) {
-  $scope.activeTabIndex = 0;
+  $scope.selectedTabIndex = $scope.selectedTabIndex || ($scope.$parent.selectedTabIndex ? $scope.$parent.selectedTabIndex : 0);
   $scope.termSearch = {term: '', isSearching: false, results: []};
   $scope.valueSetSearch = {term: '', isSearching: false, results: []};
   $scope.selectedValueSetMembers = [];

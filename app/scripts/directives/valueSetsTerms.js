@@ -11,7 +11,7 @@ angular.module('sophe.valueSetsTerms', [])
       selectedValueSets: '=',
       selectedTerms: '=',
       existingValueSet: '=',
-      selectedTabIndex: '='
+      selectedTabIndex: '=?'
     }
   };
   return directive;
