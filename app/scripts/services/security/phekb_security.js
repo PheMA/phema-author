@@ -107,7 +107,6 @@ angular.module('security.service', [
     },
 
     // Attempt to authenticate a user by the given email and password
-    // Todo -- fix
     login: function(email, password) {
       var request = $http.post('/api/login', {email: email, password: password});
 
@@ -127,6 +126,21 @@ angular.module('security.service', [
         }
         
       });
+    },
+    
+    // See if user has access to phekb data they are trying to view 
+    // data looks like : {action: edit, type: phenotype , obj: phenotype_obj }
+    // returns {access: "granted"||"denied" reason: "Reason for granting access " , error:null or "error string"}
+    phekb_access: function(data) {
+      var request = $http.post('/api/phekb/access', data);
+
+      return request.then(function(response) {
+          return response.data; 
+          }, function (error) {
+            return {error: error};
+          }
+        ); 
+        
     },
     
 

@@ -46,6 +46,7 @@ app.post('/api/library', library.add);
 app.get('/api/library-properties', library.properties);
 app.put('/api/library/:id', library.update);
 app.delete('/api/library/:id', library.delete);
+app.post('/api/phenotype-access', library.pheno_access_type);
 
 
 app.get('/api/valueset', valueSets.index);

@@ -19,8 +19,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var request = require('request');
 
-//var phekb_url = 'http://local.phekb.org';
-var phekb_url = 'https://phekb.org';
+var phekb_url = 'http://local.phekb.org';
+//var phekb_url = 'https://phekb.org';
 
 
 function nameValidator (v) {
@@ -137,6 +137,9 @@ function saveToPhekb(item, params, res)
     // Make drupal node for phekb 
     var nid = item.external.nid;
     var lang = 'und';
+    console.log("Calling pheno access in save");
+    var access = _get_pheno_access_type(item.user, nid);
+    console.log("Saved access ", access);
     
     // Set up the drupal node.  For updates we just send the phema id and the image
     var node = { 
@@ -560,4 +563,64 @@ exports.properties = function(req,res) {
        
 };
 
+/* phema access to phenotype */
+exports.pheno_access_type = function(req, res){
 
+  var user = req.body.user;
+  var nid = req.body.library_id;
+
+  if (!user) {
+      res.status(200).send({can_edit: false, error: 'Missing user'});
+      return;
+  }
+  if (!nid) {
+      res.status(200).send({can_edit: false, error: 'Missing node id : nid'});
+      return;
+  }
+  
+
+  if (!user.session){
+    console.log("No user logged in");
+    res.status(200).send({can_edit: false, error: 'User not logged in'});
+  }
+
+  // Must get a token from drupal services 
+
+  request.get({url: phekb_url + '/services/session/token', headers: { Cookie: user.session}}, 
+    function (error, response, body) {
+      console.log("token response: " , error, body);
+      if (!error) {
+        // We got a token and we can Save node 
+        var token = body;
+        var method = 'POST';
+        var phekb_access_url = phekb_url + '/services/phenotypes/phema_access/phema_access_type'
+        //request({method: method, url: phekb_access_url, headers: { 'Content-type': 'application/json', 'Accept':'application/json', 
+        var headers = { 
+         //'Accept':'application/json', 
+         'X-CSRF-Token': token, 
+         'Cookie': user.session
+        };
+        request.post({ url: phekb_access_url, headers: headers, 
+          formData:{'nid': nid} }, 
+          function (error, response, body) {
+            console.log("Got response from access" , error, body); 
+            if (!error) {
+              console.log('Access from phekb ', body);
+              res.status(200).send(body);
+              return;
+            }
+            else {
+              console.log("Error response: " , error);
+              res.status(500).send(error);
+            }
+            
+          });
+      }
+      else {
+        console.log("error getting token. Could not ", error);
+        res.status(500).send(error);
+        //return {can_edit: false, error: "Server error getting token"};
+      }
+    });
+            
+}

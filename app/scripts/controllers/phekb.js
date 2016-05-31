@@ -1,8 +1,8 @@
 'use strict';
 
 var mod = angular.module('phekb', ['ngCookies']);
-//var phekb_url = "http://local.phekb.org";
-var phekb_url = "https://phekb.org";
+var phekb_url = "http://local.phekb.org";
+//var phekb_url = "https://phekb.org";
 function htmlToPlaintext(text) {
   return text ? String(text).replace(/<[^>]+>/gm, '') : '';
 }
@@ -121,21 +121,34 @@ mod.controller('PhekbEntryController', ['$scope', 'security', '$http', '$rootSco
       //console.log($scope.user);
       // Entry to Edit a phenotype 
       if (args.action == 'edit' ){
-        if (args.id.length > 1) {  // 0 by default on phekb 
-          $location.path('/phenotype/'+args.id).search({}).replace();
-        }
-        else {
-          var external = { nid: args.nid, uid: args.uid, site: args.site, url: phekb_url + "/phenotype/" + args.nid };
-          // Luke: external object in phekb is not getting passed through to library for some reason . 
-          var phenotype = {phekb: true, modifiedBy: user.email, createdBy: user.email, name: args.title, description: args.description,
-          external: external };  //nid: args.nid, uid: args.uid, site: args.site };
-          LibraryService.saveDetails(phenotype)
-            .then(function(data) {
-              $location.path('/phenotype/' + data.id).search({}).replace();
-            }, function() {
-              $scope.errorMessage = 'There was an error trying to save your phenotype definition and launch the authoring tool';
-            });
-        }
+        var library_id = args.nid;
+        LibraryService.phenotype_access(library_id).then(function(access) {
+          console.log("phekb.js access: ", access);
+          if (access.can_edit) {
+            if (args.id.length > 1) {  // 0 by default on phekb 
+              $location.path('/phenotype/'+args.id).search({}).replace();
+            }
+            else {
+              var external = { nid: args.nid, uid: args.uid, site: args.site, url: phekb_url + "/phenotype/" + args.nid };
+              // Luke: external object in phekb is not getting passed through to library for some reason . 
+              var phenotype = {phekb: true, modifiedBy: user.email, createdBy: user.email, name: args.title, description: args.description,
+              external: external };  //nid: args.nid, uid: args.uid, site: args.site };
+              LibraryService.saveDetails(phenotype)
+                .then(function(data) {
+                  $location.path('/phenotype/' + data.id).search({}).replace();
+                }, function() {
+                  $scope.errorMessage = 'There was an error trying to save your phenotype definition and launch the authoring tool';
+                });
+            }
+          }
+          else { 
+            //Access denied 
+            $scope.msg = "Access Denied";
+          }
+        }, function(error) {
+          $scope.msg = "Error checking access. Try again.";
+          console.log("error phekb.js access ", error);
+        });
       } // End edit phenotype entry 
 
     }, // end login success 
