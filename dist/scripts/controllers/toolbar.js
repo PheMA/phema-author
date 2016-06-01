@@ -4,6 +4,7 @@ var mod = angular.module('toolbar', []);
 
 mod.controller('ToolbarController', ['$scope', 'security', '$window',function($scope,security, $window) {
   $scope.isAuthenticated = security.isAuthenticated;
+  
   $scope.login = security.showLogin;
   $scope.logout = security.logout;
   $scope.register = security.showRegister;
