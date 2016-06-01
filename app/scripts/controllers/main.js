@@ -8,10 +8,10 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('MainController', ['$scope', 'LibraryService', function ($scope, LibraryService) {
+  .controller('MainController', ['$scope', 'LibraryService', 'security', function ($scope, LibraryService, security) {
     $scope.numberOfPhenotypes = 0;
     $scope.errorGettingPhenotypes = false;
-
+    $scope.security = security;
     LibraryService.load()
       .then(LibraryService.processValues)
       .then(function(elements) {

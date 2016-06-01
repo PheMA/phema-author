@@ -119,7 +119,7 @@ angular.module('security.service', [
         else {
         service.currentUser = response.data.user;
         $cookies.session = service.currentUser.session;
-        console.log(service.currentUser);
+        //console.log(service.currentUser);
         $rootScope.$broadcast('user:updated', service.currentUser);
         closeLoginDialog(true);
         return service.currentUser;
@@ -128,21 +128,34 @@ angular.module('security.service', [
       });
     },
     
-    // See if user has access to phekb data they are trying to view 
-    // data looks like : {action: edit, type: phenotype , obj: phenotype_obj }
-    // returns {access: "granted"||"denied" reason: "Reason for granting access " , error:null or "error string"}
-    phekb_access: function(data) {
-      var request = $http.post('/api/phekb/access', data);
+    // return access user has  to phenotype they want to edit or view 
+    // example return: {can_edit: true or false , access_type : admin || owner || public }
+    phenotype_access: function(library_id) {
+      var deferred = $q.defer();
+      if (!service.currentUser) { 
+        deferred.reject("You must be logged in.");
+      }
+      else {
+        var user = service.currentUser;
+        var session = user.session;
+        if (session) {
+          var url = '/api/phenotype-access';
+          var props = $http.post(url,{user:user, library_id: library_id}); 
+          props.then( function(response) {
+            //console.log("library service phenotype access data: ", response.data);
+            deferred.resolve(response.data);
+          }, function(response) {
+            deferred.reject('There was an error getting phenotype access: ' + response);
+          });
+        }
+        else {
+          deferred.reject('You must be logged in.');
+        }
+      }
+      return deferred.promise;
 
-      return request.then(function(response) {
-          return response.data; 
-          }, function (error) {
-            return {error: error};
-          }
-        ); 
-        
     },
-    
+      
 
     // Give up trying to login and clear the retry queue
     cancelLogin: function() {

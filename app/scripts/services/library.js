@@ -45,12 +45,12 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
   };
     
 
-  this.loadDetails = function(id) {
+  this.loadDetails = function(id, uid, session) {
     var deferred = $q.defer();
-    $resource(URLService.getLibraryURL(true), {id:'@id'}).get({id: id}, function(data) {
+    $resource(URLService.getLibraryURL(true), {id:'@id'}).get({id: id, uid: uid, session:session}, function(data) {
       deferred.resolve(data);
-    }, function(data, status) {
-      deferred.reject('There was an error: ' + status);
+    }, function(data) {
+      deferred.reject(data);
     });
     return deferred.promise;
   };
@@ -109,31 +109,7 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
     return deferred.promise;
 
   };
-  // Get phenotype access type for user
-  this.phenotype_access = function(library_id) {
-    var deferred = $q.defer();
-    if (!security.currentUser) { 
-      deferred.reject("You must be logged in.");
-    }
-    else {
-      var session = security.currentUser.session;
-      if (session) {
-        var url = '/api/phenotype-access';
-        var props = $http.post(url,{user:security.currentUser, library_id: library_id}); 
-        props.then( function(response) {
-          console.log("library service phenotype access data: ", response.data);
-          deferred.resolve(response.data);
-        }, function(response) {
-          deferred.reject('There was an getting phenotype access: ' + response);
-        });
-      }
-      else {
-        deferred.reject('You must be logged in.');
-      }
-    }
-    return deferred.promise;
-
-  };
+  
 
 }]);
 
