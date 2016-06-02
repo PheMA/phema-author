@@ -133,12 +133,17 @@ mod.controller('PhekbEntryController', ['$scope', 'security', '$http', '$rootSco
     // Try to login with uid and sess string  . A custom Phekb service allows this 
     security.login(args.uid, args.sess_id).then(function(user) {
       $scope.user = security.currentUser;
-      $scope.msg = "Welcome, " + user.fullName;
-      //console.log($scope.user);
-      // Entry to Edit a phenotype 
-      if (args.action == 'edit' ){
-        security.phenotype_access(library_id).then(phekb_goto_edit, phekb_server_error);
-      } // End edit phenotype entry 
+      if ($scope.user ) { 
+        $scope.msg = "Welcome, " + $scope.user.fullName;
+        //console.log($scope.user);
+        // Entry to Edit a phenotype 
+        if (args.action == 'edit' ){
+          security.phenotype_access(library_id).then(phekb_goto_edit, phekb_server_error);
+        } // End edit phenotype entry 
+      }
+      else {
+        $scope.msg = "Something unknown went wrong logging in: " + user;
+      }
 
     }, // end login success 
     function (error) {
