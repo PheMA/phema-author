@@ -19,8 +19,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var request = require('request');
 
-//var phekb_url = 'http://local.phekb.org';
-var phekb_url = 'https://phekb.org';
+var phekb_url = 'http://local.phekb.org';
+//var phekb_url = 'https://phekb.org';
 
 
 function nameValidator (v) {
@@ -73,23 +73,44 @@ var LibraryItem = new Schema({
   }
 });
 
-function formatItemForReturn(item) {
-  return {
-    id: item._id.toHexString(),
-    name: item.name,
-    description: item.description,
-    definition: item.definition,
-    created: item.created,
-    createdBy: item.createdBy,
-    modified: item.modified,
-    modifiedBy: item.modifiedBy,
-    deleted: item.deleted,
-    deletedBy: item.deletedBy,
-    image: item.image,
-    user : item.user,
-    external: item.external
-    
-  };
+function formatItemForReturn(item, readonly) {
+  if (!readonly) {
+    return {
+      id: item._id.toHexString(),
+      name: item.name,
+      description: item.description,
+      definition: item.definition,
+      created: item.created,
+      createdBy: item.createdBy,
+      modified: item.modified,
+      modifiedBy: item.modifiedBy,
+      deleted: item.deleted,
+      deletedBy: item.deletedBy,
+      image: item.image,
+      user : item.user,
+      external: item.external
+      
+    }; 
+  }
+  else {
+    return {
+      id: item._id.toHexString(),
+      name: item.name,
+      description: item.description,
+      //definition: item.definition,
+      created: item.created,
+      createdBy: item.createdBy,
+      modified: item.modified,
+      modifiedBy: item.modifiedBy,
+      deleted: item.deleted,
+      deletedBy: item.deletedBy,
+      image: item.image,
+      
+      //user : item.user,
+      external: item.external
+      
+    }; 
+  }
 }
 // Must connect this way to have multiple connections in one node js app 
 var libconn = mongoose.createConnection('mongodb://localhost/phema-library');
@@ -183,7 +204,7 @@ function saveToPhekb(item, params, res)
             json:{'node': node} }, 
             function (error, response, body) {
               //console.log("Saved Phenotype" , error, body); 
-              
+              console.log("Status code: " + response.statusCode);
               if (!error && response.statusCode == 200) {
                 // Drupal returns {nid: 222, uri: http://phekb.org/phenotype/.... } the phekb nid and url and such 
                 item.external.nid  = body.nid; 
@@ -191,6 +212,7 @@ function saveToPhekb(item, params, res)
                 item.save(function(err) {
                   if(!err) { 
                    // In case phekb service is down we don't want app depending on it 
+                   console.log("Saved to phekb : ", item.external);
                    res.statusCode = 200;
                    res.send(formatItemForReturn(item));
                    return true;
@@ -202,6 +224,9 @@ function saveToPhekb(item, params, res)
                     return false;
                   }
                 });
+              }
+              else {
+                console.log("Error saving to phekb ", error);
               }
             });
           }
@@ -247,6 +272,7 @@ exports.group_phenotypes = function(req, res) {
  * Finds a library item by its ID
  * @param {Object} req HTTP request object.
  * @param {Object} res HTTP response object.
+ * If no user session then we just return title the db details 
  */
 exports.details = function(req, res){
   console.log("GET - /library/:id");
@@ -272,9 +298,9 @@ exports.details = function(req, res){
       var session = req.query.session;
       
       if (!uid || !session) { 
-        console.log("No user session. access denied");
-        res.statusCode = 403;
-        res.send({error: 'Access Denied'});
+        console.log("No user session. Read only item ");
+        res.statusCode = 200;
+        res.send(formatItemForReturn(item, true) );
       }
       else {
         pheno_check_access(uid, session,library_id, item, req, res);
@@ -674,7 +700,7 @@ function pheno_check_access(uid, session, nid, item, req, res) {
               }
 
               if (body.can_edit ) {
-                console.log("can edit ");
+                //console.log("can edit ");
                 res.send(formatItemForReturn(item));
               }
               else {

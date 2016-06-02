@@ -59,8 +59,8 @@ var PhemaUser = new Schema({
 
 // Phekb variables  todo config 
 
-//var phekb_url = 'http://local.phekb.org';
-var phekb_url = 'https://phekb.org';
+var phekb_url = 'http://local.phekb.org';
+//var phekb_url = 'https://phekb.org';
 // api_key must match the api key specified at phekb.org/admin/phema/config 
 var api_key = 'abc123';
 // Must connect this way to have multiple connections in one node js app 
