@@ -51,10 +51,12 @@ app.config(function ($routeProvider) {
       .when('/help', {
         title: 'Help', templateUrl: 'views/help/index.html', controller: 'HelpController' })
 
-      .when('/phekb-resource', {
-        title: 'Phekb Resource', templateUrl: 'views/phekb_resource.html', controller: 'PhekbController' })
+      //.when('/phekb-resource', {
+      //  title: 'Phekb Resource', templateUrl: 'views/phekb_resource.html', controller: 'PhekbController' })
       .when('/phekb', {
         title: 'PheKB Entry Point', templateUrl: 'views/phekb_entry.html', controller: 'PhekbEntryController' })
+      .when('/access-denied', {
+        title: 'Access Denied', templateUrl: 'views/access-denied.html', controller: 'MainController' })
 
       .otherwise({
         redirectTo: '/'

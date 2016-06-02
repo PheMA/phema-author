@@ -83,7 +83,9 @@ angular.module('security.service', [
 
   // The public API of the service
   var service = {
-    
+    // Disable login on phat here . They will have to login through other means like phekb
+    loginDisabled: true,
+
     // Get the first reason for needing a login
     getLoginReason: function() {
       return queue.retryReason();
@@ -105,21 +107,55 @@ angular.module('security.service', [
     },
 
     // Attempt to authenticate a user by the given email and password
-    // Todo -- fix
     login: function(email, password) {
       var request = $http.post('/api/login', {email: email, password: password});
 
       return request.then(function(response) {
+        if (!response.data.user) {
+          service.currentUser = null;
+          console.log(response);
+          return null; 
+        }
+        else {
         service.currentUser = response.data.user;
         $cookies.session = service.currentUser.session;
-        console.log(service.currentUser);
+        //console.log(service.currentUser);
         $rootScope.$broadcast('user:updated', service.currentUser);
         closeLoginDialog(true);
         return service.currentUser;
+        }
         
       });
     },
     
+    // return access user has  to phenotype they want to edit or view 
+    // example return: {can_edit: true or false , access_type : admin || owner || public }
+    phenotype_access: function(library_id) {
+      var deferred = $q.defer();
+      if (!service.currentUser) { 
+        deferred.reject("You must be logged in.");
+      }
+      else {
+        var user = service.currentUser;
+        var session = user.session;
+        if (session) {
+          var url = '/api/phenotype-access';
+          var props = $http.post(url,{user:user, library_id: library_id}); 
+          props.then( function(response) {
+            //console.log("library service phenotype access data: ", response.data);
+            deferred.resolve(response.data);
+          }, function(response) {
+            deferred.reject('There was an error getting phenotype access: ' + response);
+          });
+        }
+        else {
+          deferred.reject('You must be logged in.');
+        }
+      }
+      return deferred.promise;
+
+    },
+      
 
     // Give up trying to login and clear the retry queue
     cancelLogin: function() {
@@ -139,6 +175,9 @@ angular.module('security.service', [
       $rootScope.$broadcast('user:updated', service.currentUser);
       if (redirectTo) {
         redirect(redirectTo);
+      }
+      else {
+        window.location('https://phekb.org');
       }
       
       /*$http.post('/api/logout').then(function() {
