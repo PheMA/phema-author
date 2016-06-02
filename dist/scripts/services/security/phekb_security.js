@@ -176,9 +176,6 @@ angular.module('security.service', [
       if (redirectTo) {
         redirect(redirectTo);
       }
-      else {
-        window.location('https://phekb.org');
-      }
       
       /*$http.post('/api/logout').then(function() {
         service.currentUser = null;

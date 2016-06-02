@@ -1,8 +1,8 @@
 'use strict';
 
 var mod = angular.module('phekb', ['ngCookies']);
-//var phekb_url = "http://local.phekb.org";
-var phekb_url = "https://phekb.org";
+var phekb_url = "http://local.phekb.org";
+//var phekb_url = "https://phekb.org";
 function htmlToPlaintext(text) {
   return text ? String(text).replace(/<[^>]+>/gm, '') : '';
 }
@@ -87,12 +87,15 @@ mod.controller('PhekbEntryController', ['$scope', 'security', '$http', '$rootSco
   function phekb_goto_edit(access) {
     // Stop access right here to prevent people from coming from phekb with random node
     // ids and creating phema items for them
+    var user = security.currentUser;
     if (access.can_edit) {
       //  phekb sends 0 for phenotypes that haven't been authored yet or the hex id 
       if (args.id.length > 1) {
+        
         $location.path('/phenotype/'+args.id).search({}).replace();
       }
       else {
+        console.log(user);
         var external = { nid: args.nid, site: args.site, url: phekb_url + "/phenotype/" + args.nid };
         var phenotype = {user: user, modifiedBy: user.email, createdBy: user.email, name: args.title, description: args.description,
         external: external };  //nid: args.nid, uid: args.uid, site: args.site };
@@ -113,8 +116,9 @@ mod.controller('PhekbEntryController', ['$scope', 'security', '$http', '$rootSco
           console.log("error phekb.js access ", error);
     }
 
-  // If user logged in at phekb is not user logged in here, logout this user to be safe and try to login phekb user
-  if (user && args.uid && user.uid != args.uid) { 
+  // If user logged in at phekb is not user logged in here or we have a new session , logout this user to be safe and try to login phekb user
+  if ( (args.sess_id && args.uid) || (user && args.uid && user.uid != args.uid) ) { 
+    console.log("Logging out ", user);
       security.logout(); 
   }
 
@@ -124,18 +128,8 @@ mod.controller('PhekbEntryController', ['$scope', 'security', '$http', '$rootSco
     
   }
 
-  if (user)
-  {
-    
-    // Here same user is already logged in 
-    if (args.action == 'edit' ){
-      security.phenotype_access(library_id).then(phekb_goto_edit, phekb_server_error);
-    }
-
-  }
-
   // Log user in if we have sid and uid 
-  else if (args.sess_id && args.uid ) {
+  if (args.sess_id && args.uid ) {
     // Try to login with uid and sess string  . A custom Phekb service allows this 
     security.login(args.uid, args.sess_id).then(function(user) {
       $scope.user = security.currentUser;
@@ -153,6 +147,17 @@ mod.controller('PhekbEntryController', ['$scope', 'security', '$http', '$rootSco
     }// end login success 
     ); 
   }
+  else if (user)
+  {
+    
+    // Here same user is already logged in 
+    if (args.action == 'edit' ){
+      security.phenotype_access(library_id).then(phekb_goto_edit, phekb_server_error);
+    }
+
+  }
+
+  
   
 }]);
 

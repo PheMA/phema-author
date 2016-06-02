@@ -24,6 +24,7 @@ angular.module('sopheAuthorApp')
     var user = security.currentUser;
     if (!user || !user.session) {
       // Must be logged in
+      $scope.checkForUnsavedChanges = false;
       $location.path('/access-denied');
     }
 
