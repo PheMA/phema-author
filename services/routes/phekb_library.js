@@ -19,8 +19,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var request = require('request');
 
-var phekb_url = 'http://local.phekb.org';
-//var phekb_url = 'https://phekb.org';
+//var phekb_url = 'http://local.phekb.org';
+var phekb_url = 'https://phekb.org';
 
 
 function nameValidator (v) {
