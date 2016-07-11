@@ -547,7 +547,7 @@ function containedInSelection(selectionRectangle, shape) {
   return false;
 }
 
-function getIntersectingShapes(layer, shape, stopOnFirstFound) {
+function getContainedShapes(layer, shape, stopOnFirstFound) {
   var groups = layer.getChildren();
   var intersectingShapes = [];
   stopOnFirstFound = (typeof stopOnFirstFound !== 'undefined' ? stopOnFirstFound : false);
@@ -564,12 +564,6 @@ function getIntersectingShapes(layer, shape, stopOnFirstFound) {
 }
 
 function getIntersectingShape(layer, pos) {
-  // var shapes = getIntersectingShapes(layer, pos, true);
-  // if (shapes.length === 0) {
-  //   return null;
-  // }
-
-  // return shapes[0];
   var groups = layer.getChildren();
   var shapes = null;
   var intersectingGroup = null;
@@ -743,8 +737,8 @@ function highlightItemsInSelectionRectangle(stage, layer) {
 
   clearSelections(stage);
 
-  var intersectingShapes = getIntersectingShapes(layer, selectionRectangle);
-  for (var index = 0; index < intersectingShapes.length; index++) {
-    selectObject(stage, intersectingShapes[index]);
+  var containedShapes = getContainedShapes(layer, selectionRectangle);
+  for (var index = 0; index < containedShapes.length; index++) {
+    selectObject(stage, containedShapes[index]);
   }
 }

@@ -1,5 +1,5 @@
 'use strict';
-/* globals Kinetic, DataElement, GenericElement, LogicalOperator, TemporalOperator, ValueSet, Term, SubsetOperator, FunctionOperator, PhenotypeElement
+/* globals Kinetic, DataElement, GenericElement, LogicalOperator, TemporalOperator, ValueSet, Term, SubsetOperator, FunctionOperator, PhenotypeElement, 
  getIntersectingShape, allowsDrop, addElementToContainer, removeElementFromContainer, resizeStageForEvent */
 
 angular.module('sophe.factories.algorithmElement', [])
@@ -245,10 +245,6 @@ angular.module('sophe.factories.algorithmElement', [])
         else if (element.type === 'FunctionOperator') {
           var functionOperator = new FunctionOperator();
           functionOperator.load(group, scope);
-        }
-        else if (element.type === 'Phenotype') {
-          var phenotype = new GenericElement();
-          phenotype.load(group, scope);
         }
         else if (element.type === 'ValueSet') {
           var valueSet = new ValueSet();
