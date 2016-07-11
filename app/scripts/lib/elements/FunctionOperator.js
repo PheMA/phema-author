@@ -58,7 +58,7 @@ FunctionOperator.prototype.atCapacity = function() {
 FunctionOperator.prototype.connectEvents = function(group, scope) {
   this.addStandardEventHandlers(group, scope);
   this.addCursorEventHandlers(group, scope);
-  this.setDroppable(group.find('.mainRect')[0], ['Category', 'DataElement'], this.atCapacity);
+  this.setDroppable(group.find('.mainRect')[0], ['Category', 'DataElement', 'Phenotype'], this.atCapacity);
   this.addConnectionHandler(group.find('.leftConnector')[0], scope);
   this.addConnectionHandler(group.find('.rightConnector')[0], scope);
   this.connectConnectorEvents(group);
