@@ -176,7 +176,7 @@ angular.module('sophe.factories.algorithmElement', [])
       // If we dropped on top of a valid drop target, we are going to process the
       // drop event.
       var stage = scope.canvasDetails.kineticStageObj;
-      var dropShape = getIntersectingShape(stage.mainLayer, {x: config.x, y: config.y});
+      var dropShape = getIntersectingShape(stage.mainLayer, {x: config.x, y: config.y}, true, workflowObject);
       if (dropShape && allowsDrop(workflowObject, dropShape)) {
         addElementToContainer(stage, dropShape, workflowObject);
       }

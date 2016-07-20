@@ -224,7 +224,7 @@ BaseElement.prototype = {
       // We can't use the KineticJS getIntersection because when we are moving the mouse we
       // need to redraw the different layers to account for connector arrows moving.  Because
       // we do the redraw, it invalidates the underlying image that getIntersections relies on.
-      var shape = getIntersectingShape(stage.mainLayer, pos);
+      var shape = getIntersectingShape(stage.mainLayer, pos, true, e.target);
       if (!shape) {
         // If we don't have a spot to drop, but we did before, clean up the old shape so it's not
         // still highlighted as an active drop target.
