@@ -376,6 +376,19 @@ angular.module('sopheAuthorApp')
       return contextItem.parent.attrs.element.type;
     }
 
+    // Update an element with a new set of value set data.
+    //   selectedElement - the element in the canvas that has been selected and should be updated.
+    //   valueSetData - the configuration data (typically generated from a call to ValueSet.createElementFromData) to use for the value set.
+    //   customListData - the custom list information for the value set (if applicable).  This may be empty if an existing value set was used.
+    function _updateCustomValueSetData(selectedElement, valueSetData, customListData) {
+      var valueSetObject = $scope.addWorkflowObject({x: 0, y: 0, element: valueSetData});
+      selectedElement.phemaObject().valueSet(valueSetObject);
+      if (valueSetData.customList) {
+        valueSetObject.phemaObject().customList(customListData);
+      }
+      selectedElement.getStage().draw();
+    }
+
     $scope.showProperties = function() {
       var selectedElement = algorithmElementFactory.getFirstSelectedItem($scope);
       if (!$scope.canShowProperties(selectedElement)) {
@@ -487,7 +500,10 @@ angular.module('sopheAuthorApp')
               selectedElement.phemaObject().valueSet() &&
               selectedElement.phemaObject().valueSet().element()) {
             existingValueSet = selectedElement.phemaObject().valueSet();
-            if (existingValueSet.element().id !== result.valueSet.id) {
+            // If the value set has a different ID (meaning it's changed), or if there is no ID for the
+            // new value set (meaning it's a custom value set) we're going to do an update.
+            if (existingValueSet.element().id !== result.valueSet.id ||
+              result.valueSet.id === '' && result.valueSet.customList) {
               createNewVS = true;
               removeOldVS = true;
             }
@@ -503,13 +519,7 @@ angular.module('sopheAuthorApp')
           }
 
           if (createNewVS) {
-            var newValueSet = $scope.addWorkflowObject({x: 0, y: 0, element: result.valueSet});
-            selectedElement.phemaObject().valueSet(newValueSet);
-            if (result.valueSet.customList) {
-              newValueSet.phemaObject().customList(result.valueSet.customList);
-              delete result.valueSet.customList;
-            }
-            selectedElement.getStage().draw();
+            _updateCustomValueSetData(selectedElement, result.valueSet, result.valueSet.customList);
           }
         });
       }
@@ -635,15 +645,8 @@ angular.module('sopheAuthorApp')
       modalInstance.result.then(function (result) {
         if (result) {
           // If we just have a value set, we will create that and place it in the object
-          var valueSet;
           var element = ValueSet.createElementFromData(result);
-          valueSet = $scope.addWorkflowObject({x: 0, y: 0, element: element});
-          dataElement.phemaObject().valueSet(valueSet);
-          if (element.customList) {
-            valueSet.phemaObject().customList(result);
-            delete element.customList;
-          }
-          dataElement.getStage().draw();
+          _updateCustomValueSetData(dataElement, element, result);
         }
       });
     });
