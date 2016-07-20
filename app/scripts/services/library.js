@@ -3,7 +3,7 @@
 /* globals ArrayUtil */
 
 angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
-.service('LibraryService', ['$resource', '$q', 'URLService', 'security', function($resource, $q, URLService, security) {
+.service('LibraryService', ['$http','$resource', '$q', 'URLService', 'security', function($http, $resource, $q, URLService, security) {
   this.load = function() {
     var deferred = $q.defer();
     $resource(URLService.getLibraryURL()).query(function(data) {
@@ -45,12 +45,12 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
   };
     
 
-  this.loadDetails = function(id) {
+  this.loadDetails = function(id, uid, session) {
     var deferred = $q.defer();
-    $resource(URLService.getLibraryURL(true), {id:'@id'}).get({id: id}, function(data) {
+    $resource(URLService.getLibraryURL(true), {id:'@id'}).get({id: id, uid: uid, session:session}, function(data) {
       deferred.resolve(data);
-    }, function(data, status) {
-      deferred.reject('There was an error: ' + status);
+    }, function(data) {
+      deferred.reject(data);
     });
     return deferred.promise;
   };
@@ -109,6 +109,7 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
     return deferred.promise;
 
   };
+  
 
 }]);
 

@@ -3,7 +3,7 @@
 /* globals ArrayUtil */
 
 angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
-.service('LibraryService', ['$resource', '$q', 'URLService', 'security', function($resource, $q, URLService, security) {
+.service('LibraryService', ['$http','$resource', '$q', 'URLService', 'security', function($http, $resource, $q, URLService, security) {
   this.load = function() {
     var deferred = $q.defer();
     $resource(URLService.getLibraryURL()).query(function(data) {
@@ -45,12 +45,12 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
   };
     
 
-  this.loadDetails = function(id) {
+  this.loadDetails = function(id, uid, session) {
     var deferred = $q.defer();
-    $resource(URLService.getLibraryURL(true), {id:'@id'}).get({id: id}, function(data) {
+    $resource(URLService.getLibraryURL(true), {id:'@id'}).get({id: id, uid: uid, session:session}, function(data) {
       deferred.resolve(data);
-    }, function(data, status) {
-      deferred.reject('There was an error: ' + status);
+    }, function(data) {
+      deferred.reject(data);
     });
     return deferred.promise;
   };
@@ -85,4 +85,31 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
     }
     return deferred.promise;
   };
+
+  // Get the property options needed to save a phenotype to the library 
+  this.properties = function() {
+    var deferred = $q.defer();
+    if (!security.currentUser) { 
+      deferred.reject("You must be logged in.");
+    }
+    else {
+      var session = security.currentUser.session;
+      if (session) {
+        var url = 'api/library-properties';
+        var props = $resource(url).get({session:session}, function(data) {
+          deferred.resolve(data);
+        }, function(data, status) {
+          deferred.reject('There was an getting phenotype properties: ' + status);
+        });
+      }
+      else {
+        deferred.reject('You must be logged in.');
+      }
+    }
+    return deferred.promise;
+
+  };
+  
+
 }]);
+

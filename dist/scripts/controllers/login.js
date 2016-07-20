@@ -30,7 +30,7 @@ angular.module('security.login.form', ['ngCookies'])
       
       if ( !security.isAuthenticated() ) {
         // If we get here then the login failed due to bad credentials
-        $scope.authError = 'Invalid login or password';
+        $scope.authError = 'Invalid email or password';
       }
       else {
         security.closeLogin(true);
@@ -41,7 +41,7 @@ angular.module('security.login.form', ['ngCookies'])
       }
     }, function(err) {
       // If we get here then there was a problem with the login request to the server
-      $scope.authError = err;
+      $scope.authError = err.data.error_msg;
     });
   };
 

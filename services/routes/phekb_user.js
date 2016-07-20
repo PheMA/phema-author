@@ -207,9 +207,11 @@ function login_phekb(res,email, password)
       if ( user_in_role('administrator', body.user.roles) ) { admin = true; }
 
       // Temporary -- must be a phema_author or deny 
-      if ( ! user_in_role('phema_author', body.user.roles) ) {
+      /*if ( ! user_in_role('phema_author', body.user.roles) ) {
         res.status(403).send('Forbidden not a phema_author');
+        return;
       } 
+      */
 
       var user_data = {session: session , sessid: body.sessid, session_name: body.session_name, admin: admin,
         uid: body.user.uid, fullName: body.user.field_full_name.und[0].value, email: body.user.mail, fromSite: 'phekb.org',  
@@ -265,6 +267,7 @@ function login_phekb(res,email, password)
     }
   });
 }
+
 
 
 /* No registration . Register on PheKB.org 

@@ -73,23 +73,44 @@ var LibraryItem = new Schema({
   }
 });
 
-function formatItemForReturn(item) {
-  return {
-    id: item._id.toHexString(),
-    name: item.name,
-    description: item.description,
-    definition: item.definition,
-    created: item.created,
-    createdBy: item.createdBy,
-    modified: item.modified,
-    modifiedBy: item.modifiedBy,
-    deleted: item.deleted,
-    deletedBy: item.deletedBy,
-    image: item.image,
-    user : item.user,
-    external: item.external
-    
-  };
+function formatItemForReturn(item, readonly) {
+  if (!readonly) {
+    return {
+      id: item._id.toHexString(),
+      name: item.name,
+      description: item.description,
+      definition: item.definition,
+      created: item.created,
+      createdBy: item.createdBy,
+      modified: item.modified,
+      modifiedBy: item.modifiedBy,
+      deleted: item.deleted,
+      deletedBy: item.deletedBy,
+      image: item.image,
+      user : item.user,
+      external: item.external
+      
+    }; 
+  }
+  else {
+    return {
+      id: item._id.toHexString(),
+      name: item.name,
+      description: item.description,
+      //definition: item.definition,
+      created: item.created,
+      createdBy: item.createdBy,
+      modified: item.modified,
+      modifiedBy: item.modifiedBy,
+      deleted: item.deleted,
+      deletedBy: item.deletedBy,
+      image: item.image,
+      
+      //user : item.user,
+      external: item.external
+      
+    }; 
+  }
 }
 // Must connect this way to have multiple connections in one node js app 
 var libconn = mongoose.createConnection('mongodb://localhost/phema-library');
@@ -140,14 +161,14 @@ function saveToPhekb(item, params, res)
     
     // Set up the drupal node.  For updates we just send the phema id and the image
     var node = { 
-      "field_phema_author_id": {"und": [{"value": item.id}] },
+      "field_phema_author_id": {"und": [{"value": id}] },
     }
     var method = null; // For create it is POST , update it is PUT
     if (!nid) {
       // New phenotype gets all the required properties 
       method = 'POST';
       node = {
-        "field_phema_author_id": {"und": [{"value": item.id}] },
+        "field_phema_author_id": {"und": [{"value": id}] },
         "title": item.name, 
         "type": 'phenotype',
         "language": 'und',
@@ -174,7 +195,6 @@ function saveToPhekb(item, params, res)
     // Must get a token from drupal services 
     request.get({url: phekb_url + '/services/session/token', headers: { Cookie: item.user.session}}, 
       function (error, response, body) {
-        console.log(error, body);
         if (!error) {
           // We got a token and we can Save node 
           var token = body;
@@ -184,7 +204,7 @@ function saveToPhekb(item, params, res)
             json:{'node': node} }, 
             function (error, response, body) {
               //console.log("Saved Phenotype" , error, body); 
-              
+              console.log("Status code: " + response.statusCode);
               if (!error && response.statusCode == 200) {
                 // Drupal returns {nid: 222, uri: http://phekb.org/phenotype/.... } the phekb nid and url and such 
                 item.external.nid  = body.nid; 
@@ -192,6 +212,7 @@ function saveToPhekb(item, params, res)
                 item.save(function(err) {
                   if(!err) { 
                    // In case phekb service is down we don't want app depending on it 
+                   console.log("Saved to phekb : ", item.external);
                    res.statusCode = 200;
                    res.send(formatItemForReturn(item));
                    return true;
@@ -203,6 +224,9 @@ function saveToPhekb(item, params, res)
                     return false;
                   }
                 });
+              }
+              else {
+                console.log("Error saving to phekb ", error);
               }
             });
           }
@@ -248,6 +272,7 @@ exports.group_phenotypes = function(req, res) {
  * Finds a library item by its ID
  * @param {Object} req HTTP request object.
  * @param {Object} res HTTP response object.
+ * If no user session then we just return title the db details 
  */
 exports.details = function(req, res){
   console.log("GET - /library/:id");
@@ -258,9 +283,29 @@ exports.details = function(req, res){
       return res.send({ error: 'Not found' });
     }
 
+
     if (!err) {
       res.statusCode = 200;
-      return res.send(formatItemForReturn(item));
+      /* access check */
+      if (!item.external || !item.external.nid ) { 
+        console.log("No node id ");
+        res.statusCode = 403;
+        res.send({error: 'Access Denied'});
+      }
+        
+      var library_id = item.external.nid
+      var uid = req.query.uid;
+      var session = req.query.session;
+      
+      if (!uid || !session) { 
+        console.log("No user session. Read only item ");
+        res.statusCode = 200;
+        res.send(formatItemForReturn(item, true) );
+      }
+      else {
+        pheno_check_access(uid, session,library_id, item, req, res);
+      }
+      
     }
     else {
       res.statusCode = 500;
@@ -560,4 +605,121 @@ exports.properties = function(req,res) {
        
 };
 
+/* phema access to phenotype */
+exports.pheno_access_type = function(req, res){
 
+  var user = req.body.user;
+  var nid = req.body.library_id;
+
+  if (!user) {
+      res.status(200).send({can_edit: false, error: 'Missing user'});
+      return;
+  }
+  if (!nid) {
+      res.status(200).send({can_edit: false, error: 'Missing node id : nid'});
+      return;
+  }
+  
+
+  if (!user.session){
+    res.status(200).send({can_edit: false, error: 'User not logged in'});
+  }
+
+  //pheno_check_access(user, user.session, nid, req, res);
+
+  // Must get a token from drupal services 
+  
+  request.get({url: phekb_url + '/services/session/token', headers: { Cookie: user.session}}, 
+    function (error, response, body) {
+      console.log("token response: " , error, body);
+      if (!error) {
+        // We got a token and we can Save node 
+        var token = body;
+        var method = 'POST';
+        var phekb_access_url = phekb_url + '/services/phenotypes/phema_access/phema_access_type'
+        //request({method: method, url: phekb_access_url, headers: { 'Content-type': 'application/json', 'Accept':'application/json', 
+        var headers = { 
+         //'Accept':'application/json', 
+         'X-CSRF-Token': token, 
+         'Cookie': user.session
+        };
+        request.post({ url: phekb_access_url, headers: headers, 
+          formData:{'nid': nid} }, 
+          function (error, response, body) {
+            console.log("Got response from access" , error, body); 
+            if (!error) {
+              console.log('Access from phekb ', body);
+              res.status(200).send(body);
+              return;
+            }
+            else {
+              console.log("Error response: " , error);
+              res.status(500).send(error);
+            }
+            
+          });
+      }
+      else {
+        console.log("error getting token. Could not ", error);
+        res.status(500).send(error);
+        //return {can_edit: false, error: "Server error getting token"};
+      }
+    });
+
+            
+}
+
+function pheno_check_access(uid, session, nid, item, req, res) {
+
+          
+  request.get({url: phekb_url + '/services/session/token', headers: { Cookie: session}}, 
+    function (error, response, body) {
+      console.log("token response: " , error, body);
+      if (!error) {
+        // We got a token and we can Save node 
+        var token = body;
+        var method = 'POST';
+        var phekb_access_url = phekb_url + '/services/phenotypes/phema_access/phema_access_type'
+        //request({method: method, url: phekb_access_url, headers: { 'Content-type': 'application/json', 'Accept':'application/json', 
+        var headers = { 
+         //'Accept':'application/json', 
+         'X-CSRF-Token': token, 
+         'Cookie': session
+        };
+        request.post({ url: phekb_access_url, headers: headers, 
+          formData:{'nid': nid} }, 
+          function (error, response, body) {
+            
+            if (!error) {
+              try{
+                body = JSON.parse(body);
+              } catch(e){
+                console.log("Error parsing phekb response ", e, body)
+                res.status(500).send({error_msg: "Error parsing phekb response " , error: e} );
+                return;
+              }
+
+              if (body.can_edit ) {
+                //console.log("can edit ");
+                res.send(formatItemForReturn(item));
+              }
+              else {
+                console.log("access denied ")
+                res.statusCode = 403;
+                res.send({error: 'Access Denied'});
+              }
+            }
+            else {
+              console.log("Error response: " , error);
+              res.status(500).send(error);
+            }
+            
+          });
+      }
+      else {
+        console.log("error getting token. Could not ", error);
+        res.status(500).send(error);
+        //return {can_edit: false, error: "Server error getting token"};
+      }
+    });
+}
