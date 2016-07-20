@@ -2,5 +2,7 @@
 angular.module('security', [
   'security.service',
   'security.interceptor',
-  'security.login',
-  'security.authorization']);
+  'security.login.form',
+  'security.authorization',
+  'security.register'
+  ]);

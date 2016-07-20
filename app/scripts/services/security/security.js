@@ -1,11 +1,12 @@
 // Based loosely around work by Witold Szczerba - https://github.com/witoldsz/angular-http-auth
 angular.module('security.service', [
+  'ngCookies',              // cookies api
   'security.retryQueue',    // Keeps track of failed requests that need to be retried once the user logs in
   'security.login',         // Contains the login form template and controller
-  'ui.bootstrap.modal'     // Used to display the login form as a modal dialog.
+  'ui.bootstrap.modal'    // Used to display the login form as a modal dialog.
 ])
 
-.factory('security', ['$http', '$q', '$location', 'securityRetryQueue', '$modal', function($http, $q, $location, queue, $modal) {
+.factory('security', ['$http', '$q', '$location', 'securityRetryQueue', '$modal', '$cookies', function($http, $q, $location, queue, $modal, $cookies) {
 
   // Redirect to the given url (defaults to '/')
   function redirect(url) {
@@ -65,6 +66,7 @@ angular.module('security.service', [
       return request.then(function(response) {
         service.currentUser = response.data.user;
         if ( service.isAuthenticated() ) {
+          $cookies.put('session', service.currentUser.cookie);
           closeLoginDialog(true);
         }
       });

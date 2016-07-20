@@ -2,7 +2,7 @@
   "environment":"local",
   "dataServiceBaseUrl":"data/",
   "fhirServiceBaseUrl":"data/",
-  "libraryBaseUrl":"data/",
+  "libraryBaseUrl":"api/library/",
   "valueSetServiceBaseUrl":"data/",
   "codeSystemServiceBaseUrl":"data/",
   "configServiceBaseUrl":"data/",

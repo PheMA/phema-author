@@ -9,7 +9,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', '$location', '$window', '$timeout', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'SubsetOperatorService', 'QDMElementService', 'FHIRElementService', 'LibraryService', 'ConfigurationService', 'FunctionOperatorService', function ($scope, $http, $routeParams, $modal, $location, $window, $timeout, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, SubsetOperatorService, QDMElementService, FHIRElementService, LibraryService, ConfigurationService, FunctionOperatorService) {
+  .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', '$location', '$window', '$timeout', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'SubsetOperatorService', 'QDMElementService', 'FHIRElementService', 'LibraryService', 'ConfigurationService', 'FunctionOperatorService', 'security', function ($scope, $http, $routeParams, $modal, $location, $window, $timeout, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, SubsetOperatorService, QDMElementService, FHIRElementService, LibraryService, ConfigurationService, FunctionOperatorService, security) {
     $scope.phenotype = ($routeParams.id ? {id: $routeParams.id } : null );
     $scope.status = { open: [false, false, false, false, false, false, false, false, false]};
     $scope.isPropertiesDisabled = true;
@@ -19,6 +19,14 @@ angular.module('sopheAuthorApp')
     $scope.treeOptions = {
       dirSelectable: false
     };
+
+    // Must be logged in to create/edit a phenotype 
+    var user = security.currentUser;
+    if (!user || !user.session) {
+      // Must be logged in
+      $scope.checkForUnsavedChanges = false;
+      $location.path('/access-denied');
+    }
 
     $scope.$on('onBeforeUnload', function (e, confirmation) {
         if (_hasPhenotypeChanged()) {
@@ -89,11 +97,27 @@ angular.module('sopheAuthorApp')
       // to see when that takes place before proceeding.
       $scope.$watch('canvasDetails', function() {
         if ($scope.canvasDetails) {
-          LibraryService.loadDetails($scope.phenotype.id)
+          // Load Details will get access denied if user doesn't have access to details
+          // Todo -- possible load read only details 
+          LibraryService.loadDetails($scope.phenotype.id, user.uid, user.session)
             .then(function(phenotype) {
-              $scope.phenotype = phenotype;
-              algorithmElementFactory.loadFromDefinition($scope, phenotype.definition);
-            });
+                $scope.phenotype = phenotype;
+                algorithmElementFactory.loadFromDefinition($scope, phenotype.definition);
+              },
+              function(error) {
+                if (error.status == 403) {
+                  // Don't check for unsaved changes
+                  $scope.checkForUnsavedChanges = false;
+                  $location.path('/access-denied');
+                }
+                else {
+                  // Don't know what happened
+                  console.log("LoadDetails error in phenotype.js error", error);
+                  $scope.errorMessage = 'There was an error opening this phenotype. Please try again.';
+                  //$scope.checkForUnsavedChanges = false;
+                  $location.path('/');
+                }
+              });
         }
       });
     }
@@ -142,7 +166,15 @@ angular.module('sopheAuthorApp')
     function _handlePhenotypeSave(result) {
       LibraryService.saveDetails(result)
         .then(function(data) {
+          //console.log('Saved phenotype in controller', data.id);
           _setPhenotypeData(data.id, data.name, data.description);
+          // Update the phenotype with any external data we got from save -- such as phekb node id , etc
+          if ($scope.phenotype) { 
+            $scope.phenotype.external = data.external;
+          }
+          else {
+            $scope.phenotype = data;
+          }
           $scope.successMessage = 'Your phenotype was successfully saved';
           $scope.checkForUnsavedChanges = false;
           $location.path('/phenotype/' + data.id);
@@ -271,28 +303,43 @@ angular.module('sopheAuthorApp')
 
     $scope.save = function() {
       var phenotypeDefinition = $scope.canvasDetails.kineticStageObj.mainLayer.toJSON();
-
-      // If the phenotype was already saved (because there is an ID) we don't need to display
-      // the dialog again and we can just save.
+      
+      
       if ($scope.phenotype) {
         $scope.phenotype.definition = phenotypeDefinition;
-        _handlePhenotypeSave($scope.phenotype);
+        $scope.canvasDetails.kineticStageObj.toImage({callback: function(image){
+          $scope.phenotype.image = image.src;
+          _handlePhenotypeSave($scope.phenotype);
+        }});
       }
+      
       else {
-        var modalInstance = $modal.open({
-          templateUrl: 'views/properties/phenotype.html',
-          controller: 'PhenotypePropertiesController',
-          size: 'lg',
-          resolve: {
-            phenotype: function() {
-              return {definition: phenotypeDefinition };
-            },
-            isReference: function() { return false; }
-          }
-        });
+        var modalInstance = null;
+        // Send the library properties to the modal form so it can build the form 
+        // for the library 
+        LibraryService.properties().then(function(props) {
+          modalInstance = $modal.open({
+            templateUrl: 'views/properties/phenotype.html',
+            controller: 'PhenotypePropertiesController',
+            size: 'lg',
+            resolve: {
+              phenotype: function() {
+                return {definition: phenotypeDefinition };
+              },
+              isReference: function() { return false; },
+              properties: function() { return props; },
+            }
+          });
 
-        modalInstance.result.then(function (result) {
-          _handlePhenotypeSave(result);
+          modalInstance.result.then(function (result) {
+            $scope.canvasDetails.kineticStageObj.toImage({callback: function(image){
+              
+              result.image = image.src;
+            _handlePhenotypeSave(result);
+            }});
+          });
+        }, function(error) { 
+          console.log("Error getting libary properties for phenotype save", error);
         });
       }
     };
@@ -314,6 +361,24 @@ angular.module('sopheAuthorApp')
         _handleLoad();
       }
     };
+
+    $scope.openExternal = function(url) {
+      // Todo -- figure out how to get phenotype data from phekb back to app phenotype 
+      if (!url) { 
+        LibraryService.loadDetails($scope.phenotype.id)
+            .then(function(phenotype) { 
+              $scope.phenotype = phenotype; // update with latest because when saving to phekb on s
+              url = $scope.phenotype.external.url;
+              //console.log("opening in phekb " + url);
+              $window.open(url, '_blank');
+            }, function(error) { 
+              console.log("Couldn't get url for phenotype in external library.", error);
+            });
+      } else {
+        $window.open(url, '_blank');
+      }
+      
+    }
 
     $scope.canShowProperties = function(item) {
       var selectedElement = item || algorithmElementFactory.getFirstSelectedItem($scope);
@@ -599,6 +664,8 @@ angular.module('sopheAuthorApp')
       {id: 'btnDelete', text: 'Delete', iconClass:'fa fa-remove', event: $scope.delete, disabled: true, tooltip: 'Delete the highlighted element(s) in the canvas'},
       {spacer: true},
       {id: 'btnFeedback', text: 'Feedback', iconClass:'fa fa-comment', event: $scope.delete, disabled: true, tooltip: 'Suggestions or comments'},
+      {id: 'btnOpenExternal', text: 'Open in PheKB', iconClass:'fa fa-external', event: $scope.openExternal, disabled: false, tooltip: 'Open Phenotype in PheKB.org'},
+ 
     ];
 
 

@@ -1,3 +1,4 @@
+
 'use strict';
 var request = require('request');
 
@@ -25,6 +26,12 @@ LibraryRepository.prototype.getItems = function(callback) {
 LibraryRepository.prototype.getItem = function(id, callback) {
   request(this.baseURL + '/library/' + id, function(error, response, body) {
     if (!error && response.statusCode === 200) {
+     // Have to parse the body for the image 
+      try {
+        body = JSON.parse(body);
+      } catch(e) {
+        console.log("error parsing phekb response to saving phenotype ", e);
+      }
       callback(null, body);
     }
     else {
@@ -53,7 +60,7 @@ LibraryRepository.prototype.updateItem = function(item, callback) {
     }
     else {
       console.log(error);
-      callback({message: 'Unable to update the item'});
+      callback({message: 'Unable to update the item: ', error: error});
     }
   });
 };
@@ -69,5 +76,31 @@ LibraryRepository.prototype.deleteItem = function(id, callback) {
     }
   });
 };
+
+LibraryRepository.prototype.repositories = function(callback) {
+  request(this.baseURL + '/library/repositories', function(error, response, body) {
+    if (!error && response.statusCode === 200) {
+      callback(null, body);
+    }
+    else {
+      console.log(error);
+      callback({message: 'Unable to get repository list'});
+    }
+  });
+};
+
+// This gets the property options we want for the library 
+LibraryRepository.prototype.properties = function(callback) {
+  request(this.baseURL + '/library/properties', function(error, response, body) {
+    if (!error && response.statusCode === 200) {
+      callback(null, body);
+    }
+    else {
+      console.log(error);
+      callback({message: 'Unable to get properties list'});
+    }
+  });
+};
+
 
 exports.LibraryRepository = LibraryRepository;

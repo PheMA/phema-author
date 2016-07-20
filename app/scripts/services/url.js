@@ -3,8 +3,9 @@
 angular.module('sophe.services.url', ['sophe.config'])
 .service('URLService', ['environment', 'dataServiceBaseUrl', 'fhirServiceBaseUrl', 'libraryBaseUrl', 'valueSetServiceBaseUrl', 'codeSystemServiceBaseUrl', 'configServiceBaseUrl', 'exporterServiceBaseUrl', 'unitServiceBaseUrl',
     function(environment, dataServiceBaseUrl, fhirServiceBaseUrl, libraryBaseUrl, valueSetServiceBaseUrl, codeSystemServiceBaseUrl, configServiceBaseUrl, exporterServiceBaseUrl, unitServiceBaseUrl) {
-
+  // Todo -- set environment variable 
   this.getDataServiceURL = function(resource) {
+    
     if (environment === 'local' || environment.substring(0, 2) === '@@') {
       // For our local setup, we sometimes stub things in.  This isn't code we plan to
       // use in production, so it's okay if it's a little messy.
@@ -29,11 +30,12 @@ angular.module('sophe.services.url', ['sophe.config'])
     }
 
     var url = fhirServiceBaseUrl + resource;
-    return url;
+    return url 
   };
 
   this.getLibraryURL = function(details) {
-    if (environment === 'local' || environment.substring(0, 2) === '@@') {
+    
+    /*if (false && environment === 'local' || environment.substring(0, 2) === '@@') {
       if (details) {
         return 'data/phenotype.json';
       }
@@ -41,8 +43,10 @@ angular.module('sophe.services.url', ['sophe.config'])
         return 'data/phenotypes.json';
       }
     }
+    */
 
-    var url = libraryBaseUrl;
+    var url = "api/library/";//libraryBaseUrl;
+    
     if (details) {
       url = url + ':id';
     }
