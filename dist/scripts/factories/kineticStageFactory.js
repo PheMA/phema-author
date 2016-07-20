@@ -1,5 +1,6 @@
 'use strict';
-/* globals updateActiveLineLocation, endConnector, clearSelections, Kinetic */
+/* globals updateActiveLineLocation, endConnector, clearSelections, Kinetic, createSelectionRectangle, updateSelectionRectangle,
+isDrawingLine, removeSelectionRectangle, highlightItemsInSelectionRectangle */
 
 angular.module('sophe.factories.kineticStage', [])
   .factory('kineticStageFactory', function() {
@@ -49,15 +50,38 @@ angular.module('sophe.factories.kineticStage', [])
         backgroundLayer.add(background);
         backgroundLayer.draw();
 
+        background.on('mousedown', function() {
+          mainLayer.isMouseDown = true;
+          mainLayer.isSelectionRectangleActive = false;
+          createSelectionRectangle(stage, mainLayer);
+        });
+
         background.on('mousemove', function(evt) {
-          updateActiveLineLocation(stage, evt);
+          if (isDrawingLine(stage)) {
+            updateActiveLineLocation(stage, evt);            
+          }
+          else if (mainLayer.isMouseDown) {
+            updateSelectionRectangle(stage, mainLayer);
+            highlightItemsInSelectionRectangle(stage, mainLayer);
+            mainLayer.isSelectionRectangleActive = true;
+          }
         });
 
         background.on('mouseup', function() {
-          endConnector(stage, undefined, scope);
-          clearSelections(stage);
+          if (isDrawingLine(stage) || !mainLayer.isSelectionRectangleActive) {
+            endConnector(stage, undefined, scope);
+            clearSelections(stage);
+          }
+
+          removeSelectionRectangle(mainLayer);
+          mainLayer.isMouseDown = false;
+          mainLayer.isSelectionRectangleActive = false;
           scope.$root.$broadcast('sophe-element-selected', null);
         });
+
+        mainLayer.updateSelectionRectangle = function(evt) {
+          background.fire(evt.type, evt, false);
+        };
       }
     };
 

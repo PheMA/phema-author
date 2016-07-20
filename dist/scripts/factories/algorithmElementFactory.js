@@ -1,5 +1,5 @@
 'use strict';
-/* globals Kinetic, DataElement, GenericElement, LogicalOperator, TemporalOperator, ValueSet, Term, SubsetOperator, FunctionOperator,
+/* globals Kinetic, DataElement, GenericElement, LogicalOperator, TemporalOperator, ValueSet, Term, SubsetOperator, FunctionOperator, PhenotypeElement, 
  getIntersectingShape, allowsDrop, addElementToContainer, removeElementFromContainer, resizeStageForEvent */
 
 angular.module('sophe.factories.algorithmElement', [])
@@ -42,6 +42,12 @@ angular.module('sophe.factories.algorithmElement', [])
 
     function createTerm(config, scope) {
       var element = new Term();
+      element.create(config, scope);
+      return element.container();
+    }
+
+    function createPhenotypeElement(config, scope) {
+      var element = new PhenotypeElement();
       element.create(config, scope);
       return element.container();
     }
@@ -151,7 +157,7 @@ angular.module('sophe.factories.algorithmElement', [])
         workflowObject = createQDMFunctionOperator(config, scope);
       }
       else if (config.element.type === 'Phenotype') {
-        workflowObject = createGenericElement(config, scope);
+        workflowObject = createPhenotypeElement(config, scope);
       }
       else if (config.element.type === 'ValueSet') {
         workflowObject = createValueSet(config, scope);
@@ -170,7 +176,7 @@ angular.module('sophe.factories.algorithmElement', [])
       // If we dropped on top of a valid drop target, we are going to process the
       // drop event.
       var stage = scope.canvasDetails.kineticStageObj;
-      var dropShape = getIntersectingShape(stage.mainLayer, {x: config.x, y: config.y});
+      var dropShape = getIntersectingShape(stage.mainLayer, {x: config.x, y: config.y}, true, workflowObject);
       if (dropShape && allowsDrop(workflowObject, dropShape)) {
         addElementToContainer(stage, dropShape, workflowObject);
       }
@@ -240,13 +246,13 @@ angular.module('sophe.factories.algorithmElement', [])
           var functionOperator = new FunctionOperator();
           functionOperator.load(group, scope);
         }
-        else if (element.type === 'Phenotype') {
-          var phenotype = new GenericElement();
-          phenotype.load(group, scope);
-        }
         else if (element.type === 'ValueSet') {
           var valueSet = new ValueSet();
           valueSet.load(group, scope);
+        }
+        else if (element.type === 'Phenotype') {
+          var phenotype = new PhenotypeElement();
+          phenotype.load(group, scope);
         }
         else {
           var genericElement = new GenericElement();

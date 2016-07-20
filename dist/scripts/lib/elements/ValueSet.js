@@ -105,7 +105,7 @@ ValueSet.createElementFromData = function(result) {
     else {
       element = {
           id: '',
-          name: 'Custom Value Set',
+          name: 'Custom Value Set\r\n(' + result.terms.length + ' term' + (result.terms.length == 1 ? '' : 's') +')',
           type: 'ValueSet'
       };
       element.customList = result;

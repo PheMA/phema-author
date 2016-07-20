@@ -34,6 +34,14 @@ function _getConnectedElements(element, connectorName, elements, includeLabels) 
   }
 }
 
+function _backgroundShouldHandleMouseEvent(obj, evt) {
+  if (obj.parent && obj.parent.isSelectionRectangleActive && obj.parent.updateSelectionRectangle) {
+    obj.parent.updateSelectionRectangle(evt);
+    return true;
+  }
+  return false;
+}
+
 // Helper function that returns true/false if an element has anything
 // connected to its connector identified by connectorName
 function _hasConnectedElements(element, connectorName) {
@@ -48,24 +56,37 @@ BaseElement.prototype = {
 
   addConnectionHandler: function(kineticObj, scope) {
     var stage = scope.canvasDetails.kineticStageObj;
-    kineticObj.on('mouseup', function (e) {
-      endConnector(stage, e.target, scope);
+    kineticObj.on('mouseup', function (evt) {
+      if (_backgroundShouldHandleMouseEvent(this, evt)) {
+        return;
+      }
+      endConnector(stage, evt.target, scope);
     });
     kineticObj.on('mousemove', function(evt) {
+      if (_backgroundShouldHandleMouseEvent(this, evt)) {
+        return;
+      }
       updateActiveLineLocation(stage, evt);
     });
-    kineticObj.on('mousedown', function (e) {
+    kineticObj.on('mousedown', function (evt) {
       endConnector(stage, undefined, scope);  // Make sure it's not carrying over from before
-      startConnector(stage, e.target);
+      startConnector(stage, evt.target);
     });
   },
 
   addStandardEventHandlers: function(kineticObj, scope) {
     var stage = scope.canvasDetails.kineticStageObj;
     kineticObj.on('mousemove', function(evt) {
+      if (_backgroundShouldHandleMouseEvent(this, evt)) {
+        return;
+      }
       updateActiveLineLocation(stage, evt);
     });
     kineticObj.on('mouseup', function(evt) {
+      if (_backgroundShouldHandleMouseEvent(this, evt)) {
+        return;
+      }
+
       var line = endConnector(stage, undefined, scope);
 
       // We don't want to allow connectors to trigger selection
@@ -74,9 +95,13 @@ BaseElement.prototype = {
         shouldSelect = (!line) && (kineticObj.phemaObject().isChild(evt.target));
       }
 
+      // Only deselect existing items if the user isn't drawing a line, and the user isn't holding
+      // down the shift or control keys.  This gives us the ability to select multiple items.
+      var shouldDeselect = !line && evt && evt.target && !evt.evt.shiftKey && !evt.evt.ctrlKey;
+
       // Always clear the selection if a line was drawn, but if this is a click event we should only
       // clear the selection if we're going to be selecting a new item.
-      if (line || shouldSelect) {
+      if (line || (shouldSelect && shouldDeselect)) {
         clearSelections(stage);
       }
 
@@ -101,10 +126,16 @@ BaseElement.prototype = {
 
   addCursorEventHandlers: function(kineticObj, scope) {
     // add cursor styling
-    kineticObj.on('mouseover', function () {
+    kineticObj.on('mouseover', function (evt) {
+      if (_backgroundShouldHandleMouseEvent(this, evt)) {
+        return;
+      }
       document.body.style.cursor = 'pointer';
     });
-    kineticObj.on('mouseout', function () {
+    kineticObj.on('mouseout', function (evt) {
+      if (_backgroundShouldHandleMouseEvent(this, evt)) {
+        return;
+      }
       document.body.style.cursor = 'default';
     });
   },
@@ -193,7 +224,7 @@ BaseElement.prototype = {
       // We can't use the KineticJS getIntersection because when we are moving the mouse we
       // need to redraw the different layers to account for connector arrows moving.  Because
       // we do the redraw, it invalidates the underlying image that getIntersections relies on.
-      var shape = getIntersectingShape(stage.mainLayer, pos);
+      var shape = getIntersectingShape(stage.mainLayer, pos, true, e.target);
       if (!shape) {
         // If we don't have a spot to drop, but we did before, clean up the old shape so it's not
         // still highlighted as an active drop target.

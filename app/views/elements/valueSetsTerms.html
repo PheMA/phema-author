@@ -1,5 +1,5 @@
 <div>
-  <tabset>
+  <tabset active="selectedTabIndex">
     <tab heading="Value Sets">
       <div class="value-set-container">
         <div class="row search-panel">
@@ -50,9 +50,9 @@
           <div class="col-md-8">
             <ol class="note-sm">
               <li>Enter a search term for a condition, procedure or medication (e.g. 'diabetes', 'CABG', 'statin').</li>
-              <li>When you have found a value set you would like to use, click the 'Add' button</li>
-              <li>After you have selected all the value sets you want to use, click 'OK'</li>
-              <li>If you want to remove a value set from your saved list, click the 'Remove' button</li>
+              <li>When you have found a term you would like to use, click the '<i class="fa fa-plus"/>' button</li>
+              <li>After you have selected all the terms you want to use, click 'OK'</li>
+              <li>If you want to remove a term from your saved list, click the '<i class="fa fa-trash remove-from-term-list" />' button</li>
             </ol>
           </div>
         </div>
@@ -70,33 +70,33 @@
                 {{codeSystem.name}}
                 <ul>
                   <li ng-repeat="term in codeSystem.children">
-                    <input type="checkbox" ng-click="addToTermList(term)"></input>
                     {{term.name}}
                     ({{term.id}})
+                    <i class="fa fa-plus add-to-term-list" ng-click="addToTermList(term)"/>
                   </li>
               </li>
             </ul>
           </div>
           <div class="col-md-6">
             <label>Selected terms:</label>
-            <div class="note" ng-show="selectedTerms.length === 0">
-              (You have not selected any terms)
-            </div>
-            <table>
+            <table class="term-table">
               <thead>
+                <th class="name-col">Name</th>
+                <th class="code-col">Code</th>
                 <th></th>
-                <th>Name</th>
-                <th>Code</th>
               </thead>
+              <tr ng-show="selectedTerms.length === 0" colwidth="3">
+                <td class="note">(You have not selected any terms)</td>
+              </tr>
               <tr ng-repeat="term in selectedTerms">
-                <td>
-                  <input type="checkbox" checked="checked" ng-click="removeFromTermList(term)"></input>
-                </td>
                 <td>
                   {{term.name}}
                 </td>
                 <td>
                   {{term.id}}
+                </td>
+                <td>
+                  <i class="fa fa-trash remove-from-term-list" ng-click="removeFromTermList(term)"/>
                 </td>
               </tr>
             </table>

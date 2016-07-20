@@ -1,12 +1,14 @@
 /* globals Kinetic */
 /* exported startConnector, endConnector, updateActiveLineLocation, getIntersectingShape,
   addElementToContainer, removeElementFromContainer, updateConnectedLines, changeConnectorEndpoints,
-  allowsDrop, findObjectInPhemaGroupType, BORDER, updateSizeOfMainRect, resizeStageForEvent, MINIMUM_CANVAS_SIZE */
+  allowsDrop, findObjectInPhemaGroupType, BORDER, updateSizeOfMainRect, resizeStageForEvent, MINIMUM_CANVAS_SIZE,
+  createSelectionRectangle, updateSelectionRectangle, removeSelectionRectangle, highlightItemsInSelectionRectangle */
 
 'use strict';
 
 var BORDER = 20;
 var MINIMUM_CANVAS_SIZE = { width: 800, height: 600 };
+var SELECTION_RECTANGLE_NAME = 'PhemaSelectionRectangle';
 
 // Find the first descendant in 'kineticObj' with the name of 'name'.
 // If 'shallow' is set to true, it will only search immediate children
@@ -356,8 +358,12 @@ function removeElementFromContainer(stage, element) {
   }
 }
 
+function isDrawingLine(stage) {
+  return (stage && stage.connector && stage.connector.status === 'drawing');
+}
+
 function selectObject(stage, selectObj, scope) {
-  if (stage.connector && stage.connector.status === 'drawing') {
+  if (isDrawingLine(stage)) {
     return;
   }
   selectObj.selected = true;
@@ -415,7 +421,7 @@ function addOutlineStyles(kineticObj, originalWidth) {
 // Responding to a mouse move event, update the current connector line that is being drawn
 // to end at the cursor.
 function updateActiveLineLocation(stage, evt) {
-  if (stage.connector.status === 'drawing') {
+  if (isDrawingLine(stage)) {
     var startPos = {x: stage.connector.line.getX(), y: stage.connector.line.getY()};
     var endPos = {x: evt.evt.layerX, y: evt.evt.layerY};
     changeConnectorEndpoints(stage.connector.line, startPos, endPos);
@@ -452,7 +458,7 @@ function startConnector(stage, connectorObj) {
 // or the connector isn't valid, remove the in progress line.
 function endConnector(stage, connectorObj, scope, suppressCreateEvent) {
   var line = null;
-  if (stage.connector.status === 'drawing') {
+  if (isDrawingLine(stage)) {
     // If we are dropping where we started, or there is no end connection point, the line
     // is invalid and we will just clear it
     if (stage.connector.anchor === connectorObj || ('undefined' === typeof connectorObj)) {
@@ -512,10 +518,10 @@ function endConnector(stage, connectorObj, scope, suppressCreateEvent) {
 }
 
 function checkCollide(pointX, pointY, objectx, objecty, objectw, objecth) { // pointX, pointY belong to one rectangle, while the object variables belong to another rectangle
-  var oTop = objecty;
-  var oLeft = objectx;
-  var oRight = objectx+objectw;
-  var oBottom = objecty+objecth;
+  var oTop = Math.min(objecty, objecty+objecth);
+  var oLeft = Math.min(objectx, objectx+objectw);
+  var oRight = Math.max(objectx, objectx+objectw);
+  var oBottom = Math.max(objecty, objecty+objecth);
 
   if(pointX > oLeft && pointX < oRight){
     if(pointY > oTop && pointY < oBottom ){
@@ -525,24 +531,100 @@ function checkCollide(pointX, pointY, objectx, objecty, objectw, objecth) { // p
   return false;
 }
 
-function getIntersectingShape(layer, pos) {
+function containedInSelection(selectionRectangle, shape) {
+  // Check if any of the 4 corners are contained in the selection.
+  var selX = selectionRectangle.getX();
+  var selY = selectionRectangle.getY();
+  var selWidth = selectionRectangle.getWidth();
+  var selHeight = selectionRectangle.getHeight();
+  if (checkCollide(shape.getX(), shape.getY(), selX, selY, selWidth, selHeight) ||
+    checkCollide(shape.getX() + shape.getWidth(), shape.getY(), selX, selY, selWidth, selHeight) ||
+    checkCollide(shape.getX(), shape.getY() + shape.getHeight(), selX, selY, selWidth, selHeight) ||
+    checkCollide(shape.getX() + shape.getWidth(), shape.getY() + shape.getHeight(), selX, selY, selWidth, selHeight)) {
+    return true;
+  }
+
+  return false;
+}
+
+function getContainedShapes(layer, shape, stopOnFirstFound) {
   var groups = layer.getChildren();
+  var intersectingShapes = [];
+  stopOnFirstFound = (typeof stopOnFirstFound !== 'undefined' ? stopOnFirstFound : false);
+  for (var groupIndex = 0; groupIndex < groups.length; groupIndex++) {
+    if (containedInSelection(shape, groups[groupIndex])) {
+      intersectingShapes.push(groups[groupIndex]);
+      if (stopOnFirstFound) {
+        return intersectingShapes;
+      }
+    }
+  }
+
+  return intersectingShapes;
+}
+
+/*
+  _getIntersectingShape
+
+  The internal workhorse for intersection detection.  It is called recursively, depending on how the shapes on
+  the canvas are nested.  For example, a logical container could have another logical container, which has a
+  data element inside it.  When we get a particular object from the canvas, we then need to look at its nested
+  shapes (from getChildren) to truly assess what is the appropriate intersecting shape.
+
+  Since there could be multiple intersecting shapes when there is nesting/overlap, we make a best effort to
+  prioritize the result.  For nested shapes, we first check all nested PhemaGroup elements.  This should prioritize
+  for the most specific nested shape.  Otherwise, it will prioritize the first shape found (a somewhat arbitrary order).
+
+  groups - an array of UI elements (typically PhemaGroup) that are candidate drop targets.
+  pos - the coordinates to use as the intersection point (an object, e.g. {x: 1, y: 1})
+  parentOffset - when calling this function for a list of groups from the main canvas, this should be {x:0, y:0}.
+      As execution continues, it tracks the offset of each parent shape.  This is because the shapes X,Y coordinates
+      are just tracked with respect to their parent, and not the entire canvas.
+  applyDropFilter - optional.  Set to true if you want to only return an element that can be dropped on.
+  dragItem - optional.  Used when applyDropFilter is true, this is the item that is being dragged (and should be dropped) on a target.
+*/
+function _getIntersectingShape(groups, pos, parentOffset, applyDropFilter, dragItem) {
   var shapes = null;
   var intersectingGroup = null;
   for (var groupIndex = 0; groupIndex < groups.length; groupIndex++) {
-    if (checkCollide(pos.x, pos.y, groups[groupIndex].getX(), groups[groupIndex].getY(), groups[groupIndex].getWidth(), groups[groupIndex].getHeight())) {
+    if (checkCollide(pos.x, pos.y, groups[groupIndex].getX() + parentOffset.x, groups[groupIndex].getY() + parentOffset.y, groups[groupIndex].getWidth(), groups[groupIndex].getHeight())) {
+      var shape = null;
       intersectingGroup = groups[groupIndex];
+      shapes = intersectingGroup.getChildren();
+
+      // For our preferred order of selecting shapes, we first are going to look at nested objects and find the
+      // innermost droppable target.
+      var shapeIndex = 0;
+      for (shapeIndex = 0; shapeIndex < shapes.length; shapeIndex++) {
+        shape = shapes[shapeIndex];
+        if (shape.className === 'PhemaGroup') {
+          var nestedOffset = {x: parentOffset.x, y: parentOffset.y};
+          nestedOffset.x += intersectingGroup.getX();
+          nestedOffset.y += intersectingGroup.getY();
+          var nestedResult = _getIntersectingShape([shape], pos, nestedOffset, applyDropFilter, dragItem);
+          if (nestedResult) {
+            return nestedResult;
+          }
+        }
+      }
 
       // Once we identify an intersected group, we need to look for the underlying droppable Rect that should
       // be considered the actual drop target.  We always use a Rect because our visual indicator of
       // a drop target is to modify the Rect itself.
-      shapes = intersectingGroup.getChildren();
-      for (var shapeIndex = 0; shapeIndex < shapes.length; shapeIndex++) {
-        if (shapes[shapeIndex].droppable) {
+      for (shapeIndex = 0; shapeIndex < shapes.length; shapeIndex++) {
+        shape = shapes[shapeIndex];
+        if (shape.droppable) {
           // Shapes within the group are oriented at (0, 0).  Offset the X and Y coordinates with that of the group
-          if (checkCollide(pos.x, pos.y, shapes[shapeIndex].getX() + intersectingGroup.getX(), shapes[shapeIndex].getY() + intersectingGroup.getY(), 
-              shapes[shapeIndex].getWidth(), shapes[shapeIndex].getHeight())) {
-            return shapes[shapeIndex];
+          if (checkCollide(pos.x, pos.y,
+              shape.getX() + intersectingGroup.getX() + parentOffset.x,
+              shape.getY() + intersectingGroup.getY() + parentOffset.y, 
+              shape.getWidth(), shape.getHeight())) {
+
+            if (applyDropFilter && !allowsDrop(dragItem, shape)) {
+              continue;
+            }
+          
+            return shape;
           }
         }
       }
@@ -551,6 +633,24 @@ function getIntersectingShape(layer, pos) {
   }
 
   return null;
+}
+
+
+/*
+  getIntersectingShape
+
+  Returns the first element that has an intersecting, droppable rectangle on it.  This optionally
+  allows filtering to only return the first element that supports dropping a certain drag item.
+
+  layer - the layer in which we will search for droppable elements
+  pos - the coordinates to use as the intersection point (an object, e.g. {x: 1, y: 1})
+  applyDropFilter - optional.  Set to true if you want to only return an element that can be dropped on.
+  dragItem - optional.  Used when applyDropFilter is true, this is the item that is being dragged (and should be dropped) on a target.
+*/
+function getIntersectingShape(layer, pos, applyDropFilter, dragItem) {
+  var groups = layer.getChildren();
+  var parentOffset = {x:0, y:0};
+  return _getIntersectingShape(groups, pos, parentOffset, applyDropFilter, dragItem);
 }
 
 function _setDimension(farthestChild, mainLayer, minimumSize) {
@@ -642,5 +742,65 @@ function resizeStageForEvent(stage, updatedSize, movedElement) {
     stage.setHeight(newSize.height);
 
     stage.drawScene();
+  }
+}
+
+// Establish the visible selection rectangle in the specified layer.
+// This will begin drawing at the stage's current cursor position.
+function createSelectionRectangle(stage, layer) {
+  var pointerPosition = stage.getPointerPosition();
+  var x = Math.floor(pointerPosition.x);
+  var y = Math.floor(pointerPosition.y);
+  var selectionRectangle = new Kinetic.Rect({
+       x: x,
+       y: y,
+       width: 0,
+       height: 0,
+       stroke: 'gray',
+       strokeWidth: 2,
+       name: SELECTION_RECTANGLE_NAME
+   });
+  selectionRectangle.dash([5, 5]);
+  selectionRectangle.dashEnabled(true);
+  selectionRectangle.setListening(false);
+  layer.add(selectionRectangle);
+}
+
+// Update the dimensions of the selection rectangle, if it exists in the
+// specified layer.  The cursor is assumed to now be at the stage's
+// current position.
+function updateSelectionRectangle(stage, layer) {
+  var pointerPosition = stage.getPointerPosition();
+  var x = Math.floor(pointerPosition.x);
+  var y = Math.floor(pointerPosition.y);
+  var selectionRectangle = findFirst(layer, SELECTION_RECTANGLE_NAME, true);
+  if (selectionRectangle) {
+    selectionRectangle.setWidth(x - selectionRectangle.getX());
+    selectionRectangle.setHeight(y - selectionRectangle.getY());
+    layer.drawScene();
+  }
+}
+
+// Clean up and remove the selection rectangle from the specified layer.
+function removeSelectionRectangle(layer) {
+  var selectionRectangle = findFirst(layer, SELECTION_RECTANGLE_NAME, true);
+  if (selectionRectangle) {
+    selectionRectangle.destroy();
+    layer.drawScene();
+  }
+}
+
+// Identify all objects in the selection rectangle and mark those as selected.
+function highlightItemsInSelectionRectangle(stage, layer) {
+  var selectionRectangle = findFirst(layer, SELECTION_RECTANGLE_NAME, true);
+  if (!selectionRectangle) {
+    return;
+  }
+
+  clearSelections(stage);
+
+  var containedShapes = getContainedShapes(layer, selectionRectangle);
+  for (var index = 0; index < containedShapes.length; index++) {
+    selectObject(stage, containedShapes[index]);
   }
 }
