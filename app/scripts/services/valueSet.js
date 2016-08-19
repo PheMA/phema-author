@@ -40,13 +40,14 @@
 //   and prepares results to be processed.
 
 
-function _processValueList(originalData) {
+function _processValueList(valueSetRepositoryId, originalData) {
   var valueSets = [];
   var transformedData = [];
   for (var index = 0; index < originalData.length; index++) {
     if (originalData[index].currentDefinition) {
       transformedData.push({
         id: originalData[index].currentDefinition.valueSet.content,
+        valueSetRepository: valueSetRepositoryId,
         name: originalData[index].formalName,
         uri: originalData[index].currentDefinition.valueSetDefinition.uri,
         type: 'ValueSet',
@@ -58,6 +59,17 @@ function _processValueList(originalData) {
   }
   valueSets = transformedData.sort(ArrayUtil.sortByName);
   return valueSets;
+}
+
+function _getValueListAsChildren(valueSetRepositoryId, data) {
+  if (data.valueSetCatalogEntryDirectory && data.valueSetCatalogEntryDirectory.entryList) {
+    return _processValueList(valueSetRepositoryId, data.valueSetCatalogEntryDirectory.entryList);
+  }
+  else if (data.ValueSetCatalogEntryDirectory && data.ValueSetCatalogEntryDirectory.entry) {
+    return _processValueList(valueSetRepositoryId, data.ValueSetCatalogEntryDirectory.entry);
+  }
+
+  return [];
 }
 
 function _processSingleValue(originalData) {
@@ -128,9 +140,9 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
     return deferred.promise;
   };
 
-  this.loadSingle = function(id) {
+  this.loadSingle = function(repoId, id) {
     var deferred = $q.defer();
-    $http.get(URLService.getValueSetServiceURL('single', {id: id}))
+    $http.get(URLService.getValueSetServiceURL('single', {repoId: repoId, id: id}))
       .success(function(data) {
         deferred.resolve(data);
       })
@@ -140,9 +152,9 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
     return deferred.promise;
   };
 
-  this.loadDetails = function(id) {
+  this.loadDetails = function(repoId, id) {
     var deferred = $q.defer();
-    $http.get(URLService.getValueSetServiceURL('details', {id: id}))
+    $http.get(URLService.getValueSetServiceURL('details', {repoId: repoId, id: id}))
       .success(function(data) {
         deferred.resolve(data);
       })
@@ -155,12 +167,15 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
   this.processValues = function(data) {
     var valueSets = [];
     if (data) {
-      if (data.valueSetCatalogEntryDirectory && data.valueSetCatalogEntryDirectory.entryList) {
-        valueSets = _processValueList(data.valueSetCatalogEntryDirectory.entryList);
-      }
-      else if (data.ValueSetCatalogEntryDirectory && data.ValueSetCatalogEntryDirectory.entry) {
-        valueSets = _processValueList(data.ValueSetCatalogEntryDirectory.entry);
-      }
+      // Iterate over each attribute in data
+      Object.keys(data).forEach(function(key) {
+        valueSets.push({
+          id: key,
+          name: data[key].title,
+          type: 'ValueSetRepository',
+          children: _getValueListAsChildren(key, JSON.parse(data[key].data))
+        });
+      });
     }
     return valueSets;
   };

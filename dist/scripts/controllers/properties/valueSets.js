@@ -11,7 +11,7 @@ angular.module('sopheAuthorApp')
   .controller('ValueSetPropertiesController', ['$scope', '$modalInstance', 'ValueSetService', 'valueSet', function ($scope, $modalInstance, ValueSetService, valueSet) {
     $scope.valueSet = valueSet;
     $scope.members = [];
-    ValueSetService.loadDetails(valueSet.id)
+    ValueSetService.loadDetails(valueSet.valueSetRepository, valueSet.id)
       .then(ValueSetService.processDetails)
       .then(function(details) { $scope.members = details.members; });
 

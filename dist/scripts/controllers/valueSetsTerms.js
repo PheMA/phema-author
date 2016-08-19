@@ -45,7 +45,7 @@ angular.module('sopheAuthorApp')
 
   $scope.loadValueSetDetails = function(valueSet) {
     if(!valueSet.loadDetailStatus) {
-      ValueSetService.loadDetails(valueSet.id)
+      ValueSetService.loadDetails(valueSet.valueSetRepository, valueSet.id)
         .then(ValueSetService.processDetails, function() {
           valueSet.loadDetailStatus = 'error';
           valueSet.description = ValueSetService.formatDescription(valueSet);

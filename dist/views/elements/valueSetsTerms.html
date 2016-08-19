@@ -3,30 +3,34 @@
     <tab heading="Value Sets">
       <div class="value-set-container">
         <div class="row search-panel">
-          <div class="col-md-3 divider-right">
+          <div class="col-md-12 divider-right">
             <label id='value-set-search'>
               Search for value sets:
               <input type="text" style="width: 100%;" ng-model="valueSetSearch.term" ng-model-options="{ debounce: 750 }"></input>
             </label>
           </div>
-          <div class="col-md-6 value-set-results">
-            <label>Value sets matching your search criteria:</label>
+        </div>
+        <div class="row value-set-results">
+          <div class="col-md-8 divider-right scrollable-container">
+            <span class="result-label">Value sets matching your search criteria:</span>
             <div us-spinner="{radius:8, width:4, length: 8, top: '50%', left: '25%'}" class="note" ng-show="valueSetSearch.isSearching">
               Please wait
             </div>
             <div class="note" ng-show="valueSetSearch.results.length === 0 && !valueSetSearch.isSearching">
               (No value sets were found that met your criteria)
             </div>
-            <table>
-              <tr ng-repeat="valueSet in valueSetSearch.results" draggable ng-click="setSelectedValueSet(valueSet)" ng-class="{selected: valueSet === selectedValueSets[0]}">
-                <td>
-                  {{valueSet.name}}
-                </td>
-                <input type="hidden" value="{{valueSet}}"></input>
-              </tr>
-            </table>
+            <ul class="codeSystemList">
+              <li ng-repeat="valueSetRepo in valueSetSearch.results">
+                {{valueSetRepo.name}}
+                <ul>
+                  <li ng-repeat="valueSet in valueSetRepo.children" ng-click="setSelectedValueSet(valueSet)" ng-class="{selected: valueSet === selectedValueSets[0]}">
+                    {{valueSet.name}}
+                    <input type="hidden" value="{{valueSet}}"></input>
+                  </li>
+              </li>
+            </ul>
           </div>
-          <div class="col-md-3 value-set-details">
+          <div class="col-md-4 value-set-details scrollable-container">
             <label>Details:</label>
             <span ng-show="selectedValueSets[0] && selectedValueSets[0].loadDetailStatus === 'error'">
               {{selectedValueSets[0].description}}
@@ -57,8 +61,8 @@
           </div>
         </div>
         <div class="row code-systems-results">
-          <div class="col-md-6 divider-right">
-            <label>Terms matching your search criteria:</label>
+          <div class="col-md-6 divider-right scrollable-container">
+            <span class="result-label">Terms matching your search criteria:</span>
             <div us-spinner="{radius:8, width:4, length: 8, top: '50%', left: '25%'}" class="note" ng-show="termSearch.isSearching">
               Please wait
             </div>
@@ -77,7 +81,7 @@
               </li>
             </ul>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6 scrollable-container">
             <label>Selected terms:</label>
             <table class="term-table">
               <thead>
