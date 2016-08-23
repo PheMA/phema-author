@@ -297,13 +297,17 @@ $value-sets-background-color: #eee;
   }
 }
 
-.code-systems-container, .code-system-container {
+.code-systems-container, .code-system-container, .value-sets-container, .value-set-container {
   max-height: 400px;
   overflow-y: hidden;
 
-  .col-md-6 {
+  .scrollable-container {
     height: 300px;
     overflow-y: scroll;
+
+    .result-label {
+      font-weight: bold;
+    }
   }
 
   .add-to-term-list, .remove-from-term-list {
@@ -313,9 +317,9 @@ $value-sets-background-color: #eee;
 
 .value-set-results {
   .divider-right {
-    border-right: solid 1px black;
     margin-bottom: 10px;
     padding-bottom: 10px;
+    padding-right: 5px;
   }
 
   thead {

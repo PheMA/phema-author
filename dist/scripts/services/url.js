@@ -68,10 +68,10 @@ angular.module('sophe.services.url', ['sophe.config'])
 
     var url = valueSetServiceBaseUrl;
     if (action === 'single') {
-      url = url + params.id;
+      url = url + params.repoId + '/' + params.id;
     }
     else if (action === 'details') {
-      url = url + params.id + '/members';
+      url = url + params.repoId + '/' + params.id + '/members';
     }
     else if (action === 'search') {
       url = url + 'search=' + params.term;

@@ -28,6 +28,39 @@ angular.module('sopheAuthorApp')
       $location.path('/access-denied');
     }
 
+    // Helper function to determine if a phenotype has been changed, either as a new
+    // phenotype or an existing one loaded for editing.
+    function _hasPhenotypeChanged() {
+      // Make sure the canvas has been initialized, otherwise we know there is
+      // nothing to save.
+      if (!$scope.canvasDetails || !$scope.canvasDetails.kineticStageObj || !$scope.canvasDetails.kineticStageObj.mainLayer) {
+        return false;
+      }
+
+      // Get the phenotype definition from the KineticJS stage.  We expect there to be
+      // at least some information about the main layer, so if it is undefined this is
+      // an unexpected condition.
+      var phenotypeDefinition = $scope.canvasDetails.kineticStageObj.mainLayer.toJSON();
+      if (!phenotypeDefinition) {
+        console.error('The phenotype definition was blank, which is unexpected');
+        return false;
+      }
+
+      // We need to parse the JSON so we can look for defined children elements in the
+      // main layer.  This tells us if there is anything in the canvas.
+      var phenotypeObject = JSON.parse(phenotypeDefinition);
+      if ($scope.phenotype) {
+        if ($scope.phenotype.definition !== phenotypeDefinition) {
+          return true;
+        }
+      }
+      else if (phenotypeObject.children && phenotypeObject.children.length > 0) {
+        return true;
+      }
+
+      return false;
+    }
+
     $scope.$on('onBeforeUnload', function (e, confirmation) {
         if (_hasPhenotypeChanged()) {
          confirmation.message = 'You have some unsaved changes that may be lost.';
@@ -120,39 +153,6 @@ angular.module('sopheAuthorApp')
               });
         }
       });
-    }
-
-    // Helper function to determine if a phenotype has been changed, either as a new
-    // phenotype or an existing one loaded for editing.
-    function _hasPhenotypeChanged() {
-      // Make sure the canvas has been initialized, otherwise we know there is
-      // nothing to save.
-      if (!$scope.canvasDetails || !$scope.canvasDetails.kineticStageObj || !$scope.canvasDetails.kineticStageObj.mainLayer) {
-        return false;
-      }
-
-      // Get the phenotype definition from the KineticJS stage.  We expect there to be
-      // at least some information about the main layer, so if it is undefined this is
-      // an unexpected condition.
-      var phenotypeDefinition = $scope.canvasDetails.kineticStageObj.mainLayer.toJSON();
-      if (!phenotypeDefinition) {
-        console.error('The phenotype definition was blank, which is unexpected');
-        return false;
-      }
-
-      // We need to parse the JSON so we can look for defined children elements in the
-      // main layer.  This tells us if there is anything in the canvas.
-      var phenotypeObject = JSON.parse(phenotypeDefinition);
-      if ($scope.phenotype) {
-        if ($scope.phenotype.definition !== phenotypeDefinition) {
-          return true;
-        }
-      }
-      else if (phenotypeObject.children && phenotypeObject.children.length > 0) {
-        return true;
-      }
-
-      return false;
     }
 
     // Clear out the success and error message boxes that may be showing.

@@ -1,14 +1,13 @@
-# [ng-context-menu](http://ianwalter.github.io/ng-context-menu/)
+# [ng-context-menu](https://talis.github.io/ng-context-menu/)
 *An AngularJS directive to display a context menu when a right-click event is triggered*
 
-## Looking for a new owner/maintainer  
-> Please email me (my email is on my profile page: https://github.com/ianwalter)
+This repository was originally created and maintained by @ianwalter.
+Many thanks to Ian and [others](https://github.com/talis/ng-context-menu/graphs/contributors) 
+for their contributions.
 
 ---
 
-[![Code Climate](https://codeclimate.com/github/ianwalter/ng-context-menu.png)](https://codeclimate.com/github/ianwalter/ng-context-menu) [![Circle CI](https://circleci.com/gh/ianwalter/ng-context-menu.svg?style=svg)](https://circleci.com/gh/ianwalter/ng-context-menu)
-
-This project was built using [ng-boilerplate](https://github.com/ianwalter/ng-boilerplate)!
+[![Code Climate](https://codeclimate.com/github/ianwalter/ng-context-menu.png)](https://codeclimate.com/github/ianwalter/ng-context-menu) [![Build Status](https://travis-ci.org/talis/ng-context-menu.svg)](https://travis-ci.org/talis/ng-context-menu)
 
 ---
 
@@ -77,7 +76,7 @@ Customize the menu to your needs. It may look something like:
       </a>
     </li>
     <li>
-      <a href="https://github.com/ianwalter/ng-context-menu"
+      <a href="https://github.com/talis/ng-context-menu"
          role="menuitem"
          tabindex="-1">
          ng-context-menu on GitHub
@@ -144,5 +143,5 @@ away from the bottom of the page at least by this attribute value in pixels.
 
 ---
 
-I hope you find this useful!  
-⌁ [Ian](http://ianvonwalter.com)
+We hope you find this useful!  
+⌁ [Talis](http://engineering.talis.com/)
