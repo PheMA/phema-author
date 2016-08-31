@@ -1,8 +1,11 @@
-//var gzippo = require('gzippo');
 var express = require('express');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
-var app = express();
+var session = require('express-session')
+var flash = require("connect-flash");
+var helmet = require('helmet');
+var auth = require('./services/lib/authentication');
+
 var site = require('./services/routes/site');
 var elements = require('./services/routes/dataElements');
 var fhir = require('./services/routes/fhirElements');
@@ -12,7 +15,9 @@ var codeSystems = require('./services/routes/codeSystems');
 var config = require('./services/routes/config');
 var exporters = require('./services/routes/exporters');
 var units = require('./services/routes/units');
+var users = require('./services/routes/users');
 
+var app = express();
 module.exports = app;
 
 app.use(logger('combined'));
@@ -20,6 +25,15 @@ app.use(express.static("" + __dirname + "/dist", {maxAge: 1}));
 
 // parse application/json
 app.use(bodyParser.json());
+
+// Allow flash message responses
+app.use(flash());
+
+// Initialize our authentication handler
+auth.initialize(app);
+
+// Use helmet to include recommended HTTP headers for security
+app.use(helmet());
 
 // Routing examples at: https://github.com/strongloop/express/tree/master/examples/route-separation
 app.get('/', site.index);
@@ -51,4 +65,13 @@ app.get('/api/export/:id', exporters.result);
 
 app.get('/api/units', units.index);
 
+app.get('/api/user/:id', users.details);
+app.post('/api/user', users.add);
+app.put('/api/user/:id', users.update);
+
+app.post('/login', auth.login);
+app.get('/logout', auth.logout);
+
+
 app.listen(process.env.PORT || 8081);
+
