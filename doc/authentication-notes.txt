@@ -19,4 +19,12 @@ https://auth0.com/blog/angularjs-authentication-with-cookies-vs-token/
 Here's more info about JWT:
    http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html
 
+https://scotch.io/tutorials/authenticate-a-node-js-api-with-json-web-tokens
+  - This is also a really good tutorial walking through the use of JWT.
+
+https://github.com/auth0/node-jsonwebtoken
+  - The JWT library we're going to be using.
+
 https://github.com/robert52/express-starter
+  - Starter app that shows better practices for managing configuration
+

@@ -2,8 +2,8 @@
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
+var expressJwt = require('express-jwt');
+var jwt = require('jsonwebtoken');
 var UserRepository = require('./user').UserRepository;
 var repository = new UserRepository();
 
@@ -28,17 +28,8 @@ passport.deserializeUser(function(id, done) {
 });
 
 exports.initialize = function(app) {
-  app.use(session({
-      secret: 'keyboard cat',
-      saveUninitialized: false, // don't create session until something stored
-      resave: false, //don't save session if unmodified
-      store: new MongoStore({
-        url: 'mongodb://localhost/phema-author',
-        ttl: 14 * 24 * 60 * 60 // = 14 days. Default
-      })
-  }));
+  app.use('/api', expressJwt({secret: 'somesecret'}));
   app.use(passport.initialize());
-  app.use(passport.session());
 };
 
 exports.login = function (req, res, next) {
@@ -51,7 +42,18 @@ exports.login = function (req, res, next) {
 
     req.logIn(user, function(err) {
       if (err) { throw err; }
-      return res.status(200).json(user);
+
+        // If user is found and password is right, create a token
+        var token = jwt.sign(user, 'somesecret', {
+          expiresIn: 1440 // expires in 24 hours
+        });
+
+        res.status(200).json({
+          success: true,
+          message: 'Enjoy your token!',
+          token: token,
+          user: user
+        });
     });
   })(req, res, next);
 };

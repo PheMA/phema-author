@@ -1,7 +1,6 @@
 var express = require('express');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
-var session = require('express-session')
 var flash = require("connect-flash");
 var helmet = require('helmet');
 var auth = require('./services/lib/authentication');
