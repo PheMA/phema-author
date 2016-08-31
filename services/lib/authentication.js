@@ -2,6 +2,8 @@
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 var UserRepository = require('./user').UserRepository;
 var repository = new UserRepository();
 
@@ -26,7 +28,15 @@ passport.deserializeUser(function(id, done) {
 });
 
 exports.initialize = function(app) {
-  app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
+  app.use(session({
+      secret: 'keyboard cat',
+      saveUninitialized: false, // don't create session until something stored
+      resave: false, //don't save session if unmodified
+      store: new MongoStore({
+        url: 'mongodb://localhost/phema-author',
+        ttl: 14 * 24 * 60 * 60 // = 14 days. Default
+      })
+  }));
   app.use(passport.initialize());
   app.use(passport.session());
 };

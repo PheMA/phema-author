@@ -1,0 +1,22 @@
+https://medium.com/opinionated-angularjs/techniques-for-authentication-in-angularjs-applications-7bbf0346acec
+https://thinkster.io/angularjs-jwt-auth
+https://thinkster.io/mean-stack-tutorial
+http://passportjs.org/docs
+https://github.com/jaredhanson/passport-local
+http://code.tutsplus.com/tutorials/token-based-authentication-with-angularjs-nodejs--cms-22543
+http://witoldsz.github.io/angular-http-auth/
+http://espeo.eu/blog/authentication-in-angularjs-or-similar-based-application/
+https://github.com/expressjs/session
+http://blog.robertonodi.me/node-authentication-series-email-and-password/
+https://codahale.com/how-to-safely-store-a-password/
+https://github.com/ncb000gt/node.bcrypt.js
+
+
+
+https://auth0.com/blog/angularjs-authentication-with-cookies-vs-token/
+  - Good example showing how we'll use JWT instead of the server-based session scheme.  We did implement this using connect-mongo and express-session but will switch to JWT.
+
+Here's more info about JWT:
+   http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html
+
+https://github.com/robert52/express-starter
