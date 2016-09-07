@@ -37,8 +37,8 @@ app.delete('/api/library/:id', library.delete);
 
 app.get('/api/valueset', valueSets.index);
 app.get('/api/valueset/search=:search', valueSets.search);
-app.get('/api/valueset/:id', valueSets.details);
-app.get('/api/valueset/:id/members', valueSets.members);
+app.get('/api/valueset/:repo/:id', valueSets.details);
+app.get('/api/valueset/:repo/:id/members', valueSets.members);
 
 app.get('/api/codesystem/:codesystem/version/:version/search=:search', codeSystems.search);
 

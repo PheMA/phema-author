@@ -15,11 +15,14 @@ angular.module('sopheAuthorApp')
   $scope.isSearching = false;
   $scope.searchResults = [];
   $scope.selectedValueSets = $scope.selectedValueSets || [];
+  $scope.treeOptions = {
+    dirSelectable: false
+  };
 
   $scope.loadValueSetDetails = function(el) {
     $timeout(function() {
       if(!el.node.loadDetailStatus) {
-        ValueSetService.loadDetails(el.node.id)
+        ValueSetService.loadDetails(el.node.valueSetRepository, el.node.id)
           .then(ValueSetService.processDetails, function() {
             el.node.loadDetailStatus = 'error';
             el.node.description = ValueSetService.formatDescription(el.node);
