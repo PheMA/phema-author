@@ -8,4 +8,5 @@ angular.module('sophe.config', [])
 .constant('configServiceBaseUrl', 'api/config/')
 .constant('exporterServiceBaseUrl', 'api/export/')
 .constant('unitServiceBaseUrl', 'api/units/')
+.constant('userServiceBaseUrl', 'api/user/')
 ;
