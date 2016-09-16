@@ -28,3 +28,9 @@ https://github.com/auth0/node-jsonwebtoken
 https://github.com/robert52/express-starter
   - Starter app that shows better practices for managing configuration
 
+
+
+In the application, we need the following functionality (taken from https://medium.com/opinionated-angularjs/techniques-for-authentication-in-angularjs-applications-7bbf0346acec):
+  authInterceptFactory - sets the authorization token in the header for requests, and handles 401 responses
+     if the user is not authenticated.
+  AuthService - handles performing login, and returning if a user is authenticated/authorized

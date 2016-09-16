@@ -29,6 +29,9 @@ angular.module('security.service', [
       loginDialog.close(success);
       loginDialog = null;
     }
+    else if (success) {
+      redirect();
+    }
   }
   function onLoginDialogClose(success) {
     if ( success ) {
@@ -60,13 +63,20 @@ angular.module('security.service', [
     },
 
     // Attempt to authenticate a user by the given email and password
-    login: function(email, password) {
+    login: function(email, password, callback) {
       var request = $http.post('/login', {email: email, password: password});
-      return request.then(function(response) {
-        service.currentUser = response.data.user;
+      return request.success(function(response) {
+        service.token = response.token;
+        service.currentUser = response.user;
         if ( service.isAuthenticated() ) {
           closeLoginDialog(true);
+          callback(null, true);
         }
+        else {
+          callback('Invalid username or password', false);
+        }
+      }).error(function(data, status) {
+        callback(data.error, false);
       });
     },
 
@@ -78,8 +88,9 @@ angular.module('security.service', [
 
     // Logout the current user and redirect
     logout: function(redirectTo) {
-      $http.post('/logout').then(function() {
+      $http.get('/logout').then(function() {
         service.currentUser = null;
+        service.token = null;
         redirect(redirectTo);
       });
     },
@@ -89,7 +100,7 @@ angular.module('security.service', [
       if ( service.isAuthenticated() ) {
         return $q.when(service.currentUser);
       } else {
-        return $http.get('/current-user').then(function(response) {
+        return $http.get('/api/user/' + service.currentUser.id).then(function(response) {
           service.currentUser = response.data.user;
           return service.currentUser;
         });
@@ -99,12 +110,15 @@ angular.module('security.service', [
     // Information about the current user
     currentUser: null,
 
+    // Token for the current user
+    token: null,
+
     // Is the current user authenticated?
     isAuthenticated: function(){
-      if (service.currentUser == null) {
-        service.currentUser = {firstName: "Test", lastName: "Person"};
-      }
-      return !!service.currentUser;
+      // if (service.currentUser == null) {
+      //   service.currentUser = {firstName: "Test", lastName: "Person"};
+      // }
+      return !!service.currentUser && !!service.token;
     },
 
     // Is the current user an adminstrator?

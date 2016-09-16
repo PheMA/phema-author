@@ -37,23 +37,22 @@ exports.login = function (req, res, next) {
 
   passport.authenticate('local', function(err, user) {
     if (err || !user) {
-      return res.status(400).send(err);
+      return res.status(401).send({'error' : 'Invalid username or password' });
     }
 
     req.logIn(user, function(err) {
-      if (err) { throw err; }
+      if (err) { return res.status(401).send({'error' : 'Invalid username or password' }) };
 
-        // If user is found and password is right, create a token
-        var token = jwt.sign(user, 'somesecret', {
-          expiresIn: 1440 // expires in 24 hours
-        });
+      // If user is found and password is right, create a token
+      var token = jwt.sign(user, 'somesecret', {
+        expiresIn: 1440 // expires in 24 hours
+      });
 
-        res.status(200).json({
-          success: true,
-          message: 'Enjoy your token!',
-          token: token,
-          user: user
-        });
+      res.status(200).json({
+        success: true,
+        token: token,
+        user: user
+      });
     });
   })(req, res, next);
 };

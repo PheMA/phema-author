@@ -9,6 +9,7 @@ angular.module('sophe', [
   'sophe.factories.window',
   'sophe.factories.algorithmElement',
   'sophe.factories.kineticStage',
+  'sophe.factories.authInterceptor',
   'sophe.elements.fhir.dataElements',
   'sophe.elements.qdm.dataElements',
   'sophe.elements.qdm.logicalOperators',
