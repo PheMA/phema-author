@@ -13,8 +13,8 @@ var app = angular.module('sopheAuthorApp', [
     'ngRoute',
     'treeControl',
     'ui.bootstrap',
-    'sophe',
     'security',
+    'sophe',
     'ng-context-menu',
     'dynform',
     'angularSpinner'
@@ -31,6 +31,11 @@ app.config(function ($routeProvider) {
 
       .when('/login', {
         title: 'Log In', templateUrl: 'views/security/login.html', controller: 'LoginFormController', isPublic: true })
+
+      .when('/users/register', {
+        title: 'Register for an Account', templateUrl: 'views/users/register.html', controller: 'RegisterFormController', isPublic: true })
+      .when('/users/profile', {
+        title: 'Manage Your Profile', templateUrl: 'views/users/profile.html', controller: 'ProfileFormController', isPublic: true })
 
       .when('/phenotype', {
         title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
@@ -63,7 +68,7 @@ app.config(function ($httpProvider) {
 // page (defined within the routes above), or if the user is logged in.  If the user needs to
 // be authenticated and isn't, we take them to the login page.
 app.run(['$rootScope', '$location', 'security', function ($rootScope, $location, security) {
-    $rootScope.$on('$routeChangeStart', function (event, next, current) {
+    $rootScope.$on('$routeChangeStart', function (event, next) {
       if (next.$$route && !next.$$route.isPublic && !security.isAuthenticated()) {
         event.preventDefault();
         $location.path('/login');

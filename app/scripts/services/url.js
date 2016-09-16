@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sophe.services.url', ['sophe.config'])
-.service('URLService', ['environment', 'dataServiceBaseUrl', 'fhirServiceBaseUrl', 'libraryBaseUrl', 'valueSetServiceBaseUrl', 'codeSystemServiceBaseUrl', 'configServiceBaseUrl', 'exporterServiceBaseUrl', 'unitServiceBaseUrl',
-    function(environment, dataServiceBaseUrl, fhirServiceBaseUrl, libraryBaseUrl, valueSetServiceBaseUrl, codeSystemServiceBaseUrl, configServiceBaseUrl, exporterServiceBaseUrl, unitServiceBaseUrl) {
+.service('URLService', ['environment', 'dataServiceBaseUrl', 'fhirServiceBaseUrl', 'libraryBaseUrl', 'valueSetServiceBaseUrl', 'codeSystemServiceBaseUrl', 'configServiceBaseUrl', 'exporterServiceBaseUrl', 'unitServiceBaseUrl', 'userServiceBaseUrl',
+    function(environment, dataServiceBaseUrl, fhirServiceBaseUrl, libraryBaseUrl, valueSetServiceBaseUrl, codeSystemServiceBaseUrl, configServiceBaseUrl, exporterServiceBaseUrl, unitServiceBaseUrl, userServiceBaseUrl) {
 
   this.getDataServiceURL = function(resource) {
     if (environment === 'local' || environment.substring(0, 2) === '@@') {
@@ -133,6 +133,21 @@ angular.module('sophe.services.url', ['sophe.config'])
     }
 
     var url = unitServiceBaseUrl;
+    return url;
+  };
+
+  this.getUserServiceURL = function(action, param) {
+    if (environment === 'local' || environment.substring(0, 2) === '@@') {
+      return 'data/user.json';
+    }
+
+    var url = userServiceBaseUrl;
+    if (action === 'add') {
+      url = '/register';
+    }
+    else if (action === 'update') {
+      url = url + param;
+    }
     return url;
   };
 }]);

@@ -34,5 +34,6 @@ angular.module('sophe', [
   'sophe.services.url',
   'sophe.services.valueSet',
   'sophe.services.exporter',
-  'sophe.services.unit'
+  'sophe.services.unit',
+  'sophe.services.user'
 ]);

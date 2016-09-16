@@ -65,11 +65,11 @@ app.get('/api/export/:id', exporters.result);
 app.get('/api/units', units.index);
 
 app.get('/api/user/:id', users.details);
-app.post('/api/user', users.add);
 app.put('/api/user/:id', users.update);
 
 app.post('/login', auth.login);
 app.get('/logout', auth.logout);
+app.post('/register', users.add);
 
 
 app.listen(process.env.PORT || 8081);

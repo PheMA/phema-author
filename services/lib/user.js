@@ -133,19 +133,39 @@ UserRepository.prototype.updateUser = function(updatedUser, callback) {
     user.firstName = updatedUser.firstName;
     user.lastName = updatedUser.lastName;
 
-    return user.save(function(err) {
-      if(!err) {
-        console.log("Updated : " , user.email);
-        return callback(null, formatUserForReturn(user));
-      } else {
-        console.log('Internal error(%d): %s',res.statusCode,err.message);
-        if (err.name === 'ValidationError') {
-          return callback({ error: 'Validation error' });
+    if (updatedUser.password) {
+      bcrypt.genSalt(SALT_ROUNDS, function(err, salt) {
+        bcrypt.hash(updatedUser.password, salt, function(err, hash) {
+          user.password = hash;
+
+          user.save(function(err) {
+            console.log("User w/ password updated ", user.email);
+            if (err) {
+              console.log(err);
+              return callback({message: 'There was an error when saving the new user.'});
+            }
+            else {
+              return callback(null, formatUserForReturn(user));
+            }
+          });
+        });
+      });
+    }
+    else {
+      return user.save(function(err) {
+        if(!err) {
+          console.log("Updated : " , user.email);
+          return callback(null, formatUserForReturn(user));
         } else {
-          return callback({ error: 'Server error' });
+          console.log('Internal error(%d): %s',res.statusCode,err.message);
+          if (err.name === 'ValidationError') {
+            return callback({ error: 'Validation error' });
+          } else {
+            return callback({ error: 'Server error' });
+          }
         }
-      }
-    });
+      });
+    }
   });
 };
 
