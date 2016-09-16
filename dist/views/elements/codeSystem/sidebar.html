@@ -1,0 +1,30 @@
+<div id="code-system-sidebar" class="search-panel" tooltip="Search for a term, then drag and drop it onto the canvas" tooltip-placement="right">
+  <div>
+    <label>
+      Search for terms:
+      <input type="text" style="width: 100%;" ng-model="search.term" ng-model-options="{ debounce: 750 }"></input>
+    </label>
+  </div>
+  <div>
+    <div us-spinner="{radius:8, width:4, length: 8, top: '50%', left: '25%'}" class="note" ng-show="search.isSearching">
+      Please wait
+    </div>
+    <div class="note" ng-show="search.results.length === 0 && !search.isSearching">
+      (No terms were found that met your criteria)
+    </div>
+    <div treecontrol class="tree-classic"
+     tree-model="search.results"
+     options="treeOptions">
+     <span draggable double-clickable dblclick-event="addWorkflowObject(config)">
+      <span popover="{{node.description}}"
+        popover-trigger="mouseenter"
+        popover-placement="right"
+        popover-append-to-body="true">
+        {{node.name}}
+        <span class="note" ng-show="node.type !== 'CodeSystem'"> ({{node.id}})</span>
+      </span>
+      <input type="hidden" value="{{node}}"></input>
+     </span>
+    </div>
+  </div>
+</div>

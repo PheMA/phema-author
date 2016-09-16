@@ -1,0 +1,34 @@
+<div class="modal-header">
+    <h3 class="modal-title">Define the temporal relationship</h3>
+</div>
+<div class="modal-body" id="relationship-properties">
+    <div>
+        {{startLabel}}
+        <select ng-options="item as item.label for item in relationships" ng-model="relationship.relationship.base"></select>
+        <select ng-options="item as item.name for item in comparisons" ng-model="relationship.timeRange.comparison"
+            ng-show="relationship.relationship.base.allowsTimeRange"></select>
+        <div class="range" ng-show="relationship.relationship.base.allowsTimeRange && relationship.timeRange.comparison.showStartTime">
+            <input type="text" only-digits ng-model="relationship.timeRange.start.value"></input>
+            <select ng-options="item.value as item.name for item in units" ng-model="relationship.timeRange.start.units"></select>
+        </div>
+        <div class="range" ng-show="relationship.relationship.base.allowsTimeRange && relationship.timeRange.comparison.showEndTime">
+            and
+            <input type="text" only-digits ng-model="relationship.timeRange.end.value"></input>
+            <select ng-options="item.value as item.name for item in units" ng-model="relationship.timeRange.end.units"></select>
+        </div>
+        <select ng-options="item as item.label for item in relationship.relationship.base.modifiers
+                | advancedFilter:showAdvanced"
+            ng-model="relationship.relationship.modifier" ng-show="relationship.relationship.base.modifiers.length > 0"></select>
+        {{endLabel}}
+    </div>
+    <div class="options" ng-show="relationship.relationship.base.modifiers.length > 0">
+        <label>
+            Include 'concurrent' options:
+            <input type="checkbox" ng-model="showAdvanced"></input>
+        </label>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

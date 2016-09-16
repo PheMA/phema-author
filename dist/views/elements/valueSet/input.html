@@ -1,0 +1,17 @@
+<div class="value-set value-set-inline">
+  <label style="width: 100%">
+    <input type="text" value="{{selectedValueSets[0].name}}" ng-click="chooseValueSet()" readonly></input>
+    <span class="clickable fa fa-pencil" ng-click="chooseValueSet()"></span>
+  </label>
+  <div ng-show="isSearching" class="value-set-search-panel">
+    <value-sets-terms
+      selected-value-sets="selectedValueSets"
+      selected-terms="selectedTerms"
+      existing-value-set="existingValueSet"
+      selected-tab-index="selectedTabIndex"
+      ></value-sets-terms>
+    <button class="btn btn-primary btn-xs vs-btn" ng-click="saveValueSet()">Save</button>
+    <button class="btn btn-primary btn-xs vs-btn" ng-click="cancelValueSet()">Close</button>
+    <button class="btn btn-primary btn-xs vs-btn" ng-click="reset()">Clear</button>
+  </div>
+</div>

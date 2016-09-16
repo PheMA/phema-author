@@ -1,0 +1,13 @@
+<div tooltip="Drag and drop a subset operator onto the canvas" tooltip-placement="right">
+  <div treecontrol class="tree-classic"
+     tree-model="subsetOperators"
+     options="treeOptions">
+     <span draggable double-clickable dblclick-event="addWorkflowObject(config)">
+      <span popover="{{node.description}}"
+        popover-trigger="mouseenter"
+        popover-placement="right"
+        popover-append-to-body="true">{{node.name}}</span>
+      <input type="hidden" value="{{node}}"></input>
+     </span>
+  </div>
+</div>
