@@ -8,5 +8,6 @@
   "configServiceBaseUrl":"api/config/",
   "exporterServiceBaseUrl":"api/export/",
   "unitServiceBaseUrl":"api/units/",
-  "userServiceBaseUrl":"api/user/"
+  "userServiceBaseUrl":"api/user/",
+  "authenticationType":"local"
 }

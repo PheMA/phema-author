@@ -508,6 +508,10 @@ module.exports = function (grunt) {
             {
               match: 'userServiceBaseUrl',
               replacement: settings.userServiceBaseUrl
+            },
+            {
+              match: 'authenticationType',
+              replacement: settings.authenticationType
             }
           ]
         },

@@ -8,5 +8,6 @@
   "configServiceBaseUrl":"data/",
   "exporterServiceBaseUrl":"data/",
   "unitServiceBaseUrl":"data/",
-  "userServiceBaseUrl":"data/"
+  "userServiceBaseUrl":"data/",
+  "authenticationType":"none"
 }

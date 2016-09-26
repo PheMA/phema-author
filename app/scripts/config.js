@@ -9,4 +9,5 @@ angular.module('sophe.config', [])
 .constant('exporterServiceBaseUrl', '@@exporterServiceBaseUrl')
 .constant('unitServiceBaseUrl', '@@unitServiceBaseUrl')
 .constant('userServiceBaseUrl', '@@userServiceBaseUrl')
+.constant('authenticationType', '@@authenticationType')
 ;
