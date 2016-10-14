@@ -19,9 +19,12 @@ body {
   padding-bottom: 10px;
 }
 
-h1 {
-  font-size: 32px;
-}
+h1 { font-size: 26px; }
+h2 { font-size: 22px; }
+h3 { font-size: 18px; }
+h4 { font-size: 14px; }
+
+h1 { margin: 10px 3px;}
 
 .btn {
   background-color: $button-color;
@@ -35,6 +38,10 @@ h1 {
 .btn-success:hover, .btn:hover {
   background-color: lighten($button-color, 10%);
   color: white;
+}
+
+.header, .footer {
+  height: 50px;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
