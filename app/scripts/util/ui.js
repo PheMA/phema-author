@@ -735,8 +735,8 @@ function resizeStageForEvent(stage, updatedSize, movedElement) {
     mainLayer.setHeight(newSize.height);
     stage.backgroundLayer.setWidth(newSize.width);
     stage.backgroundLayer.setHeight(newSize.height);
-    stage.backgroundLayer.children[0].setWidth(stage.getWidth());
-    stage.backgroundLayer.children[0].setHeight(stage.getHeight());
+    stage.backgroundLayer.children[0].setWidth(newSize.width);
+    stage.backgroundLayer.children[0].setHeight(newSize.height);
     stage.backgroundLayer.draw();
     stage.setWidth(newSize.width);
     stage.setHeight(newSize.height);
