@@ -9,18 +9,24 @@
       <input type="text" value="{{valueSet.name}}" ng-click="chooseValueSet()" readonly></input>
     </label>
   </div>
-  <div ng-show="isSearchingValueSets" class="value-set-search-panel">
-    <value-sets-terms
-      selected-value-sets="selectedValueSets"
-      selected-terms="selectedTerms"
-      existing-value-set="valueSet"
-      ></value-sets-terms>
-    <button class="btn btn-primary btn-xs vs-btn" ng-click="saveValueSet()">Save Value Set</button>
-    <button class="btn btn-primary btn-xs vs-btn" ng-click="cancelValueSet()">Cancel Value Set</button>
-  </div>
-  <dynamic-form template-promise="formTemplate"
-    ng-model="formData">
-  </dynamic-form>
+  <accordion close-others="oneAtATime">
+    <accordion-group id="qdm-element-value-set" is-open="isSearchingValueSets">
+      <div class="value-set-search-panel">
+        <value-sets-terms
+          selected-value-sets="selectedValueSets"
+          selected-terms="selectedTerms"
+          existing-value-set="valueSet"
+          new-value-set="newValueSet"
+          ></value-sets-terms>
+        <button class="btn btn-primary btn-xs vs-btn" ng-click="saveValueSet()">Save Value Set</button>
+        <button class="btn btn-primary btn-xs vs-btn" ng-click="cancelValueSet()">Cancel Value Set</button>
+      </div>
+    </accordion-group>
+    <accordion-group id="qdm-element-form" is-open="!isSearchingValueSets">
+      <dynamic-form template-promise="formTemplate" ng-model="formData">
+      </dynamic-form>
+    </accordion-group>
+  </accordion>
 </div>
 <div class="modal-footer">
   <button class="btn btn-primary" ng-click="ok()">OK</button>

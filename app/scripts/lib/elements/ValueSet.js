@@ -102,13 +102,15 @@ ValueSet.createElementFromData = function(result) {
       element = result.valueSets[0];
     }
     // Otherwise we are going to build a temporary value set based on this collection
-    else {
+    else if (result.newValueSet){
+      var name = (result.newValueSet.name && result.newValueSet.name !== '') ? result.newValueSet.name :
+        'Custom Value Set \r\n(' + result.terms.length + ' term' + (result.terms.length == 1 ? '' : 's') +')';
       element = {
           id: '',
-          name: 'Custom Value Set\r\n(' + result.terms.length + ' term' + (result.terms.length == 1 ? '' : 's') +')',
+          name: name,
           type: 'ValueSet'
       };
-      element.customList = result;
+      element.customList = result.newValueSet.terms;
     }
   }
   return element;

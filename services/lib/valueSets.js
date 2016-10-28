@@ -59,4 +59,16 @@ ValueSetRepository.prototype.getValueSetMembers = function(id, callback) {
   });
 }
 
+ValueSetRepository.prototype.add = function(callback) {
+  request({rejectUnauthorized: false, url: this.baseURL + 'valueset/' + id + '/resolution?format=json'}, function(error, response, body) {
+    if (!error && response.statusCode === 200) {
+      callback(null, body);
+    }
+    else {
+      console.log(error);
+      callback({message: 'Unable to add the value set'});
+    }
+  });
+}
+
 exports.ValueSetRepository = ValueSetRepository;

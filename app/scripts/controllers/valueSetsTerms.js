@@ -14,6 +14,7 @@ angular.module('sopheAuthorApp')
   $scope.selectedTabIndex = $scope.selectedTabIndex || ($scope.$parent.selectedTabIndex ? $scope.$parent.selectedTabIndex : 0);
   $scope.termSearch = {term: '', isSearching: false, results: []};
   $scope.valueSetSearch = {term: '', isSearching: false, results: []};
+  $scope.newValueSet = {name: '', description: '', terms: []};
   $scope.selectedValueSetMembers = [];
   $scope.existingValueSet = $scope.existingValueSet || {};
   $scope.selectedTerms = $scope.selectedTerms || [];

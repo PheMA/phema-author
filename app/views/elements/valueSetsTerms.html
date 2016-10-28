@@ -1,6 +1,6 @@
 <div>
   <tabset active="selectedTabIndex">
-    <tab heading="Value Sets">
+    <tab heading="Select Value Set">
       <div class="value-set-container">
         <div class="row search-panel">
           <div class="col-md-12 divider-right">
@@ -42,8 +42,22 @@
         </div>
       </div>
     </tab>
-    <tab heading="Terminologies / Codes">
+    <tab heading="Create Value Set">
       <div class="code-systems-container">
+        <div class="row search-panel">
+          <div class="col-md-6">
+            <label id='new-vs-name'>
+              Name:
+              <input type="text" style="width: 100%;" ng-model="newValueSet.name"></input>
+            </label>
+          </div>
+          <div class="col-md-6">
+            <label id='new-vs-description'>
+              Description:
+              <input type="text" style="width: 100%;" ng-model="newValueSet.description"></input>
+            </label>
+          </div>
+        </div>
         <div class="row search-panel">
           <div class="col-md-4">
             <label id='term-search'>

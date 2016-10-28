@@ -109,3 +109,12 @@ exports.members = function(req, res){
     util.respondJSON(res, error, data);
   });
 };
+
+exports.add = function(req, res){
+  console.log("POST - /api/valueSet/:repo");
+  var service = findRepository(req.params.repo, res);
+  if (service == null) { return; }
+  service.repository.add(req.params, function(error, data) {
+    util.respondJSON(res, error, data);
+  });
+};

@@ -10,7 +10,8 @@
 angular.module('sopheAuthorApp')
 .controller('ValueSetsTermsDialogController', ['$scope', '$http', '$modalInstance', function ($scope, $http, $modalInstance) {
   $scope.ok = function () {
-    $modalInstance.close({valueSets: $scope.selectedValueSets, terms: $scope.selectedTerms});
+    $scope.newValueSet.terms = $scope.selectedTerms;
+    $modalInstance.close({valueSets: $scope.selectedValueSets, newValueSet: $scope.newValueSet, });
   };
 
   $scope.cancel = function () {

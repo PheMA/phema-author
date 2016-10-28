@@ -127,7 +127,7 @@ DataElement.prototype.create = function(config, scope) {
     x: termDropOptions.x, y: termDropOptions.y,
     width: termObj.width(), height: termObj.height(),
     fontFamily: 'Calibri', fontSize: 14, fill: 'gray',
-    text: 'Drag and drop clinical terms or value sets here, or click to search',
+    text: 'Drag and drop value sets here, or click to search',
     align: 'center', padding: 5, name: 'termDropText',
   };
   var termTextObj = this.createText(termTextOptions, group);

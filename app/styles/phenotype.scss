@@ -503,3 +503,8 @@ $value-sets-background-color: #eee;
     height: 100%;
   }
 }
+
+#qdm-element-value-set, #qdm-element-form {
+  .panel-heading { display: none; }
+  border: none;
+}
