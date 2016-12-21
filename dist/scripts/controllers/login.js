@@ -10,9 +10,9 @@ angular.module('security.login.form', [])
     password: ''
   };
 
-  $scope.login = function (credentials) {
+  $scope.login = function () {
     $scope.authError = '';
-    security.login(this.credentials.email, this.credentials.password, function(error, loggedIn){
+    security.login(this.credentials.email, this.credentials.password, function(error){
       $scope.authError = error;
     });
   };

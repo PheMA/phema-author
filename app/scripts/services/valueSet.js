@@ -164,6 +164,18 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
     return deferred.promise;
   };
 
+  this.save = function(repoId, valueSet) {
+    var deferred = $q.defer();
+    $http.post(URLService.getValueSetServiceURL('save', {repoId: repoId}), valueSet)
+      .success(function(data) {
+        deferred.resolve(data);
+      })
+      .error(function(data, status) {
+        deferred.reject('There was an error: ' + status);
+      });
+    return deferred.promise;
+  }
+
   this.processValues = function(data) {
     var valueSets = [];
     if (data) {

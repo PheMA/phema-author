@@ -3,10 +3,16 @@ var async = require("async");
 var ValueSetRepository = require('../lib/valueSets').ValueSetRepository;
 var util = require('../lib/util');
 
-// You can add as many CTS2 endpoints as you want
+// You can add as many CTS2 endpoints as you want, but only one can be writable
 var VALUE_SET_SERVICES = [
-    {'id': 'vsac', 'order': 1, 'title': 'NLM VSAC', 'repository' : new ValueSetRepository('http://umls_user:umls_pwd@localhost:8080/')}
-  //, {'id': 'phema', 'order': 2, 'title': 'Local Value Sets', 'repository' : new ValueSetRepository('http://umls_user:umls_pwd@localhost:8080/')}
+    {
+      'id': 'vsac', 'order': 1, 'title': 'NLM VSAC', 'writable': false,
+      'repository': new ValueSetRepository('http://umls_user:umls_pwd@localhost:8080/')}
+  , {
+      'id': 'phema', 'order': 2, 'title': 'Local Value Sets', 'writable': true, 
+      'repository': new ValueSetRepository('http://172.16.51.130:8080/phema-cts2/', '2.16.840.1.113883.3.1427.10000')
+      //'repository': new ValueSetRepository('http://172.16.51.130:8080/value-sets/', '2.16.840.1.113883.3.1427.10000')
+    }
 ];
 
 /**
@@ -110,10 +116,16 @@ exports.members = function(req, res){
   });
 };
 
+/**
+ * Returns the codes of a value set, given a repository ID and the value set ID
+ * @param {Object} req HTTP request object.
+ * @param {Object} res HTTP response object.
+ */
 exports.add = function(req, res){
   console.log("POST - /api/valueSet/:repo");
   var service = findRepository(req.params.repo, res);
   if (service == null) { return; }
+  console.log(req.body);
   service.repository.add(req.body, function(error, data) {
     util.respondJSON(res, error, data);
   });

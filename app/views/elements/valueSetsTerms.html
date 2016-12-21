@@ -1,6 +1,6 @@
 <div>
-  <tabset active="selectedTabIndex">
-    <tab heading="Select Value Set">
+  <tabset>
+    <tab heading="Select Value Set" ng-click="setTab(0)">
       <div class="value-set-container">
         <div class="row search-panel">
           <div class="col-md-12 divider-right">
@@ -42,7 +42,7 @@
         </div>
       </div>
     </tab>
-    <tab heading="Create Value Set">
+    <tab heading="Create Value Set" ng-click="setTab(1)">
       <div class="code-systems-container">
         <div class="row search-panel">
           <div class="col-md-6">

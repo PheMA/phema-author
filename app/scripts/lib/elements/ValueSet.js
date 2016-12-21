@@ -98,7 +98,7 @@ ValueSet.createElementFromData = function(result) {
   var element = {};
   if (result) {
     // If we just have a value set, we will create that and place it in the object
-    if (result.valueSets.length > 0 && result.terms.length === 0) {
+    if (result.valueSets && result.valueSets.length > 0 && result.terms.length === 0) {
       element = result.valueSets[0];
     }
     // Otherwise we are going to build a temporary value set based on this collection

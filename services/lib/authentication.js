@@ -28,7 +28,9 @@ passport.deserializeUser(function(id, done) {
 });
 
 exports.initialize = function(app) {
-  app.use('/api', expressJwt({secret: 'somesecret'}));
+  //*********  DON'T CHECK ME IN *************
+  //app.use('/api', expressJwt({secret: 'somesecret'}));
+  // *****************************************
   app.use(passport.initialize());
 };
 

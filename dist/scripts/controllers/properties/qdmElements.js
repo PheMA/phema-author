@@ -15,6 +15,7 @@ angular.module('sopheAuthorApp')
     $scope.isSearchingValueSets = false;
     $scope.selectedValueSets = [];
     $scope.selectedTerms = [];
+    $scope.newValueSet = {};
     $scope.existingValueSet = valueSet;
     $scope.selectedTabIndex = (valueSet && valueSet.customList && valueSet.customList.terms && valueSet.customList.terms.length > 0) ? 1 : 0;
     
