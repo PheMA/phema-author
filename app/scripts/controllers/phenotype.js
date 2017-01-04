@@ -88,6 +88,14 @@ angular.module('sopheAuthorApp')
       .then(FunctionOperatorService.processValues)
       .then(function(operators) { $scope.functionOperators = operators; });
 
+    // The list of classification elements is pretty small and manageable, and doesn't need to be tightly controlled.  We will
+    // just put the list in here instead of setting up a service.
+    $scope.classifications = [
+      { 'name': 'Case', 'description' : 'Affected individuals as part of a case/control algorithm', 'type' : 'Classification' },
+      { 'name': 'Control', 'description' : 'Unaffected individuals as part of a case/control algorithm', 'type' : 'Classification' },
+      { 'name': 'My Label', 'description' : 'Define a custom label for your phenotype algorithm result', 'type' : 'Classification' }
+    ];
+
     // Update the phenotype metadata so that it is available within the phenotype definition
     // for export.  This needs to be synced each time we update/save.
     function _setPhenotypeData(id, name, description) {
@@ -329,7 +337,8 @@ angular.module('sopheAuthorApp')
         element.type === 'DataElement' ||
         element.type === 'ValueSet' ||
         element.type === 'SubsetOperator' ||
-        element.type === 'FunctionOperator');
+        element.type === 'FunctionOperator' ||
+        element.type === 'Classification');
     };
 
     function _getConnectorElementType(selectedConnection, start) {
@@ -580,6 +589,25 @@ angular.module('sopheAuthorApp')
           selectedElement.getStage().draw();
         });
       }
+      else if (element.type === 'Classification') {
+        modalInstance = $modal.open({
+          templateUrl: 'views/properties/classification.html',
+          controller: 'ClassificationPropertiesController',
+          size: 'md',
+          resolve: {
+            element: function () {
+              return angular.copy(element);
+            }
+          }
+        });
+
+        modalInstance.result.then(function (result) {
+          element = result;
+          selectedElement.element(element);
+          findParentElementByName(selectedElement, 'header').setText(element.name);
+          selectedElement.getStage().draw();
+        });
+      }
     };
 
     // Keep this after the other scope function definitions - it needs to have the appropriate definitions loaded
@@ -633,6 +661,10 @@ angular.module('sopheAuthorApp')
       $scope.$apply(function() {
         $scope.showProperties();
       });
+    });
+
+    $scope.$on('sophe-custom-classification-created', function() {
+      $scope.showProperties();
     });
 
     // When the user tries to navigate away from the current page, check to see if there

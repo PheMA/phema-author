@@ -326,28 +326,37 @@ BaseElement.prototype = {
     }
   },
 
-  addConnectors: function (scope, mainRect, group, trackDrag) {
+  addConnectors: function (scope, mainRect, group, trackDrag, addLeft, addRight) {
     trackDrag = (typeof trackDrag !== 'undefined') ? trackDrag : true;
+    addLeft = (typeof addLeft !== 'undefined') ? addLeft : true;
+    addRight = (typeof addRight !== 'undefined') ? addRight : true;
 
-    var leftConnectOptions = {
-      x: mainRect.getX(), y: (mainRect.getHeight() / 2),
-      width: 15, height: 15,
-      fill: 'white', name: 'leftConnector',
-      stroke: 'black', strokeWidth: 1
-    };
-    var leftObj = this.createConnector(leftConnectOptions, group);
-    addOutlineStyles(leftObj);
-    leftObj.connections([]);
+    var leftObj = null;
+    var rightObj = null;
 
-    var rightConnectOptions = {
-      x: mainRect.getX() + mainRect.getWidth(), y: (mainRect.getHeight() / 2),
-      width: 15, height: 15,
-      fill: 'white', name: 'rightConnector',
-      stroke: 'black', strokeWidth: 1
-    };
-    var rightObj = this.createConnector(rightConnectOptions, group);
-    addOutlineStyles(rightObj);
-    rightObj.connections([]);
+    if (addLeft) {
+      var leftConnectOptions = {
+        x: mainRect.getX(), y: (mainRect.getHeight() / 2),
+        width: 15, height: 15,
+        fill: 'white', name: 'leftConnector',
+        stroke: 'black', strokeWidth: 1
+      };
+      leftObj = this.createConnector(leftConnectOptions, group);
+      addOutlineStyles(leftObj);
+      leftObj.connections([]);
+    }
+
+    if (addRight) {
+      var rightConnectOptions = {
+        x: mainRect.getX() + mainRect.getWidth(), y: (mainRect.getHeight() / 2),
+        width: 15, height: 15,
+        fill: 'white', name: 'rightConnector',
+        stroke: 'black', strokeWidth: 1
+      };
+      rightObj = this.createConnector(rightConnectOptions, group);
+      addOutlineStyles(rightObj);
+      rightObj.connections([]);
+    }
 
     if (trackDrag) {
       this.connectConnectorEvents(group);

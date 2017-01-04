@@ -1,5 +1,5 @@
 'use strict';
-/* globals Kinetic, DataElement, GenericElement, LogicalOperator, TemporalOperator, ValueSet, Term, SubsetOperator, FunctionOperator, PhenotypeElement, 
+/* globals Kinetic, DataElement, GenericElement, LogicalOperator, TemporalOperator, ValueSet, Term, SubsetOperator, FunctionOperator, PhenotypeElement, ClassificationElement,
  getIntersectingShape, allowsDrop, addElementToContainer, removeElementFromContainer, resizeStageForEvent */
 
 angular.module('sophe.factories.algorithmElement', [])
@@ -48,6 +48,12 @@ angular.module('sophe.factories.algorithmElement', [])
 
     function createPhenotypeElement(config, scope) {
       var element = new PhenotypeElement();
+      element.create(config, scope);
+      return element.container();
+    }
+
+    function createClassificationElement(config, scope) {
+      var element = new ClassificationElement();
       element.create(config, scope);
       return element.container();
     }
@@ -165,6 +171,9 @@ angular.module('sophe.factories.algorithmElement', [])
       else if (config.element.type === 'Term') {
         workflowObject = createTerm(config, scope);
       }
+      else if (config.element.type === 'Classification') {
+        workflowObject = createClassificationElement(config, scope);
+      }
       else {
         workflowObject = createGenericElement(config, scope);
       }
@@ -179,6 +188,12 @@ angular.module('sophe.factories.algorithmElement', [])
       var dropShape = getIntersectingShape(stage.mainLayer, {x: config.x, y: config.y}, true, workflowObject);
       if (dropShape && allowsDrop(workflowObject, dropShape)) {
         addElementToContainer(stage, dropShape, workflowObject);
+      }
+
+      if (config.element.type === 'Classification' && config.element.name === 'My Label') {
+        //selectObject(stage, workflowObject);
+        workflowObject.selected = true;
+        scope.$root.$broadcast('sophe-custom-classification-created', workflowObject);
       }
 
       return workflowObject;
@@ -253,6 +268,10 @@ angular.module('sophe.factories.algorithmElement', [])
         else if (element.type === 'Phenotype') {
           var phenotype = new PhenotypeElement();
           phenotype.load(group, scope);
+        }
+        else if (element.type === 'Classification') {
+          var classification = new ClassificationElement();
+          classification.load(group, scope);
         }
         else {
           var genericElement = new GenericElement();
