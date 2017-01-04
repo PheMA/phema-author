@@ -459,9 +459,10 @@ function startConnector(stage, connectorObj) {
 function endConnector(stage, connectorObj, scope, suppressCreateEvent) {
   var line = null;
   if (isDrawingLine(stage)) {
-    // If we are dropping where we started, or there is no end connection point, the line
-    // is invalid and we will just clear it
-    if (stage.connector.anchor === connectorObj || ('undefined' === typeof connectorObj)) {
+    // If we are dropping where we started, or there is no end connection point, or we are drawing
+    // an invalid connection (from a classification label to something else) the line is invalid 
+    // and we will just clear it
+    if (stage.connector.anchor === connectorObj || ('undefined' === typeof connectorObj) || stage.connector.anchor.parent.element().type === 'Classification') {
       stage.connector.line.destroy();
     }
     // Otherwise we have a valid line.  Update the internal collections tracking how objects
@@ -489,7 +490,15 @@ function endConnector(stage, connectorObj, scope, suppressCreateEvent) {
       var labelObj = new Kinetic.Text(labelTextOptions);
       stage.mainLayer.add(labelObj);
       line.label(labelObj);
-      line.element({name: labelTextOptions.text, uri: '', type: 'TemporalOperator'});
+
+      // If we are connected to a classification label, the line type should just be a General type
+      // that has no properties associated with it.
+      var lineType = 'TemporalOperator';
+      if (connectorObj.parent.element().type === 'Classification') {
+        lineType = 'General';
+        suppressCreateEvent = true;
+      }
+      line.element({name: labelTextOptions.text, uri: '', type: lineType});
 
       _setLabelLocationGivenConnections(lineConnectors, line);
 
