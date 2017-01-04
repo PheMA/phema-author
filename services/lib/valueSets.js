@@ -175,17 +175,15 @@ ValueSetRepository.prototype.add = function(data, callback) {
     if (oidBlank && existingValueSet) { return callback({message: 'A conflicting value set definition was found'}) }
     if (existingValueSet) {
       var existingVersion = existingValueSet['ValueSetCatalogEntryMsg']['valueSetCatalogEntry']['currentDefinition']['valueSetDefinition']['content'].split('_')[1]
+      var changeSet = existingValueSet['ValueSetCatalogEntryMsg']['valueSetCatalogEntry']['changeDescription']['containingChangeSet']
       data['version'] = existingVersion;
       console.log('Existing value set found: version=' + existingVersion);
 
-      cts2Util.createChangeSet(function(error, changeSet) {
+      var valueSetDefinition = mapValueSetToCTS2Definition(data, existingVersion);
+      valueSetDefinition['valueSetDefinition']['changeDescription'] = { "changeType" : "UPDATE", "containingChangeSet" : changeSet };
+      cts2Util.updateValueSetDefinition(data['oid'], existingVersion, changeSet, valueSetDefinition, function(error, vsdResponse) {
         if (error) { return callback(error); }
-        var valueSetDefinition = mapValueSetToCTS2Definition(data, existingVersion);
-        valueSetDefinition['valueSetDefinition']['changeDescription'] = { "changeType" : "UPDATE", "containingChangeSet" : changeSet };
-        cts2Util.updateValueSetDefinition(data['oid'], existingVersion, changeSet, valueSetDefinition, function(error, vsdResponse) {
-          if (error) { return callback(error); }
-          callback(null, data);
-        });
+        callback(null, data);
       });
     }
     else {
