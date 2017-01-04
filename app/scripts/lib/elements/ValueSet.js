@@ -76,7 +76,7 @@ ValueSet.prototype.customList = function(items) {
 };
 
 ValueSet.prototype.toObject = function() {
-  var obj = {className: 'ValueSet'};
+  var obj = {className: Constants.ElementTypes.VALUE_SET};
   if (this._customList) {
     obj.customList = this._customList;
   }
@@ -106,7 +106,7 @@ ValueSet.createElementFromData = function(result) {
       element = {
           id: '',
           name: 'Custom Value Set\r\n(' + result.terms.length + ' term' + (result.terms.length == 1 ? '' : 's') +')',
-          type: 'ValueSet'
+          type: Constants.ElementTypes.VALUE_SET
       };
       element.customList = result;
     }

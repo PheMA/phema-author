@@ -1,4 +1,4 @@
-/* globals Kinetic */
+/* globals Kinetic, Constants */
 /* exported startConnector, endConnector, updateActiveLineLocation, getIntersectingShape,
   addElementToContainer, removeElementFromContainer, updateConnectedLines, changeConnectorEndpoints,
   allowsDrop, findObjectInPhemaGroupType, BORDER, updateSizeOfMainRect, resizeStageForEvent, MINIMUM_CANVAS_SIZE,
@@ -248,12 +248,12 @@ function addElementToContainer(stage, container, element) {
         _replaceTemporalElement(false, containerParent, container, element, stage);
       }
     }
-    else if (groupDefinition.type === 'DataElement' || groupDefinition.type === 'Category') {
+    else if (groupDefinition.type === Constants.ElementTypes.DATA_ELEMENT || groupDefinition.type === Constants.ElementTypes.CATEGORY) {
       phemaObject.valueSet(element);
       element.container = group;
       stage.draw();
     }
-    else if (groupDefinition.type === 'LogicalOperator' || groupDefinition.type === 'SubsetOperator' || groupDefinition.type === 'FunctionOperator') {
+    else if (groupDefinition.type === 'LogicalOperator' || groupDefinition.type === Constants.ElementTypes.SUBSET_OPERATOR || groupDefinition.type === Constants.ElementTypes.FUNCTION_OPERATOR) {
       // Add the item (if it's not already in the array)
       _addElementToOperator(element, phemaObject);
 
@@ -462,7 +462,7 @@ function endConnector(stage, connectorObj, scope, suppressCreateEvent) {
     // If we are dropping where we started, or there is no end connection point, or we are drawing
     // an invalid connection (from a classification label to something else) the line is invalid 
     // and we will just clear it
-    if (stage.connector.anchor === connectorObj || ('undefined' === typeof connectorObj) || stage.connector.anchor.parent.element().type === 'Classification') {
+    if (stage.connector.anchor === connectorObj || ('undefined' === typeof connectorObj) || stage.connector.anchor.parent.element().type === Constants.ElementTypes.CLASSIFICATION) {
       stage.connector.line.destroy();
     }
     // Otherwise we have a valid line.  Update the internal collections tracking how objects
@@ -494,7 +494,7 @@ function endConnector(stage, connectorObj, scope, suppressCreateEvent) {
       // If we are connected to a classification label, the line type should just be a General type
       // that has no properties associated with it.
       var lineType = 'TemporalOperator';
-      if (connectorObj.parent.element().type === 'Classification') {
+      if (connectorObj.parent.element().type === Constants.ElementTypes.CLASSIFICATION) {
         lineType = 'General';
         suppressCreateEvent = true;
       }

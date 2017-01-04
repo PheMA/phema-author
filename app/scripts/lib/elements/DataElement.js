@@ -9,7 +9,7 @@ DataElement.prototype.connectEvents = function(group, scope) {
   this.addStandardEventHandlers(group, scope);
   this.addCursorEventHandlers(group, scope);
   var termObj = group.find('.termDrop')[0];
-  this.setDroppable(termObj, ['ValueSet', 'Term']);
+  this.setDroppable(termObj, [Constants.ElementTypes.VALUE_SET, 'Term']);
   this.addConnectionHandler(group.find('.leftConnector')[0], scope);
   this.addConnectionHandler(group.find('.rightConnector')[0], scope);
   this.connectConnectorEvents(group);
@@ -41,13 +41,13 @@ DataElement.prototype._layoutElementsAfterTermDrop = function(valueSet) {
   // configRect.width(termDrop.width());
   // configRect.y(termDrop.y() + termDrop.height() + 5);
 
-  var mainRect = findObjectInPhemaGroupType('mainRect', this._container, ['Category', 'DataElement']);
+  var mainRect = findObjectInPhemaGroupType('mainRect', this._container, [Constants.ElementTypes.CATEGORY, Constants.ElementTypes.DATA_ELEMENT]);
   // updateSizeOfMainRect(mainRect, this._container,
   //   (termDrop.width() + 20), (configRect.getY() + configRect.getHeight() + 10));
   updateSizeOfMainRect(mainRect, this._container,
     (termDrop.width() + 20), (termDrop.getY() + termDrop.getHeight() + 10));
 
-  var headerRect = findObjectInPhemaGroupType('header', this._container, ['Category', 'DataElement']);
+  var headerRect = findObjectInPhemaGroupType('header', this._container, [Constants.ElementTypes.CATEGORY, Constants.ElementTypes.DATA_ELEMENT]);
   headerRect.width(mainRect.width());
 };
 
@@ -206,7 +206,7 @@ DataElement.prototype.toObject = function() {
       }
     }
   }
-  obj.className = 'DataElement';
+  obj.className = Constants.ElementTypes.DATA_ELEMENT;
   return obj;
 };
 

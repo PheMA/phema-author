@@ -5,7 +5,7 @@ TemporalOperator.prototype = new BaseElement;
 // Connects the appropriate QDM logical operator shapes to event handlers.
 // Used when constructing a new element, or when loading from a definition.
 TemporalOperator.prototype.connectEvents = function(group, scope) {
-  var allowedTemporalDropTypes = ['Category', 'DataElement', 'LogicalOperator', 'Phenotype', 'SubsetOperator'];
+  var allowedTemporalDropTypes = [Constants.ElementTypes.CATEGORY, Constants.ElementTypes.DATA_ELEMENT, 'LogicalOperator', 'Phenotype', Constants.ElementTypes.SUBSET_OPERATOR];
   this.addStandardEventHandlers(group, scope);
   this.addCursorEventHandlers(group, scope);
   var eventA = group.find('.eventA')[0];
