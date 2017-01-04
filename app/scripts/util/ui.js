@@ -238,7 +238,7 @@ function addElementToContainer(stage, container, element) {
   if (group) {
     var groupDefinition = group.element();
     var phemaObject = group.phemaObject();
-    if (groupDefinition.type === 'TemporalOperator') {
+    if (groupDefinition.type === Constants.ElementTypes.TEMPORAL_OPERATOR) {
       // Replace container with element
       var containerParent = container.getParent();
       if (container === containerParent.find('.eventA')[0]) {
@@ -253,7 +253,7 @@ function addElementToContainer(stage, container, element) {
       element.container = group;
       stage.draw();
     }
-    else if (groupDefinition.type === 'LogicalOperator' || groupDefinition.type === Constants.ElementTypes.SUBSET_OPERATOR || groupDefinition.type === Constants.ElementTypes.FUNCTION_OPERATOR) {
+    else if (groupDefinition.type === Constants.ElementTypes.LOGICAL_OPERATOR || groupDefinition.type === Constants.ElementTypes.SUBSET_OPERATOR || groupDefinition.type === Constants.ElementTypes.FUNCTION_OPERATOR) {
       // Add the item (if it's not already in the array)
       _addElementToOperator(element, phemaObject);
 
@@ -373,7 +373,7 @@ function selectObject(stage, selectObj, scope) {
   if (scope) {
     // Because of the order in which events are handled, we need to broadcast an event that
     // we selected an item.  This is needed to update the context menu appropriately.
-    scope.$root.$broadcast('sophe-element-selected', selectObj);
+    scope.$root.$broadcast(Constants.Events.ELEMENT_SELECTED, selectObj);
   }
 }
 
@@ -493,7 +493,7 @@ function endConnector(stage, connectorObj, scope, suppressCreateEvent) {
 
       // If we are connected to a classification label, the line type should just be a General type
       // that has no properties associated with it.
-      var lineType = 'TemporalOperator';
+      var lineType = Constants.ElementTypes.TEMPORAL_OPERATOR;
       if (connectorObj.parent.element().type === Constants.ElementTypes.CLASSIFICATION) {
         lineType = 'General';
         suppressCreateEvent = true;
@@ -520,7 +520,7 @@ function endConnector(stage, connectorObj, scope, suppressCreateEvent) {
 
   if (line && !suppressCreateEvent) {
     selectObject(stage, line, scope);
-    scope.$root.$broadcast('sophe-empty-temporal-operator-created', line);
+    scope.$root.$broadcast(Constants.Events.CREATE_TEMPORAL_OPERATOR, line);
   }
 
   return line;

@@ -35,7 +35,7 @@ angular.module('sophe.services.temporalOperator', ['sophe.services.url', 'ngReso
         linkRegex: new RegExp('^[a-z]+\\sbefore', 'i'),
         name: 'Before',
         uri: 'http://projectphema.org/TemporalOperator#Before',
-        type: 'TemporalOperator',
+        type: Constants.ElementTypes.TEMPORAL_OPERATOR,
         children: []
       },
       {
@@ -43,7 +43,7 @@ angular.module('sophe.services.temporalOperator', ['sophe.services.url', 'ngReso
         linkRegex: new RegExp('^[a-z]+\\safter', 'i'),
         name: 'After',
         uri: 'http://projectphema.org/TemporalOperator#After',
-        type: 'TemporalOperator',
+        type: Constants.ElementTypes.TEMPORAL_OPERATOR,
         children: []
       },
       {
@@ -68,7 +68,7 @@ angular.module('sophe.services.temporalOperator', ['sophe.services.url', 'ngReso
           id: originalData[index].dataElementName.value,
           name: originalData[index].temporalOperatorLabel.value,
           uri: originalData[index].id.value,
-          type: 'TemporalOperator',
+          type: Constants.ElementTypes.TEMPORAL_OPERATOR,
           description: originalData[index].definition.value,
           tooltip: originalData[index].definition.value + '<div class="popup-diagram"><img src="images/temporal/' + originalData[index].dataElementName.value + '.png" /></div>',
           children: []

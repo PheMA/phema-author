@@ -16,7 +16,7 @@ DataElement.prototype.connectEvents = function(group, scope) {
 
   group.find('.termDropText')[0].on('click', function(e) {
     if (e.evt.which !== 3) {
-      scope.$root.$broadcast('sophe-search-valuesets', e.target.parent);
+      scope.$root.$broadcast(Constants.Events.SEARCH_VALUESETS, e.target.parent);
     }
   });
 };

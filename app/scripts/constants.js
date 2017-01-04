@@ -21,5 +21,16 @@ const Constants = {
     'VALUE_SET': 'ValueSet',
     'TERM': 'Term',
     'CLASSIFICATION': 'Classification'
+  },
+  'ExportStatuses': {
+    'PROCESSING': 'processing',
+    'COMPLETED': 'completed',
+    'ERROR' : 'error'
+  },
+  'Events': {
+    'SEARCH_VALUESETS': 'sophe-search-valuesets',
+    'ELEMENT_SELECTED': 'sophe-element-selected',
+    'CREATE_TEMPORAL_OPERATOR': 'sophe-empty-temporal-operator-created',
+    'CREATE_CLASSIFICATION': 'sophe-custom-classification-created'
   }
 };

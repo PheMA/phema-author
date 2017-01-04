@@ -63,7 +63,7 @@ ClassificationElement.prototype.create = function(config, scope) {
 };
 
 ClassificationElement.prototype.toObject = function() {
-  var obj = {className: 'Phenotype'};
+  var obj = {className: Constants.ElementTypes.PHENOTYPE};
   return obj;
 };
 

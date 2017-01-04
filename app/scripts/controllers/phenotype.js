@@ -630,7 +630,7 @@ angular.module('sopheAuthorApp')
     ];
 
 
-    $scope.$on('sophe-search-valuesets', function(evt, dataElement) {
+    $scope.$on(Constants.Events.SEARCH_VALUESETS, function(evt, dataElement) {
       var modalInstance = $modal.open({
         templateUrl: 'views/elements/valueSetsTermsDialog.html',
         controller: 'ValueSetsTermsDialogController',
@@ -648,7 +648,7 @@ angular.module('sopheAuthorApp')
 
     // Special event handler such that whenever an element is selected, we are notified
     // and can enable/disable menu items for deleting, viewing properties, etc.
-    $scope.$on('sophe-element-selected', function(evt, args) {
+    $scope.$on(Constants.Events.ELEMENT_SELECTED, function(evt, args) {
       $scope.$apply(function() {
         $scope.isPropertiesDisabled = !$scope.canShowProperties(args);
         _.findWhere($scope.buttons, {text: 'Delete'}).disabled = !$scope.canDelete();
@@ -657,13 +657,13 @@ angular.module('sopheAuthorApp')
 
     // Special event handler that's fired after a connection has been drawn between two
     // objects.  This brings up the property dialog for the temporal operator.
-    $scope.$on('sophe-empty-temporal-operator-created', function() {
+    $scope.$on(Constants.Events.CREATE_TEMPORAL_OPERATOR, function() {
       $scope.$apply(function() {
         $scope.showProperties();
       });
     });
 
-    $scope.$on('sophe-custom-classification-created', function() {
+    $scope.$on(Constants.Events.CREATE_CLASSIFICATION, function() {
       $scope.showProperties();
     });
 
