@@ -1,9 +1,9 @@
 'use strict';
 /* globals Kinetic, DataElement, GenericElement, LogicalOperator, TemporalOperator, ValueSet, Term, SubsetOperator, FunctionOperator, PhenotypeElement, ClassificationElement,
- getIntersectingShape, allowsDrop, addElementToContainer, removeElementFromContainer, resizeStageForEvent */
+ getIntersectingShape, allowsDrop, addElementToContainer, removeElementFromContainer, resizeStageForEvent, Constants */
 
 angular.module('sophe.factories.algorithmElement', [])
-  .factory('algorithmElementFactory', function() {
+  .factory('algorithmElementFactory', [function() {
      function createQDMDataElement(config, scope) {
       var element = new DataElement();
       element.create(config, scope);
@@ -147,31 +147,31 @@ angular.module('sophe.factories.algorithmElement', [])
       }
 
       var workflowObject = null;
-      if (config.element.type === 'TemporalOperator') {
+      if (config.element.type === Constants.ElementTypes.TEMPORAL_OPERATOR) {
         workflowObject = createQDMTemporalOperator(config, scope);
       }
-      else if (config.element.type === 'DataElement' || config.element.type === 'Category') {
+      else if (config.element.type === Constants.ElementTypes.DATA_ELEMENT || config.element.type === Constants.ElementTypes.CATEGORY) {
         workflowObject = createQDMDataElement(config, scope);
       }
-      else if (config.element.type === 'LogicalOperator') {
+      else if (config.element.type === Constants.ElementTypes.LOGICAL_OPERATOR) {
         workflowObject = createQDMLogicalOperator(config, scope);
       }
-      else if (config.element.type === 'SubsetOperator') {
+      else if (config.element.type === Constants.ElementTypes.SUBSET_OPERATOR) {
         workflowObject = createQDMSubsetOperator(config, scope);
       }
-      else if (config.element.type === 'FunctionOperator') {
+      else if (config.element.type === Constants.ElementTypes.FUNCTION_OPERATOR) {
         workflowObject = createQDMFunctionOperator(config, scope);
       }
-      else if (config.element.type === 'Phenotype') {
+      else if (config.element.type === Constants.ElementTypes.PHENOTYPE) {
         workflowObject = createPhenotypeElement(config, scope);
       }
-      else if (config.element.type === 'ValueSet') {
+      else if (config.element.type === Constants.ElementTypes.VALUE_SET) {
         workflowObject = createValueSet(config, scope);
       }
-      else if (config.element.type === 'Term') {
+      else if (config.element.type === Constants.ElementTypes.TERM) {
         workflowObject = createTerm(config, scope);
       }
-      else if (config.element.type === 'Classification') {
+      else if (config.element.type === Constants.ElementTypes.CLASSIFICATION) {
         workflowObject = createClassificationElement(config, scope);
       }
       else {
@@ -190,10 +190,10 @@ angular.module('sophe.factories.algorithmElement', [])
         addElementToContainer(stage, dropShape, workflowObject);
       }
 
-      if (config.element.type === 'Classification' && config.element.name === 'My Label') {
+      if (config.element.type === Constants.ElementTypes.CLASSIFICATION && config.element.name === 'My Label') {
         //selectObject(stage, workflowObject);
         workflowObject.selected = true;
-        scope.$root.$broadcast('sophe-custom-classification-created', workflowObject);
+        scope.$root.$broadcast(Constants.Events.CREATE_CLASSIFICATION, workflowObject);
       }
 
       return workflowObject;
@@ -241,35 +241,35 @@ angular.module('sophe.factories.algorithmElement', [])
       var groups = stage.mainLayer.get('Group');
       groups.each(function(group) {
         var element = group.element();
-        if (element.type === 'TemporalOperator') {
+        if (element.type === Constants.ElementTypes.TEMPORAL_OPERATOR) {
           var temporalOperator = new TemporalOperator();
           temporalOperator.load(group, scope);
         }
-        else if (element.type === 'DataElement' || element.type === 'Category') {
+        else if (element.type === Constants.ElementTypes.DATA_ELEMENT || element.type === Constants.ElementTypes.CATEGORY) {
           var dataElement = new DataElement();
           dataElement.load(group, scope);
         }
-        else if (element.type === 'LogicalOperator') {
+        else if (element.type === Constants.ElementTypes.LOGICAL_OPERATOR) {
           var logicalOperator = new LogicalOperator();
           logicalOperator.load(group, scope);
         }
-        else if (element.type === 'SubsetOperator') {
+        else if (element.type === Constants.ElementTypes.SUBSET_OPERATOR) {
           var subsetOperator = new SubsetOperator();
           subsetOperator.load(group, scope);
         }
-        else if (element.type === 'FunctionOperator') {
+        else if (element.type === Constants.ElementTypes.FUNCTION_OPERATOR) {
           var functionOperator = new FunctionOperator();
           functionOperator.load(group, scope);
         }
-        else if (element.type === 'ValueSet') {
+        else if (element.type === Constants.ElementTypes.VALUE_SET) {
           var valueSet = new ValueSet();
           valueSet.load(group, scope);
         }
-        else if (element.type === 'Phenotype') {
+        else if (element.type === Constants.ElementTypes.PHENOTYPE) {
           var phenotype = new PhenotypeElement();
           phenotype.load(group, scope);
         }
-        else if (element.type === 'Classification') {
+        else if (element.type === Constants.ElementTypes.CLASSIFICATION) {
           var classification = new ClassificationElement();
           classification.load(group, scope);
         }
@@ -317,4 +317,4 @@ angular.module('sophe.factories.algorithmElement', [])
     };
 
     return factory;
-});
+}]);

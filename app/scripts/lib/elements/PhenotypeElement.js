@@ -63,7 +63,7 @@ PhenotypeElement.prototype.create = function(config, scope) {
 };
 
 PhenotypeElement.prototype.toObject = function() {
-  var obj = {className: 'Phenotype'};
+  var obj = {className: Constants.ElementTypes.PHENOTYPE};
   return obj;
 };
 

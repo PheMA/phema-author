@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals ArrayUtil */
+/* globals ArrayUtil, Constants */
 
 angular.module('sophe.services.qdmElement', ['sophe.services.attribute', 'sophe.services.url', 'ngResource'])
 .service('QDMElementService', ['$resource', '$q', 'AttributeService', 'URLService', function($resource, $q, AttributeService, URLService) {
@@ -40,7 +40,7 @@ angular.module('sophe.services.qdmElement', ['sophe.services.attribute', 'sophe.
           name: originalCategoryData[index].categoryLabel.value,
           description: originalCategoryData[index].definition.value,
           uri: originalCategoryData[index].id.value,
-          type: 'Category',
+          type: Constants.ElementTypes.CATEGORY,
           children: []} );
       }
       dataElements = transformedData.sort(ArrayUtil.sortByName);
@@ -57,7 +57,7 @@ angular.module('sophe.services.qdmElement', ['sophe.services.attribute', 'sophe.
               name: originalElementData[index].dataElementLabel.value,
               description: originalElementData[index].definition.value,
               uri: originalElementData[index].id.value,
-              type: 'DataElement'
+              type: Constants.ElementTypes.DATA_ELEMENT
             });
             break;
           }
@@ -73,11 +73,11 @@ angular.module('sophe.services.qdmElement', ['sophe.services.attribute', 'sophe.
 
   this.getAttributes = function(element) {
     var promise = null;
-    if (element.type === 'Category') {
+    if (element.type === Constants.ElementTypes.CATEGORY) {
       promise = AttributeService.loadCategory(element.id)
         .then(AttributeService.processValues);
     }
-    else if (element.type === 'DataElement') {
+    else if (element.type === Constants.ElementTypes.DATA_ELEMENT) {
       promise = AttributeService.loadElement(element.id)
         .then(AttributeService.processValues);
     }

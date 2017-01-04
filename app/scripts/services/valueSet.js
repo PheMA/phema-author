@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals ArrayUtil */
+/* globals ArrayUtil, Constants */
 
 // Creates objects with the following attributes (and CTS2 mappings):
 // id: The OID associated with the value set
@@ -50,7 +50,7 @@ function _processValueList(valueSetRepositoryId, originalData) {
         valueSetRepository: valueSetRepositoryId,
         name: originalData[index].formalName,
         uri: originalData[index].currentDefinition.valueSetDefinition.uri,
-        type: 'ValueSet',
+        type: Constants.ElementTypes.VALUE_SET,
         loadDetailStatus: null,
         description: null,
         codeSystems: [],
@@ -78,7 +78,7 @@ function _processSingleValue(originalData) {
     id: originalData.definedValueSet.content,
     name: originalData.formalName,
     uri: originalData.documentURI,
-    type: 'ValueSet',
+    type: Constants.ElementTypes.VALUE_SET,
     loadDetailStatus: null,
     description: null,
     codeSystems: [],

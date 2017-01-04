@@ -1,5 +1,5 @@
 'use strict';
-/* globals ArrayUtil, findParentElementByName, ValueSet, _ */
+/* globals ArrayUtil, findParentElementByName, ValueSet, Constants, _ */
 
 /**
  * @ngdoc function
@@ -91,9 +91,9 @@ angular.module('sopheAuthorApp')
     // The list of classification elements is pretty small and manageable, and doesn't need to be tightly controlled.  We will
     // just put the list in here instead of setting up a service.
     $scope.classifications = [
-      { 'name': 'Case', 'description' : 'Affected individuals as part of a case/control algorithm', 'type' : 'Classification' },
-      { 'name': 'Control', 'description' : 'Unaffected individuals as part of a case/control algorithm', 'type' : 'Classification' },
-      { 'name': 'My Label', 'description' : 'Define a custom label for your phenotype algorithm result', 'type' : 'Classification' }
+      { 'name': 'Case', 'description' : 'Affected individuals as part of a case/control algorithm', 'type' : Constants.ElementTypes.CLASSIFICATION },
+      { 'name': 'Control', 'description' : 'Unaffected individuals as part of a case/control algorithm', 'type' : Constants.ElementTypes.CLASSIFICATION },
+      { 'name': 'My Label', 'description' : 'Define a custom label for your phenotype algorithm result', 'type' : Constants.ElementTypes.CLASSIFICATION }
     ];
 
     // Update the phenotype metadata so that it is available within the phenotype definition
@@ -330,15 +330,15 @@ angular.module('sopheAuthorApp')
       }
 
       var element = selectedElement.element();
-      return (element.type === 'TemporalOperator' ||
-        element.type === 'LogicalOperator' ||
-        element.type === 'Category' ||
-        element.type === 'Phenotype' ||
-        element.type === 'DataElement' ||
-        element.type === 'ValueSet' ||
-        element.type === 'SubsetOperator' ||
-        element.type === 'FunctionOperator' ||
-        element.type === 'Classification');
+      return (element.type === Constants.ElementTypes.TEMPORAL_OPERATOR ||
+        element.type === Constants.ElementTypes.LOGICAL_OPERATOR ||
+        element.type === Constants.ElementTypes.CATEGORY ||
+        element.type === Constants.ElementTypes.PHENOTYPE ||
+        element.type === Constants.ElementTypes.DATA_ELEMENT ||
+        element.type === Constants.ElementTypes.VALUE_SET ||
+        element.type === Constants.ElementTypes.SUBSET_OPERATOR ||
+        element.type === Constants.ElementTypes.FUNCTION_OPERATOR ||
+        element.type === Constants.ElementTypes.CLASSIFICATION);
     };
 
     function _getConnectorElementType(selectedConnection, start) {
@@ -375,7 +375,7 @@ angular.module('sopheAuthorApp')
 
       var modalInstance = null;
       var element = selectedElement.element();
-      if (element.type === 'TemporalOperator') {
+      if (element.type === Constants.ElementTypes.TEMPORAL_OPERATOR) {
         modalInstance = $modal.open({
           templateUrl: 'views/properties/relationship.html',
           controller: 'RelationshipPropertiesController',
@@ -389,11 +389,11 @@ angular.module('sopheAuthorApp')
             },
             startLabel: function() {
               var startType = _getConnectorElementType(selectedElement, true);
-              return (startType === null || startType === 'TemporalOperator') ? 'Event A' : selectedElement.attrs.connectors.start.parent.attrs.element.name;
+              return (startType === null || startType === Constants.ElementTypes.TEMPORAL_OPERATOR) ? 'Event A' : selectedElement.attrs.connectors.start.parent.attrs.element.name;
             },
             endLabel: function() {
               var endType = _getConnectorElementType(selectedElement, false);
-              return (endType === null || endType === 'TemporalOperator') ? 'Event B' : selectedElement.attrs.connectors.end.parent.attrs.element.name;
+              return (endType === null || endType === Constants.ElementTypes.TEMPORAL_OPERATOR) ? 'Event B' : selectedElement.attrs.connectors.end.parent.attrs.element.name;
             }
           }
         });
@@ -412,7 +412,7 @@ angular.module('sopheAuthorApp')
           label.getStage().draw();
         });
       }
-      else if (element.type === 'LogicalOperator') {
+      else if (element.type === Constants.ElementTypes.LOGICAL_OPERATOR) {
         modalInstance = $modal.open({
           templateUrl: 'views/properties/logicalOperator.html',
           controller: 'LogicalOperatorPropertiesController',
@@ -437,7 +437,7 @@ angular.module('sopheAuthorApp')
           selectedElement.getStage().draw();
         });
       }
-      else if (element.type === 'Category' || element.type === 'DataElement') {
+      else if (element.type === Constants.ElementTypes.CATEGORY || element.type === Constants.ElementTypes.DATA_ELEMENT) {
         // We define the element properties based on the URI (if it's QDM or FHIR)
         var isFHIR = (element.uri.indexOf('fhir') >= 0);
         modalInstance = $modal.open({
@@ -501,7 +501,7 @@ angular.module('sopheAuthorApp')
           }
         });
       }
-      else if (element.type === 'Phenotype') {
+      else if (element.type === Constants.ElementTypes.PHENOTYPE) {
         modalInstance = $modal.open({
           templateUrl: 'views/properties/phenotype.html',
           controller: 'PhenotypePropertiesController',
@@ -522,7 +522,7 @@ angular.module('sopheAuthorApp')
           selectedElement.getStage().draw();
         });
       }
-      else if (element.type === 'ValueSet') {
+      else if (element.type === Constants.ElementTypes.VALUE_SET) {
         modalInstance = $modal.open({
           templateUrl: 'views/properties/valueSet.html',
           controller: 'ValueSetPropertiesController',
@@ -535,7 +535,7 @@ angular.module('sopheAuthorApp')
           }
         });
       }
-      else if (element.type === 'SubsetOperator') {
+      else if (element.type === Constants.ElementTypes.SUBSET_OPERATOR) {
         modalInstance = $modal.open({
           templateUrl: 'views/properties/subsetOperator.html',
           controller: 'SubsetOperatorPropertiesController',
@@ -560,7 +560,7 @@ angular.module('sopheAuthorApp')
           selectedElement.getStage().draw();
         });
       }
-      else if (element.type === 'FunctionOperator') {
+      else if (element.type === Constants.ElementTypes.FUNCTION_OPERATOR) {
         modalInstance = $modal.open({
           templateUrl: 'views/properties/functionOperator.html',
           controller: 'FunctionOperatorPropertiesController',
@@ -589,7 +589,7 @@ angular.module('sopheAuthorApp')
           selectedElement.getStage().draw();
         });
       }
-      else if (element.type === 'Classification') {
+      else if (element.type === Constants.ElementTypes.CLASSIFICATION) {
         modalInstance = $modal.open({
           templateUrl: 'views/properties/classification.html',
           controller: 'ClassificationPropertiesController',
@@ -630,7 +630,7 @@ angular.module('sopheAuthorApp')
     ];
 
 
-    $scope.$on('sophe-search-valuesets', function(evt, dataElement) {
+    $scope.$on(Constants.Events.SEARCH_VALUESETS, function(evt, dataElement) {
       var modalInstance = $modal.open({
         templateUrl: 'views/elements/valueSetsTermsDialog.html',
         controller: 'ValueSetsTermsDialogController',
@@ -648,7 +648,7 @@ angular.module('sopheAuthorApp')
 
     // Special event handler such that whenever an element is selected, we are notified
     // and can enable/disable menu items for deleting, viewing properties, etc.
-    $scope.$on('sophe-element-selected', function(evt, args) {
+    $scope.$on(Constants.Events.ELEMENT_SELECTED, function(evt, args) {
       $scope.$apply(function() {
         $scope.isPropertiesDisabled = !$scope.canShowProperties(args);
         _.findWhere($scope.buttons, {text: 'Delete'}).disabled = !$scope.canDelete();
@@ -657,13 +657,13 @@ angular.module('sopheAuthorApp')
 
     // Special event handler that's fired after a connection has been drawn between two
     // objects.  This brings up the property dialog for the temporal operator.
-    $scope.$on('sophe-empty-temporal-operator-created', function() {
+    $scope.$on(Constants.Events.CREATE_TEMPORAL_OPERATOR, function() {
       $scope.$apply(function() {
         $scope.showProperties();
       });
     });
 
-    $scope.$on('sophe-custom-classification-created', function() {
+    $scope.$on(Constants.Events.CREATE_CLASSIFICATION, function() {
       $scope.showProperties();
     });
 
