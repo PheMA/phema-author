@@ -11,7 +11,7 @@
 angular.module('sopheAuthorApp')
   .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', '$location', '$window', '$timeout', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'SubsetOperatorService', 'QDMElementService', 'FHIRElementService', 'LibraryService', 'ConfigurationService', 'FunctionOperatorService', function ($scope, $http, $routeParams, $modal, $location, $window, $timeout, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, SubsetOperatorService, QDMElementService, FHIRElementService, LibraryService, ConfigurationService, FunctionOperatorService) {
     $scope.phenotype = ($routeParams.id ? {id: $routeParams.id } : null );
-    $scope.status = { open: [false, false, false, false, false, false, false, false, false]};
+    $scope.status = { open: [false, false, false, false, false, false, false, false, false, false]};
     $scope.isPropertiesDisabled = true;
     $scope.successMessage = null;
     $scope.errorMessage = null;

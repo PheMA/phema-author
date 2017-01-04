@@ -77,16 +77,12 @@
         </accordion-heading>
         <div phenotype-elements></div>
       </accordion-group>
-      <div id="classification-list" class="classification-list panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title">
-            Output Labels
-          </h4>
-        </div>
-        <div class="panel-body">
-          <div classification-elements></div>
-        </div>
-      </div>
+      <accordion-group id="classification-list" class="data-element-list" is-open="status.open[8]">
+        <accordion-heading>
+          Output Labels <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[8], 'glyphicon-chevron-right': !status.open[8]}"></i>
+        </accordion-heading>
+        <div classification-elements></div>
+      </accordion-group>
 <!--       <accordion-group id="fhir-elements-list" class="phenotype-element-list" is-open="status.open[7]">
         <accordion-heading>
           FHIR Data Elements <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[7], 'glyphicon-chevron-right': !status.open[7]}"></i>
