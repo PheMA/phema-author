@@ -6,10 +6,10 @@ angular.module('sophe.services.codeSystem', ['sophe.services.url', 'ngResource']
 .service('CodeSystemService', ['$http', '$q', 'URLService', function($http, $q, URLService) {
   // The list of code systems and versions that are supported for terminology searches
   this.supportedCodeSystems = [
-    { codeSystem: 'ICD-9-CM', version: '2013_2012_08_06' },
+    { codeSystem: 'ICD-9-CM', version: '2014' },
     { codeSystem: 'ICD-10', version: '2010' },
-    { codeSystem: 'LOINC', version: '246' },
-    { codeSystem: 'NDFRT', version: 'February2015' }
+    { codeSystem: 'LOINC', version: '252' },
+    { codeSystem: 'NDFRT', version: 'November2016' }
   ];
 
   this.search = function(codeSystem, version, search) {

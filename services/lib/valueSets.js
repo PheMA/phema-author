@@ -36,7 +36,6 @@ ValueSetRepository.prototype.searchValueSets = function(search, callback) {
     }
     else {
       console.log(error);
-      console.log(response);
       callback({message: 'Unable to search the list of value sets'});
     }
   });
@@ -174,7 +173,7 @@ ValueSetRepository.prototype.add = function(data, callback) {
     if (error) { return callback(error); }
     if (oidBlank && existingValueSet) { return callback({message: 'A conflicting value set definition was found'}) }
     if (existingValueSet) {
-      var existingVersion = existingValueSet['ValueSetCatalogEntryMsg']['valueSetCatalogEntry']['currentDefinition']['valueSetDefinition']['content'].split('_')[1]
+      var existingVersion = existingValueSet['ValueSetCatalogEntryMsg']['valueSetCatalogEntry']['currentDefinition']['valueSetDefinition']['content']
       var changeSet = existingValueSet['ValueSetCatalogEntryMsg']['valueSetCatalogEntry']['changeDescription']['containingChangeSet']
       data['version'] = existingVersion;
       console.log('Existing value set found: version=' + existingVersion);

@@ -1,6 +1,5 @@
 var request = require('request');
 exports.respondJSON = function(res, error, data) {
-  console.log("************");
   if (error) {
     res.status(400).send(error);
   }

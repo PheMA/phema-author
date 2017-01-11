@@ -10,8 +10,8 @@ var VALUE_SET_SERVICES = [
       'repository': new ValueSetRepository('http://umls_user:umls_pwd@localhost:8080/')}
   , {
       'id': 'phema', 'order': 2, 'title': 'Local Value Sets', 'writable': true, 
-      'repository': new ValueSetRepository('http://172.16.51.130:8080/phema-cts2/', '2.16.840.1.113883.3.1427.10000')
-      //'repository': new ValueSetRepository('http://172.16.51.130:8080/value-sets/', '2.16.840.1.113883.3.1427.10000')
+      //'repository': new ValueSetRepository('http://172.16.51.130:8080/phema-cts2/', '2.16.840.1.113883.3.1427.10000')
+      'repository': new ValueSetRepository('http://172.16.51.130:8080/value-sets/', '2.16.840.1.113883.3.1427.10000')
     }
 ];
 

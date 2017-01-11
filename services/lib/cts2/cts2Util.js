@@ -61,7 +61,6 @@ CTS2Util.prototype.createValueSetDefinition = function(changeSet, data, callback
 
 CTS2Util.prototype.updateValueSetDefinition = function(oid, version, changeSet, data, callback) {
   console.log('In updateValueSetDefinition');
-  console.log(util.inspect(data, {showHidden: false, depth: null}))
   this.client.put('valueset/' + oid + '/definition/' + version + '?changesetcontext=' + changeSet, data, function(error, response, body) {
     if (!handleError(error, 204, response, callback)) {
       console.log("Created CTS2 value set definition");
