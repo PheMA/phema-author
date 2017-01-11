@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals ArrayUtil */
+/* globals ArrayUtil, Constants */
 
 angular.module('sophe.services.fhirElement', ['sophe.services.attribute', 'sophe.services.url', 'ngResource'])
 .service('FHIRElementService', ['$resource', '$q', 'URLService', 'AttributeService', function($resource, $q, URLService, AttributeService) {
@@ -26,7 +26,7 @@ angular.module('sophe.services.fhirElement', ['sophe.services.attribute', 'sophe
           name: originalData[index].dataElementLabel.value,
           description: originalData[index].definition.value,
           uri: originalData[index].id.value,
-          type: 'DataElement'} );
+          type: Constants.ElementTypes.DATA_ELEMENT} );
       }
       dataElements = transformedData.sort(ArrayUtil.sortByName);
     }
@@ -36,11 +36,11 @@ angular.module('sophe.services.fhirElement', ['sophe.services.attribute', 'sophe
 
   this.getAttributes = function(element) {
     var promise = null;
-    if (element.type === 'Category') {
+    if (element.type === Constants.ElementTypes.CATEGORY) {
       promise = AttributeService.loadCategory(element.id, 'fhir')
         .then(AttributeService.processValues);
     }
-    else if (element.type === 'DataElement') {
+    else if (element.type === Constants.ElementTypes.DATA_ELEMENT) {
       promise = AttributeService.loadElement(element.id, 'fhir')
         .then(AttributeService.processValues);
     }

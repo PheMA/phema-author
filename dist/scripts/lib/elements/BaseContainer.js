@@ -60,7 +60,7 @@ BaseContainer.prototype.layoutElementsInContainer = function(vertical) {
 
     if (element.className === 'PhemaGroup') {
       details = element.element();
-      if (details.type === 'DataElement' || details.type === 'Category') {
+      if (details.type === Constants.ElementTypes.DATA_ELEMENT || details.type === Constants.ElementTypes.CATEGORY) {
         horizontalItems.push(element);
       }
       else {

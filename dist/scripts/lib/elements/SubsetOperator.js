@@ -41,7 +41,7 @@ SubsetOperator.prototype.reconcileMinimumSize = function(group) {
 SubsetOperator.prototype.connectEvents = function(group, scope) {
   this.addStandardEventHandlers(group, scope);
   this.addCursorEventHandlers(group, scope);
-  this.setDroppable(group.find('.mainRect')[0], ['Category', 'DataElement', 'Phenotype']);
+  this.setDroppable(group.find('.mainRect')[0], [Constants.ElementTypes.CATEGORY, Constants.ElementTypes.DATA_ELEMENT, Constants.ElementTypes.PHENOTYPE]);
   this.addConnectionHandler(group.find('.leftConnector')[0], scope);
   this.addConnectionHandler(group.find('.rightConnector')[0], scope);
   this.connectConnectorEvents(group);
@@ -109,7 +109,7 @@ SubsetOperator.prototype.toObject = function() {
   for (var index = 0; index < this._containedElements.length; index++) {
     obj.containedElements.push({id: this._containedElements[index]._id});
   }
-  obj.className = 'SubsetOperator';
+  obj.className = Constants.ElementTypes.SUBSET_OPERATOR;
   return obj;
 };
 

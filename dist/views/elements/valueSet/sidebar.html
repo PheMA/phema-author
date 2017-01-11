@@ -15,7 +15,7 @@
     <div treecontrol class="tree-classic"
      tree-model="searchResults"
      options="treeOptions">
-     <span ng-if="node.type === 'ValueSet'" draggable double-clickable dblclick-event="addWorkflowObject(config)" ng-mouseenter="loadValueSetDetails(this)">
+     <span ng-if="node.type === Constants.ElementTypes.VALUE_SET" draggable double-clickable dblclick-event="addWorkflowObject(config)" ng-mouseenter="loadValueSetDetails(this)">
       <span popover="{{node.description ? node.description : 'Loading...'}}"
         popover-trigger="mouseenter"
         popover-placement="right"
@@ -24,7 +24,7 @@
       </span>
       <input type="hidden" value="{{node}}"></input>
      </span>
-     <span ng-if="node.type !== 'ValueSet'" double-clickable>
+     <span ng-if="node.type !== Constants.ElementTypes.VALUE_SET" double-clickable>
       <span>{{node.name}}</span>
       <input type="hidden" value="{{node}}"></input>
      </span>

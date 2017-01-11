@@ -25,7 +25,7 @@ angular.module('sophe.services.logicalOperator', ['sophe.services.url', 'ngResou
           name: originalData[index].logicalOperatorLabel.value,
           description: originalData[index].definition.value,
           uri: originalData[index].id.value,
-          type: 'LogicalOperator',
+          type: Constants.ElementTypes.LOGICAL_OPERATOR,
           children: []} );
       }
       logicalOperators = transformedData.sort(ArrayUtil.sortByName);

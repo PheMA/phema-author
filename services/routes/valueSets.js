@@ -7,11 +7,11 @@ var util = require('../lib/util');
 var VALUE_SET_SERVICES = [
     {
       'id': 'vsac', 'order': 1, 'title': 'NLM VSAC', 'writable': false,
-      'repository': new ValueSetRepository('http://umls_user:umls_pwd@localhost:8080/')}
+      'repository': new ValueSetRepository('vsac', 'http://umls_user:umls_pwd@localhost:8080/')}
   , {
       'id': 'phema', 'order': 2, 'title': 'Local Value Sets', 'writable': true, 
       //'repository': new ValueSetRepository('http://172.16.51.130:8080/phema-cts2/', '2.16.840.1.113883.3.1427.10000')
-      'repository': new ValueSetRepository('http://172.16.51.130:8080/value-sets/', '2.16.840.1.113883.3.1427.10000')
+      'repository': new ValueSetRepository('phema', 'http://172.16.51.130:8080/value-sets/', '2.16.840.1.113883.3.1427.10000')
     }
 ];
 
@@ -125,7 +125,6 @@ exports.add = function(req, res){
   console.log("POST - /api/valueSet/:repo");
   var service = findRepository(req.params.repo, res);
   if (service == null) { return; }
-  console.log(req.body);
   service.repository.add(req.body, function(error, data) {
     util.respondJSON(res, error, data);
   });

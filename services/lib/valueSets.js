@@ -8,10 +8,12 @@ var util = require('../lib/util');
 // We wrap this so we can safely invoke from our client without having to
 // worry about cross-domain requests.
 
+// id - the identifier of the repository, used to distinguish it from other value sets
 // baseURL - the base URL to the CTS2 endpoint, including the trailing slash
 // baseOID - OPTIONAL - only used for writable repositories.  This is the base OID used when creating new value set entries.
-var ValueSetRepository = function(baseURL, baseOID) {
+var ValueSetRepository = function(id, baseURL, baseOID) {
   console.log(baseURL);
+  this.id = id;
   this.baseURL = baseURL;
   this.cts2Util = new CTS2Util(baseURL);
   this.baseOID = baseOID;
@@ -166,6 +168,12 @@ ValueSetRepository.prototype.add = function(data, callback) {
   var oidBlank = util.isEmptyString(data['oid']);
   if (oidBlank) {
     data['oid'] = this.baseOID + '.' + uuid.v4().replace(/-/g, '');
+  }
+
+  // Make sure we are including the value set repository identifier in the response.  The
+  // application will need this to know who we got the value set from.
+  if (!data['valueSetRepository'] || data['valueSetRepository'] === '') {
+    data['valueSetRepository'] = this.id;
   }
 
   var cts2Util = this.cts2Util;

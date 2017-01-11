@@ -101,16 +101,26 @@ ValueSet.createElementFromData = function(result) {
     if (result.valueSets && result.valueSets.length > 0 && result.terms.length === 0) {
       element = result.valueSets[0];
     }
-    // Otherwise we are going to build a temporary value set based on this collection
     else if (result.newValueSet){
-      var name = (result.newValueSet.name && result.newValueSet.name !== '') ? result.newValueSet.name :
-        'Custom Value Set \r\n(' + result.terms.length + ' term' + (result.terms.length == 1 ? '' : 's') +')';
-      element = {
-          id: '',
-          name: name,
-          type: Constants.ElementTypes.VALUE_SET
-      };
-      element.customList = result.newValueSet.terms;
+      // If there is an OID, it means it was saved in a local repository, so we'll treat it normal
+      if (result.newValueSet.oid && result.newValueSet.oid !== '') {
+        element = {
+            id: result.newValueSet.oid,
+            name: result.newValueSet.name,
+            terms: result.newValueSet.terms,
+            valueSetRepository: result.newValueSet.valueSetRepository,
+            type: Constants.ElementTypes.VALUE_SET
+        };
+      }
+      // Otherwise we are going to build a temporary value set based on this collection
+      else {
+        element = {
+            id: '',
+            name: 'Custom Value Set \r\n(' + result.terms.length + ' term' + (result.terms.length == 1 ? '' : 's') +')',
+            customList: result.newValueSet.terms,
+            type: Constants.ElementTypes.VALUE_SET
+        };
+      }
     }
   }
   return element;
