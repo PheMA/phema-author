@@ -33,7 +33,7 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
         id: data[index].id,
         name: data[index].name,
         description: _formatDescription(data[index]),
-        type: 'Phenotype',
+        type: Constants.ElementTypes.PHENOTYPE,
         lastModified: _formatLastModified(data[index])
       });
     }
