@@ -181,12 +181,14 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
     if (data) {
       // Iterate over each attribute in data
       Object.keys(data).forEach(function(key) {
-        valueSets.push({
-          id: key,
-          name: data[key].title,
-          type: 'ValueSetRepository',
-          children: _getValueListAsChildren(key, JSON.parse(data[key].data))
-        });
+        if (!data[key].error) {
+          valueSets.push({
+            id: key,
+            name: data[key].value.title,
+            type: 'ValueSetRepository',
+            children: _getValueListAsChildren(key, JSON.parse(data[key].value.data))
+          });
+        }
       });
     }
     return valueSets;

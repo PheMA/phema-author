@@ -64,10 +64,15 @@ app.config(function ($httpProvider) {
 });
 
 
-// When the route changes, we are going to detect if the user is trying to access a public
-// page (defined within the routes above), or if the user is logged in.  If the user needs to
-// be authenticated and isn't, we take them to the login page.
-app.run(['$rootScope', '$location', 'security', function ($rootScope, $location, security) {
+app.run(['$rootScope', '$location', 'security', 'ConfigurationService', function ($rootScope, $location, security, ConfigurationService) {
+    ConfigurationService.load()
+      .then(function(data) {
+        alert(data);
+      });
+
+    // When the route changes, we are going to detect if the user is trying to access a public
+    // page (defined within the routes above), or if the user is logged in.  If the user needs to
+    // be authenticated and isn't, we take them to the login page.
     $rootScope.$on('$routeChangeStart', function (event, next) {
       if (next.$$route && !next.$$route.isPublic && !security.isAuthenticated()) {
         event.preventDefault();

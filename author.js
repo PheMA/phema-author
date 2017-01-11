@@ -5,6 +5,9 @@ var flash = require("connect-flash");
 var helmet = require('helmet');
 var auth = require('./services/lib/authentication');
 
+
+// --------- SERVICES -----------
+// Services used to respond to route requests
 var site = require('./services/routes/site');
 var elements = require('./services/routes/dataElements');
 var fhir = require('./services/routes/fhirElements');
@@ -16,6 +19,8 @@ var exporters = require('./services/routes/exporters');
 var units = require('./services/routes/units');
 var users = require('./services/routes/users');
 
+
+// --------- SETUP -----------
 var app = express();
 module.exports = app;
 
@@ -34,6 +39,8 @@ auth.initialize(app);
 // Use helmet to include recommended HTTP headers for security
 app.use(helmet());
 
+
+// --------- ROUTING -----------
 // Routing examples at: https://github.com/strongloop/express/tree/master/examples/route-separation
 app.get('/', site.index);
 

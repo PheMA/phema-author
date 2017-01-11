@@ -11,50 +11,34 @@ var EchoExporter = require('./exporter/echo').EchoExporter;
 var echoExport = new EchoExporter();
 var db = mongojs(MONGO_CONNECTION, ['exporterTempFiles']);
 var fs = require('fs');
+var configuration = require('../../configuration');
 
-var exporterConfig = [
-  {
-    id: "hqmf",
-    name: "HQMF (XML)",
-    description: "HL7 Health Quality Measure Format (HQMF)",
-    invokeAs: 'program',
-    invokePath: 'BUNDLE_GEMFILE=/opt/phema-hqmf-generator/Gemfile bundle exec rake -f /opt/phema-hqmf-generator/lib/tasks/phema.rake phema:generate[{input},{output},hqmf]',
-    inputDirectory: '/opt/phema-hqmf-generator/temp/input/',
-    outputDirectory: '/opt/phema-hqmf-generator/temp/output/',
-    outputExtension: 'xml',
-    outputMIMEType: 'application/xml'
-  },
-  {
-    id: "hds-json",
-    name: "HQMF (JSON)",
-    description: "A JSON format (based on HQMF) that is supported by the Health Data Standards library",
-    invokeAs: 'program',
-    invokePath: 'BUNDLE_GEMFILE=/opt/phema-hqmf-generator/Gemfile bundle exec rake -f /opt/phema-hqmf-generator/lib/tasks/phema.rake phema:generate[{input},{output},hds]',
-    inputDirectory: '/opt/phema-hqmf-generator/temp/input/',
-    outputDirectory: '/opt/phema-hqmf-generator/temp/output/',
-    outputExtension: 'json',
-    outputMIMEType: 'application/json'
-  },
-  {
-    id: "phema-json",
-    name:"PhEMA (JSON)",
-    description: "Native format created by the authoring tool",
-    invokeAs: 'function',
-    fn: echoExport.echo,
-    outputExtension: 'json',
-    outputMIMEType: 'application/json'
-  },
-  // {
-  //   id: "knime",
-  //   name: "KNIME",
-  //   description: "Creates an executable KNIME workflow",
-  //   invokeAs: 'program',
-  //   invokeParams: ''
-  // }
-];
+// Initialize our exporters.  Although we have a basic definition available from the configuration
+// code, there are internal details we are also setting up within here.
+var exporterConfig = configuration.exporters;
+exporterConfig['hqmf'].invokeAs = 'program';
+exporterConfig['hqmf'].invokePath = 'BUNDLE_GEMFILE=/opt/phema-hqmf-generator/Gemfile bundle exec rake -f /opt/phema-hqmf-generator/lib/tasks/phema.rake phema:generate[{input},{output},hqmf]';
+exporterConfig['hqmf'].inputDirectory = '/opt/phema-hqmf-generator/temp/input/';
+exporterConfig['hqmf'].outputDirectory = '/opt/phema-hqmf-generator/temp/output/';
+exporterConfig['hqmf'].outputExtension = 'xml';
+exporterConfig['hqmf'].outputMIMEType = 'application/xml';
 
+exporterConfig['hds-json'].name = "HQMF (JSON)";
+exporterConfig['hds-json'].description = "A JSON format (based on HQMF) that is supported by the Health Data Standards library";
+exporterConfig['hds-json'].invokeAs = 'program';
+exporterConfig['hds-json'].invokePath = 'BUNDLE_GEMFILE=/opt/phema-hqmf-generator/Gemfile bundle exec rake -f /opt/phema-hqmf-generator/lib/tasks/phema.rake phema:generate[{input},{output},hds]';
+exporterConfig['hds-json'].inputDirectory = '/opt/phema-hqmf-generator/temp/input/';
+exporterConfig['hds-json'].outputDirectory = '/opt/phema-hqmf-generator/temp/output/';
+exporterConfig['hds-json'].outputExtension = 'json';
+exporterConfig['hds-json'].outputMIMEType = 'application/json';
 
-exports.exporters = exporterConfig;
+exporterConfig['phema-json'].name = "PhEMA (JSON)";
+exporterConfig['phema-json'].description = "Native format created by the authoring tool";
+exporterConfig['phema-json'].invokeAs = 'function';
+exporterConfig['phema-json'].fn = echoExport.echo;
+exporterConfig['phema-json'].outputExtension = 'json';
+exporterConfig['phema-json'].outputMIMEType = 'application/json';
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // The ExporterRepository can be configured to use NeDB (for lightweight persistance),
@@ -145,15 +129,7 @@ function establishInputFile(exportDef, definition, id, callback) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 exports.run = function(exporterKey, definition, callback) {
-  var index = 0;
-  var exportDef = null;
-  for (index = 0; index < exporterConfig.length; index++) {
-    if (exporterConfig[index].id === exporterKey) {
-      exportDef = exporterConfig[index];
-      break;
-    }
-  }
-
+  var exportDef = exporterConfig[exporterKey];
   if (exportDef == null) {
     callback(null, {message: 'The exporter definition (' + exporterKey + ') could not be found.' });
     return;

@@ -27,13 +27,12 @@ angular.module('sophe.services.configuration', ['sophe.services.url', 'ngResourc
 
   this.processExportersForMenu = function(data) {
     var exporters = [];
-    var index = 0;
-    if (data.data && data.data.length > 0) {
-      for (index = 0; index < data.data.length; index++) {
+    if (data && data.data) {
+      for (var key in data.data) {
         exporters.push({
-          id: data.data[index].id,
-          text: data.data[index].name,
-          tooltip: data.data[index].description,
+          id: key,
+          text: data.data[key].name,
+          tooltip: data.data[key].description,
           event: data.exportFn
         });
       }
