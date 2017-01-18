@@ -119,11 +119,6 @@ angular.module('sopheAuthorApp')
       });
     };
 
-    // Exporters that we create will be reformatted similar to menu items.
-    ConfigurationService.loadExporters()
-      .then(function(exporters) { return ConfigurationService.processExportersForMenu(exporters, $scope.export); })
-      .then(function(exporters) { _.findWhere($scope.buttons, {text: 'Export'}).children = exporters; });
-
     // If a specific phenotype was specified, load it now
     if ($scope.phenotype) {
       // We can't load the phenotype until the canvas has been built, so we will watch
@@ -629,6 +624,10 @@ angular.module('sopheAuthorApp')
       {id: 'btnFeedback', text: 'Feedback', iconClass:'fa fa-comment', event: $scope.delete, disabled: true, tooltip: 'Suggestions or comments'},
     ];
 
+    // Exporters that we create will be reformatted similar to menu items.
+    ConfigurationService.load()
+       .then(function(exporters) { return ConfigurationService.processExportersForMenu(exporters, $scope.export); })
+       .then(function(exporters) { _.findWhere($scope.buttons, {text: 'Export'}).children = exporters; });
 
     $scope.$on(Constants.Events.SEARCH_VALUESETS, function(evt, dataElement) {
       var modalInstance = $modal.open({

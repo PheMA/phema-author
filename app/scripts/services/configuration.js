@@ -10,10 +10,11 @@ angular.module('sophe.services.configuration', ['sophe.services.url', 'ngResourc
   this._load = function(url) {
     var deferred = $q.defer();
     if (_cachedData) {
-      $timeout(function() {
-        deferred.resolve(_cachedData);
-      }, 1);
-      return;
+      // Internally we will have a cached representation of the config data.  If we need to return that, because everything
+      // is hooked up otherwise to get a promise and wait for it to be resolved, we wrap a $timeout call around it.  This
+      // way everywhere we use the configuration service we can call ConfigurationService.load().then().
+      $timeout(function() { deferred.resolve(_cachedData); }, 10);
+      return deferred.promise;
     }
     else {
       $http.get(url)
@@ -32,18 +33,14 @@ angular.module('sophe.services.configuration', ['sophe.services.url', 'ngResourc
     return this._load(URLService.getConfigServiceURL());
   };
 
-  this.loadExporters = function() {
-    return this._load(URLService.getConfigServiceURL('exporters'));
-  };
-
   this.processExportersForMenu = function(data, exportFn) {
     var exporters = [];
-    if (data) {
-      for (var key in data) {
+    if (data && data.exporters) {
+      for (var key in data.exporters) {
         exporters.push({
           id: key,
-          text: data[key].name,
-          tooltip: data[key].description,
+          text: data.exporters[key].name,
+          tooltip: data.exporters[key].description,
           event: exportFn
         });
       }

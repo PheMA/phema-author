@@ -64,7 +64,6 @@ app.post('/api/valueset/:repo', valueSets.add);
 app.get('/api/codesystem/:codesystem/version/:version/search=:search', codeSystems.search);
 
 app.get('/api/config', config.index);
-app.get('/api/config/exporters', config.exporters);
 
 app.post('/api/export/:exporter', exporters.invoke);
 app.get('/api/export/:id/status', exporters.status);
