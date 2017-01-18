@@ -28,6 +28,26 @@ var configuration = {
 };
 
 
-exports.all = configuration;
-exports.exporters = configuration.exporters;
-exports.valueSetServices = configuration.valueSetServices;
+/*
+  The exported interfaces uses functions which make a copy each time it's called.  This way a caller
+  may get the configuration data and further annotate it with internal details.
+
+  Anything put in this file will be sent to the client, so don't include any potentially sensitive
+  information or internal configurations (e.g., database passwords).
+
+  For example, the exporters service will get the basic exporter configuration and then adds in path 
+  and configuration information for how the exporter is called.  We never want that exposed, so we
+  don't include it in this basic file.
+*/
+
+exports.all = function() {
+  return JSON.parse(JSON.stringify(configuration));
+};
+
+exports.exporters = function() {
+  return JSON.parse(JSON.stringify(configuration.exporters));
+};
+
+exports.valueSetServices = function() {
+  return JSON.parse(JSON.stringify(configuration.valueSetServices));
+};

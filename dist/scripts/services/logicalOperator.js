@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals ArrayUtil */
+/* globals ArrayUtil, Constants */
 
 angular.module('sophe.services.logicalOperator', ['sophe.services.url', 'ngResource'])
 .service('LogicalOperatorService', ['$resource', '$q', 'URLService', function($resource, $q, URLService) {

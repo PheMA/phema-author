@@ -15,7 +15,7 @@ var configuration = require('../../configuration');
 
 // Initialize our exporters.  Although we have a basic definition available from the configuration
 // code, there are internal details we are also setting up within here.
-var exporterConfig = configuration.exporters;
+var exporterConfig = configuration.exporters();
 exporterConfig['hqmf'].invokeAs = 'program';
 exporterConfig['hqmf'].invokePath = 'BUNDLE_GEMFILE=/opt/phema-hqmf-generator/Gemfile bundle exec rake -f /opt/phema-hqmf-generator/lib/tasks/phema.rake phema:generate[{input},{output},hqmf]';
 exporterConfig['hqmf'].inputDirectory = '/opt/phema-hqmf-generator/temp/input/';

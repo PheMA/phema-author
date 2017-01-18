@@ -120,9 +120,9 @@ angular.module('sopheAuthorApp')
     };
 
     // Exporters that we create will be reformatted similar to menu items.
-    ConfigurationService.loadExporters($scope.export)
-      .then(ConfigurationService.processExportersForMenu)
-      .then(function(exporters) { $scope.exporters = exporters; _.findWhere($scope.buttons, {text: 'Export'}).children = exporters; });
+    ConfigurationService.loadExporters()
+      .then(function(exporters) { return ConfigurationService.processExportersForMenu(exporters, $scope.export); })
+      .then(function(exporters) { _.findWhere($scope.buttons, {text: 'Export'}).children = exporters; });
 
     // If a specific phenotype was specified, load it now
     if ($scope.phenotype) {

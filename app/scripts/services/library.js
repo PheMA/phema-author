@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals ArrayUtil */
+/* globals ArrayUtil, Constants */
 
 angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
 .service('LibraryService', ['$resource', '$q', 'URLService', function($resource, $q, URLService) {

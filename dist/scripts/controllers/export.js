@@ -1,5 +1,7 @@
 'use strict';
 
+/* globals Constants */
+
 /**
  * @ngdoc function
  * @name sopheAuthorApp.controller:ExportPhenotypeController

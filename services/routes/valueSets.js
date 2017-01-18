@@ -6,7 +6,7 @@ var configuration = require('../../configuration');
 
 // Initialize our value set services.  Although we have a basic definition available from the configuration
 // code, there are internal details we are also setting up within here.
-var valueSetServices = configuration.valueSetServices;
+var valueSetServices = configuration.valueSetServices();
 valueSetServices['vsac'].repository = new ValueSetRepository(
   'vsac', 'http://umls_user:umls_pwd@localhost:8080/');
 valueSetServices['phema'].repository = new ValueSetRepository(

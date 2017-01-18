@@ -4,7 +4,7 @@ var configuration = require('../../configuration');
 
 exports.index = function(req, res){
   res.set('Content-Type', 'application/json');
-  res.status(200).send(configuration.all);
+  res.status(200).send(configuration.all());
 };
 
 /**
@@ -14,5 +14,5 @@ exports.index = function(req, res){
  */
 exports.exporters = function(req, res){
   res.set('Content-Type', 'application/json');
-  res.status(200).send(configuration.exporters);
+  res.status(200).send(configuration.exporters());
 };

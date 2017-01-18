@@ -5,11 +5,11 @@
 // constants set when the application is deployed.
 angular.module('sophe.services.configuration', ['sophe.services.url', 'ngResource'])
 .service('ConfigurationService', ['$http', '$q', 'URLService', function($http, $q, URLService) {
-  this._load = function(url, exportFn) {
+  this._load = function(url) {
     var deferred = $q.defer();
     $http.get(url)
       .success(function(data) {
-        deferred.resolve({data: data, exportFn: exportFn});
+        deferred.resolve(data);
       })
       .error(function(data, status) {
         deferred.reject('There was an error: ' + status);
@@ -21,19 +21,19 @@ angular.module('sophe.services.configuration', ['sophe.services.url', 'ngResourc
     return this._load(URLService.getConfigServiceURL());
   };
 
-  this.loadExporters = function(exportFn) {
-    return this._load(URLService.getConfigServiceURL('exporters'), exportFn);
+  this.loadExporters = function() {
+    return this._load(URLService.getConfigServiceURL('exporters'));
   };
 
-  this.processExportersForMenu = function(data) {
+  this.processExportersForMenu = function(data, exportFn) {
     var exporters = [];
-    if (data && data.data) {
-      for (var key in data.data) {
+    if (data) {
+      for (var key in data) {
         exporters.push({
           id: key,
-          text: data.data[key].name,
-          tooltip: data.data[key].description,
-          event: data.exportFn
+          text: data[key].name,
+          tooltip: data[key].description,
+          event: exportFn
         });
       }
     }

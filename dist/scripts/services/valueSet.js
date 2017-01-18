@@ -174,7 +174,7 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
         deferred.reject('There was an error: ' + status);
       });
     return deferred.promise;
-  }
+  };
 
   this.processValues = function(data) {
     var valueSets = [];

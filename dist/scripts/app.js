@@ -59,15 +59,18 @@ app.config(function ($routeProvider) {
       ;
   });
 
+app.value('Configuration', {});
+
 app.config(function ($httpProvider) {
   $httpProvider.interceptors.push('authInterceptorFactory');
 });
 
 
-app.run(['$rootScope', '$location', 'security', 'ConfigurationService', function ($rootScope, $location, security, ConfigurationService) {
+app.run(['$rootScope', '$location', 'security', 'ConfigurationService', 'Configuration', function ($rootScope, $location, security, ConfigurationService, Configuration) {
     ConfigurationService.load()
       .then(function(data) {
-        alert(data);
+        Configuration = data;
+        console.debug(Configuration);
       });
 
     // When the route changes, we are going to detect if the user is trying to access a public
