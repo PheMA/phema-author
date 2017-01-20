@@ -8,7 +8,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('QDMElementPropertiesController', ['$scope', '$modalInstance', 'QDMElementService', 'AttributeService', 'element', 'valueSet', 'attributes', function ($scope, $modalInstance, QDMElementService, AttributeService, element, valueSet, attributes) {
+  .controller('QDMElementPropertiesController', ['$scope', '$modalInstance', 'QDMElementService', 'AttributeService', 'ValueSetService', 'element', 'valueSet', 'attributes', function ($scope, $modalInstance, QDMElementService, AttributeService, ValueSetService, element, valueSet, attributes) {
     $scope.element = element;    // Element is a JSON value, and is a copy of the original
     $scope.valueSet = valueSet;  // Value set is a JSON value, and is a copy of the original
     $scope.formData = attributes || {};
@@ -16,9 +16,23 @@ angular.module('sopheAuthorApp')
     $scope.selectedValueSets = [];
     $scope.selectedTerms = [];
     $scope.newValueSet = {};
-    $scope.existingValueSet = valueSet;
+    $scope.existingValueSet = null;
+    $scope.existingValueSetEditable = false;
     $scope.selectedTabIndex = (valueSet && valueSet.customList && valueSet.customList.terms && valueSet.customList.terms.length > 0) ? 1 : 0;
-    
+
+    if (valueSet) {
+      ValueSetService.handleLoadDetails(valueSet, function(result) {
+        valueSet = result;
+        ValueSetService.isValueSetEditable(valueSet, function(editable) {
+          $scope.existingValueSetEditable = editable;
+          if (editable) {
+            $scope.existingValueSet = valueSet;
+            $scope.selectedTerms = valueSet.members;
+          }
+        });
+      });
+    }
+
     // UnitService.load()
       // .then(UnitService.processValues)
       // .then(function(units) { $scope.units = units; });

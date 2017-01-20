@@ -6,18 +6,21 @@
  * @ngdoc function
  * @name sopheAuthorApp.controller:ValueSetsTermsController
  * @description
- * # ValueSetsTermsController
- * Controller of the sopheAuthorApp
+ * This is the workhorse for finding/authoring/editing value sets.  It's used from our properties dialog for elements when we display a value set entry
+ * field, and at the top of the element properties dialog where the main value set concept is defined.  You'll find it referenced as the value-sets-terms
+ * directive in many places in the app.
  */
 angular.module('sopheAuthorApp')
 .controller('ValueSetsTermsController', ['$scope', '$http', 'ValueSetService', 'CodeSystemService', function ($scope, $http, ValueSetService, CodeSystemService) {
   $scope.selectedTabIndex = $scope.selectedTabIndex || ($scope.$parent.selectedTabIndex ? $scope.$parent.selectedTabIndex : 0);
-  $scope.tabActive = [true, false];
+  $scope.tabActive = [true, false, false];
   $scope.termSearch = {term: '', isSearching: false, results: []};
   $scope.valueSetSearch = {term: '', isSearching: false, results: []};
   $scope.newValueSet = {name: '', description: '', terms: []};
+  $scope.editValueSet = $scope.existingValueSet || null;
   $scope.selectedValueSetMembers = [];
   $scope.existingValueSet = $scope.existingValueSet || {};
+  $scope.existingValueSetEditable = $scope.existingValueSetEditable || false;
   $scope.selectedTerms = $scope.selectedTerms || [];
   $scope.selectedValueSets = $scope.selectedValueSets || [];
 
@@ -50,27 +53,30 @@ angular.module('sopheAuthorApp')
   };
 
   $scope.loadValueSetDetails = function(valueSet) {
-    if(!valueSet.loadDetailStatus) {
-      ValueSetService.loadDetails(valueSet.valueSetRepository, valueSet.id)
-        .then(ValueSetService.processDetails, function() {
-          valueSet.loadDetailStatus = 'error';
-          valueSet.description = ValueSetService.formatDescription(valueSet);
-          $scope.selectedValueSetMembers = valueSet.members;
-          }
-        )
-        .then(function(details) {
-          if (details) {
-            valueSet.members = details.members;
-            valueSet.codeSystems = details.codeSystems;
-            valueSet.loadDetailStatus = 'success';
-            valueSet.description = ValueSetService.formatDescription(valueSet);
-            $scope.selectedValueSetMembers = valueSet.members;
-          }
-        });
-    }
-    else {
-      $scope.selectedValueSetMembers = valueSet.members;
-    }
+    ValueSetService.handleLoadDetails(valueSet, function(result) {
+      $scope.selectedValueSetMembers = result.members;
+    });
+    // if(!valueSet.loadDetailStatus) {
+    //   ValueSetService.loadDetails(valueSet.valueSetRepository, valueSet.id)
+    //     .then(ValueSetService.processDetails, function() {
+    //       valueSet.loadDetailStatus = 'error';
+    //       valueSet.description = ValueSetService.formatDescription(valueSet);
+    //       $scope.selectedValueSetMembers = valueSet.members;
+    //       }
+    //     )
+    //     .then(function(details) {
+    //       if (details) {
+    //         valueSet.members = details.members;
+    //         valueSet.codeSystems = details.codeSystems;
+    //         valueSet.loadDetailStatus = 'success';
+    //         valueSet.description = ValueSetService.formatDescription(valueSet);
+    //         $scope.selectedValueSetMembers = valueSet.members;
+    //       }
+    //     });
+    // }
+    // else {
+    //   $scope.selectedValueSetMembers = valueSet.members;
+    // }
   };
 
   // Used for single-selection mode

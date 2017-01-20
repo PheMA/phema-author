@@ -75,9 +75,9 @@ function _getValueListAsChildren(valueSetRepositoryId, data) {
 function _processSingleValue(originalData) {
   var valueSet = null;
   valueSet = {
-    id: originalData.definedValueSet.content,
+    id: originalData.currentDefinition.valueSet.content,
     name: originalData.formalName,
-    uri: originalData.documentURI,
+    uri: originalData.currentDefinition.valueSetDefinition.uri,
     type: Constants.ElementTypes.VALUE_SET,
     loadDetailStatus: null,
     description: null,
@@ -115,7 +115,7 @@ function _processMemberDetails(originalData) {
 
 
 angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
-.service('ValueSetService', ['$http', '$q', 'URLService', function($http, $q, URLService) {
+.service('ValueSetService', ['$http', '$q', 'URLService', 'ConfigurationService', function($http, $q, URLService, ConfigurationService) {
   this.load = function() {
     var deferred = $q.defer();
     $http.get(URLService.getValueSetServiceURL())
@@ -203,7 +203,11 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
       else if (data.ValueSetDefinitionMsg && data.ValueSetDefinitionMsg.valueSetDefinition) {
         valueSet = _processSingleValue(data.ValueSetDefinitionMsg.valueSetDefinition);
       }
+      else if (data.ValueSetCatalogEntryMsg && data.ValueSetCatalogEntryMsg.valueSetCatalogEntry) {
+        valueSet = _processSingleValue(data.ValueSetCatalogEntryMsg.valueSetCatalogEntry);
+      }
     }
+    return valueSet;
   };
 
   this.processDetails = function(data) {
@@ -237,6 +241,26 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
         });
     }
   };
+
+  // Helper function used to determine if the valueSet passed in is one that comes from an editable repository.
+  // This relies on a callback function to signal when we have an answer (because we need to do some remote calls).
+  // The callback will get either true or false depending on the result.  If we can't get all of the information
+  // needed to determine if this comes from an editable repository, we assume it is not editable.
+  this.isValueSetEditable = function(valueSet, callback) {
+    ConfigurationService.load().then(function(config) {
+      if (!config || !config.valueSetServices || !valueSet || !valueSet.valueSetRepository) {
+        return callback(false);
+      }
+
+      for (var key in config.valueSetServices) {
+        if (valueSet.valueSetRepository === key) {
+          return callback(config.valueSetServices[key].writable);
+        }
+      }
+
+      callback(false);
+    })
+  }
 
   this.formatDescription = function(valueSet) {
     // There are conditions where we haven't loaded yet, so we will return the default
@@ -276,4 +300,34 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
 
     return description;
   };
+
+  this.handleLoadDetails = function(valueSet, callback) {
+    if (!callback) {
+      return;
+    }
+
+    if (!valueSet) {
+      callback(null);
+    }
+
+    if(!valueSet.loadDetailStatus) {
+      this.loadDetails(valueSet.valueSetRepository, valueSet.id)
+        .then(this.processDetails, function() {
+          valueSet.loadDetailStatus = 'error';
+          callback(valueSet);
+          }
+        )
+        .then(function(details) {
+          if (details) {
+            valueSet.members = details.members;
+            valueSet.codeSystems = details.codeSystems;
+            valueSet.loadDetailStatus = 'success';
+          }
+          callback(valueSet);
+        });
+    }
+    else {
+      callback(valueSet);
+    }
+  }
 }]);

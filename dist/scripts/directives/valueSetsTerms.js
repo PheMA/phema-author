@@ -8,9 +8,10 @@ angular.module('sophe.valueSetsTerms', [])
     controller: 'ValueSetsTermsController',
     replace: true,
     scope: {
-      selectedValueSets: '=',
-      selectedTerms: '=',
-      existingValueSet: '=',
+      selectedValueSets: '=?',
+      selectedTerms: '=?',
+      existingValueSet: '=?',
+      existingValueSetEditable: '=?',
       selectedTabIndex: '=?',
       newValueSet: '=?'
     }

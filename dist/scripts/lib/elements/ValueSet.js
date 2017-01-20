@@ -98,7 +98,7 @@ ValueSet.createElementFromData = function(result) {
   var element = {};
   if (result) {
     // If we just have a value set, we will create that and place it in the object
-    if (result.valueSets && result.valueSets.length > 0 && result.terms.length === 0) {
+    if (result.valueSets && result.valueSets.length > 0 && (!result.terms || result.terms.length === 0)) {
       element = result.valueSets[0];
     }
     else if (result.newValueSet){
@@ -111,6 +111,10 @@ ValueSet.createElementFromData = function(result) {
             valueSetRepository: result.newValueSet.valueSetRepository,
             type: Constants.ElementTypes.VALUE_SET
         };
+      }
+      // If there is an id attribute, that means it was saved to our CTS2 repository and can be loaded as-is.
+      else if (result.newValueSet.id && result.newValueSet.id !== '') {
+        element = result.newValueSet;
       }
       // Otherwise we are going to build a temporary value set based on this collection
       else {

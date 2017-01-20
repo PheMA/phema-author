@@ -98,3 +98,40 @@ Attribute
   uri
   type
 }
+
+ValueSet - (loaded from CTS2)
+{
+  codeSystems: Array
+  description: String
+  id: String (oid)
+  loadDetailsStatus: String
+  members: Array
+     {
+       code: String
+       codeset: String
+       name: String
+       type: "Term"
+       uri: String
+     }
+  name: String
+  type: "ValueSet"
+  uri: String (oid)
+  valueSetRepository: String
+}
+
+ValueSet - (authored)
+{
+  description: String
+  name: String
+  oid: String (oid)
+  terms: Array
+    {
+      id: String
+      codeSystem: String
+      name: String
+      type: "Term"
+      uri: String
+    }
+  valueSetRepository: String
+}
+
