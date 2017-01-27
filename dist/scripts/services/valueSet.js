@@ -18,12 +18,12 @@
 //              once details are loaded.
 // codeSystems: An array of code system(s) that are represented in the value set
 //     CTS2: resolutionInfo.resolvedUsingCodeSystemList.codeSystem.content
-// members: A collection of the codes contained in the value set
+// terms: A collection of the codes contained in the value set
 //     Array of objects with the following definition:
-//         codeset:
+//         codeSystem:
 //             CTS2: namespace
-//         code:
-//             CTS2: name
+//         id:
+//             CTS2: name  (the code value)
 //         name:
 //             CTS2: designation
 //         uri:
@@ -54,7 +54,7 @@ function _processValueList(valueSetRepositoryId, originalData) {
         loadDetailStatus: null,
         description: null,
         codeSystems: [],
-        members: []} );
+        terms: []} );
     }
   }
   valueSets = transformedData.sort(ArrayUtil.sortByName);
@@ -82,7 +82,7 @@ function _processSingleValue(originalData) {
     loadDetailStatus: null,
     description: null,
     codeSystems: [],
-    members: []
+    terms: []
   };
   return valueSet;
 }
@@ -99,18 +99,18 @@ function _processCodeSystemDetails(resolutionInfo) {
 }
 
 function _processMemberDetails(originalData) {
-  var members = [];
+  var terms = [];
   if (originalData) {
     for (var index = 0; index < originalData.length; index++) {
-      members.push({
-        codeset: originalData[index].namespace,
-        code: originalData[index].name,
+      terms.push({
+        codeSystem: originalData[index].namespace,
+        id: originalData[index].name,
         name: originalData[index].designation,
         uri: originalData[index].uri,
         type: 'Term'} );
     }
   }
-  return members;
+  return terms;
 }
 
 
@@ -211,15 +211,15 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
   };
 
   this.processDetails = function(data) {
-    var details = { codeSystems: [], members: [] };
+    var details = { codeSystems: [], terms: [] };
     if (data) {
       if (data.iteratableResolvedValueSet) {
         details.codeSystems = _processCodeSystemDetails(data.iteratableResolvedValueSet.resolutionInfo);
-        details.members = _processMemberDetails(data.iteratableResolvedValueSet.entryList);
+        details.terms = _processMemberDetails(data.iteratableResolvedValueSet.entryList);
       }
       else if (data.IteratableResolvedValueSet) {
         details.codeSystems = _processCodeSystemDetails(data.IteratableResolvedValueSet.resolutionInfo);
-        details.members = _processMemberDetails(data.IteratableResolvedValueSet.entry);
+        details.terms = _processMemberDetails(data.IteratableResolvedValueSet.entry);
       }
     }
     return details;
@@ -273,7 +273,7 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
       return 'There was an error loading the details of this value set.  Please try again in a little bit, or contact us if the problem continues.';
     }
 
-    if (!valueSet.members || valueSet.members.length === 0) {
+    if (!valueSet.terms || valueSet.terms.length === 0) {
       return '(There are no codes in this value set)';
     }
 
@@ -288,14 +288,14 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
     }
 
     description += 'Codes:';
-    var lastCodeIndex = Math.min(3, valueSet.members.length);
-    if (valueSet.members.length > lastCodeIndex) {
-      description += ' (first ' + lastCodeIndex + ' of ' + valueSet.members.length + ')';
+    var lastCodeIndex = Math.min(3, valueSet.terms.length);
+    if (valueSet.terms.length > lastCodeIndex) {
+      description += ' (first ' + lastCodeIndex + ' of ' + valueSet.terms.length + ')';
     }
     description += '\r\n';
 
     for (index = 0; index < lastCodeIndex; index++) {
-      description += ' (' + valueSet.members[index].code + ') ' + valueSet.members[index].name + '\r\n';
+      description += ' (' + valueSet.terms[index].code + ') ' + valueSet.terms[index].name + '\r\n';
     }
 
     return description;
@@ -319,7 +319,7 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
         )
         .then(function(details) {
           if (details) {
-            valueSet.members = details.members;
+            valueSet.terms = details.terms;
             valueSet.codeSystems = details.codeSystems;
             valueSet.loadDetailStatus = 'success';
           }
@@ -329,5 +329,30 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
     else {
       callback(valueSet);
     }
-  }
+  };
+
+  // Helper function to wrap some of the complexities of saving a value set entry.  This ensures it is
+  // being routed to the right CTS2 service, and returns the value set as stored in the value set service.
+  this.handleSave = function(valueSet, callback) {
+    var vss = this;
+    ConfigurationService.load().then(function(config) {
+      var editableServiceId = 'phema';
+      if (config && config.valueSetServices) {
+        for (var key in config.valueSetServices) {
+          if (config.valueSetServices[key].writable) {
+            editableServiceId = key;
+            break;
+          }
+        }
+      }
+
+      vss.save(editableServiceId, valueSet)
+        .then(function(valueSet) {
+          vss.loadSingle(editableServiceId, valueSet.oid).then(vss.processSingleValue).then(function(valueSet){
+            valueSet.valueSetRepository = editableServiceId;
+            callback(valueSet);
+          });
+        });
+    });
+  };
 }]);

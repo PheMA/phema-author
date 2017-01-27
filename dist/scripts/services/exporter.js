@@ -55,8 +55,8 @@ angular.module('sophe.services.exporter', ['sophe.services.url', 'ngResource'])
         }
       }
       else if (key === 'element') {
-        if (minimizedJson[key].hasOwnProperty('members')) {
-          delete minimizedJson[key].members;
+        if (minimizedJson[key].hasOwnProperty('terms')) {
+          delete minimizedJson[key].terms;
         }
       }
       // This is the whitelist of keys we will export

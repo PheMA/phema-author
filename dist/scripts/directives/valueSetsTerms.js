@@ -12,7 +12,7 @@ angular.module('sophe.valueSetsTerms', [])
       selectedTerms: '=?',
       existingValueSet: '=?',
       existingValueSetEditable: '=?',
-      selectedTabIndex: '=?',
+      selectedTab: '=?',
       newValueSet: '=?'
     }
   };

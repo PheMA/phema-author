@@ -30,7 +30,7 @@ angular.module('sopheAuthorApp')
       //     )
       //     .then(function(details) {
       //       if (details) {
-      //         el.node.members = details.members;
+      //         el.node.terms = details.terms;
       //         el.node.codeSystems = details.codeSystems;
       //         el.node.loadDetailStatus = 'success';
       //         el.node.description = ValueSetService.formatDescription(el.node);

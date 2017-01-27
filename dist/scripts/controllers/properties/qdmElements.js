@@ -18,7 +18,10 @@ angular.module('sopheAuthorApp')
     $scope.newValueSet = {};
     $scope.existingValueSet = null;
     $scope.existingValueSetEditable = false;
-    $scope.selectedTabIndex = (valueSet && valueSet.customList && valueSet.customList.terms && valueSet.customList.terms.length > 0) ? 1 : 0;
+    // selectedTab needs to be an object (even though we are just wrapping a single primitive)
+    // so that the 2-way binding from the directive works.  Angular will just pass primitives
+    // by value, and we need a reference.
+    $scope.selectedTab = {index: 0};
 
     if (valueSet) {
       ValueSetService.handleLoadDetails(valueSet, function(result) {
@@ -26,8 +29,8 @@ angular.module('sopheAuthorApp')
         ValueSetService.isValueSetEditable(valueSet, function(editable) {
           $scope.existingValueSetEditable = editable;
           if (editable) {
-            $scope.existingValueSet = valueSet;
-            $scope.selectedTerms = valueSet.members;
+            $scope.existingValueSet = angular.copy(valueSet);  // copy so if we edit and cancel changes the original isn't affected
+            $scope.selectedTerms = valueSet.terms;
           }
         });
       });
@@ -82,7 +85,23 @@ angular.module('sopheAuthorApp')
     }
 
     $scope.saveValueSet = function() {
-      $scope.valueSet = ValueSet.createElementFromData({valueSets: $scope.selectedValueSets, terms: $scope.selectedTerms});
+      if (!$scope.selectedTab || $scope.selectedTab.index === 0) {
+        $scope.valueSet = ValueSet.createElementFromData({valueSets: $scope.selectedValueSets, terms: $scope.selectedTerms});
+      }
+      // Tab 2 means we are saving and updating an existing value set
+      else if ($scope.selectedTab.index === 2) {
+        $scope.valueSet = angular.copy($scope.existingValueSet);
+        $scope.selectedValueSets = null;
+        $scope.existingValueSet.terms = $scope.selectedTerms;
+        ValueSetService.handleSave($scope.existingValueSet, function(savedValueSet) {
+          $scope.existingValueSet = savedValueSet;
+          $scope.valueSet = savedValueSet;
+          //$modalInstance.close({valueSets: null, newValueSet: $scope.existingValueSet});
+        });
+      }
+      else {
+        $scope.valueSet = angular.copy($scope.existingValueSet);
+      };
       $scope.isSearchingValueSets = false;
     };
 

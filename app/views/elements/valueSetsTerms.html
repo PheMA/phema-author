@@ -36,7 +36,7 @@
               {{selectedValueSets[0].description}}
             </span>
             <ul>
-              <li ng-repeat="code in selectedValueSetMembers">({{code.code}}) {{code.name}}</li>
+              <li ng-repeat="code in selectedValueSetTerms">({{code.id}}) {{code.name}}</li>
             </ul>
           </div>
         </div>
@@ -122,25 +122,25 @@
         </div>
       </div>
     </tab>
-    <tab heading="Edit Value Set" ng-click="setTab(2)" ng-show="editValueSet !== null">
+    <tab heading="Edit Value Set" ng-click="setTab(2)" ng-show="existingValueSet !== null">
       <div class="code-systems-container">
         <div class="row search-panel">
           <div class="col-md-12">
             <label id='edit-vs-oid'>OID:</label>
-            <span>{{editValueSet.id}}</span>
+            <span>{{existingValueSet.id}}</span>
           </div>
         </div>
         <div class="row search-panel">
           <div class="col-md-6">
             <label id='edit-vs-name'>
               Name:
-              <input type="text" style="width: 100%;" ng-model="editValueSet.name"></input>
+              <input type="text" style="width: 100%;" ng-model="existingValueSet.name"></input>
             </label>
           </div>
           <div class="col-md-6">
             <label id='edit-vs-description'>
               Description:
-              <input type="text" style="width: 100%;" ng-model="editValueSet.description"></input>
+              <input type="text" style="width: 100%;" ng-model="existingValueSet.description"></input>
             </label>
           </div>
         </div>

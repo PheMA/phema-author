@@ -12,14 +12,16 @@
  */
 angular.module('sopheAuthorApp')
 .controller('ValueSetsTermsController', ['$scope', '$http', 'ValueSetService', 'CodeSystemService', function ($scope, $http, ValueSetService, CodeSystemService) {
-  $scope.selectedTabIndex = $scope.selectedTabIndex || ($scope.$parent.selectedTabIndex ? $scope.$parent.selectedTabIndex : 0);
+  // selectedTab needs to be an object (even though we are just wrapping a single primitive)
+  // so that the 2-way binding from the directive works.  Angular will just pass primitives
+  // by value, and we need a reference.
+  $scope.selectedTab = $scope.selectedTab || {index: ($scope.$parent.selectedTab ? $scope.$parent.selectedTab.index : 0) };
   $scope.tabActive = [true, false, false];
   $scope.termSearch = {term: '', isSearching: false, results: []};
   $scope.valueSetSearch = {term: '', isSearching: false, results: []};
   $scope.newValueSet = {name: '', description: '', terms: []};
-  $scope.editValueSet = $scope.existingValueSet || null;
-  $scope.selectedValueSetMembers = [];
-  $scope.existingValueSet = $scope.existingValueSet || {};
+  $scope.selectedValueSetTerms = [];
+  $scope.existingValueSet = $scope.existingValueSet || null;
   $scope.existingValueSetEditable = $scope.existingValueSetEditable || false;
   $scope.selectedTerms = $scope.selectedTerms || [];
   $scope.selectedValueSets = $scope.selectedValueSets || [];
@@ -43,7 +45,7 @@ angular.module('sopheAuthorApp')
   };
 
   $scope.setTab = function(index) {
-    $scope.selectedTabIndex = index;
+    $scope.selectedTab.index = index;
   };
 
   $scope.removeFromTermList = function(term) {
@@ -54,28 +56,28 @@ angular.module('sopheAuthorApp')
 
   $scope.loadValueSetDetails = function(valueSet) {
     ValueSetService.handleLoadDetails(valueSet, function(result) {
-      $scope.selectedValueSetMembers = result.members;
+      $scope.selectedValueSetTerms = result.terms;
     });
     // if(!valueSet.loadDetailStatus) {
     //   ValueSetService.loadDetails(valueSet.valueSetRepository, valueSet.id)
     //     .then(ValueSetService.processDetails, function() {
     //       valueSet.loadDetailStatus = 'error';
     //       valueSet.description = ValueSetService.formatDescription(valueSet);
-    //       $scope.selectedValueSetMembers = valueSet.members;
+    //       $scope.selectedValueSetTerms = valueSet.terms;
     //       }
     //     )
     //     .then(function(details) {
     //       if (details) {
-    //         valueSet.members = details.members;
+    //         valueSet.terms = details.terms;
     //         valueSet.codeSystems = details.codeSystems;
     //         valueSet.loadDetailStatus = 'success';
     //         valueSet.description = ValueSetService.formatDescription(valueSet);
-    //         $scope.selectedValueSetMembers = valueSet.members;
+    //         $scope.selectedValueSetTerms = valueSet.terms;
     //       }
     //     });
     // }
     // else {
-    //   $scope.selectedValueSetMembers = valueSet.members;
+    //   $scope.selectedValueSetTerms = valueSet.terms;
     // }
   };
 
