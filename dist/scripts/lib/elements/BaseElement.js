@@ -54,6 +54,45 @@ BaseElement.prototype = {
   _init: function() {
   },
 
+  _compatibilityForValueSet: function(valueSet) {
+    if (!valueSet) {
+      return null;
+    }
+
+    if (valueSet.oid) {
+      valueSet.id = valueSet.oid;
+      delete valueSet.oid;
+    }
+
+    if (valueSet.members) {
+      valueSet.terms = valueSet.members;
+      delete valueSet.members;
+    }
+
+    if (valueSet.terms) {
+      for (var index = 0; index < valueSet.terms.length; index++) {
+        var term = valueSet.terms[index];
+        if (term.code) {
+          term.id = term.code;
+          delete term.code;
+        }
+        if (term.codeset) {
+          term.codeSystem = term.codeset;
+          delete term.codeset;
+        }
+      }
+    }
+
+    return valueSet;
+  },
+
+  _compatibilityForValueSetElement: function(valueSet) {
+    var element = valueSet.element();
+    this._compatibilityForValueSet(element);
+    valueSet.element(element);
+    return valueSet;
+  },
+
   addConnectionHandler: function(kineticObj, scope) {
     var stage = scope.canvasDetails.kineticStageObj;
     kineticObj.on('mouseup', function (evt) {

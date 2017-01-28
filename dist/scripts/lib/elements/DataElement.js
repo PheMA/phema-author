@@ -223,7 +223,7 @@ DataElement.prototype.load = function(group, scope) {
     var groups = scope.canvasDetails.kineticStageObj.mainLayer.find('Group');
     for (var index = 0; index < groups.length; index++) {
       if (groups[index]._id === obj.valueSet.id) {
-        this.valueSet(groups[index]);
+        this.valueSet(this._compatibilityForValueSetElement(groups[index]));
         break;
       }
     }
@@ -233,6 +233,16 @@ DataElement.prototype.load = function(group, scope) {
   }
 
   if (obj.attributes) {
+    for (var key in obj.attributes) {
+      var attr = obj.attributes[key];
+      if (attr.constructor === Array) {
+        for (var index = 0; index < attr.length; index++) {
+          if (attr[index] && attr[index].type === Constants.ElementTypes.VALUE_SET) {
+            this._compatibilityForValueSet(attr[index]);
+          }
+        }
+      }
+    }
     this.attributes(obj.attributes);
   }
   else {
