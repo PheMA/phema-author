@@ -58,27 +58,6 @@ angular.module('sopheAuthorApp')
     ValueSetService.handleLoadDetails(valueSet, function(result) {
       $scope.selectedValueSetTerms = result.terms;
     });
-    // if(!valueSet.loadDetailStatus) {
-    //   ValueSetService.loadDetails(valueSet.valueSetRepository, valueSet.id)
-    //     .then(ValueSetService.processDetails, function() {
-    //       valueSet.loadDetailStatus = 'error';
-    //       valueSet.description = ValueSetService.formatDescription(valueSet);
-    //       $scope.selectedValueSetTerms = valueSet.terms;
-    //       }
-    //     )
-    //     .then(function(details) {
-    //       if (details) {
-    //         valueSet.terms = details.terms;
-    //         valueSet.codeSystems = details.codeSystems;
-    //         valueSet.loadDetailStatus = 'success';
-    //         valueSet.description = ValueSetService.formatDescription(valueSet);
-    //         $scope.selectedValueSetTerms = valueSet.terms;
-    //       }
-    //     });
-    // }
-    // else {
-    //   $scope.selectedValueSetTerms = valueSet.terms;
-    // }
   };
 
   // Used for single-selection mode

@@ -30,28 +30,6 @@ angular.module('sopheAuthorApp')
           $scope.newValueSet = savedValueSet;
           $modalInstance.close({valueSets: null, newValueSet: $scope.newValueSet});
         });
-        // ConfigurationService.load().then(function(config) {
-        //   var editableServiceId = 'phema';
-        //   if (config && config.valueSetServices) {
-        //     for (var key in config.valueSetServices) {
-        //       if (config.valueSetServices[key].writable) {
-        //         editableServiceId = key;
-        //         break;
-        //       }
-        //     }
-        //   }
-
-        //   $scope.selectedValueSets = null;
-        //   $scope.newValueSet.terms = $scope.selectedTerms;
-        //   ValueSetService.save(editableServiceId, $scope.newValueSet)
-        //     .then(function(valueSet) {
-        //       ValueSetService.loadSingle(editableServiceId, valueSet.id).then(ValueSetService.processSingleValue).then(function(valueSet){
-        //         valueSet.valueSetRepository = editableServiceId;
-        //         $scope.newValueSet = valueSet;
-        //         $modalInstance.close({valueSets: null, newValueSet: $scope.newValueSet});
-        //       });
-        //     });
-        // });
       }
       else {
         $modalInstance.close({valueSets: $scope.selectedValueSets, newValueSet: null});

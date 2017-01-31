@@ -21,22 +21,6 @@ angular.module('sopheAuthorApp')
 
   $scope.loadValueSetDetails = function(el) {
     $timeout(function() {
-      // if(!el.node.loadDetailStatus) {
-      //   ValueSetService.loadDetails(el.node.valueSetRepository, el.node.id)
-      //     .then(ValueSetService.processDetails, function() {
-      //       el.node.loadDetailStatus = 'error';
-      //       el.node.description = ValueSetService.formatDescription(el.node);
-      //       }
-      //     )
-      //     .then(function(details) {
-      //       if (details) {
-      //         el.node.terms = details.terms;
-      //         el.node.codeSystems = details.codeSystems;
-      //         el.node.loadDetailStatus = 'success';
-      //         el.node.description = ValueSetService.formatDescription(el.node);
-      //       }
-      //     });
-      // }
       ValueSetService.handleLoadDetails(el.node, function (valueSet) {
         el.node = valueSet;
       });
