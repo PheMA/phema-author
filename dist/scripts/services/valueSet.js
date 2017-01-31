@@ -348,7 +348,7 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
 
       vss.save(editableServiceId, valueSet)
         .then(function(valueSet) {
-          vss.loadSingle(editableServiceId, valueSet.oid).then(vss.processSingleValue).then(function(valueSet){
+          vss.loadSingle(editableServiceId, valueSet.id).then(vss.processSingleValue).then(function(valueSet){
             valueSet.valueSetRepository = editableServiceId;
             callback(valueSet);
           });

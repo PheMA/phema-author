@@ -72,9 +72,9 @@ ValueSetRepository.prototype.getValueSetMembers = function(id, callback) {
 function mapValueSetToCTS2Entry(data) {
   return {
     "valueset" : {
-      "about": data['oid'],
+      "about": data['id'],
       "formalName": data['name'],
-      "valueSetName": data['oid'],
+      "valueSetName": data['id'],
       "sourceAndRole": [
         {
           "source": {
@@ -109,7 +109,7 @@ function getCTS2TermList(data) {
 // including which code(s) are part of the value set.
 // For more information on the PhEMA value set structure, see doc/cts2-notes.txt
 function mapValueSetToCTS2Definition(data, existingVersion) {
-  var oid = data['oid'];
+  var oid = data['id'];
   var version = (data['version'] ? data['version'] : uuid.v1());
   var versionTag = oid + '_' + version;
   var uri = oid + '_' + (existingVersion ? existingVersion : version);
@@ -149,10 +149,7 @@ function mapValueSetToCTS2Definition(data, existingVersion) {
           }
         }
       ],
-      "officialResourceVersionId": version,
-      "resourceSynopsis": {
-        "value": data['description']
-      }
+      "officialResourceVersionId": version
     }
   };
   return definition;
@@ -165,9 +162,9 @@ ValueSetRepository.prototype.add = function(data, callback) {
   }
 
   // If no OID is assigned already, we will specify one using the base OID and a random ID
-  var oidBlank = util.isEmptyString(data['oid']);
+  var oidBlank = util.isEmptyString(data['id']);
   if (oidBlank) {
-    data['oid'] = this.baseOID + '.' + uuid.v4().replace(/-/g, '');
+    data['id'] = this.baseOID + '.' + uuid.v4().replace(/-/g, '');
   }
 
   // Make sure we are including the value set repository identifier in the response.  The
@@ -177,20 +174,25 @@ ValueSetRepository.prototype.add = function(data, callback) {
   }
 
   var cts2Util = this.cts2Util;
-  cts2Util.findValueSet(data['oid'], function(error, existingValueSet) {
+  cts2Util.findValueSet(data['id'], function(error, existingValueSet) {
     if (error) { return callback(error); }
     if (oidBlank && existingValueSet) { return callback({message: 'A conflicting value set definition was found'}) }
     if (existingValueSet) {
-      var existingVersion = existingValueSet['ValueSetCatalogEntryMsg']['valueSetCatalogEntry']['currentDefinition']['valueSetDefinition']['content']
       var changeSet = existingValueSet['ValueSetCatalogEntryMsg']['valueSetCatalogEntry']['changeDescription']['containingChangeSet']
-      data['version'] = existingVersion;
-      console.log('Existing value set found: version=' + existingVersion);
-
-      var valueSetDefinition = mapValueSetToCTS2Definition(data, existingVersion);
-      valueSetDefinition['valueSetDefinition']['changeDescription'] = { "changeType" : "UPDATE", "containingChangeSet" : changeSet };
-      cts2Util.updateValueSetDefinition(data['oid'], existingVersion, changeSet, valueSetDefinition, function(error, vsdResponse) {
+      var valueSet = mapValueSetToCTS2Entry(data);
+      cts2Util.updateValueSet(data['id'], changeSet, valueSet, function(error, updatedValueSet) {
         if (error) { return callback(error); }
-        callback(null, data);
+
+        var existingVersion = existingValueSet['ValueSetCatalogEntryMsg']['valueSetCatalogEntry']['currentDefinition']['valueSetDefinition']['content']
+        data['version'] = existingVersion;
+        console.log('Existing value set found: version=' + existingVersion);
+
+        var valueSetDefinition = mapValueSetToCTS2Definition(data, existingVersion);
+        valueSetDefinition['valueSetDefinition']['changeDescription'] = { "changeType" : "UPDATE", "containingChangeSet" : changeSet };
+        cts2Util.updateValueSetDefinition(data['id'], existingVersion, changeSet, valueSetDefinition, function(error, vsdResponse) {
+          if (error) { return callback(error); }
+          callback(null, data);
+        });
       });
     }
     else {

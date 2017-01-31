@@ -45,7 +45,7 @@ angular.module('sopheAuthorApp')
         //   $scope.newValueSet.terms = $scope.selectedTerms;
         //   ValueSetService.save(editableServiceId, $scope.newValueSet)
         //     .then(function(valueSet) {
-        //       ValueSetService.loadSingle(editableServiceId, valueSet.oid).then(ValueSetService.processSingleValue).then(function(valueSet){
+        //       ValueSetService.loadSingle(editableServiceId, valueSet.id).then(ValueSetService.processSingleValue).then(function(valueSet){
         //         valueSet.valueSetRepository = editableServiceId;
         //         $scope.newValueSet = valueSet;
         //         $modalInstance.close({valueSets: null, newValueSet: $scope.newValueSet});

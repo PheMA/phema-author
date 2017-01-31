@@ -103,10 +103,11 @@ ValueSet.createElementFromData = function(result) {
     }
     else if (result.newValueSet){
       // If there is an OID, it means it was saved in a local repository, so we'll treat it normal
-      if (result.newValueSet.oid && result.newValueSet.oid !== '') {
+      if (result.newValueSet.id && result.newValueSet.id !== '') {
         element = {
-            id: result.newValueSet.oid,
+            id: result.newValueSet.id,
             name: result.newValueSet.name,
+            description: result.newValueSet.description,
             terms: result.newValueSet.terms,
             valueSetRepository: result.newValueSet.valueSetRepository,
             type: Constants.ElementTypes.VALUE_SET

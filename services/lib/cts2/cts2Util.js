@@ -49,6 +49,17 @@ CTS2Util.prototype.createValueSet = function(changeSet, data, callback) {
   });
 }
 
+CTS2Util.prototype.updateValueSet = function(oid, changeSet, data, callback) {
+  console.log('In updateValueSet');
+  this.createValueSet(changeSet, data, callback);
+  // this.client.put('valueset/' + oid + '?changesetcontext=' + changeSet, data, function(error, response, body) {
+  //   if (!handleError(error, 200, response, callback)) {
+  //     console.log("Updated CTS2 value set");
+  //     callback(null, true);
+  //   }
+  // });
+}
+
 CTS2Util.prototype.createValueSetDefinition = function(changeSet, data, callback) {
   console.log('In createValueSetDefinition');
   this.client.post('valuesetdefinition?changesetcontext=' + changeSet, data, function(error, response, body) {
@@ -70,7 +81,7 @@ CTS2Util.prototype.updateValueSetDefinition = function(oid, version, changeSet, 
 }
 
 CTS2Util.prototype.findValueSet = function(oid, callback) {
-  console.log('In findValueSet');
+  console.log('In findValueSet, searching for ' + oid);
   this.client.get('valueset/' + oid + '?format=json', function(error, response, body) {
     if (response.statusCode === 404) {
       console.log("Value set not found");
