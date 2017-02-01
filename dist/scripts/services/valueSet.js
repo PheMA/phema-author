@@ -259,8 +259,8 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
       }
 
       callback(false);
-    })
-  }
+    });
+  };
 
   this.formatDescription = function(valueSet) {
     // There are conditions where we haven't loaded yet, so we will return the default
