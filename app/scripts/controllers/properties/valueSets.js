@@ -10,10 +10,10 @@
 angular.module('sopheAuthorApp')
   .controller('ValueSetPropertiesController', ['$scope', '$modalInstance', 'ValueSetService', 'valueSet', function ($scope, $modalInstance, ValueSetService, valueSet) {
     $scope.valueSet = valueSet;
-    $scope.members = [];
-    ValueSetService.loadDetails(valueSet.valueSetRepository, valueSet.id)
-      .then(ValueSetService.processDetails)
-      .then(function(details) { $scope.members = details.members; });
+    $scope.terms = [];
+    ValueSetService.handleLoadDetails(valueSet, function(result) {
+      $scope.terms = result.terms;
+    });
 
     $scope.ok = function () {
       $modalInstance.close();

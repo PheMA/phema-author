@@ -21,6 +21,7 @@ angular.module('sophe', [
   'sophe.elements.codeSystems',
   'sophe.elements.results',
   'sophe.elements.resultValue',
+  'sophe.elements.classification',
   'sophe.services.configuration',
   'sophe.services.codeSystem',
   'sophe.services.attribute',

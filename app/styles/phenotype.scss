@@ -221,7 +221,7 @@
     padding-right: 25px;
     input {
       float: none;
-      width: 250px;
+      width: 450px;
     }
   }
 }
@@ -508,4 +508,14 @@ $value-sets-background-color: #eee;
     width: 100%;
     height: 100%;
   }
+}
+
+#qdm-element-value-set, #qdm-element-form {
+  .panel-heading { display: none; }
+  border: none;
+}
+
+
+#main-value-set, #data-element-properties #new-vs-name, #data-element-properties #edit-vs-name {
+  width: 100%;
 }

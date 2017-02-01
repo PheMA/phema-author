@@ -1,6 +1,6 @@
 <div>
-  <tabset active="selectedTabIndex">
-    <tab heading="Value Sets">
+  <tabset>
+    <tab heading="Select Value Set" ng-click="setTab(0)">
       <div class="value-set-container">
         <div class="row search-panel">
           <div class="col-md-12 divider-right">
@@ -36,14 +36,102 @@
               {{selectedValueSets[0].description}}
             </span>
             <ul>
-              <li ng-repeat="code in selectedValueSetMembers">({{code.code}}) {{code.name}}</li>
+              <li ng-repeat="code in selectedValueSetTerms">({{code.id}}) {{code.name}}</li>
             </ul>
           </div>
         </div>
       </div>
     </tab>
-    <tab heading="Terminologies / Codes">
+    <tab heading="Create Value Set" ng-click="setTab(1)">
       <div class="code-systems-container">
+        <div class="row search-panel">
+          <div class="col-md-12">
+            <label id='new-vs-name'>
+              Name:
+              <input type="text" style="width: 100%;" ng-model="newValueSet.name"></input>
+            </label>
+          </div>
+        </div>
+        <div class="row search-panel">
+          <div class="col-md-4">
+            <label id='term-search'>
+              Search for terms/codes:
+              <input type="text" style="width: 100%;" ng-model="termSearch.term" ng-model-options="{ debounce: 750 }"></input>
+            </label>
+          </div>
+          <div class="col-md-8">
+            <ol class="note-sm">
+              <li>Enter a search term for a condition, procedure or medication (e.g. 'diabetes', 'CABG', 'statin').</li>
+              <li>When you have found a term you would like to use, click the '<i class="fa fa-plus"/>' button</li>
+              <li>After you have selected all the terms you want to use, click 'OK'</li>
+              <li>If you want to remove a term from your saved list, click the '<i class="fa fa-trash remove-from-term-list" />' button</li>
+            </ol>
+          </div>
+        </div>
+        <div class="row code-systems-results">
+          <div class="col-md-6 divider-right scrollable-container">
+            <span class="result-label">Terms matching your search criteria:</span>
+            <div us-spinner="{radius:8, width:4, length: 8, top: '50%', left: '25%'}" class="note" ng-show="termSearch.isSearching">
+              Please wait
+            </div>
+            <div class="note" ng-show="termSearch.results.length === 0 && !termSearch.isSearching">
+              (No terms were found that met your criteria)
+            </div>
+            <ul class="codeSystemList">
+              <li ng-repeat="codeSystem in termSearch.results">
+                {{codeSystem.name}}
+                <ul>
+                  <li ng-repeat="term in codeSystem.children">
+                    {{term.name}}
+                    ({{term.id}})
+                    <i class="fa fa-plus add-to-term-list" ng-click="addToTermList(term)"/>
+                  </li>
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-6 scrollable-container">
+            <label>Selected terms:</label>
+            <table class="term-table">
+              <thead>
+                <th class="name-col">Name</th>
+                <th class="code-col">Code</th>
+                <th></th>
+              </thead>
+              <tr ng-show="selectedTerms.length === 0" colwidth="3">
+                <td class="note">(You have not selected any terms)</td>
+              </tr>
+              <tr ng-repeat="term in selectedTerms">
+                <td>
+                  {{term.name}}
+                </td>
+                <td>
+                  {{term.id}}
+                </td>
+                <td>
+                  <i class="fa fa-trash remove-from-term-list" ng-click="removeFromTermList(term)"/>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </tab>
+    <tab heading="Edit Value Set" ng-click="setTab(2)" ng-show="existingValueSet !== null">
+      <div class="code-systems-container">
+        <div class="row search-panel">
+          <div class="col-md-12">
+            <label id='edit-vs-oid'>OID:</label>
+            <span>{{existingValueSet.id}}</span>
+          </div>
+        </div>
+        <div class="row search-panel">
+          <div class="col-md-12">
+            <label id='edit-vs-name'>
+              Name:
+              <input type="text" style="width: 100%;" ng-model="existingValueSet.name"></input>
+            </label>
+          </div>
+        </div>
         <div class="row search-panel">
           <div class="col-md-4">
             <label id='term-search'>

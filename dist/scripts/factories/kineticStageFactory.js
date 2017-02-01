@@ -1,6 +1,6 @@
 'use strict';
 /* globals updateActiveLineLocation, endConnector, clearSelections, Kinetic, createSelectionRectangle, updateSelectionRectangle,
-isDrawingLine, removeSelectionRectangle, highlightItemsInSelectionRectangle */
+isDrawingLine, removeSelectionRectangle, highlightItemsInSelectionRectangle, Constants */
 
 angular.module('sophe.factories.kineticStage', [])
   .factory('kineticStageFactory', function() {
@@ -76,7 +76,7 @@ angular.module('sophe.factories.kineticStage', [])
           removeSelectionRectangle(mainLayer);
           mainLayer.isMouseDown = false;
           mainLayer.isSelectionRectangleActive = false;
-          scope.$root.$broadcast('sophe-element-selected', null);
+          scope.$root.$broadcast(Constants.Events.ELEMENT_SELECTED, null);
         });
 
         mainLayer.updateSelectionRectangle = function(evt) {

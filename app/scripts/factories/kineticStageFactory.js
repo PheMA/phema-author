@@ -1,6 +1,6 @@
 'use strict';
 /* globals updateActiveLineLocation, endConnector, clearSelections, Kinetic, createSelectionRectangle, updateSelectionRectangle,
-isDrawingLine, removeSelectionRectangle, highlightItemsInSelectionRectangle */
+isDrawingLine, removeSelectionRectangle, highlightItemsInSelectionRectangle, Constants */
 
 angular.module('sophe.factories.kineticStage', [])
   .factory('kineticStageFactory', function() {

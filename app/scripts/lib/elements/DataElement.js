@@ -127,7 +127,7 @@ DataElement.prototype.create = function(config, scope) {
     x: termDropOptions.x, y: termDropOptions.y,
     width: termObj.width(), height: termObj.height(),
     fontFamily: 'Calibri', fontSize: 14, fill: 'gray',
-    text: 'Drag and drop clinical terms or value sets here, or click to search',
+    text: 'Drag and drop value sets here, or click to search',
     align: 'center', padding: 5, name: 'termDropText',
   };
   var termTextObj = this.createText(termTextOptions, group);
@@ -223,7 +223,7 @@ DataElement.prototype.load = function(group, scope) {
     var groups = scope.canvasDetails.kineticStageObj.mainLayer.find('Group');
     for (var index = 0; index < groups.length; index++) {
       if (groups[index]._id === obj.valueSet.id) {
-        this.valueSet(groups[index]);
+        this.valueSet(this._compatibilityForValueSetElement(groups[index]));
         break;
       }
     }
@@ -233,6 +233,16 @@ DataElement.prototype.load = function(group, scope) {
   }
 
   if (obj.attributes) {
+    for (var key in obj.attributes) {
+      var attr = obj.attributes[key];
+      if (attr.constructor === Array) {
+        for (var index = 0; index < attr.length; index++) {
+          if (attr[index] && attr[index].type === Constants.ElementTypes.VALUE_SET) {
+            this._compatibilityForValueSet(attr[index]);
+          }
+        }
+      }
+    }
     this.attributes(obj.attributes);
   }
   else {

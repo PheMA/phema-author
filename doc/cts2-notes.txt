@@ -1,0 +1,124 @@
+A valueset definition from PhEMA will have the following structure:
+  {
+    "name": string - The formal display name.  CTS2 calls this "formalName".  
+    "description": string - An optional description of the valueset,
+    "oid": string - The system-assigned OID.  Will need a base OID to use and increment from there.  This will also be used for the CTS2 "name" field
+    "uri": string - Also system-assigned.  Will use CTS2 base URL + OID.
+    "version": integer - incremented value, default to 1.  If a version exists during save, we update the version and save.  Other option is to just do a random number.
+    "about": string - "urn:id" + name (spaces replaced by underscores).
+    "terms": array - list of entries with the following structure--
+      {
+        "id": string - This maps to the CTS2 "name" field.
+        "name": string - The display name of the code value. This maps to the CTS2 "description" field.
+        "codeSystem": string - This maps to the CTS2 "namespace" field.
+        "codeSystemVersion": string - Version of the code system.
+        "uri": string - a URI that resolves to the value set + code.  May be an HTTP-based URI or URN.
+      }
+    ]
+  }
+
+Example:
+  {
+    "name":"Test",
+    "description":"Test valueset",
+    "oid": "1.2.3.4",
+    "uri": "http://test.com/value-sets/1.2.3.4",
+    "version": 1,
+    "about": "urn:id:Test",
+    "terms":[
+      {
+        "id":"253.5",
+        "name":"Diabetes insipidus",
+        "codeSystem":"ICD9CM",
+        "codeSystemVersion":"12345",
+        "uri":"urn:oid:2.16.840.1.113883.6.2:253.5",
+      }
+    ]
+  }
+
+
+
+Creating a new value set
+  Step 1: Create a new changeset
+    POST to http://172.16.51.130:8080/value-sets/changeset
+    Expect 201 response.
+    From HTTP header, get location value for URL: Location /changeset/2357ad31-9492-4891-8b70-af4e188395a2
+
+  Step 2: Create the value set entry
+    POST to http://172.16.51.130:8080/value-sets/valueset?changesetcontext= with the changeset ID from step 1 as the parameter
+    Header "Content-Type" and "Accept" should be "application/json"
+
+    Example message POST'd to: http://172.16.51.130:8080/value-sets/valueset?changesetcontext=2357ad31-9492-4891-8b70-af4e188395a2
+    {
+      "valueset" : {
+        "about":"1012.0",          -- OID
+        "formalName": "Test",      -- Display name
+        "valueSetName": "1012.0",  -- OID
+        "sourceAndRole": [
+          {
+            "source": {
+              "uri": "",
+              "name" : "Northwestern University"
+            },
+            "role": {
+              "uri": "http://purl.org/dc/elements/1.1/creator",
+              "name": "creator"
+            }
+          }
+        ]
+      }
+    }
+
+  Step 3: Create another change set
+    POST to http://172.16.51.130:8080/value-sets/changeset
+    Expect 201 response.
+    From HTTP header, get location value for URL: Location /changeset/54b9b428-79de-45c3-877e-8045a0ecf1e1
+
+  Step 4: Create the value set definition entry
+  {
+    "valueSetDefinition": {
+      "definedValueSet": {
+        "uri":"urn:oid:2.16.840.1.113762.1.4.1026.1",
+        "content":"2.16.840.1.113762.1.4.1026.1"
+      },
+      "versionTag": [
+        {
+          "uri" : "1012.0_2",
+          "content":"1012.0_2"
+        }
+      ],
+      "sourceAndRole": [
+        {
+          "source": {
+            "uri": "",
+            "name" : "Northwestern University"
+          },
+          "role": {
+            "uri": "http://purl.org/dc/elements/1.1/creator",
+            "name": "creator"
+          }
+        }
+      ],
+      "entryState":"ACTIVE",
+      "about":"2.16.840.1.113762.1.4.1026.1",
+      "documentURI":"2.16.840.1.113762.1.4.1026.1",
+      "entry": [
+        {
+          "operator" : "UNION",
+          "entryOrder": 1,
+          "entity": {
+            "referencedEntity" : [{
+              "uri":"test",
+              "namespace":"umls",
+              "name":"F",
+              "designation":"Female"
+            }]
+          }
+        }
+      ]
+    }
+  }
+
+http://172.16.51.130:8080/value-sets/valueset/3.1.1.1.1007/definition/3.1.1.1.1007_20160907
+
+Updating an existing value set

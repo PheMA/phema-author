@@ -20,54 +20,54 @@ var app = angular.module('sopheAuthorApp', [
     'angularSpinner'
   ]);
 
-app.config(function ($routeProvider) {
-    $routeProvider
-      .when('/', {
-        title: 'Home', templateUrl: 'views/main.html', controller: 'MainController', isPublic: true })
-      .when('/dashboard', {
-        title: 'Dashboard', templateUrl: 'views/dashboard.html', controller: 'DashboardController' })
-      .when('/about', {
-        title: 'About', templateUrl: 'views/about.html', controller: 'AboutController', isPublic: true })
+app.config(['$routeProvider', function ($routeProvider) {
+  $routeProvider
+    .when('/', {
+      title: 'Home', templateUrl: 'views/main.html', controller: 'MainController', isPublic: true })
+    .when('/dashboard', {
+      title: 'Dashboard', templateUrl: 'views/dashboard.html', controller: 'DashboardController' })
+    .when('/about', {
+      title: 'About', templateUrl: 'views/about.html', controller: 'AboutController', isPublic: true })
 
-      .when('/login', {
-        title: 'Log In', templateUrl: 'views/security/login.html', controller: 'LoginFormController', isPublic: true })
+    .when('/login', {
+      title: 'Log In', templateUrl: 'views/security/login.html', controller: 'LoginFormController', isPublic: true })
 
-      .when('/users/register', {
-        title: 'Register for an Account', templateUrl: 'views/users/register.html', controller: 'RegisterFormController', isPublic: true })
-      .when('/users/profile', {
-        title: 'Manage Your Profile', templateUrl: 'views/users/profile.html', controller: 'ProfileFormController', isPublic: true })
+    .when('/users/register', {
+      title: 'Register for an Account', templateUrl: 'views/users/register.html', controller: 'RegisterFormController', isPublic: true })
+    .when('/users/profile', {
+      title: 'Manage Your Profile', templateUrl: 'views/users/profile.html', controller: 'ProfileFormController', isPublic: true })
 
-      .when('/phenotype', {
-        title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
-      .when('/phenotype/new', {
-        title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
-      .when('/phenotype/search', {
-        title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
-      .when('/phenotype/:id', {
-        title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
+    .when('/phenotype', {
+      title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
+    .when('/phenotype/new', {
+      title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
+    .when('/phenotype/search', {
+      title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
+    .when('/phenotype/:id', {
+      title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
 
-      .when('/help/quick-start', {
-        title: 'Help - Quick Start', templateUrl: 'views/help/quickStart.html', controller: 'HelpController', isPublic: true })
-      .when('/help/tutorial', {
-        title: 'Help - Tutorial', templateUrl: 'views/help/tutorial.html', controller: 'HelpController', isPublic: true })
-      .when('/help', {
-        title: 'Help', templateUrl: 'views/help/index.html', controller: 'HelpController', isPublic: true })
+    .when('/help/quick-start', {
+      title: 'Help - Quick Start', templateUrl: 'views/help/quickStart.html', controller: 'HelpController', isPublic: true })
+    .when('/help/tutorial', {
+      title: 'Help - Tutorial', templateUrl: 'views/help/tutorial.html', controller: 'HelpController', isPublic: true })
+    .when('/help', {
+      title: 'Help', templateUrl: 'views/help/index.html', controller: 'HelpController', isPublic: true })
 
-      .otherwise({
-        redirectTo: '/'
-      })
-      ;
-  });
+    .otherwise({
+      redirectTo: '/'
+    })
+    ;
+}]);
 
-app.config(function ($httpProvider) {
+app.config(['$httpProvider', function ($httpProvider) {
   $httpProvider.interceptors.push('authInterceptorFactory');
-});
+}]);
 
 
-// When the route changes, we are going to detect if the user is trying to access a public
-// page (defined within the routes above), or if the user is logged in.  If the user needs to
-// be authenticated and isn't, we take them to the login page.
 app.run(['$rootScope', '$location', 'security', function ($rootScope, $location, security) {
+    // When the route changes, we are going to detect if the user is trying to access a public
+    // page (defined within the routes above), or if the user is logged in.  If the user needs to
+    // be authenticated and isn't, we take them to the login page.
     $rootScope.$on('$routeChangeStart', function (event, next) {
       if (next.$$route && !next.$$route.isPublic && !security.isAuthenticated()) {
         event.preventDefault();

@@ -7,4 +7,8 @@ exports.respondJSON = function(res, error, data) {
     res.set('Content-Type', 'application/json');
     res.status(200).send(data);
   }
-}
+};
+
+exports.isEmptyString = function(value){
+  return (value == null || value.length === 0);
+};

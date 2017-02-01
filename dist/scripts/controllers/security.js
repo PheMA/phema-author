@@ -7,12 +7,12 @@ angular.module('sopheAuthorApp')
   $scope.login = function () {
     $http
       .post('/login', $scope.user)
-      .success(function (data, status, headers, config) {
+      .success(function (data) {
         $window.sessionStorage.token = data.token;
         $window.sessionStorage.user = data.user;
         $scope.message = 'Welcome';
       })
-      .error(function (data, status, headers, config) {
+      .error(function () {
         // Erase the token if the user fails to log in
         delete $window.sessionStorage.token;
         delete $window.sessionStorage.user;

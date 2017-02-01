@@ -72,6 +72,9 @@ angular.module('sophe.services.url', ['sophe.config'])
     else if (action === 'search') {
       url = url + 'search=' + params.term;
     }
+    else if (action === 'save') {
+      url = url + params.repoId;
+    }
 
     return url;
   };

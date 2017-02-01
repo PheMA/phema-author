@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals ArrayUtil */
+/* globals ArrayUtil, Constants */
 
 angular.module('sophe.services.functionOperator', ['sophe.services.url', 'ngResource'])
 .service('FunctionOperatorService', ['$resource', '$q', 'URLService', function($resource, $q, URLService) {
@@ -25,7 +25,7 @@ angular.module('sophe.services.functionOperator', ['sophe.services.url', 'ngReso
           name: originalData[index].dataElementLabel.value,
           description: originalData[index].definition.value,
           uri: originalData[index].id.value,
-          type: 'FunctionOperator',
+          type: Constants.ElementTypes.FUNCTION_OPERATOR,
           children: []} );
       }
       functions = transformedData.sort(ArrayUtil.sortByName);

@@ -18,12 +18,12 @@
 //              once details are loaded.
 // codeSystems: An array of code system(s) that are represented in the value set
 //     CTS2: resolutionInfo.resolvedUsingCodeSystemList.codeSystem.content
-// members: A collection of the codes contained in the value set
+// terms: A collection of the codes contained in the value set
 //     Array of objects with the following definition:
-//         codeset:
+//         codeSystem:
 //             CTS2: namespace
-//         code:
-//             CTS2: name
+//         id:
+//             CTS2: name  (the code value)
 //         name:
 //             CTS2: designation
 //         uri:
@@ -54,7 +54,7 @@ function _processValueList(valueSetRepositoryId, originalData) {
         loadDetailStatus: null,
         description: null,
         codeSystems: [],
-        members: []} );
+        terms: []} );
     }
   }
   valueSets = transformedData.sort(ArrayUtil.sortByName);
@@ -75,14 +75,14 @@ function _getValueListAsChildren(valueSetRepositoryId, data) {
 function _processSingleValue(originalData) {
   var valueSet = null;
   valueSet = {
-    id: originalData.definedValueSet.content,
+    id: originalData.currentDefinition.valueSet.content,
     name: originalData.formalName,
-    uri: originalData.documentURI,
+    uri: originalData.currentDefinition.valueSetDefinition.uri,
     type: Constants.ElementTypes.VALUE_SET,
     loadDetailStatus: null,
     description: null,
     codeSystems: [],
-    members: []
+    terms: []
   };
   return valueSet;
 }
@@ -99,23 +99,23 @@ function _processCodeSystemDetails(resolutionInfo) {
 }
 
 function _processMemberDetails(originalData) {
-  var members = [];
+  var terms = [];
   if (originalData) {
     for (var index = 0; index < originalData.length; index++) {
-      members.push({
-        codeset: originalData[index].namespace,
-        code: originalData[index].name,
+      terms.push({
+        codeSystem: originalData[index].namespace,
+        id: originalData[index].name,
         name: originalData[index].designation,
         uri: originalData[index].uri,
         type: 'Term'} );
     }
   }
-  return members;
+  return terms;
 }
 
 
 angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
-.service('ValueSetService', ['$http', '$q', 'URLService', function($http, $q, URLService) {
+.service('ValueSetService', ['$http', '$q', 'URLService', 'ConfigurationService', function($http, $q, URLService, ConfigurationService) {
   this.load = function() {
     var deferred = $q.defer();
     $http.get(URLService.getValueSetServiceURL())
@@ -164,17 +164,31 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
     return deferred.promise;
   };
 
+  this.save = function(repoId, valueSet) {
+    var deferred = $q.defer();
+    $http.post(URLService.getValueSetServiceURL('save', {repoId: repoId}), valueSet)
+      .success(function(data) {
+        deferred.resolve(data);
+      })
+      .error(function(data, status) {
+        deferred.reject('There was an error: ' + status);
+      });
+    return deferred.promise;
+  };
+
   this.processValues = function(data) {
     var valueSets = [];
     if (data) {
       // Iterate over each attribute in data
       Object.keys(data).forEach(function(key) {
-        valueSets.push({
-          id: key,
-          name: data[key].title,
-          type: 'ValueSetRepository',
-          children: _getValueListAsChildren(key, JSON.parse(data[key].data))
-        });
+        if (!data[key].error) {
+          valueSets.push({
+            id: key,
+            name: data[key].value.title,
+            type: 'ValueSetRepository',
+            children: _getValueListAsChildren(key, JSON.parse(data[key].value.data))
+          });
+        }
       });
     }
     return valueSets;
@@ -189,19 +203,23 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
       else if (data.ValueSetDefinitionMsg && data.ValueSetDefinitionMsg.valueSetDefinition) {
         valueSet = _processSingleValue(data.ValueSetDefinitionMsg.valueSetDefinition);
       }
+      else if (data.ValueSetCatalogEntryMsg && data.ValueSetCatalogEntryMsg.valueSetCatalogEntry) {
+        valueSet = _processSingleValue(data.ValueSetCatalogEntryMsg.valueSetCatalogEntry);
+      }
     }
+    return valueSet;
   };
 
   this.processDetails = function(data) {
-    var details = { codeSystems: [], members: [] };
+    var details = { codeSystems: [], terms: [] };
     if (data) {
       if (data.iteratableResolvedValueSet) {
         details.codeSystems = _processCodeSystemDetails(data.iteratableResolvedValueSet.resolutionInfo);
-        details.members = _processMemberDetails(data.iteratableResolvedValueSet.entryList);
+        details.terms = _processMemberDetails(data.iteratableResolvedValueSet.entryList);
       }
       else if (data.IteratableResolvedValueSet) {
         details.codeSystems = _processCodeSystemDetails(data.IteratableResolvedValueSet.resolutionInfo);
-        details.members = _processMemberDetails(data.IteratableResolvedValueSet.entry);
+        details.terms = _processMemberDetails(data.IteratableResolvedValueSet.entry);
       }
     }
     return details;
@@ -224,6 +242,26 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
     }
   };
 
+  // Helper function used to determine if the valueSet passed in is one that comes from an editable repository.
+  // This relies on a callback function to signal when we have an answer (because we need to do some remote calls).
+  // The callback will get either true or false depending on the result.  If we can't get all of the information
+  // needed to determine if this comes from an editable repository, we assume it is not editable.
+  this.isValueSetEditable = function(valueSet, callback) {
+    ConfigurationService.load().then(function(config) {
+      if (!config || !config.valueSetServices || !valueSet || !valueSet.valueSetRepository) {
+        return callback(false);
+      }
+
+      for (var key in config.valueSetServices) {
+        if (valueSet.valueSetRepository === key) {
+          return callback(config.valueSetServices[key].writable);
+        }
+      }
+
+      callback(false);
+    });
+  };
+
   this.formatDescription = function(valueSet) {
     // There are conditions where we haven't loaded yet, so we will return the default
     // 'Loading...' description
@@ -235,7 +273,7 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
       return 'There was an error loading the details of this value set.  Please try again in a little bit, or contact us if the problem continues.';
     }
 
-    if (!valueSet.members || valueSet.members.length === 0) {
+    if (!valueSet.terms || valueSet.terms.length === 0) {
       return '(There are no codes in this value set)';
     }
 
@@ -250,16 +288,71 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
     }
 
     description += 'Codes:';
-    var lastCodeIndex = Math.min(3, valueSet.members.length);
-    if (valueSet.members.length > lastCodeIndex) {
-      description += ' (first ' + lastCodeIndex + ' of ' + valueSet.members.length + ')';
+    var lastCodeIndex = Math.min(3, valueSet.terms.length);
+    if (valueSet.terms.length > lastCodeIndex) {
+      description += ' (first ' + lastCodeIndex + ' of ' + valueSet.terms.length + ')';
     }
     description += '\r\n';
 
     for (index = 0; index < lastCodeIndex; index++) {
-      description += ' (' + valueSet.members[index].code + ') ' + valueSet.members[index].name + '\r\n';
+      description += ' (' + valueSet.terms[index].code + ') ' + valueSet.terms[index].name + '\r\n';
     }
 
     return description;
+  };
+
+  this.handleLoadDetails = function(valueSet, callback) {
+    if (!callback) {
+      return;
+    }
+
+    if (!valueSet) {
+      callback(null);
+    }
+
+    if(!valueSet.loadDetailStatus) {
+      this.loadDetails(valueSet.valueSetRepository, valueSet.id)
+        .then(this.processDetails, function() {
+          valueSet.loadDetailStatus = 'error';
+          callback(valueSet);
+          }
+        )
+        .then(function(details) {
+          if (details) {
+            valueSet.terms = details.terms;
+            valueSet.codeSystems = details.codeSystems;
+            valueSet.loadDetailStatus = 'success';
+          }
+          callback(valueSet);
+        });
+    }
+    else {
+      callback(valueSet);
+    }
+  };
+
+  // Helper function to wrap some of the complexities of saving a value set entry.  This ensures it is
+  // being routed to the right CTS2 service, and returns the value set as stored in the value set service.
+  this.handleSave = function(valueSet, callback) {
+    var vss = this;
+    ConfigurationService.load().then(function(config) {
+      var editableServiceId = 'phema';
+      if (config && config.valueSetServices) {
+        for (var key in config.valueSetServices) {
+          if (config.valueSetServices[key].writable) {
+            editableServiceId = key;
+            break;
+          }
+        }
+      }
+
+      vss.save(editableServiceId, valueSet)
+        .then(function(valueSet) {
+          vss.loadSingle(editableServiceId, valueSet.id).then(vss.processSingleValue).then(function(valueSet){
+            valueSet.valueSetRepository = editableServiceId;
+            callback(valueSet);
+          });
+        });
+    });
   };
 }]);

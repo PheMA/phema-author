@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals ArrayUtil */
+/* globals ArrayUtil, Constants */
 
 angular.module('sophe.services.temporalOperator', ['sophe.services.url', 'ngResource'])
 .filter('advancedFilter', function() {

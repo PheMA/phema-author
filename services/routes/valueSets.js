@@ -2,12 +2,16 @@ var request = require('request');
 var async = require("async");
 var ValueSetRepository = require('../lib/valueSets').ValueSetRepository;
 var util = require('../lib/util');
+var configuration = require('../../configuration');
 
-// You can add as many CTS2 endpoints as you want
-var VALUE_SET_SERVICES = [
-    {'id': 'vsac', 'order': 1, 'title': 'NLM VSAC', 'repository' : new ValueSetRepository('http://umls_user:umls_pwd@localhost:8080/')}
-  //, {'id': 'phema', 'order': 2, 'title': 'Local Value Sets', 'repository' : new ValueSetRepository('http://umls_user:umls_pwd@localhost:8080/')}
-];
+// Initialize our value set services.  Although we have a basic definition available from the configuration
+// code, there are internal details we are also setting up within here.
+var valueSetServices = configuration.valueSetServices();
+valueSetServices['vsac'].repository = new ValueSetRepository(
+  'vsac', 'http://umls_user:umls_pwd@localhost:8080/');
+valueSetServices['phema'].repository = new ValueSetRepository(
+  'phema', 'http://172.16.51.130:8080/value-sets/', '2.16.840.1.113883.3.1427.10000');
+
 
 /**
  * Builds a collection of repositories to be invoked asynchronously.
@@ -20,14 +24,19 @@ var VALUE_SET_SERVICES = [
  */
 function buildRepositoryCollection(action, actionParams) {
   var repositories = {};
-  VALUE_SET_SERVICES.forEach(function(item) {
-    var repoFunction = item.repository[action];
-    repositories[item.id] = function(callback) {
-      var paramArray = actionParams.slice(0);  // We have to copy the array that's passed in, otherwise we get errors about the callback already being called.
-      paramArray.push(function(error, data) { callback(error, {'title': item.title, 'order': item.order, 'data': data }); });
-      repoFunction.apply(item.repository, paramArray);
-    };
-  });
+  for (var key in valueSetServices) {
+    // Wrap this in a function so the closure is evaluated right away.  If we don't do this, by the time this
+    // code is evaluated in execution, the same value set service is used for every call.
+    (function(valueSetKey) {
+      var item = valueSetServices[valueSetKey];
+      var repoFunction = item.repository[action];
+      repositories[valueSetKey] = function(callback) {
+        var paramArray = actionParams.slice(0);  // We have to copy the array that's passed in, otherwise we get errors about the callback already being called.
+        paramArray.push(function(error, data) { callback(error, {'title': item.title, 'order': item.order, 'data': data }); });
+        repoFunction.apply(item.repository, paramArray);
+      };
+    })(key);
+  };
   return repositories;
 }
 
@@ -38,19 +47,17 @@ function buildRepositoryCollection(action, actionParams) {
  *
  * @return Returns null if a unique value set repository is not found, and sets the appropriate
  *    error response and code in the response object parameter.
- *    Otherwise, it returns the repository object from the VALUE_SET_SERVICES collection.
+ *    Otherwise, it returns the repository object from the valueSetServices collection.
  */
 function findRepository(id, res) {
-  var foundServices = VALUE_SET_SERVICES.filter(function(item) {
-    return item.id === id;
-  });
-  if (foundServices.length != 1) {
-    console.log('ERROR - there were ' + foundServices.length + ' results for repository id ' + id);
+  var foundService = valueSetServices[id];
+  if (!foundService) {
+    console.log('ERROR - unable to find value set repository id ' + id);
     res.status(400).send({'message' : 'Unable to find a value set service with id ' + id});
     return null;
   }
 
-  return foundServices[0];
+  return foundService;
 }
 
 /**
@@ -60,7 +67,7 @@ function findRepository(id, res) {
  */
 exports.index = function(req, res){
   var repositories = buildRepositoryCollection('getValueSets', []);
-  async.parallel(repositories, 
+  async.parallel(async.reflectAll(repositories), 
     function (error, results) {
       util.respondJSON(res, error, results);
     }
@@ -75,8 +82,11 @@ exports.index = function(req, res){
  */
 exports.search = function(req, res){
   var repositories = buildRepositoryCollection('searchValueSets', [req.params.search]);
-  async.parallel(repositories, 
+  async.parallel(async.reflectAll(repositories), 
     function (error, results) {
+      if (error && results) {
+        error = null;
+      }
       util.respondJSON(res, error, results);
     }
   );
@@ -106,6 +116,20 @@ exports.members = function(req, res){
   var service = findRepository(req.params.repo, res);
   if (service == null) { return; }
   service.repository.getValueSetMembers(req.params.id, function(error, data) {
+    util.respondJSON(res, error, data);
+  });
+};
+
+/**
+ * Returns the codes of a value set, given a repository ID and the value set ID
+ * @param {Object} req HTTP request object.
+ * @param {Object} res HTTP response object.
+ */
+exports.add = function(req, res){
+  console.log("POST - /api/valueSet/:repo");
+  var service = findRepository(req.params.repo, res);
+  if (service == null) { return; }
+  service.repository.add(req.body, function(error, data) {
     util.respondJSON(res, error, data);
   });
 };

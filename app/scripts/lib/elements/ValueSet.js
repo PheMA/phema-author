@@ -36,16 +36,6 @@ ValueSet.prototype.create = function(config, scope) {
   var headerObj = this.createText(headerOptions, group);
   workflowObj.setHeight(headerObj.getHeight() + 10);
 
-  // var idOptions = {
-  //   x: options.x, y: options.y + headerObj.getHeight() + 5,
-  //   width: options.width, // Leave out height so it auto-sizes
-  //   fontFamily: 'Calibri', fontSize: 11, fill: 'black',
-  //   text: 'OID: ' + config.element.id, name: 'oid',
-  //   align: 'center', padding: 5
-  // };
-  // var idObj = this.createText(idOptions, group);
-  // workflowObj.setHeight(headerObj.getHeight() + idObj.getHeight() + 10);
-
   // Now that the shape is built, define the bounds of the group
   group.setWidth(workflowObj.getWidth());
   group.setHeight(workflowObj.getHeight());
@@ -98,17 +88,34 @@ ValueSet.createElementFromData = function(result) {
   var element = {};
   if (result) {
     // If we just have a value set, we will create that and place it in the object
-    if (result.valueSets.length > 0 && result.terms.length === 0) {
+    if (result.valueSets && result.valueSets.length > 0 && (!result.terms || result.terms.length === 0)) {
       element = result.valueSets[0];
     }
-    // Otherwise we are going to build a temporary value set based on this collection
-    else {
-      element = {
-          id: '',
-          name: 'Custom Value Set\r\n(' + result.terms.length + ' term' + (result.terms.length == 1 ? '' : 's') +')',
-          type: Constants.ElementTypes.VALUE_SET
-      };
-      element.customList = result;
+    else if (result.newValueSet){
+      // If there is an OID, it means it was saved in a local repository, so we'll treat it normal
+      if (result.newValueSet.id && result.newValueSet.id !== '') {
+        element = {
+            id: result.newValueSet.id,
+            name: result.newValueSet.name,
+            description: result.newValueSet.description,
+            terms: result.newValueSet.terms,
+            valueSetRepository: result.newValueSet.valueSetRepository,
+            type: Constants.ElementTypes.VALUE_SET
+        };
+      }
+      // If there is an id attribute, that means it was saved to our CTS2 repository and can be loaded as-is.
+      else if (result.newValueSet.id && result.newValueSet.id !== '') {
+        element = result.newValueSet;
+      }
+      // Otherwise we are going to build a temporary value set based on this collection
+      else {
+        element = {
+            id: '',
+            name: 'Custom Value Set \r\n(' + result.terms.length + ' term' + (result.terms.length == 1 ? '' : 's') +')',
+            customList: result.newValueSet.terms,
+            type: Constants.ElementTypes.VALUE_SET
+        };
+      }
     }
   }
   return element;

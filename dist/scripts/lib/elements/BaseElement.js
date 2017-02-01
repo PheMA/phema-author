@@ -54,6 +54,55 @@ BaseElement.prototype = {
   _init: function() {
   },
 
+  // Perform backwards compatibility conversions for value set definitions.  This assumes the value
+  // set parameter is a JS object, not a PhEMA object (for that see _compatibilityForValueSetElement).
+  _compatibilityForValueSet: function(valueSet) {
+    if (!valueSet) {
+      return null;
+    }
+
+    // oid attribute renamed to id
+    if (valueSet.oid) {
+      valueSet.id = valueSet.oid;
+      delete valueSet.oid;
+    }
+
+    // members collection renamed to terms
+    if (valueSet.members) {
+      valueSet.terms = valueSet.members;
+      delete valueSet.members;
+    }
+
+    // If we have terms, perform conversion on their details.
+    if (valueSet.terms) {
+      for (var index = 0; index < valueSet.terms.length; index++) {
+        var term = valueSet.terms[index];
+        // code renamed to id
+        if (term.code) {
+          term.id = term.code;
+          delete term.code;
+        }
+
+        // codeset renamed to codeSystem
+        if (term.codeset) {
+          term.codeSystem = term.codeset;
+          delete term.codeset;
+        }
+      }
+    }
+
+    return valueSet;
+  },
+
+  // For an element (a PhEMA object that contains a value set definition in an element() attribute),
+  // ensure the value set is converted if there are any backwards compatibility considerations.
+  _compatibilityForValueSetElement: function(valueSet) {
+    var element = valueSet.element();
+    this._compatibilityForValueSet(element);
+    valueSet.element(element);
+    return valueSet;
+  },
+
   addConnectionHandler: function(kineticObj, scope) {
     var stage = scope.canvasDetails.kineticStageObj;
     kineticObj.on('mouseup', function (evt) {
@@ -326,28 +375,37 @@ BaseElement.prototype = {
     }
   },
 
-  addConnectors: function (scope, mainRect, group, trackDrag) {
+  addConnectors: function (scope, mainRect, group, trackDrag, addLeft, addRight) {
     trackDrag = (typeof trackDrag !== 'undefined') ? trackDrag : true;
+    addLeft = (typeof addLeft !== 'undefined') ? addLeft : true;
+    addRight = (typeof addRight !== 'undefined') ? addRight : true;
 
-    var leftConnectOptions = {
-      x: mainRect.getX(), y: (mainRect.getHeight() / 2),
-      width: 15, height: 15,
-      fill: 'white', name: 'leftConnector',
-      stroke: 'black', strokeWidth: 1
-    };
-    var leftObj = this.createConnector(leftConnectOptions, group);
-    addOutlineStyles(leftObj);
-    leftObj.connections([]);
+    var leftObj = null;
+    var rightObj = null;
 
-    var rightConnectOptions = {
-      x: mainRect.getX() + mainRect.getWidth(), y: (mainRect.getHeight() / 2),
-      width: 15, height: 15,
-      fill: 'white', name: 'rightConnector',
-      stroke: 'black', strokeWidth: 1
-    };
-    var rightObj = this.createConnector(rightConnectOptions, group);
-    addOutlineStyles(rightObj);
-    rightObj.connections([]);
+    if (addLeft) {
+      var leftConnectOptions = {
+        x: mainRect.getX(), y: (mainRect.getHeight() / 2),
+        width: 15, height: 15,
+        fill: 'white', name: 'leftConnector',
+        stroke: 'black', strokeWidth: 1
+      };
+      leftObj = this.createConnector(leftConnectOptions, group);
+      addOutlineStyles(leftObj);
+      leftObj.connections([]);
+    }
+
+    if (addRight) {
+      var rightConnectOptions = {
+        x: mainRect.getX() + mainRect.getWidth(), y: (mainRect.getHeight() / 2),
+        width: 15, height: 15,
+        fill: 'white', name: 'rightConnector',
+        stroke: 'black', strokeWidth: 1
+      };
+      rightObj = this.createConnector(rightConnectOptions, group);
+      addOutlineStyles(rightObj);
+      rightObj.connections([]);
+    }
 
     if (trackDrag) {
       this.connectConnectorEvents(group);
