@@ -17,7 +17,11 @@ angular.module('security.login.form', [])
     });
   };
 
-  $scope.cancelLogin = function() {
-    security.cancelLogin();
+  $scope.cancelLogin = function(suppressRedirect) {
+    security.cancelLogin(suppressRedirect);
+  };
+
+  $scope.register = function(href) {
+    security.cancelLoginWithRedirect(href);
   };
 }]);

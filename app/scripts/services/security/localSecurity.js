@@ -81,9 +81,9 @@ angular.module('security.service.local', [
     },
 
     // Give up trying to login and clear the retry queue
-    cancelLogin: function() {
+    cancelLogin: function(suppressRedirect) {
       closeLoginDialog(false);
-      redirect();
+      if (!suppressRedirect) { redirect() };
     },
 
     // Logout the current user and redirect
