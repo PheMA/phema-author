@@ -6,16 +6,23 @@
  * @ngdoc function
  * @name sopheAuthorApp.controller:ValueSetsTermsController
  * @description
- * # ValueSetsTermsController
- * Controller of the sopheAuthorApp
+ * This is the workhorse for finding/authoring/editing value sets.  It's used from our properties dialog for elements when we display a value set entry
+ * field, and at the top of the element properties dialog where the main value set concept is defined.  You'll find it referenced as the value-sets-terms
+ * directive in many places in the app.
  */
 angular.module('sopheAuthorApp')
 .controller('ValueSetsTermsController', ['$scope', '$http', 'ValueSetService', 'CodeSystemService', function ($scope, $http, ValueSetService, CodeSystemService) {
-  $scope.selectedTabIndex = $scope.selectedTabIndex || ($scope.$parent.selectedTabIndex ? $scope.$parent.selectedTabIndex : 0);
+  // selectedTab needs to be an object (even though we are just wrapping a single primitive)
+  // so that the 2-way binding from the directive works.  Angular will just pass primitives
+  // by value, and we need a reference.
+  $scope.selectedTab = $scope.selectedTab || {index: ($scope.$parent.selectedTab ? $scope.$parent.selectedTab.index : 0) };
+  $scope.tabActive = [true, false, false];
   $scope.termSearch = {term: '', isSearching: false, results: []};
   $scope.valueSetSearch = {term: '', isSearching: false, results: []};
-  $scope.selectedValueSetMembers = [];
-  $scope.existingValueSet = $scope.existingValueSet || {};
+  $scope.newValueSet = {name: '', description: '', terms: []};
+  $scope.selectedValueSetTerms = [];
+  $scope.existingValueSet = $scope.existingValueSet || null;
+  $scope.existingValueSetEditable = $scope.existingValueSetEditable || false;
   $scope.selectedTerms = $scope.selectedTerms || [];
   $scope.selectedValueSets = $scope.selectedValueSets || [];
 
@@ -37,6 +44,10 @@ angular.module('sopheAuthorApp')
     }
   };
 
+  $scope.setTab = function(index) {
+    $scope.selectedTab.index = index;
+  };
+
   $scope.removeFromTermList = function(term) {
     $scope.selectedTerms = _.filter($scope.selectedTerms, function(item) {
       return item.id !== term.id;
@@ -44,27 +55,9 @@ angular.module('sopheAuthorApp')
   };
 
   $scope.loadValueSetDetails = function(valueSet) {
-    if(!valueSet.loadDetailStatus) {
-      ValueSetService.loadDetails(valueSet.id)
-        .then(ValueSetService.processDetails, function() {
-          valueSet.loadDetailStatus = 'error';
-          valueSet.description = ValueSetService.formatDescription(valueSet);
-          $scope.selectedValueSetMembers = valueSet.members;
-          }
-        )
-        .then(function(details) {
-          if (details) {
-            valueSet.members = details.members;
-            valueSet.codeSystems = details.codeSystems;
-            valueSet.loadDetailStatus = 'success';
-            valueSet.description = ValueSetService.formatDescription(valueSet);
-            $scope.selectedValueSetMembers = valueSet.members;
-          }
-        });
-    }
-    else {
-      $scope.selectedValueSetMembers = valueSet.members;
-    }
+    ValueSetService.handleLoadDetails(valueSet, function(result) {
+      $scope.selectedValueSetTerms = result.terms;
+    });
   };
 
   // Used for single-selection mode

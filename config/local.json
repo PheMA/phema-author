@@ -7,5 +7,7 @@
   "codeSystemServiceBaseUrl":"data/",
   "configServiceBaseUrl":"data/",
   "exporterServiceBaseUrl":"data/",
-  "unitServiceBaseUrl":"data/"
+  "unitServiceBaseUrl":"data/",
+  "userServiceBaseUrl":"data/",
+  "authenticationType":"none"
 }

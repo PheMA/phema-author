@@ -77,6 +77,12 @@
         </accordion-heading>
         <div phenotype-elements></div>
       </accordion-group>
+<!--       <accordion-group id="classification-list" class="data-element-list" is-open="status.open[8]">
+        <accordion-heading>
+          Output Labels <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[8], 'glyphicon-chevron-right': !status.open[8]}"></i>
+        </accordion-heading>
+        <div classification-elements></div>
+      </accordion-group> -->
 <!--       <accordion-group id="fhir-elements-list" class="phenotype-element-list" is-open="status.open[7]">
         <accordion-heading>
           FHIR Data Elements <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[7], 'glyphicon-chevron-right': !status.open[7]}"></i>
@@ -86,7 +92,7 @@
     </accordion>
   </div>
   <div class="col-sm-9 col-xs-9">
-    <div droppable drop="addWorkflowObject(config)" class="row">
+    <div droppable drop="addWorkflowObject(config)" class="row phenotype-canvas">
       <div context-menu="onRightClick(message)" context-menu-close="onClose(closeMessage)" data-target="phenotypeMenu">
         <div data-kinetic-canvas data-canvas-details="canvasDetails" data-right-align-to="phenotypeToolbar" style="border: solid grey 1px; width: 800px; height: 600px; overflow: scroll;" id="canvas">&nbsp;</div>
       </div>

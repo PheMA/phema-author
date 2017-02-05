@@ -1,0 +1,11 @@
+<ul>
+  <li class="classification-element" double-clickable dblclick-event="addWorkflowObject(config)" draggable ng-repeat="classification in classifications">
+    <div popover="{{classification.description}}"
+      popover-trigger="mouseenter"
+      popover-placement="right"
+      popover-append-to-body="true">
+    {{classification.name}}
+    <input type="hidden" value="{{classification}}"></input>
+  </div>
+  </li>
+</ul>

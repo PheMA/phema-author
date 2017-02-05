@@ -9,6 +9,7 @@ angular.module('sophe', [
   'sophe.factories.window',
   'sophe.factories.algorithmElement',
   'sophe.factories.kineticStage',
+  'sophe.factories.authInterceptor',
   'sophe.elements.fhir.dataElements',
   'sophe.elements.qdm.dataElements',
   'sophe.elements.qdm.logicalOperators',
@@ -20,6 +21,7 @@ angular.module('sophe', [
   'sophe.elements.codeSystems',
   'sophe.elements.results',
   'sophe.elements.resultValue',
+  'sophe.elements.classification',
   'sophe.services.configuration',
   'sophe.services.codeSystem',
   'sophe.services.attribute',
@@ -33,5 +35,6 @@ angular.module('sophe', [
   'sophe.services.url',
   'sophe.services.valueSet',
   'sophe.services.exporter',
-  'sophe.services.unit'
+  'sophe.services.unit',
+  'sophe.services.user'
 ]);

@@ -1,4 +1,4 @@
-/* globals _, ValueSet */
+/* globals _, ValueSet, Constants */
 
 'use strict';
 
@@ -15,25 +15,18 @@ angular.module('sopheAuthorApp')
   $scope.isSearching = false;
   $scope.searchResults = [];
   $scope.selectedValueSets = $scope.selectedValueSets || [];
+  $scope.treeOptions = {
+    dirSelectable: false,
+    isLeaf: function(node) {
+       return $scope.isValueSet(node);
+    }
+  };
 
   $scope.loadValueSetDetails = function(el) {
     $timeout(function() {
-      if(!el.node.loadDetailStatus) {
-        ValueSetService.loadDetails(el.node.id)
-          .then(ValueSetService.processDetails, function() {
-            el.node.loadDetailStatus = 'error';
-            el.node.description = ValueSetService.formatDescription(el.node);
-            }
-          )
-          .then(function(details) {
-            if (details) {
-              el.node.members = details.members;
-              el.node.codeSystems = details.codeSystems;
-              el.node.loadDetailStatus = 'success';
-              el.node.description = ValueSetService.formatDescription(el.node);
-            }
-          });
-      }
+      ValueSetService.handleLoadDetails(el.node, function (valueSet) {
+        el.node = valueSet;
+      });
     }, 0);
   };
 
@@ -58,6 +51,11 @@ angular.module('sopheAuthorApp')
     if (_.where($scope.selectedValueSets, {id: valueSet.id}).length === 0) {
       $scope.selectedValueSets.push(angular.copy(valueSet));
     }
+  };
+
+  // Helper for our view to determine if a tree node is a value set
+  $scope.isValueSet = function(node) {
+    return node.type === Constants.ElementTypes.VALUE_SET;
   };
 
   $scope.removeFromList = function(valueSet) {

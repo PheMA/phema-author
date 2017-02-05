@@ -98,3 +98,44 @@ Attribute
   uri
   type
 }
+
+
+TODO - HANDLE BACKWARDS COMPATIBILITY WITH OLD VALUE SET DEFINITION AND THE NEW ONE.  CONVERT OLD FIELDS TO THE NEW ONE.
+
+
+ValueSet - (loaded from CTS2)
+{
+  codeSystems: Array
+  description: String
+  id: String (oid)
+  loadDetailsStatus: String
+  terms: Array   (we changed this from "members" in 1/2017)
+     {
+       code: String
+       codeset: String
+       name: String
+       type: "Term"
+       uri: String
+     }
+  name: String
+  type: "ValueSet"
+  uri: String (oid)
+  valueSetRepository: String
+}
+
+ValueSet - (authored)
+{
+  description: String
+  name: String
+  oid: String (oid)
+  terms: Array
+    {
+      id: String
+      codeSystem: String
+      name: String
+      type: "Term"
+      uri: String
+    }
+  valueSetRepository: String
+}
+

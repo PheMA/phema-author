@@ -1,4 +1,4 @@
-/* globals Kinetic */
+/* globals Kinetic, Constants */
 /* exported startConnector, endConnector, updateActiveLineLocation, getIntersectingShape,
   addElementToContainer, removeElementFromContainer, updateConnectedLines, changeConnectorEndpoints,
   allowsDrop, findObjectInPhemaGroupType, BORDER, updateSizeOfMainRect, resizeStageForEvent, MINIMUM_CANVAS_SIZE,
@@ -238,7 +238,7 @@ function addElementToContainer(stage, container, element) {
   if (group) {
     var groupDefinition = group.element();
     var phemaObject = group.phemaObject();
-    if (groupDefinition.type === 'TemporalOperator') {
+    if (groupDefinition.type === Constants.ElementTypes.TEMPORAL_OPERATOR) {
       // Replace container with element
       var containerParent = container.getParent();
       if (container === containerParent.find('.eventA')[0]) {
@@ -248,12 +248,12 @@ function addElementToContainer(stage, container, element) {
         _replaceTemporalElement(false, containerParent, container, element, stage);
       }
     }
-    else if (groupDefinition.type === 'DataElement' || groupDefinition.type === 'Category') {
+    else if (groupDefinition.type === Constants.ElementTypes.DATA_ELEMENT || groupDefinition.type === Constants.ElementTypes.CATEGORY) {
       phemaObject.valueSet(element);
       element.container = group;
       stage.draw();
     }
-    else if (groupDefinition.type === 'LogicalOperator' || groupDefinition.type === 'SubsetOperator' || groupDefinition.type === 'FunctionOperator') {
+    else if (groupDefinition.type === Constants.ElementTypes.LOGICAL_OPERATOR || groupDefinition.type === Constants.ElementTypes.SUBSET_OPERATOR || groupDefinition.type === Constants.ElementTypes.FUNCTION_OPERATOR) {
       // Add the item (if it's not already in the array)
       _addElementToOperator(element, phemaObject);
 
@@ -373,7 +373,7 @@ function selectObject(stage, selectObj, scope) {
   if (scope) {
     // Because of the order in which events are handled, we need to broadcast an event that
     // we selected an item.  This is needed to update the context menu appropriately.
-    scope.$root.$broadcast('sophe-element-selected', selectObj);
+    scope.$root.$broadcast(Constants.Events.ELEMENT_SELECTED, selectObj);
   }
 }
 
@@ -459,9 +459,10 @@ function startConnector(stage, connectorObj) {
 function endConnector(stage, connectorObj, scope, suppressCreateEvent) {
   var line = null;
   if (isDrawingLine(stage)) {
-    // If we are dropping where we started, or there is no end connection point, the line
-    // is invalid and we will just clear it
-    if (stage.connector.anchor === connectorObj || ('undefined' === typeof connectorObj)) {
+    // If we are dropping where we started, or there is no end connection point, or we are drawing
+    // an invalid connection (from a classification label to something else) the line is invalid 
+    // and we will just clear it
+    if (stage.connector.anchor === connectorObj || ('undefined' === typeof connectorObj) || stage.connector.anchor.parent.element().type === Constants.ElementTypes.CLASSIFICATION) {
       stage.connector.line.destroy();
     }
     // Otherwise we have a valid line.  Update the internal collections tracking how objects
@@ -489,7 +490,15 @@ function endConnector(stage, connectorObj, scope, suppressCreateEvent) {
       var labelObj = new Kinetic.Text(labelTextOptions);
       stage.mainLayer.add(labelObj);
       line.label(labelObj);
-      line.element({name: labelTextOptions.text, uri: '', type: 'TemporalOperator'});
+
+      // If we are connected to a classification label, the line type should just be a General type
+      // that has no properties associated with it.
+      var lineType = Constants.ElementTypes.TEMPORAL_OPERATOR;
+      if (connectorObj.parent.element().type === Constants.ElementTypes.CLASSIFICATION) {
+        lineType = 'General';
+        suppressCreateEvent = true;
+      }
+      line.element({name: labelTextOptions.text, uri: '', type: lineType});
 
       _setLabelLocationGivenConnections(lineConnectors, line);
 
@@ -511,7 +520,7 @@ function endConnector(stage, connectorObj, scope, suppressCreateEvent) {
 
   if (line && !suppressCreateEvent) {
     selectObject(stage, line, scope);
-    scope.$root.$broadcast('sophe-empty-temporal-operator-created', line);
+    scope.$root.$broadcast(Constants.Events.CREATE_TEMPORAL_OPERATOR, line);
   }
 
   return line;
@@ -735,8 +744,8 @@ function resizeStageForEvent(stage, updatedSize, movedElement) {
     mainLayer.setHeight(newSize.height);
     stage.backgroundLayer.setWidth(newSize.width);
     stage.backgroundLayer.setHeight(newSize.height);
-    stage.backgroundLayer.children[0].setWidth(stage.getWidth());
-    stage.backgroundLayer.children[0].setHeight(stage.getHeight());
+    stage.backgroundLayer.children[0].setWidth(newSize.width);
+    stage.backgroundLayer.children[0].setHeight(newSize.height);
     stage.backgroundLayer.draw();
     stage.setWidth(newSize.width);
     stage.setHeight(newSize.height);

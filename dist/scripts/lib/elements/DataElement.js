@@ -9,14 +9,14 @@ DataElement.prototype.connectEvents = function(group, scope) {
   this.addStandardEventHandlers(group, scope);
   this.addCursorEventHandlers(group, scope);
   var termObj = group.find('.termDrop')[0];
-  this.setDroppable(termObj, ['ValueSet', 'Term']);
+  this.setDroppable(termObj, [Constants.ElementTypes.VALUE_SET, 'Term']);
   this.addConnectionHandler(group.find('.leftConnector')[0], scope);
   this.addConnectionHandler(group.find('.rightConnector')[0], scope);
   this.connectConnectorEvents(group);
 
   group.find('.termDropText')[0].on('click', function(e) {
     if (e.evt.which !== 3) {
-      scope.$root.$broadcast('sophe-search-valuesets', e.target.parent);
+      scope.$root.$broadcast(Constants.Events.SEARCH_VALUESETS, e.target.parent);
     }
   });
 };
@@ -41,13 +41,13 @@ DataElement.prototype._layoutElementsAfterTermDrop = function(valueSet) {
   // configRect.width(termDrop.width());
   // configRect.y(termDrop.y() + termDrop.height() + 5);
 
-  var mainRect = findObjectInPhemaGroupType('mainRect', this._container, ['Category', 'DataElement']);
+  var mainRect = findObjectInPhemaGroupType('mainRect', this._container, [Constants.ElementTypes.CATEGORY, Constants.ElementTypes.DATA_ELEMENT]);
   // updateSizeOfMainRect(mainRect, this._container,
   //   (termDrop.width() + 20), (configRect.getY() + configRect.getHeight() + 10));
   updateSizeOfMainRect(mainRect, this._container,
     (termDrop.width() + 20), (termDrop.getY() + termDrop.getHeight() + 10));
 
-  var headerRect = findObjectInPhemaGroupType('header', this._container, ['Category', 'DataElement']);
+  var headerRect = findObjectInPhemaGroupType('header', this._container, [Constants.ElementTypes.CATEGORY, Constants.ElementTypes.DATA_ELEMENT]);
   headerRect.width(mainRect.width());
 };
 
@@ -127,7 +127,7 @@ DataElement.prototype.create = function(config, scope) {
     x: termDropOptions.x, y: termDropOptions.y,
     width: termObj.width(), height: termObj.height(),
     fontFamily: 'Calibri', fontSize: 14, fill: 'gray',
-    text: 'Drag and drop clinical terms or value sets here, or click to search',
+    text: 'Drag and drop value sets here, or click to search',
     align: 'center', padding: 5, name: 'termDropText',
   };
   var termTextObj = this.createText(termTextOptions, group);
@@ -206,7 +206,7 @@ DataElement.prototype.toObject = function() {
       }
     }
   }
-  obj.className = 'DataElement';
+  obj.className = Constants.ElementTypes.DATA_ELEMENT;
   return obj;
 };
 
@@ -223,7 +223,7 @@ DataElement.prototype.load = function(group, scope) {
     var groups = scope.canvasDetails.kineticStageObj.mainLayer.find('Group');
     for (var index = 0; index < groups.length; index++) {
       if (groups[index]._id === obj.valueSet.id) {
-        this.valueSet(groups[index]);
+        this.valueSet(this._compatibilityForValueSetElement(groups[index]));
         break;
       }
     }
@@ -233,6 +233,16 @@ DataElement.prototype.load = function(group, scope) {
   }
 
   if (obj.attributes) {
+    for (var key in obj.attributes) {
+      var attr = obj.attributes[key];
+      if (attr.constructor === Array) {
+        for (var index = 0; index < attr.length; index++) {
+          if (attr[index] && attr[index].type === Constants.ElementTypes.VALUE_SET) {
+            this._compatibilityForValueSet(attr[index]);
+          }
+        }
+      }
+    }
     this.attributes(obj.attributes);
   }
   else {

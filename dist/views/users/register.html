@@ -1,0 +1,33 @@
+<form name="form" novalidate class="login-form">
+    <div class="modal-header">
+        <h4>Register for an account</h4>
+    </div>
+    <div class="modal-body register-form">
+        <div class="alert alert-warning" ng-show="authReason">
+            {{authReason}}
+        </div>
+        <div class="alert alert-danger" ng-show="authError">
+            {{authError}}
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label>E-mail:</label>
+                <input name="email" type="email" ng-model="credentials.email" required autofocus><br/>
+                <label>First Name:</label>
+                <input name="first_name" ng-model="first_name" required><br/>
+                <label>Last Name:</label>
+                <input name="last_name" ng-model="last_name">
+            </div>
+            <div class="col-md-8">
+                <label>Password:</label>
+                <input name="pass" type="password" ng-model="credentials.password" required><br/>
+                <label>Confirm Password:</label>
+                <input name="confirm_pass" type="password" ng-model="credentials.confirm_password" required>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary login" ng-click="register()" ng-disabled='form.$invalid'>Register</button>
+        <button class="btn btn-warning cancel" ng-click="cancel()">Cancel</button>
+    </div>
+</form>

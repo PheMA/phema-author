@@ -9,57 +9,73 @@
  * Main module of the application.
  */
 var app = angular.module('sopheAuthorApp', [
-    //'ngAnimate',
-    //'ngCookies',
     'ngResource',
     'ngRoute',
-    //'ngSanitize',
-    //'ngTouch',
     'treeControl',
     'ui.bootstrap',
-    'sophe',
     'security',
+    'sophe',
     'ng-context-menu',
     'dynform',
     'angularSpinner'
   ]);
 
-app.config(function ($routeProvider) {
-    $routeProvider
-      .when('/', {
-        title: 'Home', templateUrl: 'views/main.html', controller: 'MainController' })
-      .when('/dashboard', {
-        title: 'Dashboard', templateUrl: 'views/dashboard.html', controller: 'DashboardController' })
-      .when('/about', {
-        title: 'About', templateUrl: 'views/about.html', controller: 'AboutController' })
+app.config(['$routeProvider', function ($routeProvider) {
+  $routeProvider
+    .when('/', {
+      title: 'Home', templateUrl: 'views/main.html', controller: 'MainController', isPublic: true })
+    .when('/dashboard', {
+      title: 'Dashboard', templateUrl: 'views/dashboard.html', controller: 'DashboardController' })
+    .when('/about', {
+      title: 'About', templateUrl: 'views/about.html', controller: 'AboutController', isPublic: true })
 
-      .when('/phenotype', {
-        title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
-      .when('/phenotype/new', {
-        title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
-      .when('/phenotype/search', {
-        title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
-      .when('/phenotype/:id', {
-        title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
+    .when('/login', {
+      title: 'Log In', templateUrl: 'views/security/login.html', controller: 'LoginFormController', isPublic: true })
 
-      .when('/help/quick-start', {
-        title: 'Help - Quick Start', templateUrl: 'views/help/quickStart.html', controller: 'HelpController' })
-      .when('/help/tutorial', {
-        title: 'Help - Tutorial', templateUrl: 'views/help/tutorial.html', controller: 'HelpController' })
-      .when('/help', {
-        title: 'Help', templateUrl: 'views/help/index.html', controller: 'HelpController' })
+    .when('/users/register', {
+      title: 'Register for an Account', templateUrl: 'views/users/register.html', controller: 'RegisterFormController', isPublic: true })
+    .when('/users/profile', {
+      title: 'Manage Your Profile', templateUrl: 'views/users/profile.html', controller: 'ProfileFormController', isPublic: true })
 
-      .otherwise({
-        redirectTo: '/'
-      })
-      ;
-  });
+    .when('/phenotype', {
+      title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
+    .when('/phenotype/new', {
+      title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
+    .when('/phenotype/search', {
+      title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
+    .when('/phenotype/:id', {
+      title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
 
-/*app.run(['$location', '$rootScope', function($location, $rootScope) {
-    $rootScope.$on('$routeChangeSuccess', function (event, current) {
-        $rootScope.title = current.$$route.title;
+    .when('/help/quick-start', {
+      title: 'Help - Quick Start', templateUrl: 'views/help/quickStart.html', controller: 'HelpController', isPublic: true })
+    .when('/help/tutorial', {
+      title: 'Help - Tutorial', templateUrl: 'views/help/tutorial.html', controller: 'HelpController', isPublic: true })
+    .when('/help', {
+      title: 'Help', templateUrl: 'views/help/index.html', controller: 'HelpController', isPublic: true })
+
+    .otherwise({
+      redirectTo: '/'
+    })
+    ;
+}]);
+
+app.config(['$httpProvider', function ($httpProvider) {
+  $httpProvider.interceptors.push('authInterceptorFactory');
+}]);
+
+
+app.run(['$rootScope', '$location', 'security', function ($rootScope, $location, security) {
+    // When the route changes, we are going to detect if the user is trying to access a public
+    // page (defined within the routes above), or if the user is logged in.  If the user needs to
+    // be authenticated and isn't, we take them to the login page.
+    $rootScope.$on('$routeChangeStart', function (event, next) {
+      if (next.$$route && !next.$$route.isPublic && !security.isAuthenticated()) {
+        event.preventDefault();
+        $location.path('/login');
+      }
     });
-}]);*/
+}]);
+
 
 //-------------------------------------------------------------------------
 // The code below is a workaround to allow unsafe HTML popover controls, via http://plnkr.co/edit/4QQTNp7xrNKtkmBz4KdK?p=preview

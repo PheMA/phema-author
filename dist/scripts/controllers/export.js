@@ -1,5 +1,7 @@
 'use strict';
 
+/* globals Constants */
+
 /**
  * @ngdoc function
  * @name sopheAuthorApp.controller:ExportPhenotypeController
@@ -29,13 +31,13 @@ angular.module('sopheAuthorApp')
           ExporterService.getStatus($scope.exportData.id)
           .then(function(status) {
             if (!$scope.cancelled) {
-              if (status.status === 'processing') {
+              if (status.status === Constants.ExportStatuses.PROCESSING) {
                 pollForResponse();
               }
-              else if (status.status === 'completed') {
+              else if (status.status === Constants.ExportStatuses.COMPLETED) {
                 $scope.state = 'completed';
               }
-              else if (status.status === 'error') {
+              else if (status.status === Constants.ExportStatuses.ERROR) {
                 handleError();
               }
             }

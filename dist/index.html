@@ -20,7 +20,6 @@
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-
     <div class="container col-sm-12">
       <div class="navbar-header header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#app-navbar-collapse">
@@ -89,9 +88,10 @@
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/json3/lib/json3.js"></script>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/affix.js"></script>
     <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/alert.js"></script>
     <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/button.js"></script>
@@ -126,8 +126,10 @@
     <script src="scripts/app.js"></script>
     <script src="scripts/sophe.js"></script>
     <script src="scripts/config.js"></script>
+    <script src="scripts/constants.js"></script>
     <script src="scripts/lib/elements/BaseElement.js"></script>
     <script src="scripts/lib/elements/BaseContainer.js"></script>
+    <script src="scripts/lib/elements/ClassificationElement.js"></script>
     <script src="scripts/lib/elements/DataElement.js"></script>
     <script src="scripts/lib/elements/FunctionOperator.js"></script>
     <script src="scripts/lib/elements/GenericElement.js"></script>
@@ -157,6 +159,7 @@
     <script src="scripts/services/valueSet.js"></script>
     <script src="scripts/services/exporter.js"></script>
     <script src="scripts/services/unit.js"></script>
+    <script src="scripts/services/user.js"></script>
     <script src="scripts/directives/draggable.js"></script>
     <script src="scripts/directives/droppable.js"></script>
     <script src="scripts/directives/doubleClickable.js"></script>
@@ -165,6 +168,7 @@
     <script src="scripts/directives/valueSetsTerms.js"></script>
     <script src="scripts/directives/elements/phenotype.js"></script>
     <script src="scripts/directives/elements/valueSets.js"></script>
+    <script src="scripts/directives/elements/classification.js"></script>
     <script src="scripts/directives/elements/resultValue.js"></script>
     <script src="scripts/directives/elements/results.js"></script>
     <script src="scripts/directives/elements/codeSystems.js"></script>
@@ -177,6 +181,7 @@
     <script src="scripts/factories/algorithmElementFactory.js"></script>
     <script src="scripts/factories/kineticStageFactory.js"></script>
     <script src="scripts/factories/beforeUnloadFactory.js"></script>
+    <script src="scripts/factories/authInterceptorFactory.js"></script>
     <script src="scripts/controllers/help.js"></script>
     <script src="scripts/controllers/main.js"></script>
     <script src="scripts/controllers/about.js"></script>
@@ -200,12 +205,15 @@
     <script src="scripts/controllers/properties/qdmElements.js"></script>
     <script src="scripts/controllers/properties/valueSets.js"></script>
     <script src="scripts/controllers/properties/fhirElements.js"></script>
+    <script src="scripts/controllers/properties/classifications.js"></script>
+    <script src="scripts/controllers/users/profile.js"></script>
+    <script src="scripts/controllers/users/register.js"></script>
 
     <script src="scripts/services/security/index.js"></script>
-    <script src="scripts/services/security/interceptor.js"></script>
-    <script src="scripts/services/security/retryQueue.js"></script>
+    <script src="scripts/services/security/localSecurity.js"></script>
+    <script src="scripts/services/security/stubSecurity.js"></script>
     <script src="scripts/services/security/security.js"></script>
-    <script src="scripts/services/security/authorization.js"></script>
+    <script src="scripts/services/security/retryQueue.js"></script>
     <script src="scripts/directives/security/login.js"></script>
     <script src="scripts/directives/security/toolbar.js"></script>
     <!-- endbuild -->

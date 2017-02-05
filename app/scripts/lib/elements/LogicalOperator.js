@@ -41,7 +41,7 @@ LogicalOperator.prototype.reconcileMinimumSize = function(group) {
 LogicalOperator.prototype.connectEvents = function(group, scope) {
   this.addStandardEventHandlers(group, scope);
   this.addCursorEventHandlers(group, scope);
-  this.setDroppable(group.find('.mainRect')[0], ['Category', 'DataElement', 'LogicalOperator', 'FunctionOperator', 'Phenotype']);
+  this.setDroppable(group.find('.mainRect')[0], [Constants.ElementTypes.CATEGORY, Constants.ElementTypes.DATA_ELEMENT, Constants.ElementTypes.LOGICAL_OPERATOR, Constants.ElementTypes.FUNCTION_OPERATOR, Constants.ElementTypes.PHENOTYPE]);
   this.addConnectionHandler(group.find('.leftConnector')[0], scope);
   this.addConnectionHandler(group.find('.rightConnector')[0], scope);
   this.connectConnectorEvents(group);
@@ -111,7 +111,7 @@ LogicalOperator.prototype.toObject = function() {
   for (var index = 0; index < this._containedElements.length; index++) {
     obj.containedElements.push({id: this._containedElements[index]._id});
   }
-  obj.className = 'LogicalOperator';
+  obj.className = Constants.ElementTypes.LOGICAL_OPERATOR;
   return obj;
 };
 

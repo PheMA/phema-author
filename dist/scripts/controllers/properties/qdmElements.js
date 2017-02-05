@@ -8,16 +8,34 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('QDMElementPropertiesController', ['$scope', '$modalInstance', 'QDMElementService', 'AttributeService', 'element', 'valueSet', 'attributes', function ($scope, $modalInstance, QDMElementService, AttributeService, element, valueSet, attributes) {
+  .controller('QDMElementPropertiesController', ['$scope', '$modalInstance', 'QDMElementService', 'AttributeService', 'ValueSetService', 'element', 'valueSet', 'attributes', function ($scope, $modalInstance, QDMElementService, AttributeService, ValueSetService, element, valueSet, attributes) {
     $scope.element = element;    // Element is a JSON value, and is a copy of the original
     $scope.valueSet = valueSet;  // Value set is a JSON value, and is a copy of the original
     $scope.formData = attributes || {};
     $scope.isSearchingValueSets = false;
     $scope.selectedValueSets = [];
     $scope.selectedTerms = [];
-    $scope.existingValueSet = valueSet;
-    $scope.selectedTabIndex = (valueSet && valueSet.customList && valueSet.customList.terms && valueSet.customList.terms.length > 0) ? 1 : 0;
-    
+    $scope.newValueSet = {};
+    $scope.existingValueSet = null;
+    $scope.existingValueSetEditable = false;
+    // selectedTab needs to be an object (even though we are just wrapping a single primitive)
+    // so that the 2-way binding from the directive works.  Angular will just pass primitives
+    // by value, and we need a reference.
+    $scope.selectedTab = {index: 0};
+
+    if (valueSet) {
+      ValueSetService.handleLoadDetails(valueSet, function(result) {
+        valueSet = result;
+        ValueSetService.isValueSetEditable(valueSet, function(editable) {
+          $scope.existingValueSetEditable = editable;
+          if (editable) {
+            $scope.existingValueSet = angular.copy(valueSet);  // copy so if we edit and cancel changes the original isn't affected
+            $scope.selectedTerms = valueSet.terms;
+          }
+        });
+      });
+    }
+
     // UnitService.load()
       // .then(UnitService.processValues)
       // .then(function(units) { $scope.units = units; });
@@ -67,7 +85,23 @@ angular.module('sopheAuthorApp')
     }
 
     $scope.saveValueSet = function() {
-      $scope.valueSet = ValueSet.createElementFromData({valueSets: $scope.selectedValueSets, terms: $scope.selectedTerms});
+      if (!$scope.selectedTab || $scope.selectedTab.index === 0) {
+        $scope.valueSet = ValueSet.createElementFromData({valueSets: $scope.selectedValueSets, terms: $scope.selectedTerms});
+      }
+      // Tab 2 means we are saving and updating an existing value set
+      else if ($scope.selectedTab.index === 2) {
+        $scope.valueSet = angular.copy($scope.existingValueSet);
+        $scope.selectedValueSets = null;
+        $scope.existingValueSet.terms = $scope.selectedTerms;
+        ValueSetService.handleSave($scope.existingValueSet, function(savedValueSet) {
+          $scope.existingValueSet = savedValueSet;
+          $scope.valueSet = savedValueSet;
+          //$modalInstance.close({valueSets: null, newValueSet: $scope.existingValueSet});
+        });
+      }
+      else {
+        $scope.valueSet = angular.copy($scope.existingValueSet);
+      };
       $scope.isSearchingValueSets = false;
     };
 

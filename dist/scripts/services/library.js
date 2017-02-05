@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals ArrayUtil */
+/* globals ArrayUtil, Constants */
 
 angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
 .service('LibraryService', ['$resource', '$q', 'URLService', function($resource, $q, URLService) {
@@ -33,7 +33,7 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
         id: data[index].id,
         name: data[index].name,
         description: _formatDescription(data[index]),
-        type: 'Phenotype',
+        type: Constants.ElementTypes.PHENOTYPE,
         lastModified: _formatLastModified(data[index])
       });
     }
