@@ -187,7 +187,6 @@
     <script src="scripts/controllers/about.js"></script>
     <script src="scripts/controllers/phenotype.js"></script>
     <script src="scripts/controllers/prompt.js"></script>
-    <script src="scripts/controllers/login.js"></script>
     <script src="scripts/controllers/dashboard.js"></script>
     <script src="scripts/controllers/loadPhenotype.js"></script>
     <script src="scripts/controllers/export.js"></script>
@@ -206,16 +205,26 @@
     <script src="scripts/controllers/properties/valueSets.js"></script>
     <script src="scripts/controllers/properties/fhirElements.js"></script>
     <script src="scripts/controllers/properties/classifications.js"></script>
-    <script src="scripts/controllers/users/profile.js"></script>
-    <script src="scripts/controllers/users/register.js"></script>
 
+    <script src="scripts/controllers/login.js"></script>
     <script src="scripts/services/security/index.js"></script>
-    <script src="scripts/services/security/localSecurity.js"></script>
-    <script src="scripts/services/security/stubSecurity.js"></script>
     <script src="scripts/services/security/security.js"></script>
     <script src="scripts/services/security/retryQueue.js"></script>
     <script src="scripts/directives/security/login.js"></script>
     <script src="scripts/directives/security/toolbar.js"></script>
+
+    <!-- PhEMA integrated security includes -->
+    <script src="scripts/controllers/local/profile.js"></script>
+    <script src="scripts/controllers/local/register.js"></script>
+    <script src="scripts/services/security/localSecurity.js"></script>
+
+    <script src="scripts/services/security/stubSecurity.js"></script>
+
+    <!-- PheKB security includes -->
+    <script src="scripts/controllers/phekb/register.js"></script>
+    <script src="scripts/controllers/phekb/phekb.js"></script>
+    <script src="scripts/services/security/phekbSecurity.js"></script>
+
     <!-- endbuild -->
 </body>
 </html>

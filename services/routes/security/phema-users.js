@@ -1,7 +1,7 @@
 var request = require('request');
 var sanitizer = require('sanitizer');
-var util = require('../lib/util');
-var UserRepository = require('../lib/user').UserRepository;
+var util = require('../../lib/util');
+var UserRepository = require('../../lib/user/phema-user').UserRepository;
 var repository = new UserRepository();
 
 function buildUserFromAllowedParameters(req) {
@@ -76,4 +76,9 @@ exports.update = function(req, res) {
       util.respondJSON(res, error, data);
     });
   }
+};
+
+exports.resources = function(req, res){
+  console.log("GET - /api/user/:id/resources");
+  util.respondJSON(res, error, {});
 };

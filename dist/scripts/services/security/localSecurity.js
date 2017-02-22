@@ -2,6 +2,7 @@
 angular.module('security.service.local', [
   'security.retryQueue',    // Keeps track of failed requests that need to be retried once the user logs in
   'security.login',         // Contains the login form template and controller
+  'security.local',
   'ui.bootstrap.modal'     // Used to display the login form as a modal dialog.
 ])
 

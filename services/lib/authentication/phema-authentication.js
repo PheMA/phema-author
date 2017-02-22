@@ -4,7 +4,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var expressJwt = require('express-jwt');
 var jwt = require('jsonwebtoken');
-var UserRepository = require('./user').UserRepository;
+var UserRepository = require('../user/phema-user').UserRepository;
 var repository = new UserRepository();
 
 passport.use(new LocalStrategy({

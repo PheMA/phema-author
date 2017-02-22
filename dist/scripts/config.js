@@ -1,5 +1,5 @@
 angular.module('sophe.config', [])
-.constant('environment', 'dev')
+.constant('environment', 'phekb')
 .constant('dataServiceBaseUrl', 'api/qdm/')
 .constant('fhirServiceBaseUrl', 'api/fhir/')
 .constant('libraryBaseUrl', 'api/library/')
@@ -9,5 +9,5 @@ angular.module('sophe.config', [])
 .constant('exporterServiceBaseUrl', 'api/export/')
 .constant('unitServiceBaseUrl', 'api/units/')
 .constant('userServiceBaseUrl', 'api/user/')
-.constant('authenticationType', 'local')
+.constant('authenticationType', 'phekb')
 ;

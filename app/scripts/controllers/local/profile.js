@@ -1,6 +1,7 @@
 'use strict';
 
-angular.module('sopheAuthorApp')
+// We are assmuing that local/register.js is being loaded after us, so we create the 'security.local' module here.
+angular.module('security.local', [])
 .controller('ProfileFormController', ['$scope', '$location', 'UserService', 'security', function($scope, $location, UserService, security) {
   $scope.credentials = {
     email: security.currentUser.email,

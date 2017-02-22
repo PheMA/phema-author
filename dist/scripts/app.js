@@ -13,11 +13,15 @@ var app = angular.module('sopheAuthorApp', [
     'ngRoute',
     'treeControl',
     'ui.bootstrap',
-    'security',
     'sophe',
     'ng-context-menu',
     'dynform',
-    'angularSpinner'
+    'angularSpinner',
+    // Select the security mode that you wish to use.  Make sure all others
+    // are commented out.
+    'security',
+    'security.local',
+    'security.phekb'
   ]);
 
 app.config(['$routeProvider', function ($routeProvider) {
@@ -28,14 +32,6 @@ app.config(['$routeProvider', function ($routeProvider) {
       title: 'Dashboard', templateUrl: 'views/dashboard.html', controller: 'DashboardController' })
     .when('/about', {
       title: 'About', templateUrl: 'views/about.html', controller: 'AboutController', isPublic: true })
-
-    .when('/login', {
-      title: 'Log In', templateUrl: 'views/security/login.html', controller: 'LoginFormController', isPublic: true })
-
-    .when('/users/register', {
-      title: 'Register for an Account', templateUrl: 'views/users/register.html', controller: 'RegisterFormController', isPublic: true })
-    .when('/users/profile', {
-      title: 'Manage Your Profile', templateUrl: 'views/users/profile.html', controller: 'ProfileFormController', isPublic: true })
 
     .when('/phenotype', {
       title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
@@ -52,6 +48,20 @@ app.config(['$routeProvider', function ($routeProvider) {
       title: 'Help - Tutorial', templateUrl: 'views/help/tutorial.html', controller: 'HelpController', isPublic: true })
     .when('/help', {
       title: 'Help', templateUrl: 'views/help/index.html', controller: 'HelpController', isPublic: true })
+
+    // Enable these lines when using standalone security
+    .when('/login', {
+      title: 'Log In', templateUrl: 'views/security/login.html', controller: 'LoginFormController', isPublic: true })
+    .when('/users/register', {
+      title: 'Register for an Account', templateUrl: 'views/users/register.html', controller: 'RegisterFormController', isPublic: true })
+    .when('/users/profile', {
+      title: 'Manage Your Profile', templateUrl: 'views/users/profile.html', controller: 'ProfileFormController', isPublic: true })
+
+    // Enable these lines when using PheKB
+    .when('/phekb', {
+      title: 'PheKB Entry Point', templateUrl: 'views/phekb/entry.html', controller: 'PhekbEntryController', isPublic: true })
+    .when('/access-denied', {
+      title: 'Access Denied', templateUrl: 'views/phekb/access-denied.html', controller: 'MainController', isPublic: true })
 
     .otherwise({
       redirectTo: '/'

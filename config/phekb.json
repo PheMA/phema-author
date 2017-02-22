@@ -1,0 +1,13 @@
+{
+  "environment":"phekb",
+  "dataServiceBaseUrl":"api/qdm/",
+  "fhirServiceBaseUrl":"api/fhir/",
+  "libraryBaseUrl":"api/library/",
+  "valueSetServiceBaseUrl":"api/valueset/",
+  "codeSystemServiceBaseUrl":"api/codesystem/",
+  "configServiceBaseUrl":"api/config/",
+  "exporterServiceBaseUrl":"api/export/",
+  "unitServiceBaseUrl":"api/units/",
+  "userServiceBaseUrl":"api/user/",
+  "authenticationType":"phekb"
+}
