@@ -1,10 +1,17 @@
+var fs = require('fs');
+var http = require('http');
+var https = require('https');
 var express = require('express');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var flash = require("connect-flash");
 var helmet = require('helmet');
 var auth = require('./services/lib/authentication');
+var forceSSL = require('express-force-ssl');
 
+// --------- CONFIGURATION ------
+var defaultPort = (process.env.PORT || 8081);
+var securePort = defaultPort + 100;
 
 // --------- SERVICES -----------
 // Services used to respond to route requests
@@ -24,8 +31,14 @@ var users = require('./services/routes/users');
 var app = express();
 module.exports = app;
 
+// SSL setup
+var sslOptions = {
+  key: fs.readFileSync('../phema-dev.key'),
+  cert: fs.readFileSync('../phema-dev.crt'),
+  //ca: fs.readFileSync('../phema-dev-chain.pem')
+};
+
 app.use(logger('combined'));
-app.use(express.static("" + __dirname + "/dist", {maxAge: 1}));
 
 // parse application/json
 app.use(bodyParser.json());
@@ -39,9 +52,19 @@ auth.initialize(app);
 // Use helmet to include recommended HTTP headers for security
 app.use(helmet());
 
+// Force SSL connections
+app.use(forceSSL);
+app.set('forceSSLOptions', {
+  enable301Redirects: true,
+  httpsPort: securePort
+});
+
 
 // --------- ROUTING -----------
 // Routing examples at: https://github.com/strongloop/express/tree/master/examples/route-separation
+//app.all('*', ensureSecure); // at top of routing calls
+
+app.use(express.static("" + __dirname + "/dist", {maxAge: 1}));
 app.get('/', site.index);
 
 app.get('/api/qdm/:type', elements.index);
@@ -78,6 +101,6 @@ app.post('/login', auth.login);
 app.get('/logout', auth.logout);
 app.post('/register', users.add);
 
-
-app.listen(process.env.PORT || 8081);
-
+// Start up the application.  Note that we have both HTTP and HTTPS apps running.
+http.createServer(app).listen(defaultPort);
+https.createServer(sslOptions, app).listen(securePort);
