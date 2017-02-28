@@ -108,7 +108,7 @@ angular.module('security.service.phekb', [
 
     // Attempt to authenticate a user by the given email and password
     login: function(email, password) {
-      var request = $http.post('/api/login', {email: email, password: password});
+      var request = $http.post('/login', {email: email, password: password});
 
       return request.then(function(response) {
         if (!response.data.user) {

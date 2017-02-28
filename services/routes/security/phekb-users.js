@@ -24,7 +24,15 @@ exports.details= function(req,res){
     res.send({user: null});
   }
   
-}
+};
+
+exports.update = function(req, res) {
+  res.status(501).send();
+};
+
+exports.add = function(req, res) {
+  res.status(501).send();
+};
 
 exports.resources = function(req, res){
   var session = req.body.session;

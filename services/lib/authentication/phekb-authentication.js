@@ -62,7 +62,7 @@ function login_phekb(res,email, password) {
       */
 
       var user_data = {session: session , sessid: body.sessid, session_name: body.session_name, admin: admin,
-        uid: body.user.uid, fullName: body.user.field_full_name.und[0].value, email: body.user.mail, fromSite: 'phekb.org',  
+        uid: body.user.uid, fullName: body.user.field_full_name.und[0].value, email: body.user.mail, fromSite: 'phekb.local',  
         data : { roles: body.user.roles,  groups: body.user.field_user_pgroups.und, institution: body.user.field_user_institution.und[0].tid }
       };
       
@@ -72,7 +72,7 @@ function login_phekb(res,email, password) {
           // Record login 
           cur_user.lastLogin = Date.now();
           cur_user.session = user_data.session;
-          cur_user.fromSite = 'phekb.org';
+          cur_user.fromSite = 'phekb.local';
           cur_user.uid = user_data.uid;
           cur_user.data = user_data.data; // update their roles and such 
           cur_user.save(function(err) {

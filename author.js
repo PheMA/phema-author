@@ -4,8 +4,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 var moduleConfig = {
   library:  'phema',    // phema | phekb
-  users:    'phema',    // phema | phekb
-  auth:     'phema'     // phema | phekb
+  users:    'phekb',    // phema | phekb
+  auth:     'phekb'     // phema | phekb
 };
 ///////////////////////////////////////////////////////////////////////////////
 

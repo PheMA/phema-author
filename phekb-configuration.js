@@ -1,5 +1,5 @@
 var configuration = {
-  baseUrl: 'https://phekb.org',
+  baseUrl: 'http://phekb.local',
 
   // api_key must match the api key specified at phekb.org/admin/phema/config 
   apiKey: 'abc123',
