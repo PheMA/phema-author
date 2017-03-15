@@ -21,9 +21,11 @@
             <div class="col-md-8">
                 <i>Please enter your password only if you wish to change it</i><br/>
                 <label>Password:</label>
-                <input name="pass" type="password" ng-model="credentials.password"><br/>
+                <input name="pass" type="password" ng-model="credentials.password" ng-minlength="6"><br/>
                 <label>Confirm Password:</label>
-                <input name="confirm_pass" type="password" ng-model="credentials.confirm_password">
+                <input name="confirm_pass" type="password" ng-model="credentials.confirm_password" ng-minlength="6">
+                <br/>
+                <span class="note">Passwords must be 6 characters or longer</span>
             </div>
         </div>
     </div>
