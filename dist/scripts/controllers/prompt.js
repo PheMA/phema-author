@@ -8,12 +8,12 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PromptController', ['$scope', '$modalInstance', 'title', 'message', 'buttons', function ($scope, $modalInstance, title, message, buttons) {
+  .controller('PromptController', ['$scope', '$uibModalInstance', 'title', 'message', 'buttons', function ($scope, $uibModalInstance, title, message, buttons) {
     $scope.title = title;
     $scope.message = message;
     $scope.buttons = buttons;
 
     $scope.buttonPressed = function (id) {
-      $modalInstance.close(id);
+      $uibModalInstance.close(id);
     };
   }]);

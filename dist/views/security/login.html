@@ -13,7 +13,7 @@
         <label>E-mail</label>
         <input name="email" type="email" ng-model="credentials.email" required autofocus>
         <label>Password</label>
-        <input name="pass" type="password" ng-model="credentials.password" required>
+        <input name="pass" type="password" ng-model="credentials.password" autocomplete="off" required>
         <hr/>
         <div>Don't have an account?  Please <a href="#/users/register" ng-click="cancelLogin(true);">register for one</a></div>
     </div>

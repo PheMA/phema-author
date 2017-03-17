@@ -20,6 +20,12 @@ var app = angular.module('sopheAuthorApp', [
     'angularSpinner'
   ]);
 
+app.config(['$locationProvider', function($locationProvider) {
+  // Disable the hash prefix, as it breaks our routeProvider below otherwise.
+  // https://github.com/angular/angular.js/commit/aa077e81129c740041438688dff2e8d20c3d7b52
+  $locationProvider.hashPrefix('');
+}]);
+
 app.config(['$routeProvider', function ($routeProvider) {
   $routeProvider
     .when('/', {

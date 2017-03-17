@@ -1,6 +1,6 @@
 <div>
-  <tabset>
-    <tab heading="Select Value Set" ng-click="setTab(0)">
+  <uib-tabset>
+    <uib-tab heading="Select Value Set" ng-click="setTab(0)">
       <div class="value-set-container">
         <div class="row search-panel">
           <div class="col-md-12 divider-right">
@@ -41,8 +41,8 @@
           </div>
         </div>
       </div>
-    </tab>
-    <tab heading="Create Value Set" ng-click="setTab(1)">
+    </uib-tab>
+    <uib-tab heading="Create Value Set" ng-click="setTab(1)">
       <div class="code-systems-container">
         <div class="row search-panel">
           <div class="col-md-12">
@@ -115,8 +115,8 @@
           </div>
         </div>
       </div>
-    </tab>
-    <tab heading="Edit Value Set" ng-click="setTab(2)" ng-show="existingValueSet !== null">
+    </uib-tab>
+    <uib-tab heading="Edit Value Set" ng-click="setTab(2)" ng-show="existingValueSet !== null">
       <div class="code-systems-container">
         <div class="row search-panel">
           <div class="col-md-12">
@@ -195,6 +195,6 @@
           </div>
         </div>
       </div>
-    </tab>
-  </tabset>
+    </uib-tab>
+  </uib-tabset>
 </div>

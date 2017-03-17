@@ -8,7 +8,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('RelationshipPropertiesController', ['$scope', '$modalInstance', 'TemporalOperatorService', 'element', 'temporalOperators', 'startLabel', 'endLabel', function ($scope, $modalInstance, TemporalOperatorService, element, temporalOperators, startLabel, endLabel) {
+  .controller('RelationshipPropertiesController', ['$scope', '$uibModalInstance', 'TemporalOperatorService', 'element', 'temporalOperators', 'startLabel', 'endLabel', function ($scope, $uibModalInstance, TemporalOperatorService, element, temporalOperators, startLabel, endLabel) {
     $scope.startLabel = startLabel;
     $scope.endLabel = endLabel;
     $scope.element = element;
@@ -55,10 +55,10 @@ angular.module('sopheAuthorApp')
     }
 
     $scope.ok = function () {
-      $modalInstance.close($scope.relationship);
+      $uibModalInstance.close($scope.relationship);
     };
 
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   }]);

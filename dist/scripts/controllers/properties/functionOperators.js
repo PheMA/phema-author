@@ -8,7 +8,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('FunctionOperatorPropertiesController', ['$scope', '$modalInstance', 'element', 'containedElements', 'attributes', function ($scope, $modalInstance, element, containedElements, attributes) {
+  .controller('FunctionOperatorPropertiesController', ['$scope', '$uibModalInstance', 'element', 'containedElements', 'attributes', function ($scope, $uibModalInstance, element, containedElements, attributes) {
     $scope.containedElements = containedElements;
     $scope.formData = attributes || {};
     $scope.functionName = element.name;
@@ -32,10 +32,10 @@ angular.module('sopheAuthorApp')
     $scope.formTemplate = template;
 
     $scope.ok = function () {
-      $modalInstance.close($scope.formData);
+      $uibModalInstance.close($scope.formData);
     };
 
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   }]);

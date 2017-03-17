@@ -10,7 +10,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-.controller('CodeSystemsController', ['$scope', '$http', 'CodeSystemService', function ($scope, $http, CodeSystemService) {
+.controller('CodeSystemsController', ['$scope', 'CodeSystemService', function ($scope, CodeSystemService) {
   $scope.search = {term: '', isSearching: false, results: []};
   $scope.selectedCodeSystems = [];
 

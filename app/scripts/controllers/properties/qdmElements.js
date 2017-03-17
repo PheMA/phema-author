@@ -8,7 +8,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('QDMElementPropertiesController', ['$scope', '$modalInstance', 'QDMElementService', 'AttributeService', 'ValueSetService', 'element', 'valueSet', 'attributes', function ($scope, $modalInstance, QDMElementService, AttributeService, ValueSetService, element, valueSet, attributes) {
+  .controller('QDMElementPropertiesController', ['$scope', '$uibModalInstance', 'QDMElementService', 'AttributeService', 'ValueSetService', 'element', 'valueSet', 'attributes', function ($scope, $uibModalInstance, QDMElementService, AttributeService, ValueSetService, element, valueSet, attributes) {
     $scope.element = element;    // Element is a JSON value, and is a copy of the original
     $scope.valueSet = valueSet;  // Value set is a JSON value, and is a copy of the original
     $scope.formData = attributes || {};
@@ -73,11 +73,11 @@ angular.module('sopheAuthorApp')
     })};
 
     $scope.ok = function () {
-      $modalInstance.close({attributes: $scope.formData, valueSet: $scope.valueSet});
+      $uibModalInstance.close({attributes: $scope.formData, valueSet: $scope.valueSet});
     };
 
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
 
     $scope.chooseValueSet = function() {
@@ -96,7 +96,7 @@ angular.module('sopheAuthorApp')
         ValueSetService.handleSave($scope.existingValueSet, function(savedValueSet) {
           $scope.existingValueSet = savedValueSet;
           $scope.valueSet = savedValueSet;
-          //$modalInstance.close({valueSets: null, newValueSet: $scope.existingValueSet});
+          //$uibModalInstance.close({valueSets: null, newValueSet: $scope.existingValueSet});
         });
       }
       else {

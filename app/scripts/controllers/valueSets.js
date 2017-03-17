@@ -10,7 +10,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-.controller('ValueSetsController', ['$scope', '$http', '$timeout', 'ValueSetService', function ($scope, $http, $timeout, ValueSetService) {
+.controller('ValueSetsController', ['$scope', '$timeout', 'ValueSetService', function ($scope, $timeout, ValueSetService) {
   $scope.searchTerm = '';
   $scope.isSearching = false;
   $scope.searchResults = [];

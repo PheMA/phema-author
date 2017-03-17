@@ -28,68 +28,68 @@
 </div>
 <div class="row phenotype-elements">
   <div class="col-sm-3 col-xs-3">
-    <accordion close-others="oneAtATime">
-      <accordion-group id="data-elements-list" class="data-element-list" is-open="status.open[0]">
-        <accordion-heading>
+    <uib-accordion close-others="oneAtATime">
+      <div uib-accordion-group id="data-elements-list" class="data-element-list" is-open="status.open[0]">
+        <uib-accordion-heading>
           QDM Data Elements <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[0], 'glyphicon-chevron-right': !status.open[0]}"></i>
-        </accordion-heading>
+        </uib-accordion-heading>
         <div qdm-data-elements></div>
-      </accordion-group>
-      <accordion-group id="value-sets-list" class="term-element-list" is-open="status.open[1]">
-        <accordion-heading>
+      </div>
+      <div uib-accordion-group id="value-sets-list" class="term-element-list" is-open="status.open[1]">
+        <uib-accordion-heading>
           Value Sets <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[1], 'glyphicon-chevron-right': !status.open[1]}"></i>
-        </accordion-heading>
+        </uib-accordion-heading>
         <div value-sets selected-value-sets="selectedValueSets" location="sidebar"></div>
-      </accordion-group>
-<!--        <accordion-group id="code-systems-list" class="term-element-list" is-open="status.open[2]">
-        <accordion-heading>
+      </div>
+<!--        <div uib-accordion-group id="code-systems-list" class="term-element-list" is-open="status.open[2]">
+        <uib-accordion-heading>
           Terminologies / Codes <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[2], 'glyphicon-chevron-right': !status.open[2]}"></i>
-        </accordion-heading>
+        </uib-accordion-heading>
         <div code-systems location="sidebar"></div>
-      </accordion-group> -->
-      <accordion-group id="logical-operators-list" class="operator-element-list" is-open="status.open[3]">
-        <accordion-heading>
+      </div> -->
+      <div uib-accordion-group id="logical-operators-list" class="operator-element-list" is-open="status.open[3]">
+        <uib-accordion-heading>
           Logical Operators <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[3], 'glyphicon-chevron-right': !status.open[3]}"></i>
-        </accordion-heading>
+        </uib-accordion-heading>
         <div logical-operators></div>
-      </accordion-group>
-      <accordion-group id="temporal-operators-list" class="operator-element-list" is-open="status.open[4]">
-        <accordion-heading>
+      </div>
+      <div uib-accordion-group id="temporal-operators-list" class="operator-element-list" is-open="status.open[4]">
+        <uib-accordion-heading>
           Temporal Operators <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[4], 'glyphicon-chevron-right': !status.open[4]}"></i>
-        </accordion-heading>
+        </uib-accordion-heading>
         <div temporal-operators></div>
-      </accordion-group>
-      <accordion-group id="function-operators-list" class="operator-element-list" is-open="status.open[5]">
-        <accordion-heading>
+      </div>
+      <div uib-accordion-group id="function-operators-list" class="operator-element-list" is-open="status.open[5]">
+        <uib-accordion-heading>
           Functions <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[5], 'glyphicon-chevron-right': !status.open[5]}"></i>
-        </accordion-heading>
+        </uib-accordion-heading>
         <div function-operators></div>
-      </accordion-group>
-      <accordion-group id="subset-operators-list" class="operator-element-list" is-open="status.open[6]">
-        <accordion-heading>
+      </div>
+      <div uib-accordion-group id="subset-operators-list" class="operator-element-list" is-open="status.open[6]">
+        <uib-accordion-heading>
           Subset Operators <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[6], 'glyphicon-chevron-right': !status.open[6]}"></i>
-        </accordion-heading>
+        </uib-accordion-heading>
         <div subset-operators></div>
-      </accordion-group>
-      <accordion-group id="phenotype-element-list" class="data-element-list" is-open="status.open[7]">
-        <accordion-heading>
+      </div>
+      <div uib-accordion-group id="phenotype-element-list" class="data-element-list" is-open="status.open[7]">
+        <uib-accordion-heading>
           Existing Phenotypes <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[7], 'glyphicon-chevron-right': !status.open[7]}"></i>
-        </accordion-heading>
+        </uib-accordion-heading>
         <div phenotype-elements></div>
-      </accordion-group>
-<!--       <accordion-group id="classification-list" class="data-element-list" is-open="status.open[8]">
-        <accordion-heading>
+      </div>
+<!--       <div uib-accordion-group id="classification-list" class="data-element-list" is-open="status.open[8]">
+        <uib-accordion-heading>
           Output Labels <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[8], 'glyphicon-chevron-right': !status.open[8]}"></i>
-        </accordion-heading>
+        </uib-accordion-heading>
         <div classification-elements></div>
-      </accordion-group> -->
-<!--       <accordion-group id="fhir-elements-list" class="phenotype-element-list" is-open="status.open[7]">
-        <accordion-heading>
+      </div> -->
+<!--       <div uib-accordion-group id="fhir-elements-list" class="phenotype-element-list" is-open="status.open[7]">
+        <uib-accordion-heading>
           FHIR Data Elements <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[7], 'glyphicon-chevron-right': !status.open[7]}"></i>
-        </accordion-heading>
+        </uib-accordion-heading>
         <div fhir-data-elements></div>
-      </accordion-group> -->
-    </accordion>
+      </div> -->
+    </uib-accordion>
   </div>
   <div class="col-sm-9 col-xs-9">
     <div droppable drop="addWorkflowObject(config)" class="row phenotype-canvas">
