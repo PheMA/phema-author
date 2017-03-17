@@ -69,6 +69,12 @@ app.config(['$httpProvider', function ($httpProvider) {
   $httpProvider.interceptors.push('authInterceptorFactory');
 }]);
 
+app.config(['$qProvider', function ($qProvider) {
+  // Disable an error being thrown when unhandled promise rejections are detected.  The long-term solution is to
+  // fix these... but for now we will suppress.
+  $qProvider.errorOnUnhandledRejections(false);
+}]);
+
 
 app.run(['$rootScope', '$location', 'security', function ($rootScope, $location, security) {
     // When the route changes, we are going to detect if the user is trying to access a public

@@ -64,9 +64,9 @@ angular.module('sopheAuthorApp')
       .then(LibraryService.processValues)
       .then(function(elements) { $scope.phenotypes = elements; });
 
-    FHIRElementService.load()
-      .then(FHIRElementService.processValues)
-      .then(function(elements) { $scope.fhirElements = elements; });
+    // FHIRElementService.load()
+    //   .then(FHIRElementService.processValues)
+    //   .then(function(elements) { $scope.fhirElements = elements; });
 
     QDMElementService.load()
       .then(QDMElementService.processValues)

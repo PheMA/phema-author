@@ -1,8 +1,8 @@
 <div id="phenotype-messages" class="row" ng-show="successMessage || errorMessage">
   <div class="col-sm-3 col-xs-3"></div>
   <div class="col-sm-6 col-xs-6">
-    <alert type="success" ng-show="successMessage" close="closeSuccessMessage(successMessage)">{{successMessage}}</alert>
-    <alert type="danger" ng-show="errorMessage" close="closeErrorMessage(errorMessage)">{{errorMessage}}</alert>
+    <div uib-alert ng-class="'alert-success'" ng-show="successMessage" close="closeSuccessMessage(successMessage)">{{successMessage}}</div>
+    <div uib-alert ng-class="'alert-danger'" ng-show="errorMessage" close="closeErrorMessage(errorMessage)">{{errorMessage}}</div>
   </div>
   <div class="col-sm-3 col-xs-3"></div>
 </div>
@@ -18,7 +18,7 @@
         </button>
         <ul ng-show="{{btn.dropdown}}" class="dropdown-menu" role="menu" aria-labelledby="{{btn.id}}">
           <li ng-repeat="child in btn.children" title="{{child.tooltip}}">
-            <a href="javascript:void(0);" ng-click="child.event()">{{child.text}}</a>
+            <a href="#" ng-click="$event.preventDefault(); child.event()">{{child.text}}</a>
           </li>
         </ul>
         <div ng-show="{{btn.spacer}}" class="spacer" />
