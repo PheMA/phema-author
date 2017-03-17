@@ -5,7 +5,7 @@ angular.module('security.service.local', [
   'ui.bootstrap.modal'     // Used to display the login form as a modal dialog.
 ])
 
-.factory('localSecurity', ['$http', '$q', '$location', 'securityRetryQueue', '$modal', function($http, $q, $location, queue, $modal) {
+.factory('localSecurity', ['$http', '$q', '$location', 'securityRetryQueue', '$uibModal', function($http, $q, $location, queue, $uibModal) {
 
   // Redirect to the given url (defaults to '/')
   function redirect(url) {
@@ -17,8 +17,8 @@ angular.module('security.service.local', [
   var loginDialog = null;
   function openLoginDialog() {
     if ( !loginDialog ) {
-      //loginDialog = $modal.open();
-      loginDialog = $modal.open({
+      //loginDialog = $uibModal.open();
+      loginDialog = $uibModal.open({
         templateUrl: 'views/security/login.html',
         controller: 'LoginFormController'})
       loginDialog.result.then(onLoginDialogClose);
@@ -65,19 +65,24 @@ angular.module('security.service.local', [
     // Attempt to authenticate a user by the given email and password
     login: function(email, password, callback) {
       var request = $http.post('/login', {email: email, password: password});
-      return request.success(function(response) {
-        service.token = response.token;
-        service.currentUser = response.user;
-        if ( service.isAuthenticated() ) {
-          closeLoginDialog(true);
-          callback(null, true);
+      return request.then(
+        function(response) {
+          var data = response.data;
+          service.token = data.token;
+          service.currentUser = data.user;
+          if ( service.isAuthenticated() ) {
+            closeLoginDialog(true);
+            callback(null, true);
+          }
+          else {
+            callback('Invalid username or password', false);
+          }
+        },
+        function(response) {
+          var data = response.data;
+          callback(data.error, false);
         }
-        else {
-          callback('Invalid username or password', false);
-        }
-      }).error(function(data, status) {
-        callback(data.error, false);
-      });
+      );
     },
 
     // Give up trying to login and clear the retry queue

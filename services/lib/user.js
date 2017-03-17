@@ -17,6 +17,14 @@ function emailValidator (email) {
   return re.test(email);
 }
 
+function passwordValidator(password) {
+  if (!password || typeof password === 'undefined') {
+    return false;
+  }
+
+  return (password.length >= 6);
+}
+
 var UserSchema = new Schema({
   email: {
     type: String,
@@ -27,7 +35,8 @@ var UserSchema = new Schema({
   password: {
     type: String,
     require: true,
-    select: false
+    select: false,
+    validate: [passwordValidator, 'Please enter a password that is 6 characters or longer']
   },
   firstName: {
     type: String

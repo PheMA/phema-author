@@ -8,7 +8,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('ClassificationPropertiesController', ['$scope', '$modalInstance', 'element', function ($scope, $modalInstance, element) {
+  .controller('ClassificationPropertiesController', ['$scope', '$uibModalInstance', 'element', function ($scope, $uibModalInstance, element) {
     $scope.formData = element;
     $scope.formTemplate = [
       {
@@ -24,10 +24,10 @@ angular.module('sopheAuthorApp')
     ];
 
     $scope.ok = function () {
-      $modalInstance.close($scope.formData);
+      $uibModalInstance.close($scope.formData);
     };
 
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   }]);

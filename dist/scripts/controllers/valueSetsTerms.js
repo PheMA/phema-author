@@ -11,7 +11,7 @@
  * directive in many places in the app.
  */
 angular.module('sopheAuthorApp')
-.controller('ValueSetsTermsController', ['$scope', '$http', 'ValueSetService', 'CodeSystemService', function ($scope, $http, ValueSetService, CodeSystemService) {
+.controller('ValueSetsTermsController', ['$scope', 'ValueSetService', 'CodeSystemService', function ($scope, ValueSetService, CodeSystemService) {
   // selectedTab needs to be an object (even though we are just wrapping a single primitive)
   // so that the 2-way binding from the directive works.  Angular will just pass primitives
   // by value, and we need a reference.

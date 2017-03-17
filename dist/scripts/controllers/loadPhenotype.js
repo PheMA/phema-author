@@ -8,14 +8,14 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('LoadPhenotypeController', ['$scope', '$modalInstance', 'phenotypes', function ($scope, $modalInstance, phenotypes) {
+  .controller('LoadPhenotypeController', ['$scope', '$uibModalInstance', 'phenotypes', function ($scope, $uibModalInstance, phenotypes) {
     $scope.phenotypes = phenotypes;
 
     $scope.ok = function (id) {
-      $modalInstance.close(id);
+      $uibModalInstance.close(id);
     };
 
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   }]);

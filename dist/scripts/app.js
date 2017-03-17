@@ -20,6 +20,12 @@ var app = angular.module('sopheAuthorApp', [
     'angularSpinner'
   ]);
 
+app.config(['$locationProvider', function($locationProvider) {
+  // Disable the hash prefix, as it breaks our routeProvider below otherwise.
+  // https://github.com/angular/angular.js/commit/aa077e81129c740041438688dff2e8d20c3d7b52
+  $locationProvider.hashPrefix('');
+}]);
+
 app.config(['$routeProvider', function ($routeProvider) {
   $routeProvider
     .when('/', {
@@ -61,6 +67,12 @@ app.config(['$routeProvider', function ($routeProvider) {
 
 app.config(['$httpProvider', function ($httpProvider) {
   $httpProvider.interceptors.push('authInterceptorFactory');
+}]);
+
+app.config(['$qProvider', function ($qProvider) {
+  // Disable an error being thrown when unhandled promise rejections are detected.  The long-term solution is to
+  // fix these... but for now we will suppress.
+  $qProvider.errorOnUnhandledRejections(false);
 }]);
 
 

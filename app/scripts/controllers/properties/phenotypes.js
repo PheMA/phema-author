@@ -8,7 +8,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PhenotypePropertiesController', ['$scope', '$modalInstance', 'LibraryService', 'phenotype', 'isReference', function ($scope, $modalInstance, LibraryService, phenotype, isReference) {
+  .controller('PhenotypePropertiesController', ['$scope', '$uibModalInstance', 'LibraryService', 'phenotype', 'isReference', function ($scope, $uibModalInstance, LibraryService, phenotype, isReference) {
     $scope.formData = phenotype;
     $scope.displayReferenceNote = isReference;
     $scope.formTemplate = [
@@ -30,10 +30,10 @@ angular.module('sopheAuthorApp')
     ];
 
     $scope.ok = function () {
-      $modalInstance.close($scope.formData);
+      $uibModalInstance.close($scope.formData);
     };
 
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   }]);

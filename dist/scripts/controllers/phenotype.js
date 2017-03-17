@@ -9,7 +9,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PhenotypeController', ['$scope', '$http', '$routeParams', '$modal', '$location', '$window', '$timeout', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'SubsetOperatorService', 'QDMElementService', 'FHIRElementService', 'LibraryService', 'ConfigurationService', 'FunctionOperatorService', function ($scope, $http, $routeParams, $modal, $location, $window, $timeout, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, SubsetOperatorService, QDMElementService, FHIRElementService, LibraryService, ConfigurationService, FunctionOperatorService) {
+  .controller('PhenotypeController', ['$scope', '$routeParams', '$uibModal', '$location', '$window', '$timeout', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'SubsetOperatorService', 'QDMElementService', 'FHIRElementService', 'LibraryService', 'ConfigurationService', 'FunctionOperatorService', function ($scope, $routeParams, $uibModal, $location, $window, $timeout, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, SubsetOperatorService, QDMElementService, FHIRElementService, LibraryService, ConfigurationService, FunctionOperatorService) {
     $scope.phenotype = ($routeParams.id ? {id: $routeParams.id } : null );
     $scope.status = { open: [false, false, false, false, false, false, false, false, false, false]};
     $scope.isPropertiesDisabled = true;
@@ -64,9 +64,9 @@ angular.module('sopheAuthorApp')
       .then(LibraryService.processValues)
       .then(function(elements) { $scope.phenotypes = elements; });
 
-    FHIRElementService.load()
-      .then(FHIRElementService.processValues)
-      .then(function(elements) { $scope.fhirElements = elements; });
+    // FHIRElementService.load()
+    //   .then(FHIRElementService.processValues)
+    //   .then(function(elements) { $scope.fhirElements = elements; });
 
     QDMElementService.load()
       .then(QDMElementService.processValues)
@@ -104,7 +104,7 @@ angular.module('sopheAuthorApp')
 
     $scope.export = function() {
       var exporter = this;
-      $modal.open({
+      $uibModal.open({
         templateUrl: 'views/phenotypes/export.html',
         controller: 'ExportPhenotypeController',
         size: 'md',
@@ -182,7 +182,7 @@ angular.module('sopheAuthorApp')
     // save operation.  If not, it calls a function (fnAction with optional params)
     // to perform whatever action it had halted.
     function _handleAskToSave(fnAction, params) {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'views/phenotypes/prompt.html',
         controller: 'PromptController',
         size: 'lg',
@@ -206,7 +206,7 @@ angular.module('sopheAuthorApp')
     // Performs the actual edit/losd action - opening the load dialog.  This is
     // broken into a function so it can be passed and called in different places.
     function _handleLoad() {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'views/phenotypes/load.html',
         controller: 'LoadPhenotypeController',
         size: 'lg',
@@ -264,6 +264,10 @@ angular.module('sopheAuthorApp')
       console.log('Paste');
     };
 
+    $scope.feedback = function() {
+      $window.open("https://github.com/phema/phema-author/issues", "_blank");
+    };
+
     $scope.closeSuccessMessage = function() {
       $scope.successMessage = null;
     };
@@ -282,7 +286,7 @@ angular.module('sopheAuthorApp')
         _handlePhenotypeSave($scope.phenotype);
       }
       else {
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
           templateUrl: 'views/properties/phenotype.html',
           controller: 'PhenotypePropertiesController',
           size: 'lg',
@@ -371,7 +375,7 @@ angular.module('sopheAuthorApp')
       var modalInstance = null;
       var element = selectedElement.element();
       if (element.type === Constants.ElementTypes.TEMPORAL_OPERATOR) {
-        modalInstance = $modal.open({
+        modalInstance = $uibModal.open({
           templateUrl: 'views/properties/relationship.html',
           controller: 'RelationshipPropertiesController',
           size: 'lg',
@@ -408,7 +412,7 @@ angular.module('sopheAuthorApp')
         });
       }
       else if (element.type === Constants.ElementTypes.LOGICAL_OPERATOR) {
-        modalInstance = $modal.open({
+        modalInstance = $uibModal.open({
           templateUrl: 'views/properties/logicalOperator.html',
           controller: 'LogicalOperatorPropertiesController',
           size: 'lg',
@@ -435,7 +439,7 @@ angular.module('sopheAuthorApp')
       else if (element.type === Constants.ElementTypes.CATEGORY || element.type === Constants.ElementTypes.DATA_ELEMENT) {
         // We define the element properties based on the URI (if it's QDM or FHIR)
         var isFHIR = (element.uri.indexOf('fhir') >= 0);
-        modalInstance = $modal.open({
+        modalInstance = $uibModal.open({
           templateUrl: (isFHIR ? 'views/properties/fhirElement.html' : 'views/properties/qdmElement.html'),
           controller: (isFHIR ? 'FHIRElementPropertiesController' : 'QDMElementPropertiesController'),
           size: 'lg',
@@ -497,7 +501,7 @@ angular.module('sopheAuthorApp')
         });
       }
       else if (element.type === Constants.ElementTypes.PHENOTYPE) {
-        modalInstance = $modal.open({
+        modalInstance = $uibModal.open({
           templateUrl: 'views/properties/phenotype.html',
           controller: 'PhenotypePropertiesController',
           size: 'lg',
@@ -518,7 +522,7 @@ angular.module('sopheAuthorApp')
         });
       }
       else if (element.type === Constants.ElementTypes.VALUE_SET) {
-        modalInstance = $modal.open({
+        modalInstance = $uibModal.open({
           templateUrl: 'views/properties/valueSet.html',
           controller: 'ValueSetPropertiesController',
           size: 'lg',
@@ -531,7 +535,7 @@ angular.module('sopheAuthorApp')
         });
       }
       else if (element.type === Constants.ElementTypes.SUBSET_OPERATOR) {
-        modalInstance = $modal.open({
+        modalInstance = $uibModal.open({
           templateUrl: 'views/properties/subsetOperator.html',
           controller: 'SubsetOperatorPropertiesController',
           size: 'lg',
@@ -556,7 +560,7 @@ angular.module('sopheAuthorApp')
         });
       }
       else if (element.type === Constants.ElementTypes.FUNCTION_OPERATOR) {
-        modalInstance = $modal.open({
+        modalInstance = $uibModal.open({
           templateUrl: 'views/properties/functionOperator.html',
           controller: 'FunctionOperatorPropertiesController',
           size: 'lg',
@@ -585,7 +589,7 @@ angular.module('sopheAuthorApp')
         });
       }
       else if (element.type === Constants.ElementTypes.CLASSIFICATION) {
-        modalInstance = $modal.open({
+        modalInstance = $uibModal.open({
           templateUrl: 'views/properties/classification.html',
           controller: 'ClassificationPropertiesController',
           size: 'md',
@@ -621,7 +625,7 @@ angular.module('sopheAuthorApp')
       {spacer: true},
       {id: 'btnDelete', text: 'Delete', iconClass:'fa fa-remove', event: $scope.delete, disabled: true, tooltip: 'Delete the highlighted element(s) in the canvas'},
       {spacer: true},
-      {id: 'btnFeedback', text: 'Feedback', iconClass:'fa fa-comment', event: $scope.delete, disabled: true, tooltip: 'Suggestions or comments'},
+      {id: 'btnFeedback', text: 'Feedback', iconClass:'fa fa-comment', event: $scope.feedback, disabled: false, tooltip: 'Suggestions or comments'},
     ];
 
     // Exporters that we create will be reformatted similar to menu items.
@@ -630,7 +634,7 @@ angular.module('sopheAuthorApp')
        .then(function(exporters) { _.findWhere($scope.buttons, {text: 'Export'}).children = exporters; });
 
     $scope.$on(Constants.Events.SEARCH_VALUESETS, function(evt, dataElement) {
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'views/elements/valueSetsTermsDialog.html',
         controller: 'ValueSetsTermsDialogController',
         size: 'lg'

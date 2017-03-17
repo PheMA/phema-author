@@ -8,7 +8,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('FHIRElementPropertiesController', ['$scope', '$modalInstance', 'FHIRElementService', 'AttributeService', 'element', 'valueSet', function ($scope, $modalInstance, FHIRElementService, AttributeService, element, valueSet) {
+  .controller('FHIRElementPropertiesController', ['$scope', '$uibModalInstance', 'FHIRElementService', 'AttributeService', 'element', 'valueSet', function ($scope, $uibModalInstance, FHIRElementService, AttributeService, element, valueSet) {
     $scope.element = element;    // Element is a JSON value, and is a copy of the original
     $scope.valueSet = valueSet;  // Value set is a JSON value, and is a copy of the original
     $scope.formData = element.attributes || {};
@@ -31,11 +31,11 @@ angular.module('sopheAuthorApp')
     }
 
     $scope.ok = function () {
-      $modalInstance.close({attributes: $scope.formData, valueSet: $scope.valueSet});
+      $uibModalInstance.close({attributes: $scope.formData, valueSet: $scope.valueSet});
     };
 
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
 
     $scope.saveValueSet = function() {
