@@ -76,7 +76,7 @@
     lazyBindFound = true;
   }
   catch (e) {
-    angular.module('lazyBind', []).factory('$lazyBind', angular.noop);
+    angular.module('lazyBind', []).factory('$lazyBind', function() {return angular.noop});
   }
 
   /**
@@ -86,6 +86,14 @@
    * Provides an API for keeping a history of model values.
    */
   angular.module('decipher.history', ['lazyBind']).service('History',
+    [
+      '$parse',
+      '$rootScope',
+      '$interpolate',
+      '$lazyBind',
+      '$timeout',
+      '$log',
+      '$injector',
     function ($parse, $rootScope, $interpolate, $lazyBind, $timeout, $log,
       $injector) {
       var service = this,
@@ -1513,5 +1521,5 @@
        * @type {Watch}
        */
       this.Watch = Watch;
-    });
+    }]);
 })();

@@ -8,7 +8,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('ValueSetPropertiesController', ['$scope', '$modalInstance', 'ValueSetService', 'valueSet', function ($scope, $modalInstance, ValueSetService, valueSet) {
+  .controller('ValueSetPropertiesController', ['$scope', '$uibModalInstance', 'ValueSetService', 'valueSet', function ($scope, $uibModalInstance, ValueSetService, valueSet) {
     $scope.valueSet = valueSet;
     $scope.terms = [];
     ValueSetService.handleLoadDetails(valueSet, function(result) {
@@ -16,10 +16,10 @@ angular.module('sopheAuthorApp')
     });
 
     $scope.ok = function () {
-      $modalInstance.close();
+      $uibModalInstance.close();
     };
 
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   }]);

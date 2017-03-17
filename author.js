@@ -31,6 +31,16 @@ var users = require('./services/routes/users');
 var app = express();
 module.exports = app;
 
+// Use helmet to include recommended HTTP headers for security
+app.use(helmet());
+// Need to explicitly set CSP (not enabled by default)
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    styleSrc: ["'self'", "'unsafe-inline'"]
+  }
+}))
+
 // SSL setup
 var sslOptions = {
   key: fs.readFileSync('../phema-dev.key'),
@@ -71,9 +81,6 @@ app.use(flash());
 
 // Initialize our authentication handler
 auth.initialize(app);
-
-// Use helmet to include recommended HTTP headers for security
-app.use(helmet());
 
 // Force SSL connections
 app.use(forceSSL);

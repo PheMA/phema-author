@@ -8,16 +8,16 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('SubsetOperatorPropertiesController', ['$scope', '$modalInstance', 'SubsetOperatorService', 'element', 'containedElements', 'subsetOperators', function ($scope, $modalInstance, SubsetOperatorService, element, containedElements, subsetOperators) {
+  .controller('SubsetOperatorPropertiesController', ['$scope', '$uibModalInstance', 'SubsetOperatorService', 'element', 'containedElements', 'subsetOperators', function ($scope, $uibModalInstance, SubsetOperatorService, element, containedElements, subsetOperators) {
     $scope.subsetOperators = subsetOperators;
     $scope.subsetOperator = ArrayUtil.findInArray($scope.subsetOperators, 'name', element.name);
     $scope.containedElements = containedElements;
 
     $scope.ok = function () {
-      $modalInstance.close($scope.subsetOperator);
+      $uibModalInstance.close($scope.subsetOperator);
     };
 
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
   }]);

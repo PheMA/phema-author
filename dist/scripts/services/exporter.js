@@ -5,24 +5,29 @@ angular.module('sophe.services.exporter', ['sophe.services.url', 'ngResource'])
   this._load = function(url) {
     var deferred = $q.defer();
     $http.get(url)
-      .success(function(data) {
-        deferred.resolve(data);
-      })
-      .error(function(data, status) {
-        deferred.reject('There was an error: ' + status);
-      });
+      .then(
+        function(response) {
+          var data = response.data;
+          deferred.resolve(data);
+        },
+        function(response) {
+          deferred.reject('There was an error: ' + response.status);
+        }
+      );
     return deferred.promise;
   };
 
   this._post = function(url, data) {
     var deferred = $q.defer();
     $http.post(url, data)
-      .success(function(data) {
-        deferred.resolve(data);
-      })
-      .error(function(data, status) {
-        deferred.reject('There was an error: ' + status);
-      });
+      .then(
+        function(response) {
+          var data = response.data;
+          deferred.resolve(data);
+        },
+        function(response) {
+          deferred.reject('There was an error: ' + response.status);
+        });
     return deferred.promise;
   };
 

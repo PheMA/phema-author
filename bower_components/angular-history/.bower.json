@@ -1,14 +1,14 @@
 {
   "name": "angular-history",
-  "version": "0.7.5",
+  "version": "0.8.1",
   "main": "history.js",
   "dependencies": {},
   "devDependencies": {
-    "sinonjs": "1.7.1",
-    "sinon-qunit": "1.0.0",
-    "qunit": "1.12.0",
-    "angular": "~1.2",
-    "angular-mocks": "~1.2"
+    "sinonjs": "~1.7.1",
+    "sinon-qunit": "~1.0.0",
+    "qunit": "~1.12.0",
+    "angular": "~1.4.1",
+    "angular-mocks": "~1.4.1"
   },
   "ignore": [
     "**/.*",
@@ -22,14 +22,13 @@
     "docs"
   ],
   "homepage": "https://github.com/decipherinc/angular-history",
-  "_release": "0.7.5",
+  "_release": "0.8.1",
   "_resolution": {
     "type": "version",
-    "tag": "v0.7.5",
-    "commit": "b6a15059abb7cbc3d2eb64908841d318ef019227"
+    "tag": "v0.8.1",
+    "commit": "cf247c877714f31cb748e2d0d1bf4d86c62434e4"
   },
-  "_source": "git://github.com/decipherinc/angular-history.git",
-  "_target": "~0.7.5",
-  "_originalSource": "angular-history",
-  "_direct": true
+  "_source": "https://github.com/decipherinc/angular-history.git",
+  "_target": "~0.8.1",
+  "_originalSource": "angular-history"
 }

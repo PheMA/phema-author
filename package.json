@@ -65,12 +65,13 @@
     "karma-ng-html2js-preprocessor": "^1.0.0",
     "karma-phantomjs-launcher": "^1.0.2",
     "load-grunt-tasks": "^3.5.2",
-    "time-grunt": "^1.4.0"
+    "time-grunt": "^1.4.0",
+    "snyk": "^1.25.2"
   },
   "engines": {
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "snyk test && grunt test"
   }
 }
