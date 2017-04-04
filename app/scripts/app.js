@@ -21,7 +21,8 @@ var app = angular.module('sopheAuthorApp', [
     // are commented out.
     'security',
     'security.local',
-    'security.phekb'
+    'security.phekb',
+    'phekb'
   ]);
 
 app.config(['$locationProvider', function($locationProvider) {
@@ -30,12 +31,12 @@ app.config(['$locationProvider', function($locationProvider) {
   $locationProvider.hashPrefix('');
 }]);
 
-app.config(['$routeProvider', function ($routeProvider) {
+app.config(['$routeProvider', 'dashboardController', 'dashboardView', function ($routeProvider, dashboardController, dashboardView) {
   $routeProvider
     .when('/', {
       title: 'Home', templateUrl: 'views/main.html', controller: 'MainController', isPublic: true })
     .when('/dashboard', {
-      title: 'Dashboard', templateUrl: 'views/dashboard.html', controller: 'DashboardController' })
+      title: 'Dashboard', templateUrl: dashboardView, controller: dashboardController })
     .when('/about', {
       title: 'About', templateUrl: 'views/about.html', controller: 'AboutController', isPublic: true })
 

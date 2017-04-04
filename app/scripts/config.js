@@ -10,4 +10,6 @@ angular.module('sophe.config', [])
 .constant('unitServiceBaseUrl', '@@unitServiceBaseUrl')
 .constant('userServiceBaseUrl', '@@userServiceBaseUrl')
 .constant('authenticationType', '@@authenticationType')
+.constant('dashboardController', '@@dashboardController')
+.constant('dashboardView', '@@dashboardView')
 ;

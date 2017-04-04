@@ -72,6 +72,8 @@ angular.module('security.service.local', [
           service.token = data.token;
           service.currentUser = data.user;
           if ( service.isAuthenticated() ) {
+            // Add some elements used for display
+            service.currentUser.fullName = service.currentUser.firstName + " " + service.currentUser.lastName;
             closeLoginDialog(true);
             callback(null, true);
           }

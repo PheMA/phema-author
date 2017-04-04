@@ -15,7 +15,7 @@ xmlhttp.send();
 */
 
 var request = require('request');
-var config = require('../../../phekb-configuration').config;
+var config = require('../../../phekb-configuration').config();
 var LibraryRepository = require('../../lib/library/phekb-library').LibraryRepository;
 
 function formatItemForReturn(item, readonly) {
@@ -532,7 +532,7 @@ exports.properties = function(req,res) {
 };
 
 /* phema access to phenotype */
-exports.pheno_access_type = function(req, res){
+exports.access = function(req, res){
 
   var user = req.body.user;
   var nid = req.body.library_id;

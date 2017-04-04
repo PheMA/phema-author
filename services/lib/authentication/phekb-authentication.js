@@ -3,7 +3,7 @@
 var request = require('request');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
-var config = require('../../../phekb-configuration').config;
+var config = require('../../../phekb-configuration').config();
 var UserRepo = require('../user/phekb-user').UserRepository;
 
 
@@ -109,6 +109,10 @@ function login_phekb(res,email, password) {
       }
     }
   });
+}
+
+exports.initialize = function() {
+  // This function purposely left empty
 }
 
 exports.login = function(req, res){

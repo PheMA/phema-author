@@ -6,12 +6,11 @@ angular.module('security.service.phekb', [
   'ngCookies',              // cookies api
   'security.retryQueue',    // Keeps track of failed requests that need to be retried once the user logs in
   'security.login',         // Contains the login form template and controller
-  'security.register.phekb',      // Registration form controller
-  'ui.bootstrap.modal'      // Used to display the login form as a modal dialog.
+  'security.register.phekb'      // Registration form controller
 ])
 
-.factory('phekbSecurity', ['$http', '$q', '$location', 'securityRetryQueue', '$modal', '$rootScope', '$cookies', '$window',
-  function($http, $q, $location, queue, $modal, $rootScope, $cookies, $window) {
+.factory('phekbSecurity', ['$http', '$q', '$location', 'securityRetryQueue', '$uibModal', '$rootScope', '$cookies', '$window',
+  function($http, $q, $location, queue, $uibModal, $rootScope, $cookies, $window) {
 
   // Redirect to the given url (defaults to '/')
   function redirect(url) {
@@ -23,8 +22,8 @@ angular.module('security.service.phekb', [
   var loginDialog = null;
   function openLoginDialog() {
     if ( !loginDialog ) {
-      //loginDialog = $modal.open();
-      loginDialog = $modal.open({
+      //loginDialog = $uibModal.open();
+      loginDialog = $uibModal.open({
         templateUrl: 'views/security/login.html',
         controller: 'LoginFormController'})
       loginDialog.result.then(onLoginDialogClose);
@@ -34,6 +33,9 @@ angular.module('security.service.phekb', [
     if (loginDialog) {
       loginDialog.close(success);
       loginDialog = null;
+    }
+    else {
+      redirect();
     }
   }
 
@@ -50,8 +52,8 @@ angular.module('security.service.phekb', [
   var registerDialog = null;
   function openRegisterDialog() {
     if ( !registerDialog ) {
-      //loginDialog = $modal.open();
-      registerDialog = $modal.open({
+      //loginDialog = $uibModal.open();
+      registerDialog = $uibModal.open({
         templateUrl: 'views/security/register.html',
         controller: 'RegisterController'
       });
@@ -107,30 +109,30 @@ angular.module('security.service.phekb', [
     },
 
     // Attempt to authenticate a user by the given email and password
-    login: function(email, password) {
+    login: function(email, password, callback) {
       var request = $http.post('/login', {email: email, password: password});
 
       return request.then(function(response) {
         if (!response.data.user) {
           service.currentUser = null;
-          console.log(response);
-          return null; 
+          callback('Invalid username or password', false);
+          //console.log(response);
+          //return null; 
         }
         else {
-        service.currentUser = response.data.user;
-        $cookies.session = service.currentUser.session;
-        //console.log(service.currentUser);
-        $rootScope.$broadcast('user:updated', service.currentUser);
-        closeLoginDialog(true);
-        return service.currentUser;
+          service.currentUser = response.data.user;
+          $cookies.session = service.currentUser.session;
+          $rootScope.$broadcast('user:updated', service.currentUser);
+          closeLoginDialog(true);
+          //return service.currentUser;
+          callback(null, true);
         }
-        
       });
     },
     
     // return access user has  to phenotype they want to edit or view 
     // example return: {can_edit: true or false , access_type : admin || owner || public }
-    phenotype_access: function(library_id) {
+    phenotypeAccess: function(library_id) {
       var deferred = $q.defer();
       if (!service.currentUser) { 
         deferred.reject("You must be logged in.");
@@ -139,7 +141,7 @@ angular.module('security.service.phekb', [
         var user = service.currentUser;
         var session = user.session;
         if (session) {
-          var url = '/api/phenotype-access';
+          var url = '/api/library/' + library_id + '/access';
           var props = $http.post(url,{user:user, library_id: library_id}); 
           props.then( function(response) {
             //console.log("library service phenotype access data: ", response.data);
@@ -153,7 +155,6 @@ angular.module('security.service.phekb', [
         }
       }
       return deferred.promise;
-
     },
       
 
@@ -165,7 +166,6 @@ angular.module('security.service.phekb', [
     // Give up trying to login and clear the retry queue
     closeLogin: function(success) {
       closeLoginDialog(success);
-      
     },
 
     // Logout the current user and redirect
@@ -173,9 +173,7 @@ angular.module('security.service.phekb', [
       $cookies.session = null;
       service.currentUser = null;
       $rootScope.$broadcast('user:updated', service.currentUser);
-      if (redirectTo) {
-        redirect(redirectTo);
-      }
+      redirect(redirectTo);
       
       /*$http.post('/api/logout').then(function() {
         service.currentUser = null;
@@ -210,13 +208,9 @@ angular.module('security.service.phekb', [
     // Information about the current user, set this from any controller like login or register
     // Get user from session cookie
     currentUser: null,
-      
 
     // Is the current user authenticated?
     isAuthenticated: function(){
-      if (service.currentUser == null) {
-        //service.currentUser = {firstName: "Phekb", lastName: "User"};
-      }
       return !!service.currentUser;
     },
 

@@ -517,6 +517,14 @@ module.exports = function (grunt) {
             {
               match: 'authenticationType',
               replacement: settings.authenticationType
+            },
+            {
+              match: 'dashboardController',
+              replacement: settings.dashboardController
+            },
+            {
+              match: 'dashboardView',
+              replacement: settings.dashboardView
             }
           ]
         },

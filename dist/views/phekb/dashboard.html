@@ -1,0 +1,85 @@
+<h1>Dashboard</h1>
+<div ng-controller="PhekbDashboardController">
+  <div >
+    <div class="dashboard-col">
+      <div class="dashboard-header">
+        My PheKB Phenotypes
+      </div>
+      <div class="dashboard-body">
+        <table class="phenotype-list">
+          <thead>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Last Updated</th>
+            <th>Link to PheKB </th>
+            <th> Owner Groups </th> 
+            <th> Description </th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="phenotype in phenotypes">
+              <td><a href="#/phenotype/{{phenotype.id}}">{{phenotype.title}}</a></td>
+              <td>{{phenotype.status}}</td>
+              <td>{{phenotype.updated}}</td>
+              <td> <a href="{{phenotype.link}}" target="_blank"> Open in PheKB.org </a> </td> 
+              <td> {{phenotype.ownergroups.join(', ')}} </td>
+              <td> {{phenotype.description}} </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div >
+    <div class="dashboard-col">
+      <div class="dashboard-header">
+        My PheKB Owner Group Phenotypes
+      </div>
+      <div class="dashboard-body">
+        <table class="phenotype-list">
+          <thead>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Last Updated</th>
+            <th>Link to PheKB </th>
+            <th> Owner Groups </th> 
+            <th> Description </th>
+            <th>Email</th>
+            
+          </thead>
+          <tbody>
+            <tr ng-repeat="phenotype in group_phenotypes">
+             <td><a href="#/phenotype/{{phenotype.id}}">{{phenotype.title}}</a></td>
+              <td>{{phenotype.status}}</td>
+              <td>{{phenotype.updated}}</td>
+              <td> <a href="{{phenotype.link}}" target="_blank"> Open in PheKB.org </a> </td> 
+              <td> {{phenotype.ownergroups.join(', ')}} </td>
+              <td> {{phenotype.description}} </td>
+              <td>{{phenotype.email}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div> &nbsp; </div>
+
+
+<div class="">
+  <div class="dashboard-col">
+    <div class="dashboard-header">
+      Recent Activity
+    </div>
+    <div class="dashboard-body">
+      <span style="font-style: italic; font-size: 0.85em;">
+      This feature is not yet available.  In the future it will show you:
+        <ul style="list-style-type: disc; padding: 25px; margin: 5px;">
+          <li>Recent edits to your phenotypes</li>
+          <li>Changes to phenotypes you are watching</li>
+          <li>Changes made by others in groups you are a member of</li>
+        </ul>
+      </span>
+    </div>
+  </div>
+</div>

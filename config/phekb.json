@@ -9,5 +9,7 @@
   "exporterServiceBaseUrl":"api/export/",
   "unitServiceBaseUrl":"api/units/",
   "userServiceBaseUrl":"api/user/",
-  "authenticationType":"phekb"
+  "authenticationType":"phekb",
+  "dashboardController":"PhekbDashboardController",
+  "dashboardView":"views/phekb/dashboard.html"
 }

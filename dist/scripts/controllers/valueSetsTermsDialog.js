@@ -14,7 +14,7 @@
  */
 angular.module('sopheAuthorApp')
 .controller('ValueSetsTermsDialogController', ['$scope', '$uibModalInstance', 'ValueSetService',
-  function ($scope, $http, $modalInstance, ValueSetService) {
+  function ($scope, $http, $uibModalInstance, ValueSetService) {
     // Because we use the ValueSetsTerms directive, and this is only ever called when no value set is defined for an element,
     // we make sure to clear out/disable the scope variables that would control an editable existing value set.  That way, this
     // dialog will only show the search and create value set tabs.

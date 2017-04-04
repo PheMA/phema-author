@@ -3,7 +3,7 @@
 //                         PhEMA modules should work.
 ///////////////////////////////////////////////////////////////////////////////
 var moduleConfig = {
-  library:  'phema',    // phema | phekb
+  library:  'phekb',    // phema | phekb
   users:    'phekb',    // phema | phekb
   auth:     'phekb'     // phema | phekb
 };
@@ -18,7 +18,7 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var flash = require("connect-flash");
 var helmet = require('helmet');
-var auth = require('./services/lib/authentication/' + moduleConfig.library + '-authentication');
+var auth = require('./services/lib/authentication/' + moduleConfig.auth + '-authentication');
 var forceSSL = require('express-force-ssl');
 
 // --------- CONFIGURATION ------
@@ -119,7 +119,7 @@ app.get('/api/library/:id', library.details);
 app.post('/api/library', library.add);
 app.put('/api/library/:id', library.update);
 app.delete('/api/library/:id', library.delete);
-//app.post('/api/phenotype-access', library.pheno_access_type);
+app.post('/api/library/:id/access', library.access);
 
 app.get('/api/valueset', valueSets.index);
 app.get('/api/valueset/search=:search', valueSets.search);

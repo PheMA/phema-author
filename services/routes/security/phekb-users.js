@@ -1,6 +1,6 @@
 var request = require('request');
 var phekbModule = require('../../../phekb-configuration');
-var config = phekbModule.config;
+var config = phekbModule.config();
 var UserRepo = phekbModule.UserRepository;
 
 // Return a user if one is logged in -- the app sends the cookie which is stored with 
@@ -39,7 +39,6 @@ exports.resources = function(req, res){
   var uid = req.body.uid;
   var path = req.body.path;
   var url = config.baseUrl + '/' +  path;
-  
   request({url: url, headers: { Cookie: session} }, function(error, response, body) {
     if (!error) {
       if (body.length) {
