@@ -13,7 +13,7 @@
  * (see ValueSetsTermsController).
  */
 angular.module('sopheAuthorApp')
-.controller('ValueSetsTermsDialogController', ['$scope', '$http', '$modalInstance', 'ValueSetService',
+.controller('ValueSetsTermsDialogController', ['$scope', '$uibModalInstance', 'ValueSetService',
   function ($scope, $http, $modalInstance, ValueSetService) {
     // Because we use the ValueSetsTerms directive, and this is only ever called when no value set is defined for an element,
     // we make sure to clear out/disable the scope variables that would control an editable existing value set.  That way, this
@@ -28,15 +28,15 @@ angular.module('sopheAuthorApp')
         $scope.newValueSet.terms = $scope.selectedTerms;
         ValueSetService.handleSave($scope.newValueSet, function(savedValueSet) {
           $scope.newValueSet = savedValueSet;
-          $modalInstance.close({valueSets: null, newValueSet: $scope.newValueSet});
+          $uibModalInstance.close({valueSets: null, newValueSet: $scope.newValueSet});
         });
       }
       else {
-        $modalInstance.close({valueSets: $scope.selectedValueSets, newValueSet: null});
+        $uibModalInstance.close({valueSets: $scope.selectedValueSets, newValueSet: null});
       }
     };
 
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
 }]);

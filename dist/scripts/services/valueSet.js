@@ -119,60 +119,75 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
   this.load = function() {
     var deferred = $q.defer();
     $http.get(URLService.getValueSetServiceURL())
-      .success(function(data) {
-        deferred.resolve(data);
-      })
-      .error(function(data, status) {
-        deferred.reject('There was an error: ' + status);
-      });
+      .then(
+        function(response) {
+          var data = response.data;
+          deferred.resolve(data);
+        }, 
+        function(response) {
+          deferred.reject('There was an error: ' + response.status);
+        }
+      );
     return deferred.promise;
   };
 
   this.search = function(term) {
     var deferred = $q.defer();
     $http.get(URLService.getValueSetServiceURL('search', {term: term}))
-      .success(function(data) {
-        deferred.resolve(data);
-      })
-      .error(function(data, status) {
-        deferred.reject('There was an error: ' + status);
-      });
+      .then(
+        function(response) {
+          var data = response.data;
+          deferred.resolve(data);
+        }, 
+        function(response) {
+          deferred.reject('There was an error: ' + response.status);
+        }
+      );
     return deferred.promise;
   };
 
   this.loadSingle = function(repoId, id) {
     var deferred = $q.defer();
     $http.get(URLService.getValueSetServiceURL('single', {repoId: repoId, id: id}))
-      .success(function(data) {
-        deferred.resolve(data);
-      })
-      .error(function(data, status) {
-        deferred.reject('There was an error: ' + status);
-      });
+      .then(
+        function(response) {
+          var data = response.data;
+          deferred.resolve(data);
+        }, 
+        function(response) {
+          deferred.reject('There was an error: ' + response.status);
+        }
+      );
     return deferred.promise;
   };
 
   this.loadDetails = function(repoId, id) {
     var deferred = $q.defer();
     $http.get(URLService.getValueSetServiceURL('details', {repoId: repoId, id: id}))
-      .success(function(data) {
-        deferred.resolve(data);
-      })
-      .error(function(data, status) {
-        deferred.reject('There was an error: ' + status);
-      });
+      .then(
+        function(response) {
+          var data = response.data;
+          deferred.resolve(data);
+        }, 
+        function(response) {
+          deferred.reject('There was an error: ' + response.status);
+        }
+      );
     return deferred.promise;
   };
 
   this.save = function(repoId, valueSet) {
     var deferred = $q.defer();
     $http.post(URLService.getValueSetServiceURL('save', {repoId: repoId}), valueSet)
-      .success(function(data) {
-        deferred.resolve(data);
-      })
-      .error(function(data, status) {
-        deferred.reject('There was an error: ' + status);
-      });
+      .then(
+        function(response) {
+          var data = response.data;
+          deferred.resolve(data);
+        },
+        function(response) {
+          deferred.reject('There was an error: ' + response.status);
+        }
+      );
     return deferred.promise;
   };
 

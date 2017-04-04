@@ -5,7 +5,7 @@ angular.module('security.service.stub', [
   'ui.bootstrap.modal'     // Used to display the login form as a modal dialog.
 ])
 
-.factory('stubSecurity', ['$http', '$q', '$location', 'securityRetryQueue', '$modal', function($http, $q, $location, queue, $modal) {
+.factory('stubSecurity', ['$q', '$location', 'securityRetryQueue', '$uibModal', function($q, $location, queue, $uibModal) {
 
   // Redirect to the given url (defaults to '/')
   function redirect(url) {
@@ -17,7 +17,7 @@ angular.module('security.service.stub', [
   var loginDialog = null;
   function openLoginDialog() {
     if ( !loginDialog ) {
-      loginDialog = $modal.open({
+      loginDialog = $uibModal.open({
         templateUrl: 'views/security/login.html',
         controller: 'LoginFormController'})
       loginDialog.result.then(onLoginDialogClose);

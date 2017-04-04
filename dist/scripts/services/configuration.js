@@ -18,13 +18,16 @@ angular.module('sophe.services.configuration', ['sophe.services.url', 'ngResourc
     }
     else {
       $http.get(url)
-        .success(function(data) {
-          _cachedData = data;
-          deferred.resolve(data);
-        })
-        .error(function(data, status) {
-          deferred.reject('There was an error: ' + status);
-        });
+        .then(
+          function(response) {
+            var data = response.data;
+            _cachedData = data;
+            deferred.resolve(data);
+          },
+          function(response) {
+            deferred.reject('There was an error: ' + response.status);
+          }
+        );
     }
     return deferred.promise;
   };

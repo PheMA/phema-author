@@ -15,12 +15,14 @@ angular.module('sophe.services.codeSystem', ['sophe.services.url', 'ngResource']
   this.search = function(codeSystem, version, search) {
     var deferred = $q.defer();
     $http.get(URLService.getCodeSystemServiceURL(codeSystem, version, search))
-      .success(function(data) {
-        deferred.resolve(data);
-      })
-      .error(function(data, status) {
-        deferred.reject('There was an error: ' + status);
-      });
+      .then(
+        function(response) {
+          var data = response.data;
+          deferred.resolve(data);
+        },
+        function(response) {
+          deferred.reject('There was an error: ' + response.status);
+        });
     return deferred.promise;
   };
 

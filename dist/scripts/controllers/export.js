@@ -9,7 +9,7 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('ExportPhenotypeController', ['$scope', '$modalInstance', '$timeout', 'ExporterService', 'phenotype', 'exporter', function ($scope, $modalInstance, $timeout, ExporterService, phenotype, exporter) {
+  .controller('ExportPhenotypeController', ['$scope', '$uibModalInstance', '$timeout', 'ExporterService', 'phenotype', 'exporter', function ($scope, $uibModalInstance, $timeout, ExporterService, phenotype, exporter) {
     $scope.phenotype = phenotype;
     $scope.exporter = exporter;
     $scope.state = 'initializing';
@@ -23,7 +23,7 @@ angular.module('sopheAuthorApp')
 
     function cancelDialog() {
       $scope.cancelled = true;
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     }
 
     function pollForResponse() {
