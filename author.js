@@ -43,8 +43,8 @@ app.use(helmet.contentSecurityPolicy({
 
 // SSL setup
 var sslOptions = {
-  key: fs.readFileSync('../phema-dev.key'),
-  cert: fs.readFileSync('../phema-dev.crt'),
+  key: fs.readFileSync('phema-dev.key'),
+  cert: fs.readFileSync('phema-dev.crt'),
   //ca: fs.readFileSync('../phema-dev-chain.pem'),
   // Cipher list derived from:
   //  https://gist.github.com/collinsrj/e7faf14bb4f1d0a190a0
