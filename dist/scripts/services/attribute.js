@@ -1,3 +1,5 @@
+/* globals Conversion */
+
 'use strict';
 
 angular.module('sophe.services.attribute', ['sophe.services.url', 'ngResource'])
@@ -53,11 +55,7 @@ angular.module('sophe.services.attribute', ['sophe.services.url', 'ngResource'])
       var originalData = data.results.bindings;
       for (var index = 0; index < originalData.length; index++) {
         if (!isFiltered(originalData[index].dataElementName.value)) {
-          transformedData.push({
-            id: originalData[index].dataElementName.value,
-            name: originalData[index].attributeLabel.value,
-            uri: originalData[index].id.value,
-            type: originalData[index].attributeLabel.datatype } );
+          transformedData.push(Conversion.convertDERResponse(originalData[index], originalData[index].label.datatype));
         }
       }
       attributes = transformedData;

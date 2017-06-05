@@ -265,7 +265,7 @@ angular.module('sopheAuthorApp')
     };
 
     $scope.feedback = function() {
-      $window.open("https://github.com/phema/phema-author/issues", "_blank");
+      $window.open('https://github.com/phema/phema-author/issues', '_blank');
     };
 
     $scope.closeSuccessMessage = function() {

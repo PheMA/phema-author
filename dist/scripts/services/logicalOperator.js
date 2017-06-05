@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals ArrayUtil, Constants */
+/* globals ArrayUtil, Constants, Conversion */
 
 angular.module('sophe.services.logicalOperator', ['sophe.services.url', 'ngResource'])
 .service('LogicalOperatorService', ['$resource', '$q', 'URLService', function($resource, $q, URLService) {
@@ -20,13 +20,7 @@ angular.module('sophe.services.logicalOperator', ['sophe.services.url', 'ngResou
       var transformedData = [];
       var originalData = data.results.bindings;
       for (var index = 0; index < originalData.length; index++) {
-        transformedData.push({
-          id: originalData[index].dataElementName.value,
-          name: originalData[index].logicalOperatorLabel.value,
-          description: originalData[index].definition.value,
-          uri: originalData[index].id.value,
-          type: Constants.ElementTypes.LOGICAL_OPERATOR,
-          children: []} );
+        transformedData.push(Conversion.convertDERResponse(originalData[index], Constants.ElementTypes.LOGICAL_OPERATOR));
       }
       logicalOperators = transformedData.sort(ArrayUtil.sortByName);
     }

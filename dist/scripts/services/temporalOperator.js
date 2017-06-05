@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals ArrayUtil, Constants */
+/* globals ArrayUtil, Constants, Conversion */
 
 angular.module('sophe.services.temporalOperator', ['sophe.services.url', 'ngResource'])
 .filter('advancedFilter', function() {
@@ -64,15 +64,9 @@ angular.module('sophe.services.temporalOperator', ['sophe.services.url', 'ngReso
       var originalData = data.results.bindings;
       var index;
       for (index = 0; index < originalData.length; index++) {
-        var item = {
-          id: originalData[index].dataElementName.value,
-          name: originalData[index].temporalOperatorLabel.value,
-          uri: originalData[index].id.value,
-          type: Constants.ElementTypes.TEMPORAL_OPERATOR,
-          description: originalData[index].definition.value,
-          tooltip: originalData[index].definition.value + '<div class="popup-diagram"><img src="images/temporal/' + originalData[index].dataElementName.value + '.png" /></div>',
-          children: []
-        };
+        var item = Conversion.convertDERResponse(originalData[index], Constants.ElementTypes.TEMPORAL_OPERATOR);
+        item.tooltip = item.description + '<div class="popup-diagram"><img src="images/temporal/' + item.id + '.png" /></div>';
+        item.children = [];
 
         var existingItem = ArrayUtil.findInArray(temporalOperators, 'uri', originalData[index].id.value);
         if (existingItem) {
