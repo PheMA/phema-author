@@ -31,7 +31,7 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
     for (var index = 0; index < data.length; index++) {
       transformedData.push({
         id: data[index].id,
-        name: data[index].name,
+        name: (data[index].name === undefined ? '(No name provided)' : data[index].name),
         description: _formatDescription(data[index]),
         type: Constants.ElementTypes.PHENOTYPE,
         lastModified: _formatLastModified(data[index])
