@@ -462,7 +462,10 @@ function endConnector(stage, connectorObj, scope, suppressCreateEvent) {
     // If we are dropping where we started, or there is no end connection point, or we are drawing
     // an invalid connection (from a classification label to something else) the line is invalid 
     // and we will just clear it
-    if (stage.connector.anchor === connectorObj || ('undefined' === typeof connectorObj) || stage.connector.anchor.parent.element().type === Constants.ElementTypes.CLASSIFICATION) {
+    if (stage.connector.anchor === connectorObj ||
+      ('undefined' === typeof connectorObj) ||
+      (stage.connector.anchor.parent.element() !== null && 
+        stage.connector.anchor.parent.element().type === Constants.ElementTypes.CLASSIFICATION)) {
       stage.connector.line.destroy();
     }
     // Otherwise we have a valid line.  Update the internal collections tracking how objects
@@ -494,7 +497,8 @@ function endConnector(stage, connectorObj, scope, suppressCreateEvent) {
       // If we are connected to a classification label, the line type should just be a General type
       // that has no properties associated with it.
       var lineType = Constants.ElementTypes.TEMPORAL_OPERATOR;
-      if (connectorObj.parent.element().type === Constants.ElementTypes.CLASSIFICATION) {
+      if (connectorObj.parent.element() !== null &&
+        connectorObj.parent.element().type === Constants.ElementTypes.CLASSIFICATION) {
         lineType = 'General';
         suppressCreateEvent = true;
       }

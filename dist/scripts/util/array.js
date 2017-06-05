@@ -30,6 +30,13 @@ ArrayUtil = {
   },
 
   sortByName: function(obj1, obj2) {
+    if (obj1 === null || obj1 === undefined || obj1.name === null || obj1.name === undefined) {
+      if (obj2 === null || obj2 === undefined || obj2.name === null || obj2.name === undefined) {
+        return 0;
+      }
+      return 1;
+    }
+
     return obj1.name.localeCompare(obj2.name);
   }
 };
