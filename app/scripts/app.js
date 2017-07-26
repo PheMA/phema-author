@@ -17,7 +17,8 @@ var app = angular.module('sopheAuthorApp', [
     'sophe',
     'ng-context-menu',
     'dynform',
-    'angularSpinner'
+    'angularSpinner',
+    'angularLocalStorage'
   ]);
 
 app.config(['$locationProvider', function($locationProvider) {

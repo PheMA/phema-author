@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sopheAuthorApp')
-.controller('UserController', ['$scope', '$http', '$window', function ($scope, $http, $window) {
+.controller('UserController', ['$scope', '$http', '$window', 'storage', function ($scope, $http, $window, storage) {
   $scope.user = {username: 'john.doe', password: 'foobar'};
   $scope.message = '';
   $scope.login = function () {
