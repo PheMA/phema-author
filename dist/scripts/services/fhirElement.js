@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals ArrayUtil, Constants */
+/* globals ArrayUtil, Constants, Conversion */
 
 angular.module('sophe.services.fhirElement', ['sophe.services.attribute', 'sophe.services.url', 'ngResource'])
 .service('FHIRElementService', ['$resource', '$q', 'URLService', 'AttributeService', function($resource, $q, URLService, AttributeService) {
@@ -21,12 +21,7 @@ angular.module('sophe.services.fhirElement', ['sophe.services.attribute', 'sophe
       var transformedData = [];
       var originalData = data.results.bindings;
       for (index = 0; index < originalData.length; index++) {
-        transformedData.push({
-          id: originalData[index].dataElementName.value,
-          name: originalData[index].dataElementLabel.value,
-          description: originalData[index].definition.value,
-          uri: originalData[index].id.value,
-          type: Constants.ElementTypes.DATA_ELEMENT} );
+        transformedData.push(Conversion.convertDERResponse(originalData[index], Constants.ElementTypes.DATA_ELEMENT));
       }
       dataElements = transformedData.sort(ArrayUtil.sortByName);
     }

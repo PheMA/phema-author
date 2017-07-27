@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals ArrayUtil, Constants */
+/* globals ArrayUtil, Constants, Conversion */
 
 angular.module('sophe.services.subsetOperator', ['sophe.services.url', 'ngResource'])
 .service('SubsetOperatorService', ['$resource', '$q', 'URLService', function($resource, $q, URLService) {
@@ -20,13 +20,7 @@ angular.module('sophe.services.subsetOperator', ['sophe.services.url', 'ngResour
       var transformedData = [];
       var originalData = data.results.bindings;
       for (var index = 0; index < originalData.length; index++) {
-        transformedData.push({
-          id: originalData[index].dataElementName.value,
-          name: originalData[index].dataElementLabel.value,
-          description: originalData[index].definition.value,
-          uri: originalData[index].id.value,
-          type: Constants.ElementTypes.SUBSET_OPERATOR,
-          children: []} );
+        transformedData.push(Conversion.convertDERResponse(originalData[index], Constants.ElementTypes.SUBSET_OPERATOR));
       }
       subsetOperators = transformedData.sort(ArrayUtil.sortByName);
     }

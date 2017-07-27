@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals ArrayUtil, Constants */
+/* globals ArrayUtil, Constants, Conversion */
 
 angular.module('sophe.services.qdmElement', ['sophe.services.attribute', 'sophe.services.url', 'ngResource'])
 .service('QDMElementService', ['$resource', '$q', 'AttributeService', 'URLService', function($resource, $q, AttributeService, URLService) {
@@ -35,13 +35,9 @@ angular.module('sophe.services.qdmElement', ['sophe.services.attribute', 'sophe.
       var transformedData = [];
       var originalCategoryData = data.categories.results.bindings;
       for (index = 0; index < originalCategoryData.length; index++) {
-        transformedData.push({
-          id: originalCategoryData[index].dataElementName.value,
-          name: originalCategoryData[index].categoryLabel.value,
-          description: originalCategoryData[index].definition.value,
-          uri: originalCategoryData[index].id.value,
-          type: Constants.ElementTypes.CATEGORY,
-          children: []} );
+        var newItem = Conversion.convertDERResponse(originalCategoryData[index], Constants.ElementTypes.CATEGORY);
+        newItem.children = [];
+        transformedData.push(newItem);
       }
       dataElements = transformedData.sort(ArrayUtil.sortByName);
     }
@@ -52,13 +48,8 @@ angular.module('sophe.services.qdmElement', ['sophe.services.attribute', 'sophe.
       for (index = 0; index < originalElementData.length; index++) {
         for (categoryIndex = 0; categoryIndex < dataElements.length; categoryIndex++) {
           if (dataElements[categoryIndex].uri === originalElementData[index].context.value) {
-            dataElements[categoryIndex].children.push({
-              id: originalElementData[index].dataElementName.value,
-              name: originalElementData[index].dataElementLabel.value,
-              description: originalElementData[index].definition.value,
-              uri: originalElementData[index].id.value,
-              type: Constants.ElementTypes.DATA_ELEMENT
-            });
+            dataElements[categoryIndex].children.push(
+              Conversion.convertDERResponse(originalElementData[index], Constants.ElementTypes.DATA_ELEMENT));
             break;
           }
         }
