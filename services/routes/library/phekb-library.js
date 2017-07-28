@@ -42,7 +42,7 @@ function formatItemForReturn(item, readonly) {
       id: item._id.toHexString(),
       name: item.name,
       description: item.description,
-      //definition: item.definition,
+      definition: item.definition,
       created: item.created,
       createdBy: item.createdBy,
       modified: item.modified,
@@ -50,8 +50,7 @@ function formatItemForReturn(item, readonly) {
       deleted: item.deleted,
       deletedBy: item.deletedBy,
       image: item.image,
-      
-      //user : item.user,
+      user : item.user,
       external: item.external
       
     }; 
@@ -125,6 +124,7 @@ function saveToPhekb(item, params, res) {
   }
 
   // Must get a token from drupal services 
+  console.log(config.baseUrl + '/services/session/token')
   request.get({url: config.baseUrl + '/services/session/token', headers: { Cookie: item.user.session}}, 
     function (error, response, body) {
       if (!error) {
@@ -158,6 +158,9 @@ function saveToPhekb(item, params, res) {
             }
             else {
               console.log("Error saving to phekb ", error);
+              console.log(body);
+              res.statusCode = 500;
+              res.send({ error: 'Server error when saving to PheKB' })
             }
           });
         }
