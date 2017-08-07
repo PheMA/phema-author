@@ -525,6 +525,14 @@ module.exports = function (grunt) {
             {
               match: 'dashboardView',
               replacement: settings.dashboardView
+            },
+            {
+              match: 'phekbUrl',
+              replacement: settings.phekbUrl
+            },
+            {
+              match: 'apiKey',
+              replacement: settings.apiKey
             }
           ]
         },

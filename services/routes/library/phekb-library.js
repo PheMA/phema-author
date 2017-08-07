@@ -1,5 +1,5 @@
-/* phekb_library.js 
- * copied from the library apps /services/routes/library.js an tweaked to send data to phekb 
+/* phekb_library.js
+ * copied from the library apps /services/routes/library.js an tweaked to send data to phekb
 
 Test sending items via:
 
@@ -15,7 +15,8 @@ xmlhttp.send();
 */
 
 var request = require('request');
-var config = require('../../../phekb-configuration').config();
+var config = require('../../../config/phekb.json');
+//console.log("phekb.json", config);
 var LibraryRepository = require('../../lib/library/phekb-library').LibraryRepository;
 
 function formatItemForReturn(item, readonly) {
@@ -34,8 +35,8 @@ function formatItemForReturn(item, readonly) {
       image: item.image,
       user : item.user,
       external: item.external
-      
-    }; 
+
+    };
   }
   else {
     return {
@@ -52,18 +53,18 @@ function formatItemForReturn(item, readonly) {
       image: item.image,
       user : item.user,
       external: item.external
-      
-    }; 
+
+    };
   }
 }
 
 function saveToPhekb(item, params, res) {
-  // Params has all the form fields for a new item that are not saved in the mongo local 
-  
-  // If phekb save to phekb 
-  // Todo -- add default groups 
+  // Params has all the form fields for a new item that are not saved in the mongo local
+
+  // If phekb save to phekb
+  // Todo -- add default groups
   var id = 0;
-  var phekb_save_url = config.baseUrl + '/services/phenotypes/node';
+  var phekb_save_url = config.phekbUrl + '/services/phenotypes/node';
   if (item._id) {
     id = item._id.toHexString();
   }
@@ -75,41 +76,41 @@ function saveToPhekb(item, params, res) {
   }
 
   // It is possible that phekb initiated the authoring , in which case , we will have an nid in the item
-  // We need to send this back to phekb so it can update 
-  var nid = 0; // phekb's id 
+  // We need to send this back to phekb so it can update
+  var nid = 0; // phekb's id
   var uid = item.user.uid;
-  
-  if (!item.external ) { 
-    item.external = {nid : 0 , url: config.baseUrl};
+
+  if (!item.external ) {
+    item.external = {nid : 0 , url: config.phekbUrl};
   }
   if (!item.name) {item.name = 'No Name'; }
   if (!item.description) {item.description = 'No Description'; }
 
-  // Make drupal node for phekb 
+  // Make drupal node for phekb
   var nid = item.external.nid;
   var lang = 'und';
-  
+
   // Set up the drupal node.  For updates we just send the phema id and the image
-  var node = { 
+  var node = {
     "field_phema_author_id": {"und": [{"value": id}] },
   };
 
   var method = null; // For create it is POST , update it is PUT
   if (!nid) {
-    // New phenotype gets all the required properties 
+    // New phenotype gets all the required properties
     method = 'POST';
     node = {
       "field_phema_author_id": {"und": [{"value": id}] },
-      "title": item.name, 
+      "title": item.name,
       "type": 'phenotype',
       "language": 'und',
       "field_p_status": {"und": params.status},
-      "field_owner_pgroup":{"und":{}}, 
+      "field_owner_pgroup":{"und":{}},
       "field_view_pgroup": {"und": {}},
       "body":{"und":[{"summary":"","value":item.description, "format":"filtered_html"}]},
     };
-    node.field_owner_pgroup.und[params.owner_group] = params.owner_group; 
-    node.field_view_pgroup.und[params.view_group] = params.view_group; 
+    node.field_owner_pgroup.und[params.owner_group] = params.owner_group;
+    node.field_view_pgroup.und[params.view_group] = params.view_group;
   }
 
   if (item.image) {
@@ -123,32 +124,32 @@ function saveToPhekb(item, params, res) {
     method = 'PUT';
   }
 
-  // Must get a token from drupal services 
-  console.log(config.baseUrl + '/services/session/token')
-  request.get({url: config.baseUrl + '/services/session/token', headers: { Cookie: item.user.session}}, 
+  // Must get a token from drupal services
+  console.log(config.phekbUrl + '/services/session/token')
+  request.get({url: config.phekbUrl + '/services/session/token', headers: { Cookie: item.user.session}},
     function (error, response, body) {
       if (!error) {
-        // We got a token and we can Save node 
+        // We got a token and we can Save node
         var token = body;
-        
-        request({method: method, url: phekb_save_url, headers: { 'Content-type': 'application/json', 'Accept':'application/json', 
-            'X-CSRF-Token': token, 'Cookie': item.user.session}, 
-          json:{'node': node} }, 
+
+        request({method: method, url: phekb_save_url, headers: { 'Content-type': 'application/json', 'Accept':'application/json',
+            'X-CSRF-Token': token, 'Cookie': item.user.session},
+          json:{'node': node} },
           function (error, response, body) {
             console.log("Status code: " + response.statusCode);
             if (!error && response.statusCode == 200) {
-              // Drupal returns {nid: 222, uri: http://phekb.org/phenotype/.... } the phekb nid and url and such 
-              item.external.nid  = body.nid; 
-              item.external.url = config.baseUrl  + '/phenotype/'+item.external.nid;
+              // Drupal returns {nid: 222, uri: http://phekb.org/phenotype/.... } the phekb nid and url and such
+              item.external.nid  = body.nid;
+              item.external.url = config.phekbUrl  + '/phenotype/'+item.external.nid;
               item.save(function(err) {
-                if(!err) { 
-                 // In case phekb service is down we don't want app depending on it 
+                if(!err) {
+                 // In case phekb service is down we don't want app depending on it
                  console.log("Saved to phekb : ", item.external);
                  res.statusCode = 200;
                  res.send(formatItemForReturn(item));
                  return true;
-                } 
-                else { 
+                }
+                else {
                   console.log("Error saving phekb return nid : " + err);
                   res.statusCode = 200;
                   res.send(formatItemForReturn(item)); // don't error out
@@ -169,7 +170,7 @@ function saveToPhekb(item, params, res) {
           res.send(formatItemForReturn(item));
           return false;
         }
-      } 
+      }
     );
 }
 
@@ -194,14 +195,14 @@ exports.my_phenotypes = function(req, res) {
 
 }
 exports.group_phenotypes = function(req, res) {
-  
+
 }
 
 /**
  * Finds a library item by its ID
  * @param {Object} req HTTP request object.
  * @param {Object} res HTTP response object.
- * If no user session then we just return title the db details 
+ * If no user session then we just return title the db details
  */
 exports.details = function(req, res){
   console.log("GET - /library/:id");
@@ -216,17 +217,17 @@ exports.details = function(req, res){
     if (!err) {
       res.statusCode = 200;
       /* access check */
-      if (!item.external || !item.external.nid ) { 
+      if (!item.external || !item.external.nid ) {
         console.log("No node id ");
         res.statusCode = 403;
         res.send({error: 'Access Denied'});
       }
-        
+
       var library_id = item.external.nid
       var uid = req.query.uid;
       var session = req.query.session;
-      
-      if (!uid || !session) { 
+
+      if (!uid || !session) {
         console.log("No user session. Read only item ");
         res.statusCode = 200;
         res.send(formatItemForReturn(item, true) );
@@ -234,7 +235,7 @@ exports.details = function(req, res){
       else {
         pheno_check_access(uid, session,library_id, item, req, res);
       }
-      
+
     }
     else {
       res.statusCode = 500;
@@ -286,7 +287,7 @@ exports.add = function(req, res) {
   {
     item.name = req.body.name;
   }
-  else 
+  else
   {
     item.name = "No Name";
   }
@@ -298,7 +299,7 @@ exports.add = function(req, res) {
   {
     item.description = "No description";
   }
-  
+
   if (req.body.phekb)
   {
     item.phekb = req.body.phekb;
@@ -310,12 +311,12 @@ exports.add = function(req, res) {
   if (req.body.definition)
   {
     item.definition = req.body.definition;
-    
+
   }
   if (req.body.external)
   {
     item.external = req.body.external;
-    
+
   }
   if (req.body.user)
   {
@@ -325,7 +326,7 @@ exports.add = function(req, res) {
   {
     item.image = req.body.image;
   }
-  
+
   if (req.body.createdBy !== null && (typeof req.body.createdBy) !== 'undefined') {
     item.createdBy = req.body.createdBy;
   }
@@ -341,8 +342,8 @@ exports.add = function(req, res) {
       return;
     }
     else {
-      
-      // phekb custom -- send to phekb and save phekb data back in the item 
+
+      // phekb custom -- send to phekb and save phekb data back in the item
       saveToPhekb(item, req.body, res);
 
     }
@@ -380,7 +381,7 @@ exports.update = function(req, res) {
     if (req.body.external)
     {
       item.external = req.body.external;
-      
+
     }
     if (req.body.user)
     {
@@ -394,12 +395,12 @@ exports.update = function(req, res) {
 
     return item.save(function(err) {
       if(!err) {
-        // phekb custom  send data to phekb and save phekb data in item 
+        // phekb custom  send data to phekb and save phekb data in item
         saveToPhekb(item,req.body,res);
-        
 
 
-      
+
+
       } else {
         console.log('Internal error(%d): %s',res.statusCode,err.message);
 
@@ -453,17 +454,17 @@ exports.delete = function(req, res) {
 
 
 exports.properties = function(req,res) {
-  
+
   console.log("Properties - api/library-properties");
   var session = req.query.session;
   //var token = req.body.token;
-  
-  if (! session) 
+
+  if (! session)
   {
     res.statusCode = 400;
     return res.send({error: 'No user session. You must login.'})
   }
-  var terms_url = config.baseUrl + '/services/phenotypes/taxonomy_term'; 
+  var terms_url = config.phekbUrl + '/services/phenotypes/taxonomy_term';
 
   // Required properties and options for saving a phenotype to the phekb library
   var properties = {
@@ -472,9 +473,9 @@ exports.properties = function(req,res) {
     view_groups : [],
     status : []
   }
-  
-  // Must get a token from drupal services 
-  request.get({url: config.baseUrl + '/services/session/token', headers: { Cookie: session}}, 
+
+  // Must get a token from drupal services
+  request.get({url: config.phekbUrl + '/services/session/token', headers: { Cookie: session}},
     function (error, response, body) {
       if (error) {
         res.status(400).send({error: error});
@@ -482,12 +483,12 @@ exports.properties = function(req,res) {
       }
       var token = body;
       var headers = {
-        'X-CSRF-Token': token, 
+        'X-CSRF-Token': token,
         'Cookie': session,
         'Content-Type': 'application/json'
       }
 
-      var query = {parameters:{vid:'10'}} ; // Vocabulary id 10 is the phenotyping groups 
+      var query = {parameters:{vid:'10'}} ; // Vocabulary id 10 is the phenotyping groups
       request.get({url: terms_url, qs: query, headers: headers},
         function (error, response, body) {
           if (error) {
@@ -502,15 +503,15 @@ exports.properties = function(req,res) {
             return;
           }
           body.sort(
-            function(a,b) { 
-              if (a.name < b.name ) return -1; 
-              else if ( a.name > b.name ) return 1; 
+            function(a,b) {
+              if (a.name < b.name ) return -1;
+              else if ( a.name > b.name ) return 1;
               else return 0;
             });
           properties.owner_groups = body;
           properties.view_groups = body;
-          
-          // Get status 
+
+          // Get status
           query.parameters.vid = 3;
           request.get({url: terms_url, qs: query, headers: headers},
             function (error, response, body) {
@@ -531,7 +532,7 @@ exports.properties = function(req,res) {
             });
         });
     });
-       
+
 };
 
 /* phema access to phenotype */
@@ -548,7 +549,7 @@ exports.access = function(req, res){
       res.status(200).send({can_edit: false, error: 'Missing node id : nid'});
       return;
   }
-  
+
 
   if (!user.session){
     res.status(200).send({can_edit: false, error: 'User not logged in'});
@@ -556,26 +557,26 @@ exports.access = function(req, res){
 
   //pheno_check_access(user, user.session, nid, req, res);
 
-  // Must get a token from drupal services 
-  
-  request.get({url: config.baseUrl + '/services/session/token', headers: { Cookie: user.session}}, 
+  // Must get a token from drupal services
+
+  request.get({url: config.phekbUrl + '/services/session/token', headers: { Cookie: user.session}},
     function (error, response, body) {
       console.log("token response: " , error, body);
       if (!error) {
-        // We got a token and we can Save node 
+        // We got a token and we can Save node
         var token = body;
         var method = 'POST';
-        var phekb_access_url = config.baseUrl + '/services/phenotypes/phema_access/phema_access_type'
-        //request({method: method, url: phekb_access_url, headers: { 'Content-type': 'application/json', 'Accept':'application/json', 
-        var headers = { 
-         //'Accept':'application/json', 
-         'X-CSRF-Token': token, 
+        var phekb_access_url = config.phekbUrl + '/services/phenotypes/phema_access/phema_access_type'
+        //request({method: method, url: phekb_access_url, headers: { 'Content-type': 'application/json', 'Accept':'application/json',
+        var headers = {
+         //'Accept':'application/json',
+         'X-CSRF-Token': token,
          'Cookie': user.session
         };
-        request.post({ url: phekb_access_url, headers: headers, 
-          formData:{'nid': nid} }, 
+        request.post({ url: phekb_access_url, headers: headers,
+          formData:{'nid': nid} },
           function (error, response, body) {
-            console.log("Got response from access" , error, body); 
+            console.log("Got response from access" , error, body);
             if (!error) {
               console.log('Access from phekb ', body);
               res.status(200).send(body);
@@ -585,7 +586,7 @@ exports.access = function(req, res){
               console.log("Error response: " , error);
               res.status(500).send(error);
             }
-            
+
           });
       }
       else {
@@ -595,30 +596,30 @@ exports.access = function(req, res){
       }
     });
 
-            
+
 }
 
 function pheno_check_access(uid, session, nid, item, req, res) {
 
-          
-  request.get({url: config.baseUrl + '/services/session/token', headers: { Cookie: session}}, 
+
+  request.get({url: config.phekbUrl + '/services/session/token', headers: { Cookie: session}},
     function (error, response, body) {
       console.log("token response: " , error, body);
       if (!error) {
-        // We got a token and we can Save node 
+        // We got a token and we can Save node
         var token = body;
         var method = 'POST';
-        var phekb_access_url = config.baseUrl + '/services/phenotypes/phema_access/phema_access_type'
-        //request({method: method, url: phekb_access_url, headers: { 'Content-type': 'application/json', 'Accept':'application/json', 
-        var headers = { 
-         //'Accept':'application/json', 
-         'X-CSRF-Token': token, 
+        var phekb_access_url = config.phekbUrl + '/services/phenotypes/phema_access/phema_access_type'
+        //request({method: method, url: phekb_access_url, headers: { 'Content-type': 'application/json', 'Accept':'application/json',
+        var headers = {
+         //'Accept':'application/json',
+         'X-CSRF-Token': token,
          'Cookie': session
         };
-        request.post({ url: phekb_access_url, headers: headers, 
-          formData:{'nid': nid} }, 
+        request.post({ url: phekb_access_url, headers: headers,
+          formData:{'nid': nid} },
           function (error, response, body) {
-            
+
             if (!error) {
               try{
                 body = JSON.parse(body);
@@ -642,7 +643,7 @@ function pheno_check_access(uid, session, nid, item, req, res) {
               console.log("Error response: " , error);
               res.status(500).send(error);
             }
-            
+
           });
       }
       else {

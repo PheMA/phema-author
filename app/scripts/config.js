@@ -12,4 +12,6 @@ angular.module('sophe.config', [])
 .constant('authenticationType', '@@authenticationType')
 .constant('dashboardController', '@@dashboardController')
 .constant('dashboardView', '@@dashboardView')
+.constant('phekbUrl', '@@phekbUrl')
+.constant('apiKey', '@@apiKey')
 ;

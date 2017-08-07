@@ -5,7 +5,7 @@ angular.module('security.register.phekb', ['ngCookies'])
 // The LoginFormController provides the behaviour behind a reusable form to allow users to authenticate.
 // This controller and its template (login/form.tpl.html) are used in a modal dialog box by the security service.
 .controller('RegisterController', ['$scope', 'security', '$http', '$rootScope', '$cookies',function($scope, security, $http, $rootScope, $cookies) {
-  // The model for this form 
+  // The model for this form
   $scope.user = {};
 
   // Any error message from failing to login
@@ -28,7 +28,7 @@ angular.module('security.register.phekb', ['ngCookies'])
     // Clear any previous security errors
     $scope.authError = null;
 
-    // Try to Register. This sets the user 
+    // Try to Register. This sets the user
     var user_data = {email: $scope.user.email, password: $scope.user.password, firstName: $scope.user.firstName, lastName: $scope.user.lastName};
     var request = $http.post('/register', user_data);
     return request.then(function(response) {
@@ -39,22 +39,22 @@ angular.module('security.register.phekb', ['ngCookies'])
       if ( data.error ) {
         // If we get here then the login failed due to bad credentials
         console.log(response.error)
-        $scope.authError = 'Registration Failed: ' + data.error + '. Please try again.'; 
+        $scope.authError = 'Registration Failed: ' + data.error + '. Please try again.';
         $scope.user.email = '';
         $scope.user.password = '';
         return null;
       }
       else
       {
-        // all good 
+        // all good
         $scope.authError = null;
-        security.currentUser = data.user; 
-        security.closeRegister(true); 
+        security.currentUser = data.user;
+        security.closeRegister(true);
         $rootScope.$broadcast('user:updated', data.user);
         //console.log("Registered user ", $scope.user);
-        return security.currentUser; 
+        return security.currentUser;
       }
-    }); 
+    });
   };
 
   this.clearForm = function() {
@@ -62,6 +62,6 @@ angular.module('security.register.phekb', ['ngCookies'])
   };
 
   this.cancel = function() {
-    security.closeRegister(true); 
+    security.closeRegister(true);
   };
 }]);

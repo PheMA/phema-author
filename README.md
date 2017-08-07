@@ -39,7 +39,7 @@ The values in these configuration entries are injected into the code when you bu
 |----------|-------------|
 | environment| Usually the name of the file, it specifies the environment that is running.  You may add new files with their own environment, but please know that 'phekb' and 'local' have specific meanings within PHAT|
 | dataServiceBaseUrl | The base url (e.g., api/qdm/) with trailing backslash that is used to construct API calls to get data elements. |
-| fhirServiceBaseUrl | The base url (e.g., api/fhir/) with trailing backslash that is used to construct API calls to get FHIR data elements. | 
+| fhirServiceBaseUrl | The base url (e.g., api/fhir/) with trailing backslash that is used to construct API calls to get FHIR data elements. |
 | libraryBaseUrl | The base url (e.g., api/library/) with trailing backslash that is used to construct API calls to get items from the phenotype library. |
 | valueSetServiceBaseUrl | The base url (e.g., api/valueset/) with trailing backslash that is used to construct API calls to get value set entries. |
 | codeSystemServiceBaseUrl | The base url (e.g., api/codesystem/) with trailing backslash that is used to construct API calls to get medical vocabulary/code set entries. |
@@ -61,7 +61,7 @@ In author.js there are also configuration changes that may be made for ports and
 
 In configuration.js, you may specify basic configurations for your exporters and value set services.  The contents of configuration.js are returned to the web application, so you should not include any server-specific details that you don't want exposed.  Additional configuration for how exporters work, connection information for the value set repositories, and other services is in their respective file in `services/routes`.
 
-Configuration specific to running the application as integrated with PheKB can be found in phekb-configuration.js.  Here you can specify the base URL of your PheKB instance, as well as the API key that PheKB uses to communicate with the authoring tool.
+Configuration specific to running the application as integrated with PheKB can be found in config/phekb.json.  Here you can specify the base URL of your PheKB instance, as well as the API key that PheKB uses to communicate with the authoring tool.
 
 
 ## Setup
