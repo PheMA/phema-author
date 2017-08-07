@@ -87,7 +87,11 @@ app.config(['$qProvider', function ($qProvider) {
 }]);
 
 
-app.run(['$rootScope', '$location', 'security', function ($rootScope, $location, security) {
+app.run(['$rootScope', '$location', 'security', '$http', function ($rootScope, $location, security, $http) {
+
+    // Set CSP headers. Kinetic js image generation was throwing a violation
+    $http.defaults.headers.common['Content-Security-Policy'] = "script-src * 'self' data: 'unsafe-eval' 'unsafe-inline'; img-src * 'self' mediastream: data: blob: filesystem: 'unsafe-eval' 'unsafe-inline'; default-src *; style-src * 'unsafe-inline'";
+
     // When the route changes, we are going to detect if the user is trying to access a public
     // page (defined within the routes above), or if the user is logged in.  If the user needs to
     // be authenticated and isn't, we take them to the login page.
