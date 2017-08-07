@@ -1,8 +1,8 @@
 'use strict';
 
 var mod = angular.module('security.phekb', ['ngCookies']);
-//var phekb_url = "http://local.phekb.org";
-var phekb_url = "https://phekb.org";
+var phekb_url = "http://local.phekb.org";
+//var phekb_url = "https://phekb.org";
 function htmlToPlaintext(text) {
   return text ? String(text).replace(/<[^>]+>/gm, '') : '';
 }

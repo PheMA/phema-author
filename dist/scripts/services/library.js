@@ -3,7 +3,7 @@
 /* globals ArrayUtil, Constants */
 
 angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
-.service('LibraryService', ['$resource', '$q', 'URLService', function($resource, $q, URLService) {
+.service('LibraryService', ['$resource', '$q', 'URLService', 'security', function($resource, $q, URLService, security) {
   this.load = function() {
     var deferred = $q.defer();
     $resource(URLService.getLibraryURL()).query(function(data) {
@@ -53,6 +53,14 @@ angular.module('sophe.services.library', ['sophe.services.url', 'ngResource'])
   };
 
   this.saveDetails = function(details) {
+    if (security.currentUser)
+    {
+      if (!details.createdBy) { 
+        details.createdBy = security.currentUser.email;
+        details.modifiedBy = security.currentUser.email;
+      }
+      details.user = security.currentUser;
+    }
     var deferred = $q.defer();
     var LibraryItem = $resource(URLService.getLibraryURL(true), {id:'@id'},
       {
