@@ -285,11 +285,11 @@ angular.module('sopheAuthorApp')
         $scope.phenotype.definition = phenotypeDefinition;
         // Make imgage of phenotype and save
         $scope.canvasDetails.kineticStageObj.toImage({callback: function(image){
-          //console.log(image.src);
-           //$scope.phenotype.image = image.src;
-        //   _handlePhenotypeSave($scope.phenotype);
+          console.log(image.src);
+           $scope.phenotype.image = image.src;
+          _handlePhenotypeSave($scope.phenotype);
         }});
-        _handlePhenotypeSave($scope.phenotype);
+        //_handlePhenotypeSave($scope.phenotype);
       }
       else {
         var modalInstance = $uibModal.open({
