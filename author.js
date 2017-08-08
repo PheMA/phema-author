@@ -87,7 +87,7 @@ var sslOptions = {
 app.use(logger('combined'));
 
 // parse application/json
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
 
 // Allow flash message responses
 app.use(flash());
