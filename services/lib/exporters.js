@@ -169,7 +169,7 @@ exports.run = function(exporterKey, definition, callback) {
               });
             }
             else {
-              fs.readFile(output, 'utf8', function(error, exportData){
+              fs.readFile(output, function(error, exportData){
                 repository.markAsCompleted(data._id, exportData, exportDef.outputMIMEType, exportDef.outputExtension, function(data, error) {
                   console.log('All done - success');
                 });
