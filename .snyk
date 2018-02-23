@@ -1,13 +1,262 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.7.1
+version: v1.10.1
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
+  'npm:hoek:20180212':
+    - express-jwt > jsonwebtoken > joi > hoek:
+        reason: No update option
+        expires: '2018-03-18T21:26:14.306Z'
+    - express-jwt > jsonwebtoken > joi > topo > hoek:
+        reason: No update option
+        expires: '2018-03-18T21:26:14.306Z'
+    - request-json > request > hawk > hoek:
+        reason: No update option
+        expires: '2018-03-18T21:26:14.306Z'
+    - request-json > request > hawk > boom > hoek:
+        reason: No update option
+        expires: '2018-03-18T21:26:14.306Z'
+    - request-json > request > hawk > sntp > hoek:
+        reason: No update option
+        expires: '2018-03-18T21:26:14.306Z'
+    - request-json > request > hawk > cryptiles > boom > hoek:
+        reason: No update option
+        expires: '2018-03-18T21:26:14.306Z'
+    - npm-check-updates > npm > npm-registry-client > request > hawk > sntp > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npm > npm-registry-client > request > hawk > cryptiles > boom > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npm > node-gyp > request > hawk > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npm > node-gyp > request > hawk > boom > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npm > node-gyp > request > hawk > sntp > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npm > node-gyp > request > hawk > cryptiles > boom > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npmi > npm > request > hawk > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npmi > npm > request > hawk > boom > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npmi > npm > request > hawk > sntp > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npmi > npm > request > hawk > cryptiles > boom > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npmi > npm > npm-registry-client > request > hawk > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npmi > npm > npm-registry-client > request > hawk > boom > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npmi > npm > npm-registry-client > request > hawk > sntp > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npmi > npm > npm-registry-client > request > hawk > cryptiles > boom > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npmi > npm > node-gyp > request > hawk > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npmi > npm > node-gyp > request > hawk > boom > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npmi > npm > node-gyp > request > hawk > sntp > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npmi > npm > node-gyp > request > hawk > cryptiles > boom > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npm > request > hawk > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npm > request > hawk > boom > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npm > request > hawk > sntp > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npm > request > hawk > cryptiles > boom > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npm > npm-registry-client > request > hawk > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npm > npm-registry-client > request > hawk > boom > hoek:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
   'npm:tunnel-agent:20170305':
     - request-json > request > tunnel-agent:
-        reason: No remediation available
-        expires: '2017-09-28T17:14:07.881Z'
+        reason: No update option
+        expires: '2018-03-18T21:26:14.306Z'
+    - npm-check-updates > npm > npm-registry-client > request > tunnel-agent:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npm > node-gyp > request > tunnel-agent:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npmi > npm > request > tunnel-agent:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npmi > npm > npm-registry-client > request > tunnel-agent:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npmi > npm > node-gyp > request > tunnel-agent:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npm > request > tunnel-agent:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+  'npm:brace-expansion:20170302':
+    - npm-check-updates > npm > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npm > read-package-json > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npm > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npm > fs-vacuum > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npm > fstream > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npm > init-package-json > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npm > init-package-json > read-package-json > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npm > read-installed > read-package-json > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npm > read-package-tree > read-package-json > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npm > tar > fstream > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npm > fstream-npm > fstream-ignore > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npm > fstream-npm > fstream-ignore > fstream > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npm > node-gyp > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npm > node-gyp > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npm > node-gyp > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npm > node-gyp > fstream > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npm > node-gyp > tar > fstream > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npmi > npm > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npmi > npm > read-package-json > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npmi > npm > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npmi > npm > fs-vacuum > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npmi > npm > fstream > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npmi > npm > init-package-json > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npmi > npm > init-package-json > read-package-json > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npmi > npm > read-installed > read-package-json > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npmi > npm > read-package-tree > read-package-json > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npmi > npm > tar > fstream > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npmi > npm > fstream-npm > fstream-ignore > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npmi > npm > fstream-npm > fstream-ignore > fstream > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.119Z'
+    - npm-check-updates > npmi > npm > node-gyp > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npmi > npm > node-gyp > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npmi > npm > node-gyp > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npmi > npm > node-gyp > fstream > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
+    - npm-check-updates > npmi > npm > node-gyp > tar > fstream > rimraf > glob > minimatch > brace-expansion:
+        reason: None given
+        expires: '2018-03-18T21:33:45.120Z'
 # patches apply the minimum changes required to fix a vulnerability
 patch:
   'npm:ms:20170412':
     - bcrypt > node-pre-gyp > tar-pack > debug > ms:
         patched: '2017-06-05T16:02:58.090Z'
+      npm-check-updates > npmi > npm > node-gyp > path-array > array-index > debug > ms:
+        patched: '2018-02-16T21:34:52.313Z'
+    - npm-check-updates > npm > node-gyp > path-array > array-index > debug > ms:
+        patched: '2018-02-16T21:34:52.313Z'
+    - npm-check-updates > npmi > npm > node-gyp > path-array > array-index > debug > ms:
+        patched: '2018-02-16T21:32:33.356Z'
+  'npm:debug:20170905':
+    - npm-check-updates > npmi > npm > node-gyp > path-array > array-index > debug:
+        patched: '2018-02-16T21:34:52.313Z'
+    - npm-check-updates > npm > node-gyp > path-array > array-index > debug:
+        patched: '2018-02-16T21:34:52.313Z'
+  'npm:qs:20170213':
+    - npm-check-updates > npm > npm-registry-client > request > qs:
+        patched: '2018-02-16T21:34:52.313Z'
+    - npm-check-updates > npm > node-gyp > request > qs:
+        patched: '2018-02-16T21:34:52.313Z'
+    - npm-check-updates > npmi > npm > request > qs:
+        patched: '2018-02-16T21:34:52.313Z'
+    - npm-check-updates > npmi > npm > npm-registry-client > request > qs:
+        patched: '2018-02-16T21:34:52.313Z'
+    - npm-check-updates > npmi > npm > node-gyp > request > qs:
+        patched: '2018-02-16T21:34:52.313Z'
+    - npm-check-updates > npm > request > qs:
+        patched: '2018-02-16T21:34:52.313Z'
+  'npm:tough-cookie:20170905':
+    - npm-check-updates > npm > npm-registry-client > request > tough-cookie:
+        patched: '2018-02-16T21:34:52.313Z'
+    - npm-check-updates > npm > node-gyp > request > tough-cookie:
+        patched: '2018-02-16T21:34:52.313Z'
+    - npm-check-updates > npmi > npm > request > tough-cookie:
+        patched: '2018-02-16T21:34:52.313Z'
+    - npm-check-updates > npmi > npm > npm-registry-client > request > tough-cookie:
+        patched: '2018-02-16T21:34:52.313Z'
+    - npm-check-updates > npmi > npm > node-gyp > request > tough-cookie:
+        patched: '2018-02-16T21:34:52.313Z'
+    - npm-check-updates > npm > request > tough-cookie:
+        patched: '2018-02-16T21:34:52.313Z'

@@ -17,20 +17,20 @@ var configuration = require('../../configuration');
 // code, there are internal details we are also setting up within here.
 var exporterConfig = configuration.exporters();
 exporterConfig['hqmf'].invokeAs = 'program';
-exporterConfig['hqmf'].invokePath = 'BUNDLE_GEMFILE=/opt/phema-hqmf-generator/Gemfile bundle exec rake -f /opt/phema-hqmf-generator/lib/tasks/phema.rake phema:generate[{input},{output},hqmf]';
+exporterConfig['hqmf'].invokePath = 'BUNDLE_GEMFILE=/opt/phema-hqmf-generator/Gemfile bundle exec rake -f /opt/phema-hqmf-generator/lib/tasks/phema.rake phema:generate[{input},{output},hqmf,true]';
 exporterConfig['hqmf'].inputDirectory = '/opt/phema-hqmf-generator/temp/input/';
 exporterConfig['hqmf'].outputDirectory = '/opt/phema-hqmf-generator/temp/output/';
-exporterConfig['hqmf'].outputExtension = 'xml';
-exporterConfig['hqmf'].outputMIMEType = 'application/xml';
+exporterConfig['hqmf'].outputExtension = 'zip';
+exporterConfig['hqmf'].outputMIMEType = 'application/zip';
 
 exporterConfig['hds-json'].name = "HQMF (JSON)";
 exporterConfig['hds-json'].description = "A JSON format (based on HQMF) that is supported by the Health Data Standards library";
 exporterConfig['hds-json'].invokeAs = 'program';
-exporterConfig['hds-json'].invokePath = 'BUNDLE_GEMFILE=/opt/phema-hqmf-generator/Gemfile bundle exec rake -f /opt/phema-hqmf-generator/lib/tasks/phema.rake phema:generate[{input},{output},hds]';
+exporterConfig['hds-json'].invokePath = 'BUNDLE_GEMFILE=/opt/phema-hqmf-generator/Gemfile bundle exec rake -f /opt/phema-hqmf-generator/lib/tasks/phema.rake phema:generate[{input},{output},hds,true]';
 exporterConfig['hds-json'].inputDirectory = '/opt/phema-hqmf-generator/temp/input/';
 exporterConfig['hds-json'].outputDirectory = '/opt/phema-hqmf-generator/temp/output/';
-exporterConfig['hds-json'].outputExtension = 'json';
-exporterConfig['hds-json'].outputMIMEType = 'application/json';
+exporterConfig['hds-json'].outputExtension = 'zip';
+exporterConfig['hds-json'].outputMIMEType = 'application/zip';
 
 exporterConfig['phema-json'].name = "PhEMA (JSON)";
 exporterConfig['phema-json'].description = "Native format created by the authoring tool";
@@ -169,7 +169,7 @@ exports.run = function(exporterKey, definition, callback) {
               });
             }
             else {
-              fs.readFile(output, 'utf8', function(error, exportData){
+              fs.readFile(output, function(error, exportData){
                 repository.markAsCompleted(data._id, exportData, exportDef.outputMIMEType, exportDef.outputExtension, function(data, error) {
                   console.log('All done - success');
                 });
