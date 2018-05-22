@@ -2,6 +2,7 @@
 angular.module('security.service.local', [
   'security.retryQueue',    // Keeps track of failed requests that need to be retried once the user logs in
   'security.login',         // Contains the login form template and controller
+  'security.local',
   'ui.bootstrap.modal'     // Used to display the login form as a modal dialog.
 ])
 
@@ -71,6 +72,8 @@ angular.module('security.service.local', [
           service.token = data.token;
           service.currentUser = data.user;
           if ( service.isAuthenticated() ) {
+            // Add some elements used for display
+            service.currentUser.fullName = service.currentUser.firstName + " " + service.currentUser.lastName;
             closeLoginDialog(true);
             callback(null, true);
           }

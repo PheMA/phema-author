@@ -7,11 +7,16 @@
 
 angular.module('security.service', [
   'security.service.stub',
-  'security.service.local'])
+  'security.service.local',
+  'security.service.phekb'])
 .factory('security', ['authenticationType', '$injector', function(authenticationType, $injector) {
   if (authenticationType === 'local') {
     return $injector.get('localSecurity');
-  } else {
+  }
+  else if (authenticationType === 'phekb') {
+    return $injector.get('phekbSecurity');
+  }
+  else {
     return $injector.get('stubSecurity');
   }
 }]);
