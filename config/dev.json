@@ -9,5 +9,9 @@
   "exporterServiceBaseUrl":"api/export/",
   "unitServiceBaseUrl":"api/units/",
   "userServiceBaseUrl":"api/user/",
-  "authenticationType":"local"
+  "authenticationType":"local",
+  "dashboardController":"LocalDashboardController",
+  "dashboardView":"views/local/dashboard.html",
+  "phekbUrl": "",
+  "apiKey": ""
 }

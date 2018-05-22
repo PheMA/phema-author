@@ -1,0 +1,15 @@
+APPLICATION
+
+
+Security
+-------------
+scripts/controllers/[type]
+  login.js    - Login form controller
+  register.js - Registration form controller     [OPTIONAL]
+  profile.js  - User profile display controller  [OPTIONAL]
+
+  Module namespace: security.[type]
+
+
+
+SERVER

@@ -1,3 +1,15 @@
+///////////////////////////////////////////////////////////////////////////////
+//  Module Configuration - allows you to specify in which mode the different
+//                         PhEMA modules should work.
+///////////////////////////////////////////////////////////////////////////////
+var moduleConfig = {
+  library:  'phema',    // phema | phekb
+  users:    'phema',    // phema | phekb
+  auth:     'phema'     // phema | phekb
+};
+///////////////////////////////////////////////////////////////////////////////
+
+
 var fs = require('fs');
 var http = require('http');
 var https = require('https');
@@ -6,7 +18,7 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var flash = require("connect-flash");
 var helmet = require('helmet');
-var auth = require('./services/lib/authentication');
+var auth = require('./services/lib/authentication/' + moduleConfig.auth + '-authentication');
 var forceSSL = require('express-force-ssl');
 
 // --------- CONFIGURATION ------
@@ -18,13 +30,13 @@ var securePort = defaultPort + 100;
 var site = require('./services/routes/site');
 var elements = require('./services/routes/dataElements');
 var fhir = require('./services/routes/fhirElements');
-var library = require('./services/routes/library');
+var library = require('./services/routes/library/' + moduleConfig.library + '-library');
 var valueSets = require('./services/routes/valueSets');
 var codeSystems = require('./services/routes/codeSystems');
 var config = require('./services/routes/config');
 var exporters = require('./services/routes/exporters');
 var units = require('./services/routes/units');
-var users = require('./services/routes/users');
+var users = require('./services/routes/security/' + moduleConfig.users + '-users');
 
 
 // --------- SETUP -----------
@@ -37,7 +49,8 @@ app.use(helmet());
 app.use(helmet.contentSecurityPolicy({
   directives: {
     defaultSrc: ["'self'"],
-    styleSrc: ["'self'", "'unsafe-inline'"]
+    styleSrc: ["'self'", "'unsafe-inline'"],
+    imgSrc: ["'self'", "data:"]
   }
 }))
 
@@ -74,7 +87,7 @@ var sslOptions = {
 app.use(logger('combined'));
 
 // parse application/json
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
 
 // Allow flash message responses
 app.use(flash());
@@ -107,6 +120,7 @@ app.get('/api/library/:id', library.details);
 app.post('/api/library', library.add);
 app.put('/api/library/:id', library.update);
 app.delete('/api/library/:id', library.delete);
+app.post('/api/library/:id/access', library.access);
 
 app.get('/api/valueset', valueSets.index);
 app.get('/api/valueset/search=:search', valueSets.search);
@@ -126,6 +140,7 @@ app.get('/api/units', units.index);
 
 app.get('/api/user/:id', users.details);
 app.put('/api/user/:id', users.update);
+app.post('/api/user/resources', users.resources);
 
 app.post('/login', auth.login);
 app.get('/logout', auth.logout);

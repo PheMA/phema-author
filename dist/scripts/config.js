@@ -10,4 +10,8 @@ angular.module('sophe.config', [])
 .constant('unitServiceBaseUrl', 'api/units/')
 .constant('userServiceBaseUrl', 'api/user/')
 .constant('authenticationType', 'local')
+.constant('dashboardController', 'LocalDashboardController')
+.constant('dashboardView', 'views/local/dashboard.html')
+.constant('phekbUrl', '')
+.constant('apiKey', '')
 ;

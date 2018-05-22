@@ -13,11 +13,16 @@ var app = angular.module('sopheAuthorApp', [
     'ngRoute',
     'treeControl',
     'ui.bootstrap',
-    'security',
     'sophe',
     'ng-context-menu',
     'dynform',
-    'angularSpinner'
+    'angularSpinner',
+    // Select the security mode that you wish to use.  Make sure all others
+    // are commented out.
+    'security',
+    'security.local',
+    'security.phekb',
+    'phekb'
   ]);
 
 app.config(['$locationProvider', function($locationProvider) {
@@ -26,22 +31,14 @@ app.config(['$locationProvider', function($locationProvider) {
   $locationProvider.hashPrefix('');
 }]);
 
-app.config(['$routeProvider', function ($routeProvider) {
+app.config(['$routeProvider', 'dashboardController', 'dashboardView', function ($routeProvider, dashboardController, dashboardView) {
   $routeProvider
     .when('/', {
       title: 'Home', templateUrl: 'views/main.html', controller: 'MainController', isPublic: true })
     .when('/dashboard', {
-      title: 'Dashboard', templateUrl: 'views/dashboard.html', controller: 'DashboardController' })
+      title: 'Dashboard', templateUrl: dashboardView, controller: dashboardController })
     .when('/about', {
       title: 'About', templateUrl: 'views/about.html', controller: 'AboutController', isPublic: true })
-
-    .when('/login', {
-      title: 'Log In', templateUrl: 'views/security/login.html', controller: 'LoginFormController', isPublic: true })
-
-    .when('/users/register', {
-      title: 'Register for an Account', templateUrl: 'views/users/register.html', controller: 'RegisterFormController', isPublic: true })
-    .when('/users/profile', {
-      title: 'Manage Your Profile', templateUrl: 'views/users/profile.html', controller: 'ProfileFormController', isPublic: true })
 
     .when('/phenotype', {
       title: 'Phenotypes', templateUrl: 'views/phenotypes/edit.html', controller: 'PhenotypeController' })
@@ -58,6 +55,20 @@ app.config(['$routeProvider', function ($routeProvider) {
       title: 'Help - Tutorial', templateUrl: 'views/help/tutorial.html', controller: 'HelpController', isPublic: true })
     .when('/help', {
       title: 'Help', templateUrl: 'views/help/index.html', controller: 'HelpController', isPublic: true })
+
+    // Enable these lines when using standalone security
+    .when('/login', {
+      title: 'Log In', templateUrl: 'views/security/login.html', controller: 'LoginFormController', isPublic: true })
+    .when('/users/register', {
+      title: 'Register for an Account', templateUrl: 'views/users/register.html', controller: 'RegisterFormController', isPublic: true })
+    .when('/users/profile', {
+      title: 'Manage Your Profile', templateUrl: 'views/users/profile.html', controller: 'ProfileFormController', isPublic: true })
+
+    // Enable these lines when using PheKB
+    .when('/phekb', {
+      title: 'PheKB Entry Point', templateUrl: 'views/phekb/entry.html', controller: 'PhekbEntryController', isPublic: true })
+    .when('/access-denied', {
+      title: 'Access Denied', templateUrl: 'views/phekb/access-denied.html', controller: 'MainController', isPublic: true })
 
     .otherwise({
       redirectTo: '/'
@@ -76,7 +87,13 @@ app.config(['$qProvider', function ($qProvider) {
 }]);
 
 
-app.run(['$rootScope', '$location', 'security', function ($rootScope, $location, security) {
+app.run(['$rootScope', '$location', 'security', '$http', function ($rootScope, $location, security, $http) {
+
+    // Set CSP headers. Kinetic js image generation was throwing a violation
+    // False alarm but here is how you can set http headers for every page
+    //$http.defaults.headers.common['Content-Security-Policy'] = "script-src * 'self' data: 'unsafe-eval' 'unsafe-inline'; img-src * 'self' mediastream: data: blob: filesystem: 'unsafe-eval' 'unsafe-inline'; default-src *; style-src * 'unsafe-inline'";
+    //$http.defaults.headers.common['Access-Control-Allow-Origin'] =  "*";
+
     // When the route changes, we are going to detect if the user is trying to access a public
     // page (defined within the routes above), or if the user is logged in.  If the user needs to
     // be authenticated and isn't, we take them to the login page.
