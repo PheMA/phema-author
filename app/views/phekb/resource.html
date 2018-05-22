@@ -1,0 +1,58 @@
+<div  >
+  <h1>Phekb.org Resource </h1>
+  <form ng-submit="getPhekb()"> 
+    <input type="text" ng-model="path"> </input>
+    <input type="submit" value="Hit Phekb for path" > </input>
+  </form>
+  <h2> Path: {{path}} </h2>
+  <h3> User Name: {{user.fullName}}  Usure uid : {{user.uid}}</h3> 
+  <h6> Message: {{msg}} </h6>
+  <div> 
+    <pre>{{data}}  </pre>
+  </div>
+
+  <!--
+  <div class="col-md-6">
+    <div class="dashboard-col">
+      <div class="dashboard-header">
+        My Phenotypes
+      </div>
+      <div class="dashboard-body">
+        <table class="phenotype-list">
+          <thead>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Last Updated</th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="phenotype in phenotypes">
+              <td><a href="#/phenotype/{{phenotype.id}}">{{phenotype.name}}</a></td>
+              <td>Draft</td>
+              <td>{{phenotype.lastModified}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="dashboard-col">
+      <div class="dashboard-header">
+        Recent Activity
+      </div>
+      <div class="dashboard-body">
+        <span style="font-style: italic; font-size: 0.85em;">
+        This feature is not yet available.  In the future it will show you:
+          <ul style="list-style-type: disc; padding: 25px; margin: 5px;">
+            <li>Recent edits to your phenotypes</li>
+            <li>Changes to phenotypes you are watching</li>
+            <li>Changes made by others in groups you are a member of</li>
+          </ul>
+        </span>
+
+      </div>
+    </div>
+  </div>
+-->
+  
+</div>
