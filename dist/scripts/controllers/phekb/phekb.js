@@ -7,7 +7,7 @@ function htmlToPlaintext(text) {
 }
 
 mod.controller('PhekbController', ['$scope', 'security', '$http', '$rootScope', '$cookies', 'phekbUrl', 'apiKey',
-  function($scope, security, $http, $rootScope, $cookies, $phekbUrl, $apiKey) {
+  function($scope, security, $http, $rootScope, $cookies, phekbUrl, apiKey) {
   // The model for this form
   var user = security.currentUser;
   $scope.user = user;
@@ -45,8 +45,8 @@ mod.controller('PhekbController', ['$scope', 'security', '$http', '$rootScope', 
 }]);
 
 
-mod.controller('PhekbEntryController', ['$scope', 'security', '$http', '$rootScope', '$routeParams', '$location', '$cookies', 'LibraryService',
-  function($scope, security, $http, $rootScope, $routeParams, $location, $cookies, LibraryService) {
+mod.controller('PhekbEntryController', ['$scope', 'security', '$http', '$rootScope', '$routeParams', '$location', '$cookies', 'LibraryService', 'phekbUrl',
+  function($scope, security, $http, $rootScope, $routeParams, $location, $cookies, LibraryService, phekbUrl) {
   // The model for this form
   var user = security.currentUser;
   $scope.user = user;
