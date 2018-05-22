@@ -69,7 +69,9 @@ ExporterRepository.prototype.saveDefinitionForProcessing = function(definition, 
 }
 
 ExporterRepository.prototype.markAsCompleted = function(id, result, mimeType, extension, callback) {
-  this.tempFiles.update({_id: mongojs.ObjectId(id)}, { $set: { result: new mongo.Binary(result), mime_type: mimeType, extension: extension, status: 'completed', updatedOn: new Date() } }, {}, function (err, numReplaced) {
+  var binaryData = new mongo.Binary();
+  binaryData.write(result, 0);
+  this.tempFiles.update({_id: mongojs.ObjectId(id)}, { $set: { result: binaryData, mime_type: mimeType, extension: extension, status: 'completed', updatedOn: new Date() } }, {}, function (err, numReplaced) {
     if (err === null) {
       callback({id: id, status: 'completed'});
     }
