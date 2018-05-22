@@ -3,9 +3,9 @@
 //                         PhEMA modules should work.
 ///////////////////////////////////////////////////////////////////////////////
 var moduleConfig = {
-  library:  'phekb',    // phema | phekb
-  users:    'phekb',    // phema | phekb
-  auth:     'phekb'     // phema | phekb
+  library:  'phema',    // phema | phekb
+  users:    'phema',    // phema | phekb
+  auth:     'phema'     // phema | phekb
 };
 ///////////////////////////////////////////////////////////////////////////////
 

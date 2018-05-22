@@ -92,3 +92,20 @@ exports.delete = function(req, res) {
     }
   });
 };
+
+/* phema access to phenotype - right now authenticated users have all access */
+exports.access = function(req, res){
+  var user = req.body.user;
+  var nid = req.body.library_id;
+
+  if (!user) {
+      res.status(200).send({can_edit: false, error: 'Missing user'});
+      return;
+  }
+  if (!user.session){
+    res.status(200).send({can_edit: false, error: 'User not logged in'});
+  }
+
+  res.status(200).send({can_edit: true});
+  return;
+}

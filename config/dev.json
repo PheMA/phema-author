@@ -11,5 +11,7 @@
   "userServiceBaseUrl":"api/user/",
   "authenticationType":"local",
   "dashboardController":"LocalDashboardController",
-  "dashboardView":"views/local/dashboard.html"
+  "dashboardView":"views/local/dashboard.html",
+  "phekbUrl": "",
+  "apiKey": ""
 }
