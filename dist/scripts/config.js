@@ -12,6 +12,6 @@ angular.module('sophe.config', [])
 .constant('authenticationType', 'phekb')
 .constant('dashboardController', 'PhekbDashboardController')
 .constant('dashboardView', 'views/phekb/dashboard.html')
-.constant('phekbUrl', 'http://local.phekb.org')
+.constant('phekbUrl', 'https://phekb.org')
 .constant('apiKey', 'abc123')
 ;
