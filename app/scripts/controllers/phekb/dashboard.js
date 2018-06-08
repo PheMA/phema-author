@@ -8,10 +8,9 @@ function htmlToPlaintext(text) {
 
 
 
-mod.controller('PhekbDashboardController', ['$scope', 'security', '$http', '$rootScope', '$cookies', 'LibraryService', 'phekbUrl', 'apiKey',
-  function($scope, security, $http, $rootScope, $cookies, LibraryService, phekbUrl, apiKey) {
+mod.controller('PhekbDashboardController', ['$scope', 'security', '$http', '$rootScope', '$cookies', 'LibraryService', 'phekbUrl',
+  function($scope, security, $http, $rootScope, $cookies, LibraryService, phekbUrl) {
 
-    console.log("phekbUrl and apiKey from config: " + phekbUrl + "  " + apiKey);
     /* Utility function to take phenotype from phekb and add it to the local library where it can be edited .
      * The local library will link the id to a node on phekb.org. This way all phekb.org needs to know is the id.
      */

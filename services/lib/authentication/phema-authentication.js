@@ -28,14 +28,12 @@ passport.deserializeUser(function(id, done) {
 });
 
 exports.initialize = function(app) {
-  //*********  DON'T CHECK ME IN *************
-  //app.use('/api', expressJwt({secret: 'somesecret'}));
-  // *****************************************
+  app.use('/api', expressJwt({secret: process.env.PHEMA_USER_JWT_SECRET}));
   app.use(passport.initialize());
 };
 
 exports.login = function (req, res, next) {
-  console.log('POST - /login')
+  console.log('POST - /login');
 
   passport.authenticate('local', function(err, user) {
     if (err || !user) {
@@ -43,10 +41,10 @@ exports.login = function (req, res, next) {
     }
 
     req.logIn(user, function(err) {
-      if (err) { return res.status(401).send({'error' : 'Invalid username or password' }) };
+      if (err) { return res.status(401).send({'error' : 'Invalid username or password' }); }
 
       // If user is found and password is right, create a token
-      var token = jwt.sign(user, 'somesecret', {
+      var token = jwt.sign(user, process.env.PHEMA_USER_JWT_SECRET, {
         expiresIn: 1440 // expires in 24 hours
       });
 
@@ -60,7 +58,7 @@ exports.login = function (req, res, next) {
 };
 
 exports.logout = function(req, res) {
-  console.log('GET - /logout')
+  console.log('GET - /logout');
   req.logout();
   res.redirect('/');
 };

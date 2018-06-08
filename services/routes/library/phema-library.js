@@ -1,6 +1,6 @@
 var request = require('request');
 var LibraryRepository = require('../../lib/library/phema-library').LibraryRepository;
-var repository = new LibraryRepository('http://localhost:8082');
+var repository = new LibraryRepository(process.env.PHEMA_LIBRARY_URL);
 
 exports.index = function(req, res){
   repository.getItems(function(error, data) {

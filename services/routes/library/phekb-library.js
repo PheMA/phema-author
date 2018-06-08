@@ -15,8 +15,6 @@ xmlhttp.send();
 */
 
 var request = require('request');
-var config = require('../../../config/phekb.json');
-//console.log("phekb.json", config);
 var LibraryRepository = require('../../lib/library/phekb-library').LibraryRepository;
 
 function formatItemForReturn(item, readonly) {
@@ -64,7 +62,7 @@ function saveToPhekb(item, params, res) {
   // If phekb save to phekb
   // Todo -- add default groups
   var id = 0;
-  var phekb_save_url = config.phekbUrl + '/services/phenotypes/node';
+  var phekb_save_url = process.env.PHEKB_URL + '/services/phenotypes/node';
   if (item._id) {
     id = item._id.toHexString();
   }
@@ -81,7 +79,7 @@ function saveToPhekb(item, params, res) {
   var uid = item.user.uid;
 
   if (!item.external ) {
-    item.external = {nid : 0 , url: config.phekbUrl};
+    item.external = {nid : 0 , url: process.env.PHEKB_URL};
   }
   if (!item.name) {item.name = 'No Name'; }
   if (!item.description) {item.description = 'No Description'; }
@@ -125,8 +123,8 @@ function saveToPhekb(item, params, res) {
   }
 
   // Must get a token from drupal services
-  console.log(config.phekbUrl + '/services/session/token')
-  request.get({url: config.phekbUrl + '/services/session/token', headers: { Cookie: item.user.session}},
+  console.log(process.env.PHEKB_URL + '/services/session/token')
+  request.get({url: process.env.PHEKB_URL + '/services/session/token', headers: { Cookie: item.user.session}},
     function (error, response, body) {
       if (!error) {
         // We got a token and we can Save node
@@ -140,7 +138,7 @@ function saveToPhekb(item, params, res) {
             if (!error && response.statusCode == 200) {
               // Drupal returns {nid: 222, uri: http://phekb.org/phenotype/.... } the phekb nid and url and such
               item.external.nid  = body.nid;
-              item.external.url = config.phekbUrl  + '/phenotype/'+item.external.nid;
+              item.external.url = process.env.PHEKB_URL  + '/phenotype/'+item.external.nid;
               item.save(function(err) {
                 if(!err) {
                  // In case phekb service is down we don't want app depending on it
@@ -464,7 +462,7 @@ exports.properties = function(req,res) {
     res.statusCode = 400;
     return res.send({error: 'No user session. You must login.'})
   }
-  var terms_url = config.phekbUrl + '/services/phenotypes/taxonomy_term';
+  var terms_url = process.env.PHEKB_URL + '/services/phenotypes/taxonomy_term';
 
   // Required properties and options for saving a phenotype to the phekb library
   var properties = {
@@ -475,7 +473,7 @@ exports.properties = function(req,res) {
   }
 
   // Must get a token from drupal services
-  request.get({url: config.phekbUrl + '/services/session/token', headers: { Cookie: session}},
+  request.get({url: process.env.PHEKB_URL + '/services/session/token', headers: { Cookie: session}},
     function (error, response, body) {
       if (error) {
         res.status(400).send({error: error});
@@ -559,14 +557,14 @@ exports.access = function(req, res){
 
   // Must get a token from drupal services
 
-  request.get({url: config.phekbUrl + '/services/session/token', headers: { Cookie: user.session}},
+  request.get({url: process.env.PHEKB_URL + '/services/session/token', headers: { Cookie: user.session}},
     function (error, response, body) {
       console.log("token response: " , error, body);
       if (!error) {
         // We got a token and we can Save node
         var token = body;
         var method = 'POST';
-        var phekb_access_url = config.phekbUrl + '/services/phenotypes/phema_access/phema_access_type'
+        var phekb_access_url = process.env.PHEKB_URL + '/services/phenotypes/phema_access/phema_access_type'
         //request({method: method, url: phekb_access_url, headers: { 'Content-type': 'application/json', 'Accept':'application/json',
         var headers = {
          //'Accept':'application/json',
@@ -602,14 +600,14 @@ exports.access = function(req, res){
 function pheno_check_access(uid, session, nid, item, req, res) {
 
 
-  request.get({url: config.phekbUrl + '/services/session/token', headers: { Cookie: session}},
+  request.get({url: process.env.PHEKB_URL + '/services/session/token', headers: { Cookie: session}},
     function (error, response, body) {
       console.log("token response: " , error, body);
       if (!error) {
         // We got a token and we can Save node
         var token = body;
         var method = 'POST';
-        var phekb_access_url = config.phekbUrl + '/services/phenotypes/phema_access/phema_access_type'
+        var phekb_access_url = process.env.PHEKB_URL + '/services/phenotypes/phema_access/phema_access_type'
         //request({method: method, url: phekb_access_url, headers: { 'Content-type': 'application/json', 'Accept':'application/json',
         var headers = {
          //'Accept':'application/json',

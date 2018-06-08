@@ -12,6 +12,5 @@
   "authenticationType":"none",
   "dashboardController":"PhekbDashboardController",
   "dashboardView":"views/phekb/dashboard.html",
-  "phekbUrl": "",
-  "apiKey": ""
+  "phekbUrl": ""
 }
