@@ -11,5 +11,5 @@ exports.respondJSON = function(res, error, data) {
 };
 
 exports.isEmptyString = function(value){
-  return (value === null || value.length === 0);
+  return (value == null || value.length === 0);
 };
