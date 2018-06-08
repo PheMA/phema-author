@@ -47,7 +47,7 @@ var LibraryItem = new Schema({
 
 
 // Must connect this way to have multiple connections in one node js app 
-var libconn = mongoose.createConnection('mongodb://localhost/phema-library');
+var libconn = mongoose.createConnection(process.env.PHEKB_LIBRARY_DB_URL);
 var LibraryRepository = libconn.model('LibraryItem', LibraryItem);
 
 exports.LibraryRepository = LibraryRepository;

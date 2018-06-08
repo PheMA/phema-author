@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 
-var MONGO_CONNECTION = 'mongodb://localhost/phema-author';
+var MONGO_CONNECTION = process.env.PHEMA_USER_DB_URL;
 const SALT_ROUNDS = 10;
 
 var Schema = mongoose.Schema;

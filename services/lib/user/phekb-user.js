@@ -44,7 +44,7 @@ var PhemaUser = new Schema({
 });
 
 // Must connect this way to have multiple connections in one node js app 
-var userconn = mongoose.createConnection('mongodb://localhost/phema-user');
+var userconn = mongoose.createConnection(process.env.PHEKB_USER_DB_URL);
 var UserRepo = userconn.model('PhemaUser', PhemaUser);
 
 exports.UserRepository = UserRepo;

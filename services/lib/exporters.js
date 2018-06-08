@@ -1,7 +1,5 @@
 'use strict';
-var MONGO_CONNECTION = 'mongodb://localhost/phema-author';
 var INPUT_EXTENSION = 'json';
-var INPUT_DIRECTORY = '/opt/phema-hqmf-generator/temp/input/';
 
 var request = require('request');
 var exec = require('child_process').exec;
@@ -9,7 +7,7 @@ var mongojs = require('mongojs');
 var mongo = require('mongodb');
 var EchoExporter = require('./exporter/echo').EchoExporter;
 var echoExport = new EchoExporter();
-var db = mongojs(MONGO_CONNECTION, ['exporterTempFiles']);
+var db = mongojs(process.env.EXPORTER_DB_URL, ['exporterTempFiles']);
 var fs = require('fs');
 var configuration = require('../../configuration');
 
@@ -17,18 +15,18 @@ var configuration = require('../../configuration');
 // code, there are internal details we are also setting up within here.
 var exporterConfig = configuration.exporters();
 exporterConfig['hqmf'].invokeAs = 'program';
-exporterConfig['hqmf'].invokePath = 'BUNDLE_GEMFILE=/opt/phema-hqmf-generator/Gemfile bundle exec rake -f /opt/phema-hqmf-generator/lib/tasks/phema.rake phema:generate[{input},{output},hqmf,true]';
-exporterConfig['hqmf'].inputDirectory = '/opt/phema-hqmf-generator/temp/input/';
-exporterConfig['hqmf'].outputDirectory = '/opt/phema-hqmf-generator/temp/output/';
+exporterConfig['hqmf'].invokePath = process.env.HQMF_EXPORTER_INVOKE_PATH;
+exporterConfig['hqmf'].inputDirectory = process.env.EXPORTER_INPUT_DIRECTORY;
+exporterConfig['hqmf'].outputDirectory = process.env.EXPORTER_OUTPUT_DIRECTORY;
 exporterConfig['hqmf'].outputExtension = 'zip';
 exporterConfig['hqmf'].outputMIMEType = 'application/zip';
 
 exporterConfig['hds-json'].name = "HQMF (JSON)";
 exporterConfig['hds-json'].description = "A JSON format (based on HQMF) that is supported by the Health Data Standards library";
 exporterConfig['hds-json'].invokeAs = 'program';
-exporterConfig['hds-json'].invokePath = 'BUNDLE_GEMFILE=/opt/phema-hqmf-generator/Gemfile bundle exec rake -f /opt/phema-hqmf-generator/lib/tasks/phema.rake phema:generate[{input},{output},hds,true]';
-exporterConfig['hds-json'].inputDirectory = '/opt/phema-hqmf-generator/temp/input/';
-exporterConfig['hds-json'].outputDirectory = '/opt/phema-hqmf-generator/temp/output/';
+exporterConfig['hds-json'].invokePath = process.env.HDS_JSON_EXPORTER_INVOKE_PATH;
+exporterConfig['hds-json'].inputDirectory = process.env.EXPORTER_INPUT_DIRECTORY;
+exporterConfig['hds-json'].outputDirectory = process.env.EXPORTER_OUTPUT_DIRECTORY;
 exporterConfig['hds-json'].outputExtension = 'zip';
 exporterConfig['hds-json'].outputMIMEType = 'application/zip';
 
@@ -122,7 +120,7 @@ ExporterRepository.prototype.getEntry = function(id, callback) {
 exports.ExporterRepository = ExporterRepository;
 
 function establishInputFile(exportDef, definition, id, callback) {
-  var inputFile = INPUT_DIRECTORY + id + '.' + INPUT_EXTENSION;
+  var inputFile = process.env.EXPORTER_INPUT_DIRECTORY + id + '.' + INPUT_EXTENSION;
   fs.writeFile(inputFile, definition, 'utf8', function(err) {
     callback(inputFile, err);
   });

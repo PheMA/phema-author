@@ -12,6 +12,5 @@
   "authenticationType":"local",
   "dashboardController":"LocalDashboardController",
   "dashboardView":"views/local/dashboard.html",
-  "phekbUrl": "",
-  "apiKey": ""
+  "phekbUrl": ""
 }
