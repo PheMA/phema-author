@@ -1,6 +1,8 @@
 # phema-author
 The PhEMA Authoring Tool (PHAT) is a graphical user interface to create phenotype algorithms based on the Quality Data Model (QDM).  This is developed as part of the Phenotype Execution and Modeling Architecture (PhEMA) project sponsored by NIGMS grant R01GM105688.
 
+[![StackShare](https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/lrasmus/phema-authoring-tool)
+
 ## Topics
 [About](#about)
 [Development Guidelines](#development-guidelines)
