@@ -6,8 +6,8 @@ function htmlToPlaintext(text) {
   return text ? String(text).replace(/<[^>]+>/gm, '') : '';
 }
 
-mod.controller('PhekbController', ['$scope', 'security', '$http', '$rootScope', '$cookies', 'phekbUrl', 'apiKey',
-  function($scope, security, $http, $rootScope, $cookies, phekbUrl, apiKey) {
+mod.controller('PhekbController', ['$scope', 'security', '$http', '$rootScope', '$cookies', 'phekbUrl',
+  function($scope, security, $http, $rootScope, $cookies, phekbUrl) {
   // The model for this form
   var user = security.currentUser;
   $scope.user = user;

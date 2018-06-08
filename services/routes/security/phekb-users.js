@@ -1,9 +1,4 @@
 var request = require('request');
-//var phekbModule = require('../../../phekb-configuration');
-var config = require('../../../config/phekb.json');
-/* This is weird . Wasn't a phekbModule.UserRepository
-var UserRepo = phekbModule.UserRepository;
-Maybe this is better : */
 var UserRepo = require('../../lib/user/phekb-user').UserRepository;
 // Return a user if one is logged in -- the app sends the cookie which is stored with
 // a user when they login. We find user with that cookie and return it.
@@ -40,7 +35,7 @@ exports.resources = function(req, res){
   var session = req.body.session;
   var uid = req.body.uid;
   var path = req.body.path;
-  var url = config.phekbUrl + '/' +  path;
+  var url = process.env.PHEKB_URL + '/' +  path;
   request({url: url, headers: { Cookie: session} }, function(error, response, body) {
     if (!error) {
       if (body.length) {

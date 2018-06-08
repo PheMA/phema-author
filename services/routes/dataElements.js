@@ -1,8 +1,7 @@
 var request = require('request');
 var http = require('http');
-var config =  require('../../config/der.json');
 var QDMRepository = require('../lib/dataService/qdmRepository.js').QDMRepository;
-var repository = new QDMRepository(config.derUrl);
+var repository = new QDMRepository(process.env.QDM_DER_SERVICE_URL);
 
 exports.index = function(req, res){
   if (req.params.type === 'categories') {

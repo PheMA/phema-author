@@ -1,0 +1,27 @@
+MODULE_LIBRARY=(phema or phekb)
+MODULE_USERS=(phema or phekb)
+MODULE_AUTH=(phema or phekb)
+
+CODE_SYSTEM_SERVICE_URL=(CTS2-compliant terminology service, e.g. https://lexevscts2.nci.nih.gov/lexevscts2/)
+
+QDM_DER_SERVICE_URL=(Data Element Repository base URL, e.g. http://projectphema.org:8080/DER/rest/qdm)
+FHIR_DER_SERVICE_URL=(Data Element Repository base URL, e.g. http://projectphema.org:8080/DER/rest/fhir)
+
+VSAC_VALUE_SET_SERVICE_URL=(CTS2-compliant VSAC wrapper service URL, e.g. http://umls_user:umls_pwd@localhost:8080/)
+PHEMA_VALUE_SET_SERVICE_URL=(CTS2-compliant value set service URL, e.g. http://172.16.51.130:8080/value-sets/)
+PHEMA_VALUE_SET_OID=(OID to associate with value sets created, e.g. 2.16.840.1.113883.3.1427.10000)
+
+PHEKB_URL=(Only needed for PheKB integration.  Base URL of PheKB instance, e.g. https://phekb.org)
+PHEKB_API_KEY=(Only needed for PheKB integration.  Secret key for PheKB API, e.g. abc123)
+PHEKB_LIBRARY_DB_URL=(Only needed for PheKB integration.  URL of MongoDB instance to connect to, e.g. mongodb://localhost/phema-library)
+PHEKB_USER_DB_URL=(Only needed for PheKB integration.  URL of MongoDB instance to connect to, e.g. mongodb://localhost/phema-user)
+
+PHEMA_LIBRARY_URL=(Only needed if connected to a PhEMA library instance.  URL of the library e.g. http://localhost:8082)
+PHEMA_USER_DB_URL=(Only needed if using local authentication.  URL of MongoDB instance to connect to, e.g. mongodb://localhost/phema-author)
+
+EXPORTER_DB_URL=mongodb://localhost/phema-author
+EXPORTER_INPUT_DIRECTORY='/opt/phema-hqmf-generator/temp/input/'
+EXPORTER_OUTPUT_DIRECTORY='/opt/phema-hqmf-generator/temp/input/'
+
+HQMF_EXPORTER_INVOKE_PATH='BUNDLE_GEMFILE=/opt/phema-hqmf-generator/Gemfile bundle exec rake -f /opt/phema-hqmf-generator/lib/tasks/phema.rake phema:generate[{input},{output},hqmf,true]'
+HDS_JSON_EXPORTER_INVOKE_PATH='BUNDLE_GEMFILE=/opt/phema-hqmf-generator/Gemfile bundle exec rake -f /opt/phema-hqmf-generator/lib/tasks/phema.rake phema:generate[{input},{output},hds,true]'

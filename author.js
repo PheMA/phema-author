@@ -1,14 +1,15 @@
+require('dotenv').config();
+
 ///////////////////////////////////////////////////////////////////////////////
 //  Module Configuration - allows you to specify in which mode the different
-//                         PhEMA modules should work.
+//                         PhEMA modules should work.  Set this in your .env
 ///////////////////////////////////////////////////////////////////////////////
 var moduleConfig = {
-  library:  'phema',    // phema | phekb
-  users:    'phema',    // phema | phekb
-  auth:     'phema'     // phema | phekb
+  library:  process.env.MODULE_LIBRARY || 'phema',   // phema | phekb
+  users:    process.env.USERS_LIBRARY  || 'phema',   // phema | phekb
+  auth:     process.env.AUTH_LIBRARY   || 'phema'    // phema | phekb
 };
 ///////////////////////////////////////////////////////////////////////////////
-
 
 var fs = require('fs');
 var http = require('http');
@@ -52,7 +53,7 @@ app.use(helmet.contentSecurityPolicy({
     styleSrc: ["'self'", "'unsafe-inline'"],
     imgSrc: ["'self'", "data:"]
   }
-}))
+}));
 
 // SSL setup
 var sslOptions = {
@@ -107,7 +108,7 @@ app.set('forceSSLOptions', {
 // Routing examples at: https://github.com/strongloop/express/tree/master/examples/route-separation
 //app.all('*', ensureSecure); // at top of routing calls
 
-app.use(express.static("" + __dirname + "/dist", {maxAge: 1}));
+app.use(express.static('' + __dirname + '/dist', {maxAge: 1}));
 app.get('/', site.index);
 
 app.get('/api/qdm/:type', elements.index);

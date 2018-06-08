@@ -3,7 +3,6 @@
 var request = require('request');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
-var config = require('../../../config/phekb.json');
 var UserRepo = require('../user/phekb-user').UserRepository;
 
 
@@ -27,9 +26,9 @@ function user_in_role(role, roles) {
 }
 
 function login_phekb(res,email, password) {
-  var url = config.phekbUrl + '/services/remote_login/login';
+  var url = process.env.PHEKB_URL + '/services/remote_login/login';
   // If we are logging in via a sid , a long hash , passed in from drupal then the url is login_sid
-  var data = {username: email, api_key: config.apiKey};
+  var data = {username: email, api_key: process.env.PHEKB_API_KEY};
   if (password.length > 36) {
     // We're logging in with a user session id instead of password
     url += '_sid';

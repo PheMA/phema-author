@@ -12,6 +12,5 @@
   "authenticationType":"phekb",
   "dashboardController":"PhekbDashboardController",
   "dashboardView":"views/phekb/dashboard.html",
-  "phekbUrl": "https://phekb.org",
-  "apiKey": "abc123"
+  "phekbUrl":"https://phekb.org"
 }

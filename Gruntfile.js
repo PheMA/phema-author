@@ -529,10 +529,6 @@ module.exports = function (grunt) {
             {
               match: 'phekbUrl',
               replacement: settings.phekbUrl
-            },
-            {
-              match: 'apiKey',
-              replacement: settings.apiKey
             }
           ]
         },
