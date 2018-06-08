@@ -18,6 +18,7 @@ PHEKB_USER_DB_URL=(Only needed for PheKB integration.  URL of MongoDB instance t
 
 PHEMA_LIBRARY_URL=(Only needed if connected to a PhEMA library instance.  URL of the library e.g. http://localhost:8082)
 PHEMA_USER_DB_URL=(Only needed if using local authentication.  URL of MongoDB instance to connect to, e.g. mongodb://localhost/phema-author)
+PHEMA_USER_JWT_SECRET=(Only needed if using local authentication.  JWT secret key, e.g. somesecret)
 
 EXPORTER_DB_URL=mongodb://localhost/phema-author
 EXPORTER_INPUT_DIRECTORY='/opt/phema-hqmf-generator/temp/input/'

@@ -1,8 +1,6 @@
 'use strict';
 
 var request = require('request');
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
 var UserRepo = require('../user/phekb-user').UserRepository;
 
 
@@ -13,14 +11,14 @@ var UserRepo = require('../user/phekb-user').UserRepository;
 function inArray(needle, haystack) {
   var length = haystack.length;
   for (var i = 0; i < length; i++) {
-    if(haystack[i] == needle) return true;
+    if(haystack[i] === needle) return true;
   }
   return false;
 }
 
 function user_in_role(role, roles) {
   for (var key in roles) {
-    if (roles[key] == role) { return true; }
+    if (roles[key] === role) { return true; }
   }
   return false;
 }
@@ -42,14 +40,14 @@ function login_phekb(res,email, password) {
     try {
       body = JSON.parse(body);
     } catch(e) {
-      console.log("Error parsing phekb response ", e)
-      res.status(500).send({error_msg: "An internal error occurred on PheKB. Please try again later. " } );
+      console.log('Error parsing phekb response ', e)
+      res.status(500).send({error_msg: 'An internal error occurred on PheKB. Please try again later.' } );
       return;
     }
 
     if (body.sessid) {
       // This is the format that drupal wants it in the cookie for authenticated requests
-      var session = body.session_name + "=" + body.sessid;
+      var session = body.session_name + '=' + body.sessid;
       var admin = false;
       if ( user_in_role('administrator', body.user.roles) ) { admin = true; }
 
@@ -76,10 +74,10 @@ function login_phekb(res,email, password) {
           cur_user.data = user_data.data; // update their roles and such
           cur_user.save(function(err) {
             if (err) {
-              console.log("Login -- could not save user login time. Error: ", err);
+              console.log('Login -- could not save user login time. Error: ', err);
             }
             else {
-              console.log("Saved phekb login user ");
+              console.log('Saved phekb login user');
             }
             res.status(200).send({user: cur_user });
           });
@@ -99,12 +97,12 @@ function login_phekb(res,email, password) {
       }); // end find or add user to local db
     }
     else {
-      console.log("No sessid from phekb. Login failed: ", body);
+      console.log('No sessid from phekb. Login failed: ', body);
       if (body.error) {
         res.status(200).send({user: null, error: body.error});
       }
       else {
-        res.status(200).send({user: null, error: "Unknown error"});
+        res.status(200).send({user: null, error: 'Unknown error'});
       }
     }
   });
@@ -121,7 +119,7 @@ exports.login = function(req, res){
 };
 
 exports.logout = function(req, res){
-  console.log("In logout.");
+  console.log('In logout.');
   console.log(req.body);
   res.set('Content-Type', 'application/json');
   var retdata = {user: null };
