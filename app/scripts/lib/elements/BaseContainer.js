@@ -1,3 +1,5 @@
+/* globals Constants */
+
 'use strict';
 
 var BUFFER_FOR_CONNECTED_ITEMS = 50;
@@ -106,4 +108,19 @@ BaseContainer.prototype.layoutElementsInContainer = function(vertical) {
     header.setWidth(rect.getWidth());
   }
   this.reconcileMinimumSize(group);
+
+  // Finally, if this container is inside another container (e.g. nested Boolean logic), we need to tell the parent
+  // container to resize itself based on our changes.
+  var parent = group.parent;
+  if (parent && parent.element && parent.phemaObject) {
+    var parentElement = parent.element();
+    var parentPhemaObject = parent.phemaObject();
+    if (parentElement.type === Constants.ElementTypes.LOGICAL_OPERATOR ||
+        parentElement.type === Constants.ElementTypes.SUBSET_OPERATOR ||
+        parentElement.type === Constants.ElementTypes.FUNCTION_OPERATOR) {
+      if (parentPhemaObject.layoutElementsInContainer) {
+        parentPhemaObject.layoutElementsInContainer();
+      }
+    }
+  }
 };
