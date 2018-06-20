@@ -13,5 +13,4 @@ angular.module('sophe.config', [])
 .constant('dashboardController', 'LocalDashboardController')
 .constant('dashboardView', 'views/local/dashboard.html')
 .constant('phekbUrl', '')
-.constant('apiKey', '')
 ;
