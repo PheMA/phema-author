@@ -423,18 +423,18 @@ BaseElement.prototype = {
       var newConnections = [];
       for (var refIndex = 0; refIndex < connectionRefs.length; refIndex++) {
         for (var index = 0; index < connections.length; index++) {
-          if (connections[index]._id === connectionRefs[refIndex]._id
-            || connections[index]._id === connectionRefs[refIndex].id) {
+          if (connections[index]._id === connectionRefs[refIndex]._id ||
+            connections[index]._id === connectionRefs[refIndex].id) {
             newConnections.push(connections[index]);
 
             // We have a bi-directional reference between connectors and connections, so we
             // weill update the connector references here since we have estabilshed a connection.
             // Determine if I'm the start or the end of the connection
             var connectorRef = connections[index].connectors();
-            if (connector._id === connectorRef.start.id) {
+            if (connector._id === connectorRef.start._id || connector._id === connectorRef.start.id) {
               connectorRef.start = connector;
             }
-            else if (connector._id === connectorRef.end.id) {
+            else if (connector._id === connectorRef.end._id || connector._id === connectorRef.end.id) {
               connectorRef.end = connector;
             }
             else {
@@ -453,7 +453,7 @@ BaseElement.prototype = {
     connections.each(function(connection) {
       var labelRef = connection.label();
       for (var labelIndex = 0; labelIndex < labels.length; labelIndex++) {
-        if (labels[labelIndex]._id === labelRef.id) {
+        if (labels[labelIndex]._id === labelRef._id || labels[labelIndex]._id === labelRef.id) {
           connection.label(labels[labelIndex]);
           break;
         }

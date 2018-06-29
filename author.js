@@ -7,10 +7,10 @@ require('dotenv').config();
 ///////////////////////////////////////////////////////////////////////////////
 var moduleConfig = {
   library:  process.env.MODULE_LIBRARY || 'phema',   // phema | phekb
-  users:    process.env.USERS_LIBRARY  || 'phema',   // phema | phekb
-  auth:     process.env.AUTH_LIBRARY   || 'phema'    // phema | phekb
+  users:    process.env.MODULE_USERS  || 'phema',   // phema | phekb
+  auth:     process.env.MODULE_AUTH   || 'phema'    // phema | phekb
 };
-///////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 
 var fs = require('fs');
 var http = require('http');

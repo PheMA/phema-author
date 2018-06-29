@@ -28,7 +28,7 @@ passport.deserializeUser(function(id, done) {
 });
 
 exports.initialize = function(app) {
-  app.use('/api', expressJwt({secret: process.env.PHEMA_USER_JWT_SECRET}));
+  app.use('/api', expressJwt({secret: process.env.PHEMA_USER_JWT_SECRET}).unless({path: [/\/api\/export/i]}));
   app.use(passport.initialize());
 };
 
