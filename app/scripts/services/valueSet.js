@@ -40,7 +40,7 @@
 //   and prepares results to be processed.
 
 
-function _processValueList(valueSetRepositoryId, originalData) {
+function _processCTS2ValueList(valueSetRepositoryId, originalData) {
   var valueSets = [];
   var transformedData = [];
   for (var index = 0; index < originalData.length; index++) {
@@ -61,14 +61,39 @@ function _processValueList(valueSetRepositoryId, originalData) {
   return valueSets;
 }
 
+function _processFHIRValueList(valueSetRepositoryId, originalData) {
+  var valueSets = [];
+  var transformedData = [];
+  for (var index = 0; index < originalData.length; index++) {
+    if (originalData[index].resource) {
+      transformedData.push({
+        id: originalData[index].resource.id,
+        valueSetRepository: valueSetRepositoryId,
+        name: originalData[index].resource.name,
+        uri: originalData[index].resource.id,
+        type: Constants.ElementTypes.VALUE_SET,
+        loadDetailStatus: null,
+        description: null,
+        codeSystems: [],
+        terms: []} );
+    }
+  }
+  valueSets = transformedData.sort(ArrayUtil.sortByName);
+  return valueSets;
+}
+
 function _getValueListAsChildren(valueSetRepositoryId, data) {
+  // Process two CTS2 dialects
   if (data.valueSetCatalogEntryDirectory && data.valueSetCatalogEntryDirectory.entryList) {
-    return _processValueList(valueSetRepositoryId, data.valueSetCatalogEntryDirectory.entryList);
+    return _processCTS2ValueList(valueSetRepositoryId, data.valueSetCatalogEntryDirectory.entryList);
   }
   else if (data.ValueSetCatalogEntryDirectory && data.ValueSetCatalogEntryDirectory.entry) {
-    return _processValueList(valueSetRepositoryId, data.ValueSetCatalogEntryDirectory.entry);
+    return _processCTS2ValueList(valueSetRepositoryId, data.ValueSetCatalogEntryDirectory.entry);
   }
-
+  // Process FHIR dialect
+  else if (data.entry) {
+    return _processFHIRValueList(valueSetRepositoryId, data.entry);
+  }
   return [];
 }
 
@@ -87,7 +112,7 @@ function _processSingleValue(originalData) {
   return valueSet;
 }
 
-function _processCodeSystemDetails(resolutionInfo) {
+function _processCTS2CodeSystemDetails(resolutionInfo) {
   var codeSystems = [];
   if (resolutionInfo && resolutionInfo.resolvedUsingCodeSystemList) {
     var codeSystemList = resolutionInfo.resolvedUsingCodeSystemList;
@@ -98,7 +123,7 @@ function _processCodeSystemDetails(resolutionInfo) {
   return codeSystems;
 }
 
-function _processMemberDetails(originalData) {
+function _processCTS2MemberDetails(originalData) {
   var terms = [];
   if (originalData) {
     for (var index = 0; index < originalData.length; index++) {
@@ -108,6 +133,38 @@ function _processMemberDetails(originalData) {
         name: originalData[index].designation,
         uri: originalData[index].uri,
         type: 'Term'} );
+    }
+  }
+  return terms;
+}
+
+function _processFHIRCodeSystemDetails(originalData) {
+  var codeSystems = [];
+  if (originalData) {
+    for (var index = 0; index < originalData.length; index++) {
+      codeSystems.push(originalData[index].system);
+    }
+  }
+  return codeSystems;
+}
+
+function _processFHIRMemberDetails(originalData) {
+  var terms = [];
+  if (originalData) {
+    for (var index = 0; index < originalData.length; index++) {
+      var concepts = originalData[index].concept;
+      if (concepts) {
+        var codeSystem = originalData[index].system;
+        var numConcepts = concepts.length;
+        for (var conceptIndex = 0; conceptIndex < numConcepts; conceptIndex++) {
+          terms.push({
+            codeSystem: codeSystem,
+            id: concepts[conceptIndex].code,
+            name: concepts[conceptIndex].display,
+            uri: '',
+            type: 'Term'} );
+        }
+      }
     }
   }
   return terms;
@@ -197,11 +254,12 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
       // Iterate over each attribute in data
       Object.keys(data).forEach(function(key) {
         if (!data[key].error) {
+          var childList = _getValueListAsChildren(key, data[key].value.data);
           valueSets.push({
             id: key,
-            name: data[key].value.title,
+            name: data[key].value.title + ' (' + childList.length + ')',
             type: 'ValueSetRepository',
-            children: _getValueListAsChildren(key, JSON.parse(data[key].value.data))
+            children: childList
           });
         }
       });
@@ -212,6 +270,7 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
   this.processSingleValue = function(data) {
     var valueSet = null;
     if (data) {
+      // Handle three CTS2 dialects
       if (data.valueSetDefinitionMsg && data.valueSetDefinitionMsg.valueSetDefinition) {
         valueSet = _processSingleValue(data.valueSetDefinitionMsg.valueSetDefinition);
       }
@@ -228,13 +287,19 @@ angular.module('sophe.services.valueSet', ['sophe.services.url', 'ngResource'])
   this.processDetails = function(data) {
     var details = { codeSystems: [], terms: [] };
     if (data) {
+      // Handle two CTS2 dialects
       if (data.iteratableResolvedValueSet) {
-        details.codeSystems = _processCodeSystemDetails(data.iteratableResolvedValueSet.resolutionInfo);
-        details.terms = _processMemberDetails(data.iteratableResolvedValueSet.entryList);
+        details.codeSystems = _processCTS2CodeSystemDetails(data.iteratableResolvedValueSet.resolutionInfo);
+        details.terms = _processCTS2MemberDetails(data.iteratableResolvedValueSet.entryList);
       }
       else if (data.IteratableResolvedValueSet) {
-        details.codeSystems = _processCodeSystemDetails(data.IteratableResolvedValueSet.resolutionInfo);
-        details.terms = _processMemberDetails(data.IteratableResolvedValueSet.entry);
+        details.codeSystems = _processCTS2CodeSystemDetails(data.IteratableResolvedValueSet.resolutionInfo);
+        details.terms = _processCTS2MemberDetails(data.IteratableResolvedValueSet.entry);
+      }
+      // Handle FHIR dialect
+      else if (data.compose.include) {
+        details.codeSystems = _processFHIRCodeSystemDetails(data.compose.include);
+        details.terms = _processFHIRMemberDetails(data.compose.include);
       }
     }
     return details;
