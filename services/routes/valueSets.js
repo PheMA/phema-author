@@ -1,5 +1,7 @@
-var request = require('request');
-var async = require("async");
+"use strict";
+
+//var request = require('request');
+var async = require('async');
 var ValueSetRepository = require('../lib/valueSets').ValueSetRepository;
 var util = require('../lib/util');
 var configuration = require('../../configuration');
@@ -8,9 +10,9 @@ var configuration = require('../../configuration');
 // code, there are internal details we are also setting up within here.
 var valueSetServices = configuration.valueSetServices();
 valueSetServices['vsac'].repository = new ValueSetRepository(
-  'vsac', process.env.VSAC_VALUE_SET_SERVICE_URL);
+  'vsac', 'fhir', process.env.VSAC_VALUE_SET_SERVICE_URL);
 valueSetServices['phema'].repository = new ValueSetRepository(
-  'phema', process.env.PHEMA_VALUE_SET_SERVICE_URL, process.env.PHEMA_VALUE_SET_OID);
+  'phema', 'cts2', process.env.PHEMA_VALUE_SET_SERVICE_URL, process.env.PHEMA_VALUE_SET_OID);
 
 
 /**
