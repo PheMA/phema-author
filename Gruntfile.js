@@ -22,7 +22,6 @@ module.exports = function (grunt) {
 
   // Unit testing for Node.js code
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
-  grunt.loadNpmTasks('grunt-jasmine-node');
 
   // Generate documentation
   grunt.loadNpmTasks('grunt-ngdocs');
@@ -587,11 +586,6 @@ module.exports = function (grunt) {
     'karma'
   ]);
 
-  grunt.registerTask('testnode', [
-    'jasmineNode',
-    //'watch'
-  ]);
-
   grunt.registerTask('build', [
     'clean:dist',
     'wiredep',
@@ -618,7 +612,6 @@ module.exports = function (grunt) {
     'concurrent:dist',
     'autoprefixer',
     'copy:nomin',
-    //'cdnify',
     'cssmin',
     'replace:dist',  // Assumes it's being done at the end of the process
   ]);
