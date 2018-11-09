@@ -1,12 +1,11 @@
 <ul class="nav navbar-nav">
-  <li class="dropdown" ng-show="isAuthenticated()">
-    <a href="#" class="dropdown-toggle">{{currentUser.fullName}} <b class="caret"></b></a>
-    <ul class="dropdown-menu">
-      <li><a href="#/users/profile">Profile</a></li>
-      <li>
-        <a href="#" ng-click="logout()">Log out</a>
-      </li>
-    </ul>
+  <li uib-dropdown on-toggle="toggled(open)" ng-show="isAuthenticated()">
+      <a href id="user-dropdown" class="nav-text" uib-dropdown-toggle>{{currentUser.fullName}} <span class="caret"></span></a>
+      <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+          <li><a href="#/users/profile">Profile</a></li>
+          <li role="separator" class="divider"></li>
+          <li><a href="#" ng-click="logout()">Log out</a></li>
+      </ul>
   </li>
   <li ng-hide="isAuthenticated()" class="login">
       <form class="navbar-form">

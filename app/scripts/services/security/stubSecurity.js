@@ -64,14 +64,17 @@ angular.module('security.service.stub', [
     // Attempt to authenticate a user by the given email and password
     login: function(email, password, callback) {
       if (service.currentUser == null) {
-        service.currentUser = {firstName: "Test", lastName: "Person"};
+        service.currentUser = {firstName: "Test", lastName: "Person", fullName: "Test Person"};
         service.token = "stuby-token";
+        sessionStorage.setItem("currentUser", JSON.stringify(service.currentUser));
+        sessionStorage.setItem("token", service.token);
         if (callback) { callback(null, true); }
       }
     },
 
     // Give up trying to login and clear the retry queue
     cancelLogin: function() {
+      sessionStorage.clear();
       closeLoginDialog(false);
       redirect();
     },
@@ -80,6 +83,7 @@ angular.module('security.service.stub', [
     logout: function(redirectTo) {
       service.currentUser = null;
       service.token = null;
+      sessionStorage.clear();
     },
 
     // Ask the backend to see if a user is already authenticated - this may be from a previous session.
@@ -93,9 +97,25 @@ angular.module('security.service.stub', [
     // Token for the current user
     token: null,
 
+    _getOrReloadUser: function() {
+      if (service.currentUser == null || service.token == null) {
+        var localUser = sessionStorage.getItem("currentUser");
+        var localToken = sessionStorage.getItem("token");
+        if (localUser && localToken) {
+          service.currentUser = JSON.parse(localUser);
+          service.token = localToken;
+        }
+        else {
+          return null;
+        }
+      }
+
+      return service.currentUser;
+    },
+
     // Is the current user authenticated?
     isAuthenticated: function(){
-      return (service.currentUser !== null);
+      return (service._getOrReloadUser() != null);
     },
 
     // Is the current user an adminstrator?

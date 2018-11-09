@@ -85,6 +85,63 @@ FunctionOperator.prototype.attributes = function(attributes) {
   }
 };
 
+FunctionOperator.prototype._translateOperator = function(operator) {
+  switch (operator) {
+    case 'LT':
+      return '<';
+    case 'LE':
+      return '<=';
+    case 'EQ':
+      return '=';
+    case 'GT':
+      return '>';
+    case 'GE':
+      return '>=';
+    case 'BW':
+      return 'between';
+    default:
+      return operator;
+  }
+}
+
+FunctionOperator.prototype._translateValue = function(low, high, units) {
+  var text = '';
+  var hasLow = false;
+  var maxValue = 0;
+  if (low && low !== '') {
+    hasLow = true;
+    text += low;
+    maxValue = parseInt(low);
+  }
+  if (high && high !== '') {
+    if (hasLow) {
+      text += ' - ';
+    }
+    text += high;
+    maxValue = Math.max(maxValue, parseInt(high));
+  }
+
+  if (units && units.name && units.name !== '') {
+    text += (' ' + pluralize(units.name, maxValue));
+  }
+
+  return text.trim();
+}
+
+
+FunctionOperator.prototype.buildHeader = function(baseName) {
+  var headerText = baseName;
+  if (this._attributes && this._attributes.Value) {
+    var val = this._attributes.Value;
+    // The value must contain (at a minimum), the operator and either a low or high value
+    if (val.operator && (val.valueLow || val.valueHigh)) {
+      headerText += ' ' + this._translateOperator(val.operator) + ' ' +
+        this._translateValue(val.valueLow, (val.operator === 'BW' ? val.valueHigh : null), val.units);
+    }
+  }
+  return headerText;
+}
+
 FunctionOperator.prototype.create = function(config, scope) {
   var options = {
     x: 0, y: 0, width: 200, height: 200,
