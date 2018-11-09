@@ -283,7 +283,13 @@ angular.module('sopheAuthorApp')
       // the dialog again and we can just save.
       if ($scope.phenotype) {
         $scope.phenotype.definition = phenotypeDefinition;
-        _handlePhenotypeSave($scope.phenotype);
+        // Make imgage of phenotype and save
+        $scope.canvasDetails.kineticStageObj.toImage({callback: function(image){
+          console.log(image.src);
+           $scope.phenotype.image = image.src;
+          _handlePhenotypeSave($scope.phenotype);
+        }});
+        //_handlePhenotypeSave($scope.phenotype);
       }
       else {
         var modalInstance = $uibModal.open({
@@ -578,14 +584,7 @@ angular.module('sopheAuthorApp')
         });
 
         modalInstance.result.then(function (result) {
-          if (selectedElement.phemaObject() && selectedElement.phemaObject().attributes) {
-            selectedElement.phemaObject().attributes(result);
-          }
-          else {
-            element.attributes = result;
-            selectedElement.element(element);
-          }
-          selectedElement.getStage().draw();
+          selectedElement.update(result);
         });
       }
       else if (element.type === Constants.ElementTypes.CLASSIFICATION) {

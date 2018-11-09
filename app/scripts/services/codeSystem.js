@@ -7,9 +7,11 @@ angular.module('sophe.services.codeSystem', ['sophe.services.url', 'ngResource']
   // The list of code systems and versions that are supported for terminology searches
   this.supportedCodeSystems = [
     { codeSystem: 'ICD-9-CM', version: '2014' },
-    { codeSystem: 'ICD-10', version: '2010' },
-    { codeSystem: 'LOINC', version: '252' },
-    { codeSystem: 'NDFRT', version: 'November2016' }
+    { codeSystem: 'ICD10CM', version: '2017' },
+    { codeSystem: 'LOINC', version: '2.56' },
+    { codeSystem: 'NDFRT', version: 'February2018' },
+    { codeSystem: 'HL7', version: 'V3 R2.36' },
+    { codeSystem: 'SNOMED Clinical Terms US Edition', version: '2017_03_01' }
   ];
 
   this.search = function(codeSystem, version, search) {

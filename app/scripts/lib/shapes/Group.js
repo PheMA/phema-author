@@ -52,6 +52,22 @@
       }
 
       return obj;
+    },
+
+    update: function(result) {
+      // The checks are used to manage backwards compatibility with how we used
+      // to manage internal data structures.
+      var phemaObj = this.phemaObject();
+      if (phemaObj && phemaObj.attributes) {
+        phemaObj.attributes(result);
+        var header = phemaObj.buildHeader(this.element().name);
+        findParentElementByName(this, 'header').setText(header);
+      }
+      else { // Legacy data handling
+        element.attributes = result;
+        this.element(element);
+      }
+      this.getStage().draw();
     }
   };
 

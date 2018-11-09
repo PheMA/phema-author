@@ -1,4 +1,5 @@
-var request = require('request');
+'use strict';
+
 exports.respondJSON = function(res, error, data) {
   if (error) {
     res.status(400).send(error);

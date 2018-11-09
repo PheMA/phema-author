@@ -235,41 +235,45 @@ function _addElementToOperator(element, operatorObject) {
 // Given a droppable container, handle adding the element to that container
 function addElementToContainer(stage, container, element) {
   var group = (container.nodeType === 'Group' ? container : container.parent);
-  if (group) {
-    var groupDefinition = group.element();
-    var phemaObject = group.phemaObject();
-    if (groupDefinition.type === Constants.ElementTypes.TEMPORAL_OPERATOR) {
-      // Replace container with element
-      var containerParent = container.getParent();
-      if (container === containerParent.find('.eventA')[0]) {
-        _replaceTemporalElement(true, containerParent, container, element, stage);
-      }
-      else if (container === container.getParent().find('.eventB')[0]) {
-        _replaceTemporalElement(false, containerParent, container, element, stage);
-      }
-    }
-    else if (groupDefinition.type === Constants.ElementTypes.DATA_ELEMENT || groupDefinition.type === Constants.ElementTypes.CATEGORY) {
-      phemaObject.valueSet(element);
-      element.container = group;
-      stage.draw();
-    }
-    else if (groupDefinition.type === Constants.ElementTypes.LOGICAL_OPERATOR || groupDefinition.type === Constants.ElementTypes.SUBSET_OPERATOR || groupDefinition.type === Constants.ElementTypes.FUNCTION_OPERATOR) {
-      // Add the item (if it's not already in the array)
-      _addElementToOperator(element, phemaObject);
+  if (group === null || group === undefined) {
+    return;
+  }
 
-      // If we have connected (via a temporal operator) to other elements, we need to bring those
-      // into our group too.
-      var counter = 0;
-      var connectedElements = element.phemaObject().getConnectedElements(true);
-      for (counter = 0; counter < connectedElements.length; counter++) {
-        _addElementToOperator(connectedElements[counter], phemaObject);
-      }
-
-      if (phemaObject.layoutElementsInContainer) {
-        phemaObject.layoutElementsInContainer();
-      }
-      stage.draw();
+  var groupDefinition = group.element();
+  var groupPhemaObject = group.phemaObject();
+  if (groupDefinition.type === Constants.ElementTypes.TEMPORAL_OPERATOR) {
+    // Replace container with element
+    var containerParent = container.getParent();
+    if (container === containerParent.find('.eventA')[0]) {
+      _replaceTemporalElement(true, containerParent, container, element, stage);
     }
+    else if (container === container.getParent().find('.eventB')[0]) {
+      _replaceTemporalElement(false, containerParent, container, element, stage);
+    }
+  }
+  else if (groupDefinition.type === Constants.ElementTypes.DATA_ELEMENT || groupDefinition.type === Constants.ElementTypes.CATEGORY) {
+    groupPhemaObject.valueSet(element);
+    element.container = group;
+    stage.draw();
+  }
+  else if (groupDefinition.type === Constants.ElementTypes.LOGICAL_OPERATOR ||
+           groupDefinition.type === Constants.ElementTypes.SUBSET_OPERATOR ||
+           groupDefinition.type === Constants.ElementTypes.FUNCTION_OPERATOR) {
+    // Add the item (if it's not already in the array)
+    _addElementToOperator(element, groupPhemaObject);
+
+    // If we have connected (via a temporal operator) to other elements, we need to bring those
+    // into our group too.
+    var counter = 0;
+    var connectedElements = element.phemaObject().getConnectedElements(true);
+    for (counter = 0; counter < connectedElements.length; counter++) {
+      _addElementToOperator(connectedElements[counter], groupPhemaObject);
+    }
+
+    if (groupPhemaObject.layoutElementsInContainer) {
+      groupPhemaObject.layoutElementsInContainer();
+    }
+    stage.draw();
   }
 }
 

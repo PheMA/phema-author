@@ -9,5 +9,8 @@
   "exporterServiceBaseUrl":"data/",
   "unitServiceBaseUrl":"data/",
   "userServiceBaseUrl":"data/",
-  "authenticationType":"none"
+  "authenticationType":"none",
+  "dashboardController":"PhekbDashboardController",
+  "dashboardView":"views/phekb/dashboard.html",
+  "phekbUrl": ""
 }
