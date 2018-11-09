@@ -74,10 +74,13 @@ angular.module('security.service.local', [
           if ( service.isAuthenticated() ) {
             // Add some elements used for display
             service.currentUser.fullName = service.currentUser.firstName + " " + service.currentUser.lastName;
+            sessionStorage.setItem("currentUser", JSON.stringify(service.currentUser));
+            sessionStorage.setItem("token", service.token);
             closeLoginDialog(true);
             callback(null, true);
           }
           else {
+            sessionStorage.clear();
             callback('Invalid username or password', false);
           }
         },
@@ -90,6 +93,7 @@ angular.module('security.service.local', [
 
     // Give up trying to login and clear the retry queue
     cancelLogin: function(suppressRedirect) {
+      sessionStorage.clear();
       closeLoginDialog(false);
       if (!suppressRedirect) { redirect() };
     },
@@ -99,6 +103,7 @@ angular.module('security.service.local', [
       $http.get('/logout').then(function() {
         service.currentUser = null;
         service.token = null;
+        sessionStorage.clear();
         redirect(redirectTo);
       });
     },
@@ -121,12 +126,25 @@ angular.module('security.service.local', [
     // Token for the current user
     token: null,
 
+    _getOrReloadUser: function() {
+      if (service.currentUser == null || service.token == null) {
+        var localUser = sessionStorage.getItem("currentUser");
+        var localToken = sessionStorage.getItem("token");
+        if (localUser && localToken) {
+          service.currentUser = JSON.parse(localUser);
+          service.token = localToken;
+        }
+        else {
+          return null;
+        }
+      }
+
+      return service.currentUser;
+    },
+
     // Is the current user authenticated?
     isAuthenticated: function(){
-      // if (service.currentUser == null) {
-      //   service.currentUser = {firstName: "Test", lastName: "Person"};
-      // }
-      return !!service.currentUser && !!service.token;
+      return (service._getOrReloadUser() != null);
     },
 
     // Is the current user an adminstrator?

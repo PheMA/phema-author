@@ -17,7 +17,6 @@ var app = angular.module('sopheAuthorApp', [
     'ng-context-menu',
     'dynform',
     'angularSpinner',
-    'angularLocalStorage'
     // Select the security mode that you wish to use.  Make sure all others
     // are commented out.
     'security',

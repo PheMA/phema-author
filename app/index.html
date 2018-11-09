@@ -21,48 +21,35 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
     <div class="container col-sm-12">
-      <div class="navbar-header header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#app-navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"> </span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <img class="navbar-brand" src="images/phema.png"></img>
-        <a class="navbar-brand" href="#/">Phenotype Authoring Tool</a>
-      </div>
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse header" id="app-navbar-collapse">
-        <div class="navbar-right">
-          <ul class="nav navbar-nav">
-            <li><a href="#/dashboard">Dashboard</a>
-            <li><a class="btn btn-highlight btn-primary" ng-href="#/phenotype">Create Phenotype</a></li>
-<!--             <li class="dropdown">
-              <a href="#/phenotype/new" class="dropdown-toggle">Phenotypes <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="#/phenotype/new">Create</a></li>
-                <li><a href="#/phenotype/search">Search</a></li>
-              </ul>
-            </li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle">Value Sets <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="#/valueset/new">Create</a></li>
-                <li><a href="#/valueset-search">Search</a></li>
-              </ul>
-            </li> -->
-            <li class="dropdown">
-              <a href="#/help" class="dropdown-toggle">Help <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="PhEMAAuthoring-QuickStartGuide.pdf">Quick Start Guide</a></li>
-                <li><a href="#/help">User Guide</a></li>
-                <li><a href="#/help/tutorial">Tutorial</a></li>
-              </ul>
-            </li>
-          </ul>
-          <login-toolbar />
+      <nav class="navbar" role="navigation">
+        <div class="navbar-header header">
+          <button type="button" class="navbar-toggle" ng-click="isNavCollapsed = !isNavCollapsed">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <img class="navbar-brand" src="images/phema.png"></img>
+          <a class="navbar-brand" href="#">Phenotype Authoring Tool</a>
         </div>
-      </div>
+        <div class="collapse navbar-collapse header" uib-collapse="isNavCollapsed">
+          <div class="navbar-right">
+            <ul class="nav navbar-nav">
+              <li><a href="#/Dashboard">Dashboard</a></li>
+              <li><a class="btn btn-highlight btn-primary" ng-href="#/phenotype">Create Phenotype</a></li>
+              <li uib-dropdown on-toggle="toggled(open)">
+                <a href id="simple-dropdown" uib-dropdown-toggle>Help <span class="caret"></span></a>
+                <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                  <li><a href="PhEMAAuthoring-QuickStartGuide.pdf">Quick Start Guide</a></li>
+                  <li><a href="#/help">User Guide</a></li>
+                  <li><a href="#/help/tutorial">Tutorial</a></li>
+                </ul>
+              </li>
+            </ul>
+            <login-toolbar />
+          </div>
+        </div>
+      </nav>
 
       <div class="container container-big col-sm-12" id="view-container" ng-view=""></div>
 
@@ -107,7 +94,6 @@
     <script src="bower_components/angular-dynforms/dynamic-forms.js"></script>
     <script src="bower_components/angular-spinner/dist/angular-spinner.min.js"></script>
     <script src="bower_components/underscore/underscore.js"></script>
-    <script src="bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
     <script src="bower_components/pluralize/pluralize.js"></script>
     <!-- endbower -->
     <!-- endbuild -->

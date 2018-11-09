@@ -1,20 +1,20 @@
 {
   "name": "angular-scenario",
-  "version": "1.6.4",
+  "version": "1.7.5",
   "license": "MIT",
   "main": "./angular-scenario.js",
   "ignore": [],
   "dependencies": {
-    "angular": "1.6.4"
+    "angular": "1.7.5"
   },
   "homepage": "https://github.com/angular/bower-angular-scenario",
-  "_release": "1.6.4",
+  "_release": "1.7.5",
   "_resolution": {
     "type": "version",
-    "tag": "v1.6.4",
-    "commit": "2ddecd00f2e49e7b93aecac404c4ac2dbdac7a83"
+    "tag": "v1.7.5",
+    "commit": "44d32590cd0faff53788ea76af5dfc5411c56d79"
   },
   "_source": "https://github.com/angular/bower-angular-scenario.git",
-  "_target": "~1.6.3",
+  "_target": "~1.7.5",
   "_originalSource": "angular-scenario"
 }
