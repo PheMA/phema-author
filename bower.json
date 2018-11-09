@@ -22,7 +22,8 @@
     "angular-history": "~0.8.1",
     "angular-dynforms": "~0.0.4",
     "angular-spinner": "~1.0.1",
-    "underscore": "~1.8.3"
+    "underscore": "~1.8.3",
+    "pluralize": "^7.0.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.6.3",
