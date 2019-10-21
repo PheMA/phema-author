@@ -228,4 +228,22 @@ label * {
   label {
     width: 150px;
   }
+
+  input {
+    width: 300px;
+  }
+}
+
+.recaptcha {
+  padding-top: 15px;
+}
+
+#view-container {
+  .modal-footer {
+    text-align: left;
+  }
+  .modal-header h4 {
+    font-size: 16px;
+    font-weight: bold;
+  }
 }

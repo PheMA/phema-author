@@ -52,7 +52,9 @@ app.use(helmet.contentSecurityPolicy({
   directives: {
     defaultSrc: ["'self'"],
     styleSrc: ["'self'", "'unsafe-inline'"],
-    imgSrc: ["'self'", "data:"]
+    imgSrc: ["'self'", "data:"],
+    scriptSrc: ["'self'", "https://www.google.com", "https://www.gstatic.com"],
+    childSrc: ["'self'", "https://www.google.com"]
   }
 }));
 
@@ -146,6 +148,8 @@ app.post('/api/user/resources', users.resources);
 
 app.post('/login', auth.login);
 app.get('/logout', auth.logout);
+app.post('/forgotPassword', auth.forgotPassword);
+app.post('/resetPassword', auth.resetPassword);
 app.post('/register', users.add);
 
 // Start up the application.  Note that we have both HTTP and HTTPS apps running.

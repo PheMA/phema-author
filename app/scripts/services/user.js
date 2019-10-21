@@ -15,4 +15,18 @@ angular.module('sophe.services.user', ['sophe.services.url', 'ngResource'])
         function(response) { callback(null, response.data); },
         function(response) { callback(response.data.message); });
   };
+
+  this.forgotPassword = function(email, callback) {
+    $http.post(URLService.getUserServiceURL('forgotPassword'), {email: email})
+      .then(
+        function(response) { callback(null, response.data); },
+        function(response) { callback(response.data.error); });
+  };
+
+  this.resetPassword = function(email, password, confirmPassword, token, callback) {
+    $http.post(URLService.getUserServiceURL('resetPassword'), {email: email, password: password, confirmPassword: confirmPassword, token: token})
+      .then(
+        function(response) { callback(null, response.data); },
+        function(response) { callback(response.data.error); });
+  };
 }]);
