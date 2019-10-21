@@ -12,7 +12,7 @@ PHEMA_VALUE_SET_SERVICE_URL=(CTS2-compliant value set service URL, e.g. http://1
 PHEMA_VALUE_SET_OID=(OID to associate with value sets created, e.g. 2.16.840.1.113883.3.1427.10000)
 
 PHEKB_URL=(Only needed for PheKB integration.  Base URL of PheKB instance, e.g. https://phekb.org)
-PHEKB_API_KEY=(Only needed for PheKB integration.  Secret key for PheKB API, e.g. abc123)
+PHEKB_API_KEY=(Only needed for PheKB integration.  Secret key for PheKB API, e.g. testkey)
 PHEKB_LIBRARY_DB_URL=(Only needed for PheKB integration.  URL of MongoDB instance to connect to, e.g. mongodb://localhost/phema-library)
 PHEKB_USER_DB_URL=(Only needed for PheKB integration.  URL of MongoDB instance to connect to, e.g. mongodb://localhost/phema-user)
 
