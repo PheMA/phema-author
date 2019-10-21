@@ -905,6 +905,10 @@ ignore:
     - bcrypt > node-pre-gyp > tar > chownr:
         reason: None given
         expires: '2018-11-25T16:56:59.890Z'
+  SNYK-JS-MONGODB-473855:
+    - mongojs > mongodb:
+        reason: None given
+        expires: '2019-11-17T21:33:21.434Z'
 # patches apply the minimum changes required to fix a vulnerability
 patch:
   'npm:ms:20170412':
@@ -1163,3 +1167,8 @@ patch:
         patched: '2018-07-18T14:10:14.195Z'
     - npm-check-updates > npm > npm-registry-client > request > tunnel-agent:
         patched: '2018-07-18T14:10:14.195Z'
+  SNYK-JS-HTTPSPROXYAGENT-469131:
+    - npm-check-updates > pacote > npm-registry-fetch > make-fetch-happen > https-proxy-agent:
+        patched: '2019-10-18T21:33:01.681Z'
+    - npm-check-updates > pacote > make-fetch-happen > https-proxy-agent:
+        patched: '2019-10-18T21:33:01.681Z'

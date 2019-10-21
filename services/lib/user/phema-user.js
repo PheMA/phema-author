@@ -47,6 +47,12 @@ var UserSchema = new Schema({
   created: {
     type: Date,
     default: Date.now
+  },
+  resetPasswordExpires: {
+    type: Date,
+  },
+  resetPasswordToken: {
+    type: String
   }
 });
 
@@ -104,6 +110,22 @@ UserRepository.prototype.findUserByEmail = function(email, callback) {
   });
 };
 
+UserRepository.prototype.findUserByPasswordResetToken = function(token, callback) {
+  return UserModel.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+    if (!user) {
+      return callback({message: 'Password reset token is invalid or has expired.'});
+    }
+
+    if (!err) {
+      return callback(null, formatUserForReturn(user));
+    }
+    else {
+      console.log(err);
+      return callback({message: 'There was an error when searching for the user to reset their password.'});
+    }
+  });
+}
+
 UserRepository.prototype.addUser = function(user, callback) {
   var userRecord = new UserModel({
     email: user.email,
@@ -141,6 +163,11 @@ UserRepository.prototype.updateUser = function(updatedUser, callback) {
 
     user.firstName = updatedUser.firstName;
     user.lastName = updatedUser.lastName;
+
+    if (updatedUser.resetPasswordToken) {
+      user.resetPasswordToken = updatedUser.resetPasswordToken;
+      user.resetPasswordExpires = updatedUser.resetPasswordExpires;
+    }
 
     if (updatedUser.password) {
       bcrypt.genSalt(SALT_ROUNDS, function(err, salt) {

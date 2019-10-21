@@ -17,6 +17,7 @@ var app = angular.module('sopheAuthorApp', [
     'ng-context-menu',
     'dynform',
     'angularSpinner',
+    'vcRecaptcha',
     // Select the security mode that you wish to use.  Make sure all others
     // are commented out.
     'security',
@@ -59,6 +60,10 @@ app.config(['$routeProvider', 'dashboardController', 'dashboardView', function (
     // Enable these lines when using standalone security
     .when('/login', {
       title: 'Log In', templateUrl: 'views/security/login.html', controller: 'LoginFormController', isPublic: true })
+    .when('/users/forgotPassword', {
+      title: 'Forgot Password', templateUrl: 'views/users/forgotPassword.html', controller: 'ForgotPasswordFormController', isPublic: true })
+    .when('/users/resetPassword/:token', {
+      title: 'Reset Password', templateUrl: 'views/users/resetPassword.html', controller: 'ResetPasswordFormController', isPublic: true })
     .when('/users/register', {
       title: 'Register for an Account', templateUrl: 'views/users/register.html', controller: 'RegisterFormController', isPublic: true })
     .when('/users/profile', {
