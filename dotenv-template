@@ -26,3 +26,8 @@ EXPORTER_OUTPUT_DIRECTORY='/opt/phema-hqmf-generator/temp/input/'
 
 HQMF_EXPORTER_INVOKE_PATH='BUNDLE_GEMFILE=/opt/phema-hqmf-generator/Gemfile bundle exec rake -f /opt/phema-hqmf-generator/lib/tasks/phema.rake phema:generate[{input},{output},hqmf,true]'
 HDS_JSON_EXPORTER_INVOKE_PATH='BUNDLE_GEMFILE=/opt/phema-hqmf-generator/Gemfile bundle exec rake -f /opt/phema-hqmf-generator/lib/tasks/phema.rake phema:generate[{input},{output},hds,true]'
+
+SENDGRID_API_KEY='your-api-key-from-SendGrid'
+PASSWORD_RESET_EMAIL='your-project@project.org'
+
+PHEMA_ENCRYPTION_KEY='Random 32 bytes represented as a hex string. E.g., output from: openssl rand -hex 32'

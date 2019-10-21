@@ -23,15 +23,14 @@
     "/.*",
     "test.js"
   ],
-  "version": "7.0.0",
-  "_release": "7.0.0",
+  "version": "8.0.0",
+  "_release": "8.0.0",
   "_resolution": {
     "type": "version",
-    "tag": "v7.0.0",
-    "commit": "ef2b58ff67be5f604ade42a85e2020f48db6a60b"
+    "tag": "v8.0.0",
+    "commit": "5e6297eb40bdd6f2d6dc1512419e0854dbaaad1b"
   },
   "_source": "https://github.com/blakeembrey/pluralize.git",
-  "_target": "^7.0.0",
-  "_originalSource": "pluralize",
-  "_direct": true
+  "_target": "^8.0.0",
+  "_originalSource": "pluralize"
 }

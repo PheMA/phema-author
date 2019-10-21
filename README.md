@@ -26,7 +26,7 @@ ncu -m bower
 
 Check for any known vulnerabilities
 ```
-nsp check
+npm audit
 snyk test
 ```
 
@@ -98,7 +98,7 @@ When you are ready to check in code or to do a release, please first check that 
   `ncu -m bower`   
 
 Following that, perform security checks to ensure there are no known vulnerabilities present:   
-  `nsp check`   
+  `npm audit`   
   `snyk test`   
   or   
   `snyk wizard`

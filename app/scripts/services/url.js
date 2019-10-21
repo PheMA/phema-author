@@ -151,6 +151,12 @@ angular.module('sophe.services.url', ['sophe.config'])
     else if (action === 'update') {
       url = url + param;
     }
+    else if (action === 'forgotPassword') {
+      url = '/forgotPassword';
+    }
+    else if (action === 'resetPassword') {
+      url = '/resetPassword';
+    }
     return url;
   };
 }]);
