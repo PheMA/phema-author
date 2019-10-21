@@ -4,7 +4,6 @@
 // of creating a new one.
 angular.module('security.local')
 .controller('ResetPasswordFormController', ['$scope', '$location', '$routeParams', 'UserService', function($scope, $location, $routeParams, UserService) {
-  $scope.email = 'test@test.com';
   $scope.token = $routeParams.token;
 
   $scope.reset = function (credentials) {
@@ -12,7 +11,13 @@ angular.module('security.local')
     $scope.resetSuccess = '';
     UserService.resetPassword(this.email, this.password, this.confirm_password, this.token, function(error, result){
       if (error) {
-        $scope.resetError = error;
+        // The error can be a JSON object, or just a string
+        if (error.message) {
+          $scope.resetError = error.message;
+        }
+        else {
+          $scope.resetError = error;
+        }
       }
       else {
         $location.path("/login");

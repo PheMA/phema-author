@@ -29,3 +29,5 @@ HDS_JSON_EXPORTER_INVOKE_PATH='BUNDLE_GEMFILE=/opt/phema-hqmf-generator/Gemfile 
 
 SENDGRID_API_KEY='your-api-key-from-SendGrid'
 PASSWORD_RESET_EMAIL='your-project@project.org'
+
+PHEMA_ENCRYPTION_KEY='Random 32 bytes represented as a hex string. E.g., output from: openssl rand -hex 32'

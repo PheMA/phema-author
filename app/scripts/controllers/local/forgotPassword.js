@@ -14,7 +14,7 @@ angular.module('security.local')
         $scope.resetError = error;
       }
       else {
-        $scope.resetSuccess = 'An e-mail has been sent with further instructions.  If you do not receive the e-mail, please check to see if it was marked as "Spam"';
+        $scope.resetSuccess = 'If you had created an account using this e-mail address, you should receive an e-mail with further instructions.  If you do not receive the e-mail, please check to see if it was marked as "Spam"';
       }
     });
   };

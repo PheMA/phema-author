@@ -8,8 +8,12 @@ var sgMail = require('@sendgrid/mail');
 var async = require('async');
 var crypto = require('crypto'); 
 var UserRepository = require('../user/phema-user').UserRepository;
+var util = require('../util');
 var repository = new UserRepository();
+
 const PASSWORD_RESET_DURATION = 1200000;  // 20 minutes
+const PASSWORD_RESET_FIELD_DELIMITER = '|';
+const PASSWORD_RESET_TOKEN_LENGTH = 32;
 
 passport.use(new LocalStrategy({
     usernameField: 'email'
@@ -73,7 +77,7 @@ exports.forgotPassword = function(req, res, next) {
 
   async.waterfall([
     function(done) {
-      crypto.randomBytes(20, function(err, buf) {
+      crypto.randomBytes(PASSWORD_RESET_TOKEN_LENGTH, function(err, buf) {
         var token = buf.toString('hex');
         done(err, token);
       });
@@ -102,24 +106,11 @@ exports.forgotPassword = function(req, res, next) {
         done('Please provide an e-mail address for the reset');
       }
       else if (token == null || user.valid === false) {
-        console.log('Sending "unknown email" password reset message to ' + user.email);
-        var msg = {
-          to: user.email,
-          from: process.env.PASSWORD_RESET_EMAIL,
-          subject: 'PhEMA Authoring Tool Password Reset',
-          text: 'You are receiving this because you (or someone else) entered this e-mail when trying to reset the password of a PhEMA Authoring Tool account.\n\n' +
-             'However, this e-mail is not listed in our list of registered users and so we are unable to proceed with the password reset request.\n\n' +
-             'If you would like to create a new account, you may do so at:\n' +
-             'https://' + req.headers.host + '/#/users/register\n\n' +
-             'If you did not request this, please ignore this email.\n\n' +
-             'Thank you,\n' +
-             'The PhEMA Team\n' + 
-             'https://projectphema.org'
-        };
-        sgMail.send(msg);
-        done(null, 'Password reset link sent for ' + user.email);
+        console.log('Unknown e-mail in our system, so no reset message was sent to: ' + user.email);
+        done(null, 'Password reset request processed for ' + user.email);
       }
       else {
+        var resetToken = util.encrypt(user.email + PASSWORD_RESET_FIELD_DELIMITER + token);
         console.log('Sending password reset message to ' + user.email);
         var msg = {
           to: user.email,
@@ -127,19 +118,23 @@ exports.forgotPassword = function(req, res, next) {
           subject: 'PhEMA Authoring Tool Password Reset',
           text: 'You are receiving this because you (or someone else) entered this e-mail when trying to reset the password of a PhEMA Authoring Tool account.\n\n' +
              'Please click on the following link, or paste this into your browser to complete the process (this link will be valid for the next 20 minutes):\n\n' +
-             'https://' + req.headers.host + '/#/users/resetPassword/' + token + '\n\n' +
+             'https://' + req.headers.host + '/#/users/resetPassword/' + encodeURI(resetToken) + '\n\n' +
              'If you did not request this, please ignore this email and your password will remain unchanged.\n\n' +
              'Thank you,\n' +
              'The PhEMA Team\n' + 
              'https://projectphema.org'
         };
         sgMail.send(msg);
-        done(null, 'Password reset link sent for ' + user.email);        
+        done(null, 'Password reset request processed for ' + user.email);
       }
     }
   ], function(err) {
-    if (err) return next(err);
-    res.redirect('/#/login');
+    if (err) {
+      res.status(500).json({ success: false, error: err });
+    }
+    else {
+      res.status(200).json({ success: true });
+    }
   });
 }
 
@@ -149,15 +144,33 @@ exports.resetPassword = function(req, res, next) {
   async.waterfall([
     function(done) {
       console.log('Finding e-mail by token: ' + req.body.token);
-      repository.findUserByPasswordResetToken(req.body.token, function(err, user) {
-        console.log('Find response : ' + err);
-        done(err, user);
-      });
+      var resetTokenData = util.decrypt(req.body.token).split(PASSWORD_RESET_FIELD_DELIMITER);
+      if (resetTokenData == null || resetTokenData.length < 2) {
+        done('Invalid password reset token for this e-mail address');
+      }
+      else {
+        var email = resetTokenData[0];
+        var token = resetTokenData[1];
+        repository.findUserByPasswordResetToken(token, function(err, user) {
+          if (err) {
+            user = null;
+            console.log("Error searching for user by token: " + err);
+          }
+          else {
+            console.log('Found user associated with reset token');
+          }
+          done(err, user, email);
+        });
+      }
     },
-    function(user, done) {
-      if (user == null || user.email == null || user.email.localeCompare(req.body.email, undefined, { sensitivity: 'accent' }) !== 0) {
+    function(user, matchEmail, done) {
+      if (user == null) {
+        console.log('User e-mail or token invalid, or token expired');
+        done('Invalid password reset token for this e-mail address');
+      }
+      if (user.email == null || user.email.localeCompare(matchEmail, undefined, { sensitivity: 'accent' }) !== 0) {
         console.log('Invalid user e-mail for token');
-        done('The password could not be reset for ' + req.body.email + ' and ' + user.email);
+        done('Mistmatch between password reset request ' + matchEmail + ' and database record associated with token ' + user.email);
       }
       else if (req.body.password !== req.body.confirmPassword) {
         console.log('Passwords do not match');
@@ -165,14 +178,19 @@ exports.resetPassword = function(req, res, next) {
       }
       else {
         console.log('Updating user password');
+        user.password = req.body.password;
         repository.updateUser(user, function(err) {
           done(err, user);
         });
       }
     }
   ], function(err) {
-    if (err) return next(err);
-    res.redirect('/#/login');
+    if (err) {
+      res.status(500).json({ success: false, error: err });
+    }
+    else {
+      res.status(200).json({ success: true });
+    }
   });
 }
 

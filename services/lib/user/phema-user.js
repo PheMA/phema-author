@@ -127,27 +127,39 @@ UserRepository.prototype.findUserByPasswordResetToken = function(token, callback
 }
 
 UserRepository.prototype.addUser = function(user, callback) {
-  var userRecord = new UserModel({
-    email: user.email,
-    firstName: user.firstName,
-    lastName: user.lastName
-  });
+  UserModel.findOne({email: user.email }, function(err, existingUser) {
+    if (existingUser) {
+      return callback({message: 'This e-mail address has already been used to create an account.  Please try logging in with that account, and reset the password if you no longer remember it.'});
+    }
 
-  bcrypt.genSalt(SALT_ROUNDS, function(err, salt) {
-    bcrypt.hash(user.password, salt, function(err, hash) {
-      userRecord.password = hash;
-
-      userRecord.save(function(err) {
-        console.log("User saved ", userRecord.email);
-        if (err) {
-          console.log(err);
-          return callback({message: 'There was an error when saving the new user.'});
-        }
-        else {
-          return callback(null, formatUserForReturn(userRecord));
-        }
+    if (err) {
+      console.log(err);
+      return callback({message: 'There was an error when searching for the user.'});
+    }
+    else {
+      var userRecord = new UserModel({
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName
       });
-    });
+
+      bcrypt.genSalt(SALT_ROUNDS, function(err, salt) {
+        bcrypt.hash(user.password, salt, function(err, hash) {
+          userRecord.password = hash;
+
+          userRecord.save(function(err) {
+            console.log("User saved ", userRecord.email);
+            if (err) {
+              console.log(err);
+              return callback({message: 'There was an error when saving the new user.'});
+            }
+            else {
+              return callback(null, formatUserForReturn(userRecord));
+            }
+          });
+        });
+      });
+    }
   });
 };
 
@@ -163,6 +175,11 @@ UserRepository.prototype.updateUser = function(updatedUser, callback) {
 
     user.firstName = updatedUser.firstName;
     user.lastName = updatedUser.lastName;
+    // Any time the user is updated, we want to clear out the reset password fields.
+    // If there is an outstanding reset password and someone is logged in and able
+    // to reset this, the outstanding token should no longer be valid.
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
 
     if (updatedUser.resetPasswordToken) {
       user.resetPasswordToken = updatedUser.resetPasswordToken;
@@ -175,7 +192,7 @@ UserRepository.prototype.updateUser = function(updatedUser, callback) {
           user.password = hash;
 
           user.save(function(err) {
-            console.log("User w/ password updated ", user.email);
+            console.log("User with password updated : ", user.email);
             if (err) {
               console.log(err);
               return callback({message: 'There was an error when saving the new user.'});
