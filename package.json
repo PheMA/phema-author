@@ -69,7 +69,8 @@
     "karma-ng-html2js-preprocessor": "^1.0.0",
     "karma-phantomjs-launcher": "^1.0.4",
     "load-grunt-tasks": "^5.1.0",
-    "time-grunt": "^2.0.0"
+    "time-grunt": "^2.0.0",
+    "diff": ">=3.5.0"
   },
   "engines": {
     "node": ">=0.10.0"
