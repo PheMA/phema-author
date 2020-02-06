@@ -909,6 +909,10 @@ ignore:
     - mongojs > mongodb:
         reason: None given
         expires: '2019-11-17T21:33:21.434Z'
+  SNYK-JS-DOTPROP-543489:
+    - npm-check-updates > update-notifier > configstore > dot-prop:
+        reason: None given
+        expires: '2020-03-07T18:17:24.164Z'
 # patches apply the minimum changes required to fix a vulnerability
 patch:
   'npm:ms:20170412':
