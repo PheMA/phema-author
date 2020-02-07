@@ -125,3 +125,15 @@ exports.logout = function(req, res){
   var retdata = {user: null };
   res.status(200).send(retdata);
 };
+
+exports.forgotPassword = function(req, res, next) {
+  console.log('POST - /forgotPassword');
+  console.log('  - Not supported for PheKB authentication');
+  res.status(500).json({ success: false, error: 'Resetting password not supported' });
+}
+
+exports.resetPassword = function(req, res, next) {
+  console.log('POST - /resetPassword');
+  console.log('  - Not supported for PheKB authentication');
+  res.status(500).json({ success: false, error: 'Resetting password not supported' });
+}
