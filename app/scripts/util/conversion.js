@@ -9,7 +9,7 @@ Conversion = {
   // structure that is used within the user interface in the authoring tool.
   convertDERResponse: function(element, type) {
     return {
-      id: element.dataElementName.value,
+      id: (element.dataElementName ? element.dataElementName.value : element.id.value),
       name: element.label.value,
       description: element.definition.value,
       uri: element.id.value,

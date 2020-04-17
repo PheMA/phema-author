@@ -9,9 +9,9 @@
  * Controller of the sopheAuthorApp
  */
 angular.module('sopheAuthorApp')
-  .controller('PhenotypeController', ['$scope', '$routeParams', '$uibModal', '$location', '$window', '$timeout', 'algorithmElementFactory', 'TemporalOperatorService', 'LogicalOperatorService', 'SubsetOperatorService', 'QDMElementService', 'FHIRElementService', 'LibraryService', 'ConfigurationService', 'FunctionOperatorService', function ($scope, $routeParams, $uibModal, $location, $window, $timeout, algorithmElementFactory, TemporalOperatorService, LogicalOperatorService, SubsetOperatorService, QDMElementService, FHIRElementService, LibraryService, ConfigurationService, FunctionOperatorService) {
+  .controller('PhenotypeController', ['$scope', '$q', '$routeParams', '$uibModal', '$location', '$window', '$timeout', 'algorithmElementFactory', 'FHIRElementService', 'CQLElementService', 'LibraryService', 'ConfigurationService', function ($scope, $q, $routeParams, $uibModal, $location, $window, $timeout, algorithmElementFactory, FHIRElementService, CQLElementService, LibraryService, ConfigurationService) {
     $scope.phenotype = ($routeParams.id ? {id: $routeParams.id } : null );
-    $scope.status = { open: [false, false, false, false, false, false, false, false, false, false]};
+    $scope.status = { open: []};
     $scope.isPropertiesDisabled = true;
     $scope.successMessage = null;
     $scope.errorMessage = null;
@@ -19,6 +19,7 @@ angular.module('sopheAuthorApp')
     $scope.treeOptions = {
       dirSelectable: false
     };
+    $scope.cqlTypes = [];
 
     // Helper function to determine if a phenotype has been changed, either as a new
     // phenotype or an existing one loaded for editing.
@@ -64,29 +65,30 @@ angular.module('sopheAuthorApp')
       .then(LibraryService.processValues)
       .then(function(elements) { $scope.phenotypes = elements; });
 
-    // FHIRElementService.load()
-    //   .then(FHIRElementService.processValues)
-    //   .then(function(elements) { $scope.fhirElements = elements; });
+    FHIRElementService.load()
+      .then(FHIRElementService.processValues)
+      .then(function(elements) { $scope.fhirElements = elements; });
 
-    QDMElementService.load()
-      .then(QDMElementService.processValues)
-      .then(function(elements) { $scope.dataElements = elements; });
+    CQLElementService.load()
+      .then(CQLElementService.processValues)
+      .then(function(elements) {
+        $scope.cqlTypes = elements;
+        // Now that we know how many CQL categories, we can establish our
+        // internal tracking array for what's being displayed.  There are 3
+        // pre-defined sidebar panels that appear ahead of ours.
+        $scope.status.open = Array(3 + elements.length).fill(false);
 
-    LogicalOperatorService.load()
-      .then(LogicalOperatorService.processValues)
-      .then(function(operators) { $scope.logicalOperators = operators; });
-
-    TemporalOperatorService.load()
-      .then(TemporalOperatorService.processValues)
-      .then(function(operators) { $scope.temporalOperators = operators; });
-
-    SubsetOperatorService.load()
-      .then(SubsetOperatorService.processValues)
-      .then(function(operators) { $scope.subsetOperators = operators; });
-
-    FunctionOperatorService.load()
-      .then(FunctionOperatorService.processValues)
-      .then(function(operators) { $scope.functionOperators = operators; });
+        var promises = CQLElementService.expandTypes(elements);
+        $q.all(promises).then(function(expanded) {
+          for (let index in expanded) {
+            const type = expanded[index];
+            const found = $scope.cqlTypes.find(element => element.id === type.typeId);
+            if (found) {
+              found.children = type.data;
+            }
+          }
+        });
+      });
 
     // The list of classification elements is pretty small and manageable, and doesn't need to be tightly controlled.  We will
     // just put the list in here instead of setting up a service.
