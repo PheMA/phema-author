@@ -486,6 +486,10 @@ module.exports = function (grunt) {
               replacement: settings.fhirServiceBaseUrl
             },
             {
+              match: 'cqlServiceBaseUrl',
+              replacement: settings.cqlServiceBaseUrl
+            },
+            {
               match: 'libraryBaseUrl',
               replacement: settings.libraryBaseUrl
             },

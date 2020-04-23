@@ -26,8 +26,9 @@ The values in these configuration entries are injected into the code when you bu
 | Variable | Description |
 |----------|-------------|
 | environment| Usually the name of the file, it specifies the environment that is running.  You may add new files with their own environment, but please know that 'phekb' and 'local' have specific meanings within PHAT|
-| dataServiceBaseUrl | The base url (e.g., api/qdm/) with trailing backslash that is used to construct API calls to get data elements. |
+| dataServiceBaseUrl | [DEPRECATED] The base url (e.g., api/qdm/) with trailing backslash that is used to construct API calls to get QDM data elements. |
 | fhirServiceBaseUrl | The base url (e.g., api/fhir/) with trailing backslash that is used to construct API calls to get FHIR data elements. |
+| cqlServiceBaseUrl | The base url (e.g., api/cql/) with trailing backslash that is used to construct API calls to get CQL logical elements. |
 | libraryBaseUrl | The base url (e.g., api/library/) with trailing backslash that is used to construct API calls to get items from the phenotype library. |
 | valueSetServiceBaseUrl | The base url (e.g., api/valueset/) with trailing backslash that is used to construct API calls to get value set entries. |
 | codeSystemServiceBaseUrl | The base url (e.g., api/codesystem/) with trailing backslash that is used to construct API calls to get medical vocabulary/code set entries. |

@@ -29,17 +29,36 @@
 <div class="row phenotype-elements">
   <div class="col-sm-3 col-xs-3">
     <uib-accordion close-others="oneAtATime">
-      <div uib-accordion-group id="data-elements-list" class="data-element-list" is-open="status.open[0]">
+      <div uib-accordion-group id="phenotype-element-list" class="data-element-list" is-open="status.open[0]">
+        <uib-accordion-heading>
+          Existing Phenotypes <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[0], 'glyphicon-chevron-right': !status.open[0]}"></i>
+        </uib-accordion-heading>
+        <div phenotype-elements></div>
+      </div>
+      <div uib-accordion-group id="fhir-elements-list" class="data-element-list" is-open="status.open[1]">
+        <uib-accordion-heading>
+          Data Elements <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[1], 'glyphicon-chevron-right': !status.open[1]}"></i>
+        </uib-accordion-heading>
+        <div fhir-data-elements></div>
+      </div>
+<!--       <div uib-accordion-group id="data-elements-list" class="data-element-list" is-open="status.open[0]">
         <uib-accordion-heading>
           QDM Data Elements <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[0], 'glyphicon-chevron-right': !status.open[0]}"></i>
         </uib-accordion-heading>
         <div qdm-data-elements></div>
-      </div>
-      <div uib-accordion-group id="value-sets-list" class="term-element-list" is-open="status.open[1]">
+      </div> -->
+      <div uib-accordion-group id="value-sets-list" class="term-element-list" is-open="status.open[2]">
         <uib-accordion-heading>
-          Value Sets <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[1], 'glyphicon-chevron-right': !status.open[1]}"></i>
+          Value Sets <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[2], 'glyphicon-chevron-right': !status.open[2]}"></i>
         </uib-accordion-heading>
         <div value-sets selected-value-sets="selectedValueSets" location="sidebar"></div>
+      </div>
+
+      <div ng-repeat="cqlType in cqlTypes" uib-accordion-group id="operator-element-list" class="operator-element-list" is-open="status.open[3 + $index]">
+        <uib-accordion-heading>
+          {{cqlType.name}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[3 + $index], 'glyphicon-chevron-right': !status.open[3 + $index]}"></i>
+        </uib-accordion-heading>
+        <div cql-elements data="cqlType.children"></div>
       </div>
 <!--        <div uib-accordion-group id="code-systems-list" class="term-element-list" is-open="status.open[2]">
         <uib-accordion-heading>
@@ -47,7 +66,7 @@
         </uib-accordion-heading>
         <div code-systems location="sidebar"></div>
       </div> -->
-      <div uib-accordion-group id="logical-operators-list" class="operator-element-list" is-open="status.open[3]">
+      <!-- <div uib-accordion-group id="logical-operators-list" class="operator-element-list" is-open="status.open[3]">
         <uib-accordion-heading>
           Logical Operators <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[3], 'glyphicon-chevron-right': !status.open[3]}"></i>
         </uib-accordion-heading>
@@ -71,23 +90,12 @@
         </uib-accordion-heading>
         <div subset-operators></div>
       </div>
-      <div uib-accordion-group id="phenotype-element-list" class="data-element-list" is-open="status.open[7]">
-        <uib-accordion-heading>
-          Existing Phenotypes <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[7], 'glyphicon-chevron-right': !status.open[7]}"></i>
-        </uib-accordion-heading>
-        <div phenotype-elements></div>
-      </div>
+       -->
 <!--       <div uib-accordion-group id="classification-list" class="data-element-list" is-open="status.open[8]">
         <uib-accordion-heading>
           Output Labels <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[8], 'glyphicon-chevron-right': !status.open[8]}"></i>
         </uib-accordion-heading>
         <div classification-elements></div>
-      </div> -->
-<!--       <div uib-accordion-group id="fhir-elements-list" class="phenotype-element-list" is-open="status.open[7]">
-        <uib-accordion-heading>
-          FHIR Data Elements <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open[7], 'glyphicon-chevron-right': !status.open[7]}"></i>
-        </uib-accordion-heading>
-        <div fhir-data-elements></div>
       </div> -->
     </uib-accordion>
   </div>

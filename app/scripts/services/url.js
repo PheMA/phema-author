@@ -36,10 +36,6 @@ angular.module('sophe.services.url', ['sophe.config'])
     if (environment === 'local' || environment.substring(0, 2) === '@@') {
       // For our local setup, we sometimes stub things in.  This isn't code we plan to
       // use in production, so it's okay if it's a little messy.
-      // if (/attributes/.test(resource)) {
-      //   return 'data/cql-attributes.json';
-      // }
-      // else 
       if ('datatype' === resource) {
         return 'data/cql-type.json';
       }
@@ -49,7 +45,7 @@ angular.module('sophe.services.url', ['sophe.config'])
     var url = cqlServiceBaseUrl + resource;
 
     if (resource === 'datatype') {
-      url += params.id;
+      url += '/' + params.id;
     }
     return url;
   };

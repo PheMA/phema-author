@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sophe.services.url', ['sophe.config'])
-.service('URLService', ['environment', 'dataServiceBaseUrl', 'fhirServiceBaseUrl', 'libraryBaseUrl', 'valueSetServiceBaseUrl', 'codeSystemServiceBaseUrl', 'configServiceBaseUrl', 'exporterServiceBaseUrl', 'unitServiceBaseUrl', 'userServiceBaseUrl',
-    function(environment, dataServiceBaseUrl, fhirServiceBaseUrl, libraryBaseUrl, valueSetServiceBaseUrl, codeSystemServiceBaseUrl, configServiceBaseUrl, exporterServiceBaseUrl, unitServiceBaseUrl, userServiceBaseUrl) {
+.service('URLService', ['environment', 'dataServiceBaseUrl', 'fhirServiceBaseUrl', 'cqlServiceBaseUrl', 'libraryBaseUrl', 'valueSetServiceBaseUrl', 'codeSystemServiceBaseUrl', 'configServiceBaseUrl', 'exporterServiceBaseUrl', 'unitServiceBaseUrl', 'userServiceBaseUrl',
+    function(environment, dataServiceBaseUrl, fhirServiceBaseUrl, cqlServiceBaseUrl, libraryBaseUrl, valueSetServiceBaseUrl, codeSystemServiceBaseUrl, configServiceBaseUrl, exporterServiceBaseUrl, unitServiceBaseUrl, userServiceBaseUrl) {
 
   this.getDataServiceURL = function(resource) {
     if (environment === 'local' || environment.substring(0, 2) === '@@') {
@@ -29,6 +29,28 @@ angular.module('sophe.services.url', ['sophe.config'])
     }
 
     var url = fhirServiceBaseUrl + resource;
+    return url;
+  };
+
+  this.getCQLServiceURL = function(resource, params) {
+    if (environment === 'local' || environment.substring(0, 2) === '@@') {
+      // For our local setup, we sometimes stub things in.  This isn't code we plan to
+      // use in production, so it's okay if it's a little messy.
+      // if (/attributes/.test(resource)) {
+      //   return 'data/cql-attributes.json';
+      // }
+      // else 
+      if ('datatype' === resource) {
+        return 'data/cql-type.json';
+      }
+      return 'data/cql-' + resource + '.json';
+    }
+
+    var url = cqlServiceBaseUrl + resource;
+
+    if (resource === 'datatype') {
+      url += '/' + params.id;
+    }
     return url;
   };
 

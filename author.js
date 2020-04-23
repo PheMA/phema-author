@@ -32,6 +32,7 @@ var securePort = defaultPort + 100;
 var site = require('./services/routes/site');
 var elements = require('./services/routes/dataElements');
 var fhir = require('./services/routes/fhirElements');
+var cql = require('./services/routes/cqlElements');
 var library = require('./services/routes/library/' + moduleConfig.library + '-library');
 var valueSets = require('./services/routes/valueSets');
 var codeSystems = require('./services/routes/codeSystems');
@@ -118,6 +119,9 @@ app.get('/api/qdm/:type', elements.index);
 app.get('/api/qdm/:type/:item/attributes', elements.attributes);
 
 app.get('/api/fhir/:type', fhir.index);
+
+app.get('/api/cql/:type', cql.index);
+app.get('/api/cql/datatype/:type', cql.element);
 
 app.get('/api/library', library.index);
 app.get('/api/library/:id', library.details);
